@@ -1,0 +1,201 @@
+{
+  "shoes": [
+    {
+      "id": 1,
+      "brand": "아식스",
+      "model": "젤 카야노 32",
+      "purpose": "조깅·회복주",
+      "stability": "안정화",
+      "weight": 300,
+      "drop": 8,
+      "stackHeight": 40,
+      "width": "보통",
+      "carbon": false,
+      "price": 199000,
+      "image": "/images/shoe1.jpg",
+      "description": "발이 안쪽으로 무너지는 것을 잡아주는 아식스의 대표 안정화. 4E 와이드 모델이 따로 나와 발볼이 넓은 러너에게도 선택지가 있다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    },
+    {
+      "id": 2,
+      "brand": "나이키",
+      "model": "페가수스 41",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "weight": 297,
+      "drop": 10,
+      "stackHeight": 0,
+      "width": "보통",
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/shoe2.jpg",
+      "description": "리액트X 미드솔을 쓴 나이키의 스테디셀러 데일리 트레이너. 드롭 10mm로 뒤꿈치 착지가 편해 입문용으로 무난하다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    },
+    {
+      "id": 3,
+      "brand": "호카",
+      "model": "클리프톤 10",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "weight": 278,
+      "drop": 8,
+      "stackHeight": 50,
+      "width": "넓음",
+      "carbon": false,
+      "price": 189000,
+      "image": "/images/shoe3.jpg",
+      "description": "호카 특유의 두툼한 스택으로 푹신함을 앞세운 데일리 트레이너. 와이드핏 모델이 있어 발볼이 넓어도 무리가 없다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    },
+    {
+      "id": 4,
+      "brand": "호카",
+      "model": "본디 9",
+      "purpose": "LSD·장거리",
+      "stability": "중립화",
+      "weight": 263,
+      "drop": 5,
+      "stackHeight": 42,
+      "width": "넓음",
+      "carbon": false,
+      "price": 219000,
+      "image": "/images/shoe4.jpg",
+      "description": "호카 라인업 중 쿠션이 가장 두꺼운 축에 드는 맥스 쿠션 모델. 장거리에서 발바닥 피로를 줄이는 데 초점이 맞춰져 있다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    },
+    {
+      "id": 5,
+      "brand": "아식스",
+      "model": "노바블라스트 5",
+      "purpose": "템포·인터벌",
+      "stability": "중립화",
+      "weight": 255,
+      "drop": 8,
+      "stackHeight": 0,
+      "width": "보통",
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/shoe5.jpg",
+      "description": "반발력을 앞세운 아식스의 인기 트레이너. 카본 없이도 통통 튀는 느낌이라 템포런 입문에 자주 추천된다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    },
+    {
+      "id": 6,
+      "brand": "나이키",
+      "model": "알파플라이 3",
+      "purpose": "레이스",
+      "stability": "중립화",
+      "weight": 218,
+      "drop": 8,
+      "stackHeight": 0,
+      "width": "보통",
+      "carbon": true,
+      "price": 339000,
+      "image": "/images/shoe6.jpg",
+      "description": "에어 줌 유닛과 줌X 폼, 카본 플레이트를 결합한 나이키의 플래그십 레이싱화. 대회용으로 설계된 신발이라 일상 훈련에는 권장되지 않는다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "liked": false
+    }
+  ],
+
+  "reviews": [
+    {
+      "id": 1,
+      "targetType": "shoe",
+      "targetId": 1,
+      "author": "초보러너",
+      "rating": 5,
+      "content": "평발이라 안정화 찾다가 샀는데 5km 뛰어도 발목이 안 꺾이는 느낌. 대신 무겁긴 합니다.",
+      "createdAt": "2026-07-21"
+    },
+    {
+      "id": 2,
+      "targetType": "shoe",
+      "targetId": 1,
+      "author": "주말러너",
+      "rating": 4,
+      "content": "기본 사이즈는 발볼이 좀 조여서 4E로 바꿨습니다. 그 뒤로는 만족.",
+      "createdAt": "2026-07-21"
+    },
+    {
+      "id": 3,
+      "targetType": "shoe",
+      "targetId": 3,
+      "author": "한강러너",
+      "rating": 5,
+      "content": "구름 위를 뛰는 느낌이라는 말이 과장이 아니네요. 회복주용으로 최고.",
+      "createdAt": "2026-07-21"
+    }
+  ],
+
+  "terms": [
+    {
+      "id": 1,
+      "key": "drop",
+      "name": "드롭",
+      "short": "뒤꿈치와 앞꿈치의 높이 차이",
+      "description": "뒤꿈치와 앞꿈치의 높이 차이(mm). 클수록 뒤꿈치 착지가 편하고 무릎 부담이 줄지만, 낮으면 종아리·아킬레스건을 더 쓰게 되어 적응 기간이 필요합니다. 시중 제품은 대체로 6~12mm이며 초보는 8~10mm가 무난합니다."
+    },
+    {
+      "id": 2,
+      "key": "stackHeight",
+      "name": "스택하이트",
+      "short": "미드솔 두께 — 발밑 쿠션의 양",
+      "description": "미드솔의 두께(mm)로 발밑에 깔린 쿠션의 양을 뜻합니다. 30mm 이하면 얇은 편, 40mm 이상이면 두꺼운 편입니다. 두꺼울수록 푹신하고 장거리에 유리하지만 무게가 늘고 지면 감각이 둔해집니다."
+    },
+    {
+      "id": 3,
+      "key": "pronation",
+      "name": "프로네이션",
+      "short": "착지할 때 발이 안쪽으로 기울어지는 움직임",
+      "description": "착지 시 발이 안쪽으로 살짝 기울어지는 자연스러운 움직임으로, 충격을 흡수하는 정상 동작입니다. 이 움직임이 과도한 경우를 과내전(오버프로네이션)이라 합니다."
+    },
+    {
+      "id": 4,
+      "key": "neutral",
+      "name": "중립화",
+      "short": "교정 장치 없이 쿠션을 균등하게 배치한 신발",
+      "description": "교정 장치 없이 쿠션을 균등하게 배치한 신발로, 시중 러닝화 대부분이 여기 해당합니다. 흔히 말하는 '쿠션화'와 같은 말이며, 쿠션이 더 많다는 뜻은 아닙니다."
+    },
+    {
+      "id": 5,
+      "key": "stability",
+      "name": "안정화",
+      "short": "발이 안쪽으로 무너지는 것을 막아주는 신발",
+      "description": "미드솔 안쪽에 단단한 소재를 넣어 발이 안쪽으로 무너지는 것을 막아주는 신발입니다. 과내전인 사람에게 필요하며, 해당되지 않는 사람이 신으면 오히려 불편합니다. 더 좋은 신발이 아니라 발 유형에 맞춰 고르는 것입니다."
+    },
+    {
+      "id": 6,
+      "key": "carbon",
+      "name": "카본 플레이트",
+      "short": "미드솔에 삽입된 탄성판 — 반발력을 크게 높임",
+      "description": "미드솔에 삽입된 탄소섬유 판으로 반발력을 크게 높여줍니다. 다만 가격이 비싸고, 근력과 러닝 기술이 충분하지 않은 상태에서 신으면 종아리·발목·아킬레스에 부담이 집중될 수 있습니다."
+    },
+    {
+      "id": 7,
+      "key": "trail",
+      "name": "트레일 러닝",
+      "short": "포장도로가 아닌 산길·흙길을 달리는 러닝",
+      "description": "포장도로가 아닌 산길·흙길·자갈길을 달리는 러닝입니다. 트레일화는 밑창 돌기가 깊고 어퍼가 튼튼하며 앞코에 토캡 보강이 들어가 무게가 무거운 편입니다."
+    },
+    {
+      "id": 8,
+      "key": "midsole",
+      "name": "미드솔",
+      "short": "겉창과 안창 사이의 쿠션층",
+      "description": "겉창(아웃솔)과 안창 사이에 위치한 쿠션층으로, 러닝화의 성격을 결정하는 핵심 부위입니다. 브랜드마다 폼 소재에 고유한 이름을 붙입니다(줌X, FF Blast+, 리액트X 등)."
+    }
+  ]
+}
