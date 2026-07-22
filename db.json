@@ -41,8 +41,8 @@
       "description": "1982년부터 이어져 온 나이키의 가장 오래된 러닝화 계보입니다. 특출난 강점이 있다기보다 무난하게 다 되는 쪽이라 첫 러닝화로 자주 추천됩니다. 드롭이 10mm로 높은 편이라 뒤꿈치부터 착지하는 분에게 편안합니다. 42에서 앞발과 토박스 공간이 넓어졌고, 와이드 모델도 국내 정식 출시되어 발볼이 넓은 분에게도 선택지가 생겼습니다.",
       "rating": 4.5,
       "reviewCount": 2,
-      "likeCount": 68,
-      "liked": false
+      "likeCount": 69,
+      "liked": true
     },
     {
       "id": 3,
@@ -58,7 +58,7 @@
       "wideAvailable": true,
       "carbon": false,
       "price": 189000,
-      "image": "/images/clifton-10.jpg",
+      "image": "/images/clifton-10.png",
       "summary": "푹신한 착지를 원하는 분에게",
       "description": "호카 특유의 두툼한 미드솔로 푹신함을 앞세운 모델입니다. 착지 충격이 부담스러운 분이나 회복주를 자주 뛰는 분에게 잘 맞습니다. 와이드핏이 따로 나와 발볼이 넓어도 무리가 없습니다.",
       "rating": 4.7,
@@ -80,7 +80,7 @@
       "wideAvailable": true,
       "carbon": false,
       "price": 229000,
-      "image": "/images/bondi-9.jpg",
+      "image": "/images/bondi-9.png",
       "summary": "긴 거리를 자주 뛰는 분에게",
       "description": "호카 라인업에서도 쿠션이 가장 두꺼운 축에 드는 모델입니다. 긴 거리를 뛸 때 발바닥에 쌓이는 피로를 줄이는 데 초점이 맞춰져 있습니다. 드롭이 5mm로 낮은 편이라 종아리에 부담이 올 수 있어, 처음 신는다면 짧은 거리부터 적응하시는 편이 좋습니다.",
       "rating": 4,
@@ -102,7 +102,7 @@
       "wideAvailable": true,
       "carbon": false,
       "price": 159000,
-      "image": "/images/novablast-5.jpg",
+      "image": "/images/novablast-5.png",
       "summary": "페이스를 올려보려는 분에게",
       "description": "카본 플레이트 없이도 통통 튀는 느낌을 주는 아식스의 인기 모델입니다. 조깅에도 쓸 수 있지만 페이스를 올렸을 때 진가가 나오는 편이라, 템포런을 처음 해보시는 분께 자주 추천됩니다.",
       "rating": 4.5,
@@ -124,13 +124,13 @@
       "wideAvailable": false,
       "carbon": true,
       "price": 339000,
-      "image": "/images/alphafly-3.jpg",
+      "image": "/images/alphafly-3.png",
       "summary": "대회에서 기록을 노리는 분에게",
       "description": "에어 줌 유닛과 줌X 폼, 카본 플레이트를 결합한 나이키의 최상위 레이싱화입니다. 대회에서 기록을 노릴 때 쓰는 신발이라 일상 훈련용으로는 권장되지 않습니다. 근력이 충분히 갖춰지지 않은 상태에서 신으면 종아리와 아킬레스에 부담이 몰릴 수 있습니다.",
       "rating": 5,
       "reviewCount": 1,
-      "likeCount": 90,
-      "liked": false
+      "likeCount": 91,
+      "liked": true
     }
   ],
   "reviews": [

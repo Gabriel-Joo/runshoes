@@ -9,7 +9,7 @@
 /* 이미지 프레임 — 유리 상자 */
 .card__frame {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   background: #fff;
   border: 10px solid #fff;
   box-shadow: inset 0 0 0 1px var(--border-light);
@@ -19,7 +19,7 @@
 .card__image {
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.985 0.004 190) 100%);
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.955 0.018 190) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
