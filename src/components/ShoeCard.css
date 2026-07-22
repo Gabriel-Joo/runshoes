@@ -4,6 +4,11 @@
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.card:hover {
+  background: #fff;
 }
 
 /* 이미지 프레임 — 유리 상자 */
@@ -14,21 +19,20 @@
   border: 10px solid #fff;
   box-shadow: inset 0 0 0 1px var(--border-light);
   margin-bottom: 14px;
+  overflow: hidden;
 }
 
 .card__image {
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.955 0.018 190) 100%);
+  background: linear-gradient(to bottom, #fff 0%,oklch(0.955 0.01 240)
+
+
+ 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.card__image img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  transition: transform 0.3s;
 }
 
 .card__badge {
@@ -43,7 +47,9 @@
   border: 1px solid oklch(0.4 0 0);
   color: oklch(0.3 0 0);
 }
-
+.card__badge--shifted {
+  left: 50px;
+}
 .card__like {
   position: absolute;
   top: 6px;
@@ -60,6 +66,17 @@
   font-size: 15px;
   color: var(--text-weak);
   line-height: 1;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+.card__like:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.card:hover .card__image {
+  transform: scale(1.03);
 }
 
 .card__like em {
@@ -97,7 +114,8 @@
   padding-top: 12px;
   border-top: 1px solid var(--border-light);
   font-size: 13px;
-  color: var(--text-mid);
+  font-weight: 500;
+  color: var(--accent);
 }
 
 /* 스펙 */
@@ -155,4 +173,32 @@
   font-weight: 400;
   font-style: normal;
   color: var(--text-weak);
+}
+
+.card__rank {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.card__score {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+}
+
+.card__score strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-strong);
 }

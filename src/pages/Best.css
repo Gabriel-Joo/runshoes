@@ -1,0 +1,121 @@
+.best {
+  padding: 56px 48px 120px;
+}
+
+.best__head {
+  max-width: 720px;
+}
+
+.best__title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.best__desc {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-mid);
+}
+
+.best__desc em {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--text-weak);
+}
+
+.best__section {
+  margin-top: 48px;
+}
+
+.best__subtitle {
+  font-size: 17px;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.best__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  margin-top: 20px;
+}
+
+.best__grid--single {
+  grid-template-columns: 1fr;
+  max-width: 380px;
+  margin-top: 12px;
+}
+
+/* 용도별 */
+.best__purposes {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 20px;
+}
+
+.best__purpose {
+  display: flex;
+  flex-direction: column;
+}
+
+.best__purposename {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.best__purpose .card {
+  border: 1px solid var(--border);
+}
+
+.best__empty {
+  flex: 1;
+  padding: 60px 20px;
+  border: 1px dashed var(--border);
+  font-size: 13px;
+  color: var(--text-weak);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1199px) {
+  .best {
+    padding: 40px 32px 80px;
+  }
+  .best__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .best__purposes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .best {
+    padding: 32px 20px 60px;
+  }
+  .best__title {
+    font-size: 24px;
+  }
+  .best__grid {
+    grid-template-columns: 1fr;
+  }
+  .best__purposes {
+    grid-template-columns: 1fr;
+  }
+  .best__empty {
+    max-width: none;
+  }
+}

@@ -26,18 +26,18 @@
 }
 
 .header__link {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .header__link--sub {
-  font-weight: 500;
-  color: var(--text-mid);
+  font-weight: 600;
+  color: var(--text-strong);
 }
 
 .header__link--admin {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-weak);
 }

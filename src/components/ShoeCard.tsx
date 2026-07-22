@@ -7,9 +7,18 @@ interface ShoeCardProps {
   index: number;
   onClick: () => void;
   onToggleLike: () => void;
+  rank?: number;
+  score?: number;
 }
 
-function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
+function ShoeCard({
+  shoe,
+  index,
+  onClick,
+  onToggleLike,
+  rank,
+  score,
+}: ShoeCardProps) {
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleLike();
@@ -18,8 +27,12 @@ function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
   return (
     <article className="card" onClick={onClick}>
       <div className="card__frame">
-        {shoe.carbon && <span className="card__badge">카본 플레이트</span>}
-
+        {rank && <span className="card__rank">{rank}</span>}
+        {shoe.carbon && (
+          <span className={`card__badge ${rank ? "card__badge--shifted" : ""}`}>
+            카본 플레이트
+          </span>
+        )}
         <button
           className={`card__like ${shoe.liked ? "is-liked" : ""}`}
           onClick={handleLikeClick}
@@ -58,7 +71,14 @@ function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
       </dl>
 
       <div className="card__bottom">
-        <span className="card__stability">{shoe.stability}</span>
+        {score !== undefined ? (
+          <span className="card__score">
+            종합 <strong>{score.toFixed(1)}</strong>점
+          </span>
+        ) : (
+          <span className="card__stability">{shoe.stability}</span>
+        )}
+
         <span className="card__rating">
           평점 <strong>{shoe.rating.toFixed(1)}</strong>점
           <em>리뷰 {shoe.reviewCount}</em>
