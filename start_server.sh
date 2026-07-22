@@ -9,6 +9,6 @@ def free(p):
  s=socket.socket();r=s.connect_ex(('127.0.0.1',p));s.close();return r!=0
 for p in random.sample(range(10000,20000),100):
  if free(p): print(p); break")
-PORT=$PORT setsid node server.js > server.log 2>&1 &
+PORT=$PORT setsid node server.cjs > server.log 2>&1 &
 echo $! > server.pid; echo "$PORT" > server.port; sleep 1
 echo "서버 실행됨 (포트 $PORT)."
