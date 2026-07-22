@@ -83,7 +83,9 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const deleteReview = async (id: number) => {
     if (!deleteTarget) return;
 
-    await fetch(`http://localhost:3000/reviews/${id}`, { method: "DELETE" });
+    await fetch(`http://localhost:3000/reviews/${deleteTarget.id}`, {
+      method: "DELETE",
+    });
     setDeleteTarget(null);
     await getReviews();
     onReviewChange();
