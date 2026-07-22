@@ -12,9 +12,10 @@ function ShoeList() {
   const [purpose, setPurpose] = useState("전체");
   const [sort, setSort] = useState("default");
   const [likedOnly, setLikedOnly] = useState(false);
-  const [selectedShoe, setSelectedShoe] = useState<Shoe | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [terms, setTerms] = useState<Term[]>([]);
 
+  const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
   const getShoes = async () => {
     const url =
       sort === "default"
@@ -53,6 +54,29 @@ function ShoeList() {
     getTerms();
   }, []);
 
+  const handleReviewChange = async () => {
+    const res = await fetch(
+      `http://localhost:3000/reviews?shoeId=${selectedShoe!.id}`,
+    );
+    const list: Review[] = await res.json();
+
+    const reviewCount = list.length;
+    const rating =
+      reviewCount === 0
+        ? 0
+        : Math.round(
+            (list.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10,
+          ) / 10;
+
+    await fetch(`http://localhost:3000/shoes/${selectedId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rating, reviewCount }),
+    });
+
+    getShoes();
+  };
+
   return (
     <>
       <Hero />
@@ -72,16 +96,18 @@ function ShoeList() {
             key={shoe.id}
             shoe={shoe}
             index={i}
-            onClick={() => setSelectedShoe(shoe)}
+            onClick={() => setSelectedId(shoe.id)}
             onToggleLike={() => toggleLike(shoe)}
           />
         ))}
       </div>
       {selectedShoe && (
-        <ShoeModal shoe={selectedShoe} 
-        terms= {terms}
-        onClose={() => setSelectedShoe(null)} />
-        
+        <ShoeModal
+          shoe={selectedShoe}
+          terms={terms}
+          onClose={() => setSelectedId(null)}
+          onReviewChange={handleReviewChange}
+        />
       )}
     </>
   );

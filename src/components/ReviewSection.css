@@ -1,0 +1,183 @@
+.review {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border-light);
+}
+
+.review__title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* 목록 */
+.review__list {
+  margin-top: 14px;
+}
+
+.review__empty {
+  padding: 20px 0;
+  font-size: 13px;
+  color: var(--text-weak);
+  text-align: center;
+}
+
+.review__item {
+  padding: 14px 0;
+  border-bottom: 1px solid oklch(0.92 0 0);
+}
+
+.review__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review__author {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.review__stars {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.review__stars em {
+  font-style: normal;
+  color: oklch(0.85 0 0);
+}
+
+.review__tools {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.review__tool {
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.review__tool:hover {
+  color: var(--accent);
+}
+
+.review__tool--delete:hover {
+  color: oklch(0.5 0.18 25);
+}
+
+/* 수정 모드 */
+.review__edit .review__textarea {
+  margin-top: 8px;
+}
+
+.review__actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.review__cancel,
+.review__save {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.review__cancel {
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  background: #fff;
+}
+
+.review__save {
+  background: var(--accent);
+  color: #fff;
+}
+
+.review__delete:hover {
+  color: oklch(0.45 0.15 25);
+}
+
+.review__content {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.review__date {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+/* 작성 폼 */
+.review__form {
+  margin-top: 18px;
+  padding: 16px;
+  background: oklch(0.975 0.002 190);
+}
+
+.review__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review__input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.review__input:focus,
+.review__textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.review__rating {
+  display: flex;
+  gap: 2px;
+}
+
+.review__star {
+  font-size: 17px;
+  color: oklch(0.85 0 0);
+  line-height: 1;
+  padding: 0;
+}
+
+.review__star.is-on {
+  color: var(--accent);
+}
+
+.review__textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.review__submit {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}

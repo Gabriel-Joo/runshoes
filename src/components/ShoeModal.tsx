@@ -1,15 +1,18 @@
 import { useState } from "react";
 import type { Shoe, Term } from "../types";
 import TermTooltip from "./TermTooltip";
+import ReviewSection from "./ReviewSection";
+import ShoeImage from "./ShoeImage";
 import "./ShoeModal.css";
 
 interface ShoeModalProps {
   shoe: Shoe;
-  Term: Term[];
+  terms: Term[];
   onClose: () => void;
+  onReviewChange: () => void;
 }
 
-function ShoeModal({ shoe, terms, onClose }: ShoeModalProps) {
+function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
   const [openTerm, setOpenTerm] = useState<string | null>(null); // ← 이 줄
   const findTerm = (key: string) => terms.find((t) => t.key === key);
   return (
@@ -26,7 +29,7 @@ function ShoeModal({ shoe, terms, onClose }: ShoeModalProps) {
         </button>
 
         <div className="modal__visual">
-          <img src={shoe.image} alt={shoe.model} />
+          <ShoeImage src={shoe.image} alt={shoe.model} />
         </div>
 
         <div className="modal__info">
@@ -118,13 +121,13 @@ function ShoeModal({ shoe, terms, onClose }: ShoeModalProps) {
 
           <div className="modal__bottom">
             <span className="modal__rating">
-              {shoe.rating.toFixed(1)}
-              <em>리뷰 {shoe.reviewCount}</em>
+              평점 <strong>{shoe.rating.toFixed(1)}</strong>점
             </span>
             <span className="modal__price">
               {shoe.price.toLocaleString()}원
             </span>
           </div>
+          <ReviewSection shoeId={shoe.id} onReviewChange={onReviewChange} />
         </div>
       </div>
     </div>
