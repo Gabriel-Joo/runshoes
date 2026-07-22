@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import type { Review } from "../types";
+import ConfirmModal from "./ConfirmModal";
 import "./ReviewSection.css";
 
 interface ReviewSectionProps {
@@ -16,6 +17,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editRating, setEditRating] = useState(5);
   const [editContent, setEditContent] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
 
   const getReviews = async () => {
     const res = await fetch(`http://localhost:3000/reviews?shoeId=${shoeId}`);
@@ -79,10 +81,11 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   };
 
   const deleteReview = async (id: number) => {
-    if (!confirm("이 리뷰를 삭제할까요?")) return;
+    if (!deleteTarget) return;
 
     await fetch(`http://localhost:3000/reviews/${id}`, { method: "DELETE" });
-    getReviews();
+    setDeleteTarget(null);
+    await getReviews();
     onReviewChange();
   };
 
@@ -151,7 +154,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
                     </button>
                     <button
                       className="review__tool review__tool--delete"
-                      onClick={() => deleteReview(review.id)}
+                      onClick={() => setDeleteTarget(review)}
                     >
                       삭제
                     </button>
@@ -201,6 +204,14 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           리뷰 등록
         </button>
       </div>
+      {deleteTarget && (
+        <ConfirmModal
+          message="이 리뷰를 삭제할까요?"
+          detail={`${deleteTarget.author}님이 작성한 리뷰가 삭제되며 되돌릴 수 없습니다.`}
+          onConfirm={deleteReview}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
     </section>
   );
 }

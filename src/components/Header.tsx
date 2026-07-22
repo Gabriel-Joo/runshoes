@@ -14,7 +14,7 @@ function Header() {
         <Link to="/best" className="header__link header__link--sub">
           러너들의 선택
         </Link>
-        <Link to="/new" className="header__link header__link--admin">
+        <Link to="/admin" className="header__link header__link--admin">
           등록·관리
         </Link>
       </nav>

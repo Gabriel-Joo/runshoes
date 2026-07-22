@@ -3,6 +3,7 @@ import Header from './components/Header'
 import ShoeList from './pages/ShoeList'
 import Best from './pages/Best'
 import ShoeForm from './pages/ShoeForm'
+import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
 import "./App.css"
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ShoeList />} />
         <Route path="/best" element={<Best />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/new" element={<ShoeForm />} />
         <Route path="/edit/:id" element={<ShoeForm />} />
         <Route path="*" element={<NotFound />} />

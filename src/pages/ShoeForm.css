@@ -1,0 +1,149 @@
+.form {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 56px 48px 120px;
+}
+
+.form__title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.form__grid {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form__field--wide {
+  grid-column: 1 / -1;
+}
+
+.form__field span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.form__field input,
+.form__field select,
+.form__field textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-strong);
+}
+
+.form__field textarea {
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.form__field input:focus,
+.form__field select:focus,
+.form__field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form__checks {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 24px;
+  padding-top: 4px;
+}
+
+.form__check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-mid);
+  cursor: pointer;
+}
+
+.form__check input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+}
+
+/* 버튼 */
+.form__actions {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.form__delete,
+.form__cancel,
+.form__save {
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent; /* 추가 */
+}
+
+.form__delete {
+  margin-right: auto;
+  padding: 0 30px;
+  border: 1px solid oklch(0.75 0.1 25);
+  color: oklch(0.5 0.18 25);
+  background: #fff;
+}
+
+.form__cancel {
+  padding: 0 30px;
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  background: #fff;
+}
+
+.form__save {
+  height: 40px; /* 42 → 40 */
+  padding: 0 30px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  .form {
+    padding: 36px 20px 80px;
+  }
+  .form__title {
+    font-size: 22px;
+  }
+  .form__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .form__actions {
+    flex-wrap: wrap;
+  }
+  .form__delete {
+    margin-right: 0;
+    width: 100%;
+    order: 3;
+  }
+  .form__cancel,
+  .form__save {
+    flex: 1;
+  }
+}
