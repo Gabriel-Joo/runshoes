@@ -12,12 +12,18 @@
 .modal__box {
   position: relative;
   display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 880px;
   max-height: 88vh;
   overflow-y: auto;
   background: #fff;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* 상단 2단 */
+.modal__top {
+  display: flex;
 }
 
 .modal__close {
@@ -36,20 +42,20 @@
 
 /* 왼쪽 이미지 */
 .modal__visual {
-  width: 300px;
+  width: 320px;
   min-height: 300px;
   flex-shrink: 0;
-  background: oklch(0.97 0.003 190);
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.955 0.018 190) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  /*position: sticky; */
 }
 
-.modal__visual img {
-  max-width: 100%;
-  object-fit: contain;
+.modal__visual .shoeimage {
+  width: 100%;
+  height: auto;
+  max-height: none;
 }
 
 /* 오른쪽 정보 */
