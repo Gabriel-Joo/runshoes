@@ -44,13 +44,13 @@ function ShoeForm() {
     setPurpose(shoe.purpose);
     setStability(shoe.stability);
     setMidsole(shoe.midsole ?? "");
-    setWeight(String(shoe.weight));
-    setDrop(String(shoe.drop));
+    setWeight(shoe.weight === null ? "" : String(shoe.weight));
+    setDrop(shoe.drop === null ? "" : String(shoe.drop));
     setStackHeight(shoe.stackHeight === null ? "" : String(shoe.stackHeight));
     setWidth(shoe.width);
     setWideAvailable(shoe.wideAvailable);
     setCarbon(shoe.carbon);
-    setPrice(String(shoe.price));
+    setPrice(shoe.price === null ? "" : String(shoe.price));
     setImage(shoe.image);
     setSummary(shoe.summary);
     setDescription(shoe.description);
@@ -60,19 +60,21 @@ function ShoeForm() {
     if (isEdit) getShoe();
   }, [id]);
 
+  const toNumber = (v: string) => (v.trim() === "" ? null : Number(v));
+
   const buildBody = () => ({
     brand,
     model,
     purpose,
     stability,
     midsole: midsole.trim() === "" ? null : midsole,
-    weight: Number(weight),
-    drop: Number(drop),
-    stackHeight: stackHeight.trim() === "" ? null : Number(stackHeight),
+    weight: toNumber(weight),
+    drop: toNumber(drop),
+    stackHeight: toNumber(stackHeight),
     width,
     wideAvailable,
     carbon,
-    price: Number(price),
+    price: toNumber(price),
     image,
     summary,
     description,

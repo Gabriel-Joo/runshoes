@@ -51,7 +51,9 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.weight}g</dd>
+                <dd>
+                  {shoe.weight === null ? "정보 없음" : `${shoe.weight}g`}
+                </dd>
               </div>
               <div>
                 <dt>
@@ -62,7 +64,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.drop}mm</dd>
+                <dd>{shoe.drop === null ? "정보 없음" : `${shoe.drop}mm`}</dd>
               </div>
               <div>
                 <dt>
@@ -74,7 +76,9 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                   />
                 </dt>
                 <dd>
-                  {shoe.stackHeight ? `${shoe.stackHeight}mm` : "정보 없음"}
+                  {shoe.stackHeight === null
+                    ? "정보 없음"
+                    : `${shoe.stackHeight}mm`}
                 </dd>
               </div>
               <div>
@@ -123,7 +127,9 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 평점 <strong>{shoe.rating.toFixed(1)}</strong>점
               </span>
               <span className="modal__price">
-                {shoe.price.toLocaleString()}원
+                {shoe.price === null
+                  ? "가격 정보 없음"
+                  : `${shoe.price.toLocaleString()}원`}
               </span>
             </div>
           </div>
