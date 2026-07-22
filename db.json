@@ -37,6 +37,12 @@
       "carbon": false,
       "price": 169000,
       "image": "/images/pegasus-42.png",
+      "images": [
+        "/images/pegasus-42.png",
+        "/images/hero-drop.jpg",
+        "/images/hero-outsole.jpg",
+        "/images/hero-stack.jpg"
+      ],
       "summary": "첫 러닝화를 고르는 분에게",
       "description": "1982년부터 이어져 온 나이키의 가장 오래된 러닝화 계보입니다. 특출난 강점이 있다기보다 무난하게 다 되는 쪽이라 첫 러닝화로 자주 추천됩니다. 드롭이 10mm로 높은 편이라 뒤꿈치부터 착지하는 분에게 편안합니다. 42에서 앞발과 토박스 공간이 넓어졌고, 와이드 모델도 국내 정식 출시되어 발볼이 넓은 분에게도 선택지가 생겼습니다.",
       "rating": 4.5,
