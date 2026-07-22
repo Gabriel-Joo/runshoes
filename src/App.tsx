@@ -1,12 +1,24 @@
-import "./App.css";
+import { Routes, Route } from 'react-router-dom'
+import Header from './components/Header'
+import ShoeList from './pages/ShoeList'
+import Best from './pages/Best'
+import ShoeForm from './pages/ShoeForm'
+import NotFound from './pages/NotFound'
+import "./App.css"
 
 function App() {
   return (
-    <div>
-      <h1>RUNSHOES</h1>
-      <p style={{ fontFamily: "var(--font-mono)" }}>중량 300g · 드롭 10mm</p>
-    </div>
-  );
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<ShoeList />} />
+        <Route path="/best" element={<Best />} />
+        <Route path="/new" element={<ShoeForm />} />
+        <Route path="/edit/:id" element={<ShoeForm />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  )
 }
 
 export default App;
