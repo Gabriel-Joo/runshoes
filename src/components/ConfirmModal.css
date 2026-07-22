@@ -1,0 +1,55 @@
+.confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(10, 10, 10, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.confirm__box {
+  width: 100%;
+  max-width: 380px;
+  padding: 28px 26px 22px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.confirm__message {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.confirm__detail {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.confirm__actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirm__cancel,
+.confirm__ok {
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.confirm__cancel {
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  background: #fff;
+}
+
+.confirm__ok {
+  background: oklch(0.5 0.18 25);
+  color: #fff;
+}
