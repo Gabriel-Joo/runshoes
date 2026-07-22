@@ -58,11 +58,11 @@ function ShoeCard({
       <dl className="card__specs">
         <div>
           <dt>중량</dt>
-          <dd>{shoe.weight}g</dd>
+          <dd>{shoe.weight === null ? "—" : `${shoe.weight}g`}</dd>
         </div>
         <div>
           <dt>드롭</dt>
-          <dd>{shoe.drop}mm</dd>
+          <dd>{shoe.drop === null ? "—" : `${shoe.drop}mm`}</dd>
         </div>
         <div>
           <dt>발볼</dt>

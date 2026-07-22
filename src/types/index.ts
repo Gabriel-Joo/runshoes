@@ -7,14 +7,14 @@ export interface Shoe {
   stability: string;
   midsole: string | null;
 
-  weight: number;
-  drop: number;
+  weight: number | null;
+  drop: number | null;
   stackHeight: number | null;
   width: string;
   wideAvailable: boolean;
   carbon: boolean;
 
-  price: number;
+  price: number | null;
   image: string;
   summary: string;
   description: string;
