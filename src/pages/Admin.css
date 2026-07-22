@@ -114,6 +114,11 @@
   gap: 20px;
   padding: 14px 8px;
   border-bottom: 1px solid var(--border-light);
+  transition: background 0.15s;
+}
+
+.admin__row:hover {
+  background: #fff;
 }
 
 .admin__thumb {
