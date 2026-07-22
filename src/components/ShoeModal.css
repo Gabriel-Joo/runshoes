@@ -86,7 +86,7 @@
 .modal__summary {
   margin-top: 14px;
   font-size: 14px;
-  color: var(--text-mid);
+  color: var(--accent);
 }
 
 /* 스펙 2열 */
