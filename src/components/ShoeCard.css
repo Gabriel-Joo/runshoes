@@ -19,11 +19,7 @@
 .card__image {
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    #fff 0%,
-    oklch(0.985 0.004 190) 100%
-  );
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.985 0.004 190) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,17 +49,28 @@
   top: 6px;
   right: 6px;
   z-index: 1;
-  width: 32px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  font-size: 16px;
+  padding: 0 12px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-light);
+  font-size: 15px;
   color: var(--text-weak);
   line-height: 1;
 }
 
+.card__like em {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
 .card__like.is-liked {
   color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* 텍스트 */

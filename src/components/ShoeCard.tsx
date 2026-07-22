@@ -25,6 +25,7 @@ function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
           aria-label={shoe.liked ? "찜 해제" : "찜하기"}
         >
           {shoe.liked ? "♥" : "♡"}
+          <em>{shoe.likeCount}</em>
         </button>
 
         <div className="card__image">
