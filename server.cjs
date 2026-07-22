@@ -6,10 +6,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE = "/g/kopo17/project-runshoes";
 
+app.use("/api", jsonServer.defaults(), jsonServer.router("db.json"));
 app.use(`${BASE}/api`, jsonServer.defaults(), jsonServer.router("db.json"));
+
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(BASE, express.static(path.join(__dirname, "dist")));
 
-app.get(`${BASE}/*splat`, (req, res) => {
+app.get("/*splat", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 

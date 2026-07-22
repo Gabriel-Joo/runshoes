@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { asset } from "../api";
+
 import "./Hero.css";
 
 const SLIDES = [
@@ -42,7 +44,7 @@ function Hero() {
             <img
               key={slide.name}
               className={`hero__image ${i === index ? "is-active" : ""}`}
-              src={slide.image}
+              src={asset(slide.image)}
               alt={slide.name}
             />
           ))}

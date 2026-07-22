@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { asset } from "../api";
 import './ShoeImage.css'
 
 interface ShoeImageProps {
@@ -20,7 +21,7 @@ function ShoeImage({ src, alt }: ShoeImageProps) {
   return (
     <img
       className="shoeimage"
-      src={src}
+      src={asset(src)}
       alt={alt}
       onError={() => setFailed(true)}
     />
