@@ -16,6 +16,7 @@
   width: 100%;
   max-width: 880px;
   max-height: 88vh;
+  overflow-x: hidden;
   overflow-y: auto;
   background: #fff;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -117,12 +118,7 @@
 .modal__specs dd {
   font-weight: 600;
   text-align: right;
-}
-
-/* ShoeModal.css에 추가 */
-.modal__specs > div:nth-child(even) .tooltip__box {
-  left: auto;
-  right: -8px;
+  white-space: nowrap;
 }
 
 .modal__desc {
@@ -171,26 +167,46 @@
 }
 
 /* 모바일 */
+@media (max-width: 1199px) {
+  .modal__specs {
+    font-size: 12px;
+  }
+}
 @media (max-width: 767px) {
   .modal {
     padding: 16px;
   }
+
   .modal__box {
-    flex-wrap: wrap;
     max-height: 88vh;
   }
+
+  .modal__top {
+    flex-direction: column;
+  }
+
   .modal__visual {
     width: 100%;
-    height: 220px;
-    padding: 16px;
+    min-height: 260px;
+    padding: 20px;
   }
+
   .modal__info {
     padding: 24px 20px;
   }
+
   .modal__model {
     font-size: 22px;
   }
+
   .modal__specs {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal__specs > div:nth-child(even) .tooltip__box {
+    left: auto;
+    right: -8px;
   }
 }
