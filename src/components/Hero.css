@@ -123,24 +123,37 @@
     min-height: auto;
   }
   .hero__pane--copy {
-    padding: 40px 20px 32px;
+    padding: 36px 20px 28px;
   }
   .hero__title {
-    font-size: 34px;
+    font-size: 30px;
   }
   .hero__subtitle {
     font-size: 14px;
-    margin-top: 12px;
+    margin-top: 10px;
   }
+
   .hero__pane--visual {
     border-left: none;
     border-top: 1px solid oklch(0.24 0 0);
+    padding: 0;
   }
   .hero__stage {
-    height: 320px;
+    height: 380px;
     flex: none;
   }
+  .hero__image {
+    object-fit: cover;
+    object-position: center 60%;
+  }
   .hero__caption {
-    padding: 14px 20px 48px;
+    padding: 14px 20px 24px;
+  }
+  .filter {
+    padding: 20px 20px 0;
+  }
+  .filter::after {
+    content: "";
+    flex: 0 0 20px;
   }
 }

@@ -181,3 +181,9 @@
   font-size: 13px;
   font-weight: 600;
 }
+
+@media (max-width: 767px) {
+  .review {
+    padding: 20px 20px 28px;
+  }
+}

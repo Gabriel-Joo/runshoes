@@ -43,8 +43,9 @@
 
 @media (max-width: 767px) {
   .tooltip__box {
-    width: 220px;
-    left: auto;
-    right: -8px;
+    left: 0;
+    right: auto;
+    width: max-content;
+    max-width: min(280px, calc(100vw - 100px));
   }
 }
