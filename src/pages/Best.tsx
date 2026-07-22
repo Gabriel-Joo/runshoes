@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useState, useEffect } from "react";
 import type { Shoe, Term } from "../types";
 import ShoeCard from "../components/ShoeCard";
@@ -18,12 +19,12 @@ function Best() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const getShoes = async () => {
-    const res = await fetch("http://localhost:3000/shoes");
+    const res = await fetch(`${API}/shoes`);
     setShoes(await res.json());
   };
 
   const getTerms = async () => {
-    const res = await fetch("http://localhost:3000/terms");
+    const res = await fetch(`${API}/terms`);
     setTerms(await res.json());
   };
 
@@ -41,7 +42,7 @@ function Best() {
   const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
 
   const toggleLike = async (shoe: Shoe) => {
-    await fetch(`http://localhost:3000/shoes/${shoe.id}`, {
+    await fetch(`${API}/shoes/${shoe.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -53,9 +54,7 @@ function Best() {
   };
 
   const handleReviewChange = async () => {
-    const res = await fetch(
-      `http://localhost:3000/reviews?shoeId=${selectedId}`,
-    );
+    const res = await fetch(`${API}/reviews?shoeId=${selectedId}`);
     const list = await res.json();
 
     const reviewCount = list.length;
@@ -71,7 +70,7 @@ function Best() {
               10,
           ) / 10;
 
-    await fetch(`http://localhost:3000/shoes/${selectedId}`, {
+    await fetch(`${API}/shoes/${selectedId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rating, reviewCount }),

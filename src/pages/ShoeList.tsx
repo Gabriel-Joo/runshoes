@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useState, useEffect } from "react";
 import type { Shoe, Term } from "../types";
 import Hero from "../components/Hero";
@@ -19,8 +20,8 @@ function ShoeList() {
   const getShoes = async () => {
     const url =
       sort === "default"
-        ? "http://localhost:3000/shoes"
-        : `http://localhost:3000/shoes?_sort=${sort}&_order=desc`;
+        ? `${API}/shoes`
+        : `${API}/shoes?_sort=${sort}&_order=desc`;
     const res = await fetch(url);
     setShoes(await res.json());
   };
@@ -30,7 +31,7 @@ function ShoeList() {
   }, [sort]);
 
   const toggleLike = async (shoe: Shoe) => {
-    await fetch(`http://localhost:3000/shoes/${shoe.id}`, {
+    await fetch(`${API}/shoes/${shoe.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -46,7 +47,7 @@ function ShoeList() {
     .filter((s) => !likedOnly || s.liked);
 
   const getTerms = async () => {
-    const res = await fetch("http://localhost:3000/terms");
+    const res = await fetch(`${API}/terms`);
     setTerms(await res.json());
   };
 
@@ -55,9 +56,7 @@ function ShoeList() {
   }, []);
 
   const handleReviewChange = async () => {
-    const res = await fetch(
-      `http://localhost:3000/reviews?shoeId=${selectedShoe!.id}`,
-    );
+    const res = await fetch(`${API}/reviews?shoeId=${selectedShoe!.id}`);
     const list: Review[] = await res.json();
 
     const reviewCount = list.length;
@@ -68,7 +67,7 @@ function ShoeList() {
             (list.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10,
           ) / 10;
 
-    await fetch(`http://localhost:3000/shoes/${selectedId}`, {
+    await fetch(`${API}/shoes/${selectedId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rating, reviewCount }),

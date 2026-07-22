@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal";
@@ -36,7 +37,7 @@ function ShoeForm() {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const getShoe = async () => {
-    const res = await fetch(`http://localhost:3000/shoes/${id}`);
+    const res = await fetch(`${API}/shoes/${id}`);
     const shoe = await res.json();
 
     setBrand(shoe.brand);
@@ -87,13 +88,13 @@ function ShoeForm() {
     }
 
     if (isEdit) {
-      await fetch(`http://localhost:3000/shoes/${id}`, {
+      await fetch(`${API}/shoes/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(buildBody()),
       });
     } else {
-      await fetch("http://localhost:3000/shoes", {
+      await fetch(`${API}/shoes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -110,16 +111,16 @@ function ShoeForm() {
   };
 
   const remove = async () => {
-    const res = await fetch(`http://localhost:3000/reviews?shoeId=${id}`);
+    const res = await fetch(`${API}/reviews?shoeId=${id}`);
     const reviews = await res.json();
 
     for (const review of reviews) {
-      await fetch(`http://localhost:3000/reviews/${review.id}`, {
+      await fetch(`${API}/reviews/${review.id}`, {
         method: "DELETE",
       });
     }
 
-    await fetch(`http://localhost:3000/shoes/${id}`, { method: "DELETE" });
+    await fetch(`${API}/shoes/${id}`, { method: "DELETE" });
 
     navigate("/admin");
   };

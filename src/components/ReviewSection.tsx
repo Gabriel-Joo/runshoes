@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useState, useEffect } from "react";
 import type { Review } from "../types";
 import ConfirmModal from "./ConfirmModal";
@@ -20,7 +21,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
 
   const getReviews = async () => {
-    const res = await fetch(`http://localhost:3000/reviews?shoeId=${shoeId}`);
+    const res = await fetch(`${API}/reviews?shoeId=${shoeId}`);
     setReviews(await res.json());
   };
 
@@ -34,7 +35,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       return;
     }
 
-    await fetch("http://localhost:3000/reviews", {
+    await fetch(`${API}/reviews`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -69,7 +70,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       return;
     }
 
-    await fetch(`http://localhost:3000/reviews/${id}`, {
+    await fetch(`${API}/reviews/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rating: editRating, content: editContent }),
@@ -83,7 +84,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const deleteReview = async (id: number) => {
     if (!deleteTarget) return;
 
-    await fetch(`http://localhost:3000/reviews/${deleteTarget.id}`, {
+    await fetch(`${API}/reviews/${deleteTarget.id}`, {
       method: "DELETE",
     });
     setDeleteTarget(null);

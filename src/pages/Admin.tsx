@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { Shoe } from "../types";
@@ -21,7 +22,7 @@ function Admin() {
   const [target, setTarget] = useState<Shoe | null>(null);
 
   const getShoes = async () => {
-    const res = await fetch("http://localhost:3000/shoes");
+    const res = await fetch(`${API}/shoes`);
     setShoes(await res.json());
   };
 
@@ -43,16 +44,16 @@ function Admin() {
   const removeShoe = async () => {
     if (!target) return;
 
-    const res = await fetch(`http://localhost:3000/reviews?shoeId=${target.id}`);
+    const res = await fetch(`${API}/reviews?shoeId=${target.id}`);
     const reviews = await res.json();
 
     for (const review of reviews) {
-      await fetch(`http://localhost:3000/reviews/${review.id}`, {
+      await fetch(`${API}/reviews/${review.id}`, {
         method: "DELETE",
       });
     }
 
-    await fetch(`http://localhost:3000/shoes/${target.id}`, {
+    await fetch(`${API}/shoes/${target.id}`, {
       method: "DELETE",
     });
 
@@ -133,10 +134,7 @@ function Admin() {
               <Link className="admin__edit" to={`/edit/${shoe.id}`}>
                 수정
               </Link>
-              <button
-                className="admin__delete"
-                onClick={() => setTarget(shoe)}
-              >
+              <button className="admin__delete" onClick={() => setTarget(shoe)}>
                 삭제
               </button>
             </div>
