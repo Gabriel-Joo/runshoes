@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import type { Shoe } from "../types";
+import type { Shoe, Term } from "../types";
 import Hero from "../components/Hero";
 import FilterBar from "../components/FilterBar";
 import SortBar from "../components/SortBar";
 import ShoeCard from "../components/ShoeCard";
+import ShoeModal from "../components/ShoeModal";
 import "./ShoeList.css";
 
 function ShoeList() {
@@ -11,6 +12,8 @@ function ShoeList() {
   const [purpose, setPurpose] = useState("전체");
   const [sort, setSort] = useState("default");
   const [likedOnly, setLikedOnly] = useState(false);
+  const [selectedShoe, setSelectedShoe] = useState<Shoe | null>(null);
+  const [terms, setTerms] = useState<Term[]>([]);
 
   const getShoes = async () => {
     const url =
@@ -41,6 +44,15 @@ function ShoeList() {
     .filter((s) => purpose === "전체" || s.purpose === purpose)
     .filter((s) => !likedOnly || s.liked);
 
+  const getTerms = async () => {
+    const res = await fetch("http://localhost:3000/terms");
+    setTerms(await res.json());
+  };
+
+  useEffect(() => {
+    getTerms();
+  }, []);
+
   return (
     <>
       <Hero />
@@ -60,11 +72,17 @@ function ShoeList() {
             key={shoe.id}
             shoe={shoe}
             index={i}
-            onClick={() => console.log("모달 열기", shoe.model)}
+            onClick={() => setSelectedShoe(shoe)}
             onToggleLike={() => toggleLike(shoe)}
           />
         ))}
       </div>
+      {selectedShoe && (
+        <ShoeModal shoe={selectedShoe} 
+        terms= {terms}
+        onClose={() => setSelectedShoe(null)} />
+        
+      )}
     </>
   );
 }
