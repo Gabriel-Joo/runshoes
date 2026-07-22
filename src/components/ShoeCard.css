@@ -1,0 +1,145 @@
+.card {
+  background: var(--bg-light);
+  padding: 18px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+/* 이미지 프레임 — 유리 상자 */
+.card__frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #fff;
+  border: 10px solid #fff;
+  box-shadow: inset 0 0 0 1px var(--border-light);
+  margin-bottom: 14px;
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #fff 0%,
+    oklch(0.985 0.004 190) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.card__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  background: #fff;
+  border: 1px solid oklch(0.4 0 0);
+  color: oklch(0.3 0 0);
+}
+
+.card__like {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  color: var(--text-weak);
+  line-height: 1;
+}
+
+.card__like.is-liked {
+  color: var(--accent);
+}
+
+/* 텍스트 */
+.card__no {
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.card__model {
+  margin-top: 4px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.card__brand {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-weak);
+}
+
+.card__summary {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+/* 스펙 */
+.card__specs {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+}
+
+.card__specs div {
+  display: flex;
+  gap: 5px;
+}
+
+.card__specs dt {
+  color: oklch(0.5 0 0);
+}
+
+.card__specs dd {
+  color: oklch(0.2 0 0);
+}
+
+/* 하단 */
+.card__bottom {
+  margin-top: 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.card__stability {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.card__rating {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.card__rating em {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--text-weak);
+}
