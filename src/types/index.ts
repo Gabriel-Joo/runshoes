@@ -21,6 +21,7 @@ export interface Shoe {
 
   rating: number;
   reviewCount: number;
+  likeCount: number;
   liked: boolean;
 }
 

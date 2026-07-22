@@ -1,0 +1,72 @@
+.sortbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px 0;
+}
+
+.sortbar__sorts {
+  display: flex;
+  gap: 16px;
+}
+
+.sortbar__sort {
+  font-size: 14px;
+  font-weight: 700;
+  color: oklch(0.35 0 0);
+}
+
+.sortbar__sort.is-active {
+  color: var(--accent);
+}
+
+.sortbar__toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-mid);
+  cursor: pointer;
+}
+
+.sortbar__switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  border-radius: 100px;
+  background: oklch(0.82 0 0);
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.sortbar__switch.is-on {
+  background: var(--accent);
+}
+
+.sortbar__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s;
+}
+
+.sortbar__switch.is-on .sortbar__knob {
+  left: 18px;
+}
+
+@media (max-width: 1199px) {
+  .sortbar { padding: 18px 32px 0; }
+}
+
+@media (max-width: 767px) {
+  .sortbar {
+    padding: 16px 20px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
