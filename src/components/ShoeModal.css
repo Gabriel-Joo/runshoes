@@ -1,0 +1,178 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal__box {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 880px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-mid);
+}
+
+/* 왼쪽 이미지 */
+.modal__visual {
+  width: 300px;
+  flex-shrink: 0;
+  background: oklch(0.97 0.003 190);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal__visual img {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* 오른쪽 정보 */
+.modal__info {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 28px;
+}
+
+.modal__no {
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.modal__model {
+  margin-top: 5px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.modal__brand {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--text-weak);
+}
+
+.modal__summary {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+/* 스펙 2열 */
+.modal__specs {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-light);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.modal__specs div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid oklch(0.92 0 0);
+}
+
+.modal__specs dt {
+  color: var(--text-weak);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modal__specs dd {
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ShoeModal.css에 추가 */
+.modal__specs > div:nth-child(even) .tooltip__box {
+  left: auto;
+  right: -8px;
+}
+
+.modal__desc {
+  margin-top: 20px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+
+.modal__bottom {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.modal__rating {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.modal__rating em {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--text-weak);
+}
+
+.modal__price {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* 모바일 */
+@media (max-width: 767px) {
+  .modal {
+    padding: 16px;
+  }
+  .modal__box {
+    flex-wrap: wrap;
+    max-height: 88vh;
+  }
+  .modal__visual {
+    width: 100%;
+    height: 220px;
+    padding: 16px;
+  }
+  .modal__info {
+    padding: 24px 20px;
+  }
+  .modal__model {
+    font-size: 22px;
+  }
+  .modal__specs {
+    grid-template-columns: 1fr;
+  }
+}
