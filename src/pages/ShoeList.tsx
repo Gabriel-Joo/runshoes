@@ -1,6 +1,6 @@
 import { API } from "../api";
 import { useState, useEffect } from "react";
-import type { Shoe, Term } from "../types";
+import type { Shoe, Term, Review } from "../types";
 import Hero from "../components/Hero";
 import FilterBar from "../components/FilterBar";
 import SortBar from "../components/SortBar";

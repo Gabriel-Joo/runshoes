@@ -1,1 +1,5 @@
-export const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const isDev = import.meta.env.DEV;
+
+export const API = isDev
+  ? "http://localhost:3000"
+  : `${import.meta.env.BASE_URL}api`;
