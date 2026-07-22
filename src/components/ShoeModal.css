@@ -45,7 +45,7 @@
   width: 320px;
   min-height: 300px;
   flex-shrink: 0;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.955 0.01 240) 100%);
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
