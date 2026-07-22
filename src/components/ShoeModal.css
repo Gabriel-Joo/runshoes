@@ -37,12 +37,14 @@
 /* 왼쪽 이미지 */
 .modal__visual {
   width: 300px;
+  min-height: 300px;
   flex-shrink: 0;
   background: oklch(0.97 0.003 190);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  /*position: sticky; */
 }
 
 .modal__visual img {
@@ -131,9 +133,18 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
 }
 
 .modal__rating {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+
+.modal__rating strong {
   font-size: 22px;
   font-weight: 800;
   color: var(--accent);
@@ -150,6 +161,7 @@
 .modal__price {
   font-size: 15px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 /* 모바일 */

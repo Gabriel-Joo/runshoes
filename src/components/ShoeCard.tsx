@@ -1,4 +1,5 @@
 import type { Shoe } from "../types";
+import ShoeImage from "./ShoeImage";
 import "./ShoeCard.css";
 
 interface ShoeCardProps {
@@ -29,7 +30,7 @@ function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
         </button>
 
         <div className="card__image">
-          {shoe.image && <img src={shoe.image} alt={shoe.model} />}
+          <ShoeImage src={shoe.image} alt={shoe.model} />
         </div>
       </div>
 
@@ -59,7 +60,7 @@ function ShoeCard({ shoe, index, onClick, onToggleLike }: ShoeCardProps) {
       <div className="card__bottom">
         <span className="card__stability">{shoe.stability}</span>
         <span className="card__rating">
-          {shoe.rating.toFixed(1)}
+          평점 <strong>{shoe.rating.toFixed(1)}</strong>점
           <em>리뷰 {shoe.reviewCount}</em>
         </span>
       </div>
