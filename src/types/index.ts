@@ -16,6 +16,7 @@ export interface Shoe {
 
   price: number | null;
   image: string;
+  images?: string[];
   summary: string;
   description: string;
 

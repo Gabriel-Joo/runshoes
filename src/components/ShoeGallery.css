@@ -1,0 +1,96 @@
+.gallery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.gallery__stage {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+
+.gallery__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.35s ease;
+}
+
+.gallery__slide {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 36px;
+}
+.gallery__stage .shoeimage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-light);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-mid);
+  padding: 0;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.gallery__arrow:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.gallery__arrow--prev {
+  left: 0;
+}
+.gallery__arrow--next {
+  right: 0;
+}
+
+.gallery__thumbs {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gallery__thumb {
+  width: 52px;
+  height: 40px;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery__thumb.is-active {
+  border-color: var(--accent);
+}
+
+.gallery__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 767px) {
+  .gallery__thumb {
+    width: 46px;
+    height: 36px;
+  }
+}

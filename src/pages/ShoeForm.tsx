@@ -35,6 +35,7 @@ function ShoeForm() {
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [images, setImages] = useState("");
 
   const getShoe = async () => {
     const res = await fetch(`${API}/shoes/${id}`);
@@ -53,6 +54,7 @@ function ShoeForm() {
     setCarbon(shoe.carbon);
     setPrice(shoe.price === null ? "" : String(shoe.price));
     setImage(shoe.image);
+    setImages((shoe.images ?? []).join("\n"));
     setSummary(shoe.summary);
     setDescription(shoe.description);
   };
@@ -77,6 +79,10 @@ function ShoeForm() {
     carbon,
     price: toNumber(price),
     image,
+    images: images
+      .split("\n")
+      .map((s) => s.trim())
+      .filter((s) => s !== ""),
     summary,
     description,
   });
@@ -228,6 +234,18 @@ function ShoeForm() {
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="/images/파일명.png"
+          />
+        </label>
+
+        <label className="form__field form__field--wide">
+          <span>추가 이미지 (한 줄에 하나씩)</span>
+          <textarea
+            value={images}
+            onChange={(e) => setImages(e.target.value)}
+            rows={4}
+            placeholder={
+              "/images/모델명.png\n/images/모델명-2.png\n/images/모델명-3.png"
+            }
           />
         </label>
 

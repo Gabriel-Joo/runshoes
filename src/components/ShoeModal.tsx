@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Shoe, Term } from "../types";
 import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
-import ShoeImage from "./ShoeImage";
+import ShoeGallery from "./ShoeGallery";
 import "./ShoeModal.css";
 
 interface ShoeModalProps {
@@ -29,7 +29,11 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
         </button>
         <div className="modal__top">
           <div className="modal__visual">
-            <ShoeImage src={shoe.image} alt={shoe.model} />
+            <ShoeGallery
+              image={shoe.image}
+              images={shoe.images}
+              alt={shoe.model}
+            />
           </div>
 
           <div className="modal__info">
