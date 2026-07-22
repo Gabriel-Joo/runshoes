@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
-import type { Shoe } from "../types";
-import Hero from "../components/Hero";
+import { useState, useEffect } from 'react'
+import type { Shoe } from '../types'
+import Hero from '../components/Hero'
+import ShoeCard from '../components/ShoeCard'
+import './ShoeList.css'
 
 function ShoeList() {
   const [shoes, setShoes] = useState<Shoe[]>([]);
@@ -14,14 +16,23 @@ function ShoeList() {
     getShoes();
   }, []);
 
-  const heroShoe = shoes.find((s) => s.model === "페가수스 42");
-
   return (
     <>
-      <Hero shoe={heroShoe} />
-      <h2>목록 {shoes.length}개</h2>
+      <Hero />
+
+      <div className="grid">
+        {shoes.map((shoe, i) => (
+          <ShoeCard
+            key={shoe.id}
+            shoe={shoe}
+            index={i}
+            onClick={() => console.log('모달 열기', shoe.model)}
+            onToggleLike={() => console.log('찜 토글', shoe.model)}
+          />
+        ))}
+      </div>
     </>
   );
 }
 
-export default ShoeList;
+export default ShoeList
