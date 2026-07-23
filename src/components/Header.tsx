@@ -19,7 +19,7 @@ function Header() {
           <Link to="/" className="header__link">
             홈
           </Link>
-          <Link to="/recommend" className="header__link header__link--sub">
+          <Link to="/recommend" className="header__link header__link--point">
             맞춤 추천
           </Link>
           <Link to="/best" className="header__link header__link--sub">

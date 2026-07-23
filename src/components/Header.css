@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 20px 48px; 
+  padding: 20px 48px;
   background: oklch(0.965 0.002 90 / 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
@@ -17,7 +17,6 @@
   font-weight: 800;
   letter-spacing: -0.01em;
   color: var(--accent);
-  margin-left: -16px;
 }
 
 .header__nav {
@@ -31,7 +30,9 @@
   font-weight: 600;
   color: var(--text-strong);
 }
-
+.header__link--point {
+  color: oklch(0.62 0.17 35);
+}
 .header__link--sub {
   font-weight: 600;
   color: var(--text-strong);
@@ -101,7 +102,6 @@
   }
   .header__logo {
     font-size: 32px;
-    margin-left: -12px;
   }
   .header__nav {
     gap: 20px;
@@ -115,7 +115,6 @@
   }
   .header__logo {
     font-size: 26px;
-    margin-left: -8px;
   }
   .header__nav {
     display: none;
