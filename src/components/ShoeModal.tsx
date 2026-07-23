@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Shoe, Term } from "../types";
 import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
@@ -14,6 +14,17 @@ interface ShoeModalProps {
 
 function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
   const [openTerm, setOpenTerm] = useState<string | null>(null); // ← 이 줄
+  useEffect(() => {
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
+  }, []);
   const findTerm = (key: string) => terms.find((t) => t.key === key);
   return (
     <div className="modal" onClick={onClose}>
