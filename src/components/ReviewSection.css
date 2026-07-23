@@ -182,6 +182,46 @@
   font-weight: 600;
 }
 
+.review__item.is-best {
+  background: oklch(0.97 0.02 190);
+  padding: 14px 12px;
+  margin-bottom: 4px;
+}
+
+.review__badge {
+  padding: 3px 7px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.review__bottom {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review__like {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.review__like:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.review__like.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 @media (max-width: 767px) {
   .review {
     padding: 20px 20px 28px;
