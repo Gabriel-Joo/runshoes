@@ -2,6 +2,7 @@ import { API } from "../api";
 import { useState, useEffect } from "react";
 import type { Review } from "../types";
 import ConfirmModal from "./ConfirmModal";
+import { formatDate } from "../utils/date";
 import "./ReviewSection.css";
 
 interface ReviewSectionProps {
@@ -22,9 +23,14 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
 
   const getReviews = async () => {
     const res = await fetch(`${API}/reviews?shoeId=${shoeId}`);
-    setReviews(await res.json());
+    const list: Review[] = await res.json();
+    setReviews(
+      list.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
+    );
   };
-
   useEffect(() => {
     getReviews();
   }, [shoeId]);
@@ -43,7 +49,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
         author,
         rating,
         content,
-        createdAt: new Date().toISOString().slice(0, 10),
+        createdAt: new Date().toISOString(),
       }),
     });
 
@@ -164,7 +170,9 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
                   </div>
                 </div>
                 <p className="review__content">{review.content}</p>
-                <span className="review__date">{review.createdAt}</span>
+                <span className="review__date">
+                  {formatDate(review.createdAt)}
+                </span>{" "}
               </>
             )}
           </li>
