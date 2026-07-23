@@ -1,8 +1,8 @@
 import { API } from "../api";
 import { useState, useEffect } from "react";
 import type { Review } from "../types";
+import ReviewItem from "./ReviewItem";
 import ConfirmModal from "./ConfirmModal";
-import { formatDate } from "../utils/date";
 import "./ReviewSection.css";
 
 interface ReviewSectionProps {
@@ -15,10 +15,6 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const [author, setAuthor] = useState("");
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
-
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editRating, setEditRating] = useState(5);
-  const [editContent, setEditContent] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
 
   const getReviews = async () => {
@@ -31,6 +27,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       ),
     );
   };
+
   useEffect(() => {
     getReviews();
   }, [shoeId]);
@@ -60,43 +57,44 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
     onReviewChange();
   };
 
-  const startEdit = (review: Review) => {
-    setEditingId(review.id);
-    setEditRating(review.rating);
-    setEditContent(review.content);
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-  };
-
-  const saveEdit = async (id: number) => {
-    if (!editContent.trim()) {
-      alert("내용을 입력해 주세요.");
-      return;
-    }
-
+  const updateReview = async (id: number, rating: number, content: string) => {
     await fetch(`${API}/reviews/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating: editRating, content: editContent }),
+      body: JSON.stringify({ rating, content }),
     });
-
-    setEditingId(null);
-    getReviews();
+    await getReviews();
     onReviewChange();
   };
 
   const deleteReview = async () => {
     if (!deleteTarget) return;
 
-    await fetch(`${API}/reviews/${deleteTarget.id}`, {
-      method: "DELETE",
-    });
+    await fetch(`${API}/reviews/${deleteTarget.id}`, { method: "DELETE" });
     setDeleteTarget(null);
     await getReviews();
     onReviewChange();
   };
+  const toggleLike = async (review: Review) => {
+    const liked = !review.liked;
+    const likeCount = (review.likeCount ?? 0) + (liked ? 1 : -1);
+
+    await fetch(`${API}/reviews/${review.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ liked, likeCount }),
+    });
+    await getReviews();
+  };
+  const bestReview = reviews
+    .filter((r) => (r.likeCount ?? 0) > 0)
+    .sort(
+      (a, b) =>
+        (b.likeCount ?? 0) - (a.likeCount ?? 0) ||
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )[0];
+
+  const restReviews = reviews.filter((r) => r.id !== bestReview?.id);
 
   return (
     <section className="review">
@@ -107,78 +105,29 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           <li className="review__empty">아직 등록된 리뷰가 없습니다.</li>
         )}
 
-        {reviews.map((review) => (
-          <li className="review__item" key={review.id}>
-            {editingId === review.id ? (
-              <div className="review__edit">
-                <div className="review__head">
-                  <span className="review__author">{review.author}</span>
-                  <div className="review__rating">
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <button
-                        key={n}
-                        className={`review__star ${n <= editRating ? "is-on" : ""}`}
-                        onClick={() => setEditRating(n)}
-                        aria-label={`${n}점`}
-                      >
-                        ★
-                      </button>
-                    ))}
-                  </div>
-                </div>
+        {bestReview && (
+          <ReviewItem
+            key={bestReview.id}
+            review={bestReview}
+            isBest
+            onUpdate={updateReview}
+            onDeleteRequest={setDeleteTarget}
+            onLike={toggleLike}
+          />
+        )}
 
-                <textarea
-                  className="review__textarea"
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  rows={3}
-                />
-
-                <div className="review__actions">
-                  <button className="review__cancel" onClick={cancelEdit}>
-                    취소
-                  </button>
-                  <button
-                    className="review__save"
-                    onClick={() => saveEdit(review.id)}
-                  >
-                    저장
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="review__head">
-                  <span className="review__author">{review.author}</span>
-                  <span className="review__stars">
-                    {"★".repeat(review.rating)}
-                    <em>{"★".repeat(5 - review.rating)}</em>
-                  </span>
-                  <div className="review__tools">
-                    <button
-                      className="review__tool"
-                      onClick={() => startEdit(review)}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="review__tool review__tool--delete"
-                      onClick={() => setDeleteTarget(review)}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                </div>
-                <p className="review__content">{review.content}</p>
-                <span className="review__date">
-                  {formatDate(review.createdAt)}
-                </span>{" "}
-              </>
-            )}
-          </li>
+        {restReviews.map((review) => (
+          <ReviewItem
+            key={review.id}
+            review={review}
+            onUpdate={updateReview}
+            onDeleteRequest={setDeleteTarget}
+            onLike={toggleLike}
+          />
         ))}
       </ul>
 
+      {/* 작성 폼은 기존 그대로 */}
       <div className="review__form">
         <div className="review__row">
           <input
@@ -215,6 +164,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           리뷰 등록
         </button>
       </div>
+
       {deleteTarget && (
         <ConfirmModal
           message="이 리뷰를 삭제할까요?"

@@ -50,8 +50,8 @@
       ],
       "summary": "첫 러닝화를 고르는 분에게",
       "description": "1982년부터 이어져 온 나이키의 가장 오래된 러닝화 계보입니다. 특출난 강점이 있다기보다 무난하게 다 되는 쪽이라 첫 러닝화로 자주 추천됩니다. 드롭이 10mm로 높은 편이라 뒤꿈치부터 착지하는 분에게 편안합니다. 42에서 앞발과 토박스 공간이 넓어졌고, 와이드 모델도 국내 정식 출시되어 발볼이 넓은 분에게도 선택지가 생겼습니다.",
-      "rating": 4.5,
-      "reviewCount": 4,
+      "rating": 4.4,
+      "reviewCount": 5,
       "likeCount": 69,
       "liked": true
     },
@@ -510,8 +510,8 @@
       ],
       "summary": "진흙과 미끄러운 산길을 자주 만나는 분에게",
       "description": "2006년부터 이어진 살로몬의 대표 트레일화로, 접지력에 특화된 모델입니다. 5mm 깊이의 럭이 진흙을 파고들고 잘 털어내며, 한 번에 조이는 퀵레이스로 발을 단단히 잡아 줍니다. 어퍼가 촘촘해 이물질은 막아 주지만 여름에는 다소 덥게 느껴질 수 있습니다.",
-      "rating": 4,
-      "reviewCount": 4,
+      "rating": 3.7,
+      "reviewCount": 3,
       "likeCount": 68,
       "liked": false
     },
@@ -688,7 +688,9 @@
       "author": "런린이탈출",
       "rating": 4,
       "content": "첫 러닝화로 샀는데 무난합니다. 다만 앞이 조금 좁게 느껴져서 와이드로 다시 살까 고민 중이에요.",
-      "createdAt": "2026-06-21"
+      "createdAt": "2026-06-21",
+      "liked": true,
+      "likeCount": 1
     },
     {
       "id": 15,
@@ -856,7 +858,9 @@
       "author": "발볼걱정",
       "rating": 4,
       "content": "성능은 최고인데 앞볼이 좁습니다. 반 사이즈 크게 사는 걸 추천해요.",
-      "createdAt": "2026-07-12"
+      "createdAt": "2026-07-12",
+      "liked": true,
+      "likeCount": 1
     },
     {
       "id": 36,
@@ -1040,7 +1044,9 @@
       "author": "로드vs플레이트",
       "rating": 4,
       "content": "카본 로드라 통짜 플레이트보다 부드럽습니다. 대신 그만큼 추진력은 덜한 느낌이에요.",
-      "createdAt": "2026-07-06"
+      "createdAt": "2026-07-06",
+      "liked": false,
+      "likeCount": 0
     },
     {
       "id": 59,
@@ -1048,7 +1054,9 @@
       "author": "비오는날레이스",
       "rating": 5,
       "content": "젖은 노면에서 접지력이 압도적입니다. 컨티넨탈 고무가 확실히 다르네요.",
-      "createdAt": "2026-07-17"
+      "createdAt": "2026-07-17",
+      "liked": false,
+      "likeCount": 0
     },
     {
       "id": 60,
@@ -1056,7 +1064,9 @@
       "author": "진흙산길",
       "rating": 4,
       "content": "진흙에서 이만한 게 없습니다. 럭이 깊어서 잘 파고들고 털어내기도 좋아요.",
-      "createdAt": "2026-06-18"
+      "createdAt": "2026-06-18",
+      "liked": false,
+      "likeCount": 0
     },
     {
       "id": 61,
@@ -1064,15 +1074,19 @@
       "author": "트레일10년",
       "rating": 5,
       "content": "5세대보다 가벼워지고 앞볼도 넓어졌습니다. 스피드크로스의 정체성은 그대로예요.",
-      "createdAt": "2026-07-01"
+      "createdAt": "2026-07-01",
+      "liked": false,
+      "likeCount": 0
     },
     {
       "id": 62,
       "shoeId": 18,
       "author": "여름트레일",
-      "rating": 3,
-      "content": "그립은 최고인데 어퍼가 촘촘해서 여름엔 발이 정말 덥습니다.",
-      "createdAt": "2026-07-14"
+      "rating": 2,
+      "content": "그립은 최고인데 어퍼가 촘촘해서 여름엔 발이 정말 더워요!",
+      "createdAt": "2026-07-14",
+      "liked": true,
+      "likeCount": 1
     },
     {
       "id": 63,
@@ -1129,6 +1143,16 @@
       "content": "일단 디자인이 너무 예뻐서 구매했어요...!!!",
       "createdAt": "2026-07-23",
       "id": 69
+    },
+    {
+      "shoeId": 2,
+      "author": "ㅁㅁㅁ",
+      "rating": 4,
+      "content": "신발이 너무 좋아요!",
+      "createdAt": "2026-07-23T07:04:54.447Z",
+      "id": 70,
+      "liked": false,
+      "likeCount": 0
     }
   ],
   "terms": [

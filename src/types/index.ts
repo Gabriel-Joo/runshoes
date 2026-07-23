@@ -33,6 +33,8 @@ export interface Review {
   rating: number;
   content: string;
   createdAt: string;
+  likeCount?: number;
+  liked?: boolean;
 }
 
 export interface Term {
