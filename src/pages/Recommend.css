@@ -1,0 +1,261 @@
+.recommend {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 72px 48px 120px;
+}
+
+.recommend--result {
+  max-width: 1100px;
+}
+
+/* 진행 표시 */
+.recommend__head {
+  margin-bottom: 40px;
+}
+
+.recommend__step {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.recommend__bar {
+  margin-top: 10px;
+  height: 2px;
+  background: var(--border);
+}
+
+.recommend__bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.recommend__question {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+/* 선택지 */
+.recommend__options {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommend__option {
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.recommend__option:hover {
+  border-color: var(--accent);
+}
+
+.recommend__option.is-active {
+  border-color: var(--accent);
+  background: oklch(0.97 0.02 190);
+}
+
+.recommend__option strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.recommend__option span {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+.recommend__back {
+  margin-top: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-weak);
+  background: none;
+  padding: 0;
+}
+
+.recommend__back:hover {
+  color: var(--accent);
+}
+
+/* 결과 */
+.recommend__resulthead {
+  max-width: 640px;
+}
+
+.recommend__title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.recommend__desc {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-mid);
+}
+
+.recommend__desc em {
+  display: block;
+  font-size: 13px;
+  font-style: normal;
+  color: var(--text-weak);
+}
+
+.recommend__top {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.recommend__topitem .card {
+  border: 1px solid var(--border);
+}
+
+.recommend__reasons {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommend__reasons li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-weak);
+}
+
+.recommend__reasons li.is-hit {
+  color: var(--text-strong);
+  font-weight: 500;
+}
+
+.recommend__reasons span {
+  flex-shrink: 0;
+  width: 14px;
+  color: var(--text-weak);
+}
+
+.recommend__reasons li.is-hit span {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* 2·3등 */
+.recommend__rest {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.recommend__restitem .card {
+  border: 1px solid var(--border);
+}
+
+.recommend__reasons--small {
+  margin-top: 14px;
+  gap: 8px;
+}
+
+.recommend__reasons--small li {
+  font-size: 13px;
+}
+
+/* 버튼 */
+.recommend__actions {
+  margin-top: 56px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.recommend__again,
+.recommend__all {
+  height: 44px;
+  padding: 0 28px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+}
+
+.recommend__again {
+  border-color: var(--border);
+  color: var(--text-mid);
+  background: #fff;
+}
+
+.recommend__all {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* 반응형 */
+@media (max-width: 1199px) {
+  .recommend {
+    padding: 56px 32px 80px;
+  }
+  .recommend__top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .recommend__topitem {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 767px) {
+  .recommend {
+    padding: 40px 20px 60px;
+  }
+  .recommend__question {
+    font-size: 21px;
+  }
+  .recommend__title {
+    font-size: 24px;
+  }
+  .recommend__option {
+    padding: 15px 16px;
+  }
+  .recommend__topitem {
+    max-width: none;
+  }
+  .recommend__rest {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .recommend__actions {
+    flex-direction: column;
+  }
+  .recommend__again,
+  .recommend__all {
+    width: 100%;
+    justify-content: center;
+  }
+}
