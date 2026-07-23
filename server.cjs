@@ -8,18 +8,22 @@ const BASE = "/g/kopo17/project-runshoes";
 
 app.set("etag", false);
 
-const noCache = (req, res, next) => {
-  res.set("Cache-Control", "no-store");
+app.use((req, res, next) => {
+  if (req.originalUrl.includes("/api/")) {
+    res.set("Cache-Control", "no-store");
+  }
   next();
-};
+});
 
-app.use("/api", jsonServer.defaults(), jsonServer.router("db.json"));
-app.use(`${BASE}/api`, jsonServer.defaults(), jsonServer.router("db.json"));
+const router = jsonServer.router(path.join(__dirname, "db.json"));
+
+app.use("/api", jsonServer.defaults(), router);
+app.use(`${BASE}/api`, jsonServer.defaults(), router);
 
 app.use(express.static(path.join(__dirname, "dist")));
 app.use(BASE, express.static(path.join(__dirname, "dist")));
 
-app.get("/*splat", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
