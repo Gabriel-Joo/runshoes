@@ -6,6 +6,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE = "/g/kopo17/project-runshoes";
 
+app.set("etag", false);
+
+const noCache = (req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+};
+
 app.use("/api", jsonServer.defaults(), jsonServer.router("db.json"));
 app.use(`${BASE}/api`, jsonServer.defaults(), jsonServer.router("db.json"));
 
