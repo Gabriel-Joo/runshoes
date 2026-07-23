@@ -11,7 +11,7 @@
     "server": "json-server --watch db.json --port 3000"
   },
   "dependencies": {
-    "express": "^5.2.1",
+    "express": "4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"
