@@ -34,7 +34,8 @@ function Best() {
   }, []);
 
   const getScore = (shoe: Shoe) =>
-    shoe.rating * 20 + shoe.reviewCount * 3 + shoe.likeCount * 0.5;
+    shoe.rating * 20 * (shoe.reviewCount / (shoe.reviewCount + 3)) +
+    shoe.likeCount * 0.5;
 
   const ranked = [...shoes].sort((a, b) => getScore(b) - getScore(a));
   const top5 = ranked.slice(0, 5);
@@ -85,7 +86,11 @@ function Best() {
         <h2 className="best__title">러너들의 선택</h2>
         <p className="best__desc">
           평점과 리뷰 수, 좋아요를 합산한 종합 점수로 순위를 매겼습니다.
-          <em>종합 점수 = 평점 × 20 + 리뷰 수 × 3 + 좋아요 × 0.5</em>
+          <em>
+            종합 점수 = 평점 × 20 × 신뢰도 + 좋아요 × 0.5
+            <br />
+            리뷰가 많을수록 평점을 더 반영합니다.
+          </em>
         </p>
       </div>
 

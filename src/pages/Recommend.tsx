@@ -343,9 +343,11 @@ function Recommend() {
     .sort((a, b) => {
       if (b.score !== a.score) return b.score - a.score;
       const sa =
-        a.shoe.rating * 20 + a.shoe.reviewCount * 3 + a.shoe.likeCount * 0.5;
+        a.shoe.rating * 20 * (a.shoe.reviewCount / (a.shoe.reviewCount + 3)) +
+        a.shoe.likeCount * 0.5;
       const sb =
-        b.shoe.rating * 20 + b.shoe.reviewCount * 3 + b.shoe.likeCount * 0.5;
+        b.shoe.rating * 20 * (b.shoe.reviewCount / (b.shoe.reviewCount + 3)) +
+        b.shoe.likeCount * 0.5;
       return sb - sa;
     })
     .slice(0, 3);
