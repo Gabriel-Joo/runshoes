@@ -6,6 +6,7 @@ import Best from './pages/Best'
 import ShoeForm from './pages/ShoeForm'
 import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
+import ScrollTop from './components/ScrollTop'
 import "./App.css"
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/edit/:id" element={<ShoeForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ScrollTop />
     </>
   )
 }
