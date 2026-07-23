@@ -16,7 +16,12 @@ function Header() {
         </Link>
 
         <nav className="header__nav">
-          <Link to="/" className="header__link">홈</Link>
+          <Link to="/" className="header__link">
+            홈
+          </Link>
+          <Link to="/recommend" className="header__link header__link--sub">
+            맞춤 추천
+          </Link>
           <Link to="/best" className="header__link header__link--sub">
             러너들의 선택
           </Link>
@@ -45,6 +50,13 @@ function Header() {
             onClick={close}
           >
             홈
+          </Link>
+          <Link
+            to="/recommend"
+            className={`header__drawerlink ${location.pathname === "/recommend" ? "is-active" : ""}`}
+            onClick={close}
+          >
+            맞춤 추천
           </Link>
           <Link
             to="/best"

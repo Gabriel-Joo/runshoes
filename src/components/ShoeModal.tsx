@@ -123,8 +123,18 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 </dt>
                 <dd>{shoe.midsole ?? "정보 없음"}</dd>
               </div>
+              <div>
+                <dt>
+                  카본 플레이트
+                  <TermTooltip
+                    term={findTerm("carbon")}
+                    openTerm={openTerm}
+                    onToggle={setOpenTerm}
+                  />
+                </dt>
+                <dd>{shoe.carbon ? "있음" : "없음"}</dd>
+              </div>
             </dl>
-
             <p className="modal__desc">{shoe.description}</p>
             <div className="modal__bottom">
               <span className="modal__rating">

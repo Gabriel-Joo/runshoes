@@ -46,6 +46,6 @@
     left: 0;
     right: auto;
     width: max-content;
-    max-width: min(280px, calc(100vw - 100px));
+    max-width: min(280px, calc(100vw - 140px));
   }
 }
