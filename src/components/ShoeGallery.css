@@ -62,10 +62,25 @@
 .gallery__thumbs {
   display: flex;
   gap: 6px;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  padding-bottom: 2px;
+}
+.gallery__thumbs::-webkit-scrollbar {
+  display: none;
+}
+.gallery__thumbs::before,
+.gallery__thumbs::after {
+  content: '';
+  margin: auto;
 }
 
+.gallery__thumbs.is-dragging {
+  cursor: grabbing;
+}
 .gallery__thumb {
   width: 52px;
   height: 40px;
@@ -76,6 +91,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .gallery__thumb.is-active {
