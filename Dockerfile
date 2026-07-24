@@ -6,6 +6,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . .
+ENV NODE_OPTIONS=--max-old-space-size=1536
 RUN yarn build
 
 # 실행 단계
