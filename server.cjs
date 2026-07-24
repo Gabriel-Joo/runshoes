@@ -4,7 +4,8 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASE = "/g/kopo17/project-runshoes";
+const BASE = process.env.BASE_PATH ? process.env.BASE_PATH.replace(/\/$/, "") : "";
+const DB = process.env.DB_PATH || path.join(__dirname, "db.json");
 
 app.set("etag", false);
 
@@ -15,13 +16,13 @@ app.use((req, res, next) => {
   next();
 });
 
-const router = jsonServer.router(path.join(__dirname, "db.json"));
+const router = jsonServer.router(DB);
 
 app.use("/api", jsonServer.defaults(), router);
-app.use(`${BASE}/api`, jsonServer.defaults(), router);
+if (BASE) app.use(`${BASE}/api`, jsonServer.defaults(), router);
 
 app.use(express.static(path.join(__dirname, "dist")));
-app.use(BASE, express.static(path.join(__dirname, "dist")));
+if (BASE) app.use(BASE, express.static(path.join(__dirname, "dist")));
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
