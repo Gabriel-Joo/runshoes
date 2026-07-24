@@ -12,14 +12,11 @@ spec:
     tty: true
     resources:
       requests:
-        memory: "2Gi"
+        memory: "1Gi"
         cpu: "500m"
       limits:
-        memory: "4Gi"
+        memory: "2Gi"
         cpu: "2"
-    volumeMounts:
-    - name: harbor-config
-      mountPath: /kaniko/.docker
     volumeMounts:
     - name: harbor-config
       mountPath: /kaniko/.docker
@@ -44,14 +41,6 @@ spec:
   }
 
   stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main',
-            credentialsId: 'gitlab-token',
-            url: 'https://std-gitlab.kopoctc.kr/kopo17/runshoes.git'
-      }
-    }
-
     stage('Build & Push') {
       steps {
         container('kaniko') {
