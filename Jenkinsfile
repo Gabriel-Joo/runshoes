@@ -10,6 +10,16 @@ spec:
     image: gcr.io/kaniko-project/executor:debug
     command: ["/busybox/cat"]
     tty: true
+    resources:
+      requests:
+        memory: "2Gi"
+        cpu: "500m"
+      limits:
+        memory: "4Gi"
+        cpu: "2"
+    volumeMounts:
+    - name: harbor-config
+      mountPath: /kaniko/.docker
     volumeMounts:
     - name: harbor-config
       mountPath: /kaniko/.docker
@@ -49,6 +59,8 @@ spec:
             /kaniko/executor \
               --context=dir://${WORKSPACE} \
               --dockerfile=${WORKSPACE}/Dockerfile \
+              --snapshot-mode=redo \
+              --single-snapshot \
               --destination=${IMAGE}:${BUILD_NUMBER} \
               --destination=${IMAGE}:latest
           """
