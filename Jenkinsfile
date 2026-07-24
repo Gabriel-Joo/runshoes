@@ -14,7 +14,7 @@ spec:
     - name: harbor-config
       mountPath: /kaniko/.docker
   - name: kubectl
-    image: alpine/kubectl:1.29.2
+    image: alpine/kubectl:latest
     command: ["cat"]
     tty: true
   volumes:
