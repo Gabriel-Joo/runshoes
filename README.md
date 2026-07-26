@@ -27,6 +27,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 > - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인
 > - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차
 
+
 ### 차별점
 
 | | 내용 |
@@ -242,7 +243,25 @@ git clone https://github.com/Gabriel-Joo/runshoes.git
 cd runshoes
 yarn
 ```
+### 레포 구성
 
+두 원격 저장소를 함께 쓴다.
+
+| 원격 | 주소 | 용도 |
+|---|---|---|
+| GitLab | `std-gitlab.kopoctc.kr/kopo17/runshoes` | CI/CD 트리거 (학교 인프라) |
+| GitHub | `github.com/Gabriel-Joo/runshoes` | 포트폴리오 보관 (수료 후에도 유지) |
+
+`gitlab` remote의 push URL에 두 주소를 모두 등록해,
+`git push gitlab main` 한 번으로 양쪽에 동시 반영한다.
+(학교 GitLab 서버 미러링은 외부 push가 막혀 있어, 로컬에서 직접 두 곳에 미는 방식을 쓴다.)
+
+​```bash
+git remote set-url --add --push gitlab https://std-gitlab.kopoctc.kr/kopo17/runshoes.git
+git remote set-url --add --push gitlab https://github.com/Gabriel-Joo/runshoes.git
+​```
+
+> GitLab이 원본, GitHub은 거울이다. GitHub에 직접 커밋하지 않는다.
 ### 실행 — 터미널 2개
 
 ```bash
