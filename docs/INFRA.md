@@ -299,3 +299,23 @@ spec:
 ```
 
 개발자가 하는 일은 **1번(코드 push) 하나**뿐이다. 나머지는 자동.
+
+---
+
+## 11. 현재 상태
+
+1~4단계(코드 push → 빌드 → Harbor → gitops 태그 자동 커밋)는 **구성·검증 완료**다.
+`git push` 한 번으로 Jenkins가 이미지를 빌드해 Harbor에 올리고,
+gitops 레포의 `newTag`를 갱신하는 커밋까지 자동으로 남기는 것을 확인했다.
+
+5~7단계(ArgoCD 감지 → 배포)는 **Application 등록만 남았다.**
+정의 파일(`gitops/argocd/runshoes-app.yaml`)은 기존 앱과 동일한 형식으로 작성해
+레포에 커밋해 두었다. 다만 공용 ArgoCD의 `kopo17` 프로젝트에 새 Application을
+생성하는 권한(`applications, create`)은 관리자 영역이라, 등록은 관리자에게 요청한다.
+
+이 권한 경계는 실무의 일반적인 구조와 같다. 개발자는 자신의 앱을 배포·운영(sync)하지만,
+새 앱을 클러스터에 **등록**하는 것은 플랫폼 관리자가 통제한다.
+Application을 선언적 YAML로 정의해 두었으므로, 등록은 `kubectl apply -f` 한 번으로 끝난다.
+
+등록이 완료되면 self-heal 특성상 Git의 태그(`:11`)와 클러스터 상태가 일치해
+무중단으로 인계된다.
