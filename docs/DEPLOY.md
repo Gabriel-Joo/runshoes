@@ -3,10 +3,18 @@
 Vite + React + json-server 프로젝트를 교내 배포판(`aisw-apps.kopoctc.kr`)에 올리는 절차.
 RUNSHOES 배포 과정에서 겪은 시행착오를 정리한 문서로, 다른 프로젝트에도 그대로 적용할 수 있다.
 
----
-> **참고** — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)이다.
+> **참고 — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)이다.**
 > 현재 운영 배포는 쿠버네티스 GitOps로 전환했으며 [INFRA.md](INFRA.md)를 참고.
-> 두 방식 모두 실제로 구성했고, 이 문서는 발전 과정의 기록으로 남긴다.
+> 두 방식 모두 실제로 구성했고, 이 문서는 발전 과정의 기록이자 백업/데모용 배포로 남긴다.
+>
+> |           | 웹 터미널 (이 문서)                               | 쿠버네티스 (INFRA.md)                 |
+> | --------- | ------------------------------------------------- | ------------------------------------- |
+> | 주소      | `aisw-apps.kopoctc.kr/g/kopo17/project-runshoes/` | `kopo17-runshoes.std.kopoctc.kr`      |
+> | 방식      | `git pull` + `node server.cjs` 수동               | GitOps 자동 (push → 빌드 → 배포)      |
+> | base 경로 | `/g/kopo17/project-runshoes/` 필요                | 루트 `/`                              |
+> | 위치      | code-server 홈 디렉터리                           | RKE2 클러스터 `runshoes` 네임스페이스 |
+
+---
 
 ## 1. 환경 파악
 
@@ -42,20 +50,28 @@ npm -v      # 10.8.2
 
 ## 2. 프로젝트에 미리 넣어둘 파일
 
-### `vite.config.ts` — base 경로
+### `vite.config.ts` — base 경로 (환경변수 방식)
 
 ```ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   plugins: [react()],
-  base: command === "build" ? "/g/kopo17/project-runshoes/" : "/",
+  base: process.env.BASE_PATH || "/",
 }));
 ```
 
-> `process.env.NODE_ENV === 'production'` 방식은 Vite 빌드에서 안 잡힐 수 있다.
-> `command === 'build'`가 확실하다.
+> **base를 환경변수로 받는 이유 — 한 코드베이스로 두 배포를 지원한다.**
+> 쿠버네티스 배포는 루트(`/`)로 서비스하므로 base가 없어야 하고,
+> 웹 터미널 배포는 `/g/kopo17/project-runshoes/` 프리픽스가 필요하다.
+> `vite.config.ts`를 고치지 않고, **빌드할 때 `BASE_PATH` 지정 여부로** 구분한다.
+>
+> - 쿠버네티스: `npm run build` (base = `/`)
+> - 웹 터미널: `BASE_PATH=/g/kopo17/project-runshoes/ npm run build` (base = 프리픽스)
+>
+> `BASE_PATH` 없이 웹 터미널용을 빌드하면 base가 `/`가 되어
+> CSS·JS를 `/assets/`에서 찾다가 404 → **완전 백지**가 된다(4번 문제 해결 참고).
 
 ### `src/main.tsx` — 라우터 basename
 
@@ -64,6 +80,9 @@ export default defineConfig(({ command }) => ({
   <App />
 </BrowserRouter>
 ```
+
+`import.meta.env.BASE_URL`은 빌드 시 `base` 값을 그대로 받으므로,
+라우터도 자동으로 프리픽스에 맞춰진다.
 
 ### `src/api.ts` — API 주소 + 정적 자산 경로
 
@@ -145,6 +164,12 @@ echo "서버 실행됨 (포트 $PORT)."
 
 10000~20000 사이 빈 포트를 잡아 백그라운드로 실행하고 `server.port`에 기록한다.
 
+> **주의 — 재시작 전 기존 프로세스를 반드시 종료한다.**
+> 이 스크립트는 `server.pid`가 유효하면 "이미 실행 중"으로 넘어가지만,
+> `rm -f server.pid`로 흔적만 지우고 다시 실행하면 **이전 프로세스가 살아있는 채로
+> 새 프로세스가 또 뜬다.** 서버가 여러 개 쌓이면 각기 다른 포트를 잡아
+> "포트는 떴다는데 연결 안 됨" 상태가 된다. 재시작 시 `pkill -f server.cjs`를 먼저 친다.
+
 ### `package.json`
 
 `express`와 `json-server`가 **`dependencies`에 있어야 한다.**
@@ -175,7 +200,7 @@ cd ~
 git clone <레포주소> project-runshoes
 cd project-runshoes
 npm install
-npm run build
+BASE_PATH=/g/kopo17/project-runshoes/ npm run build
 chmod +x start_server.sh
 bash start_server.sh
 cat server.log        # listening on <포트> 확인
@@ -187,41 +212,54 @@ cat server.log        # listening on <포트> 확인
 
 ```bash
 cd ~/project-runshoes
+git checkout -- db.json                              # 웹에서 바뀐 데이터 되돌리기
 git pull
-npm run build
+BASE_PATH=/g/kopo17/project-runshoes/ npm run build  # BASE_PATH 반드시 지정
+pkill -f server.cjs                                  # 기존 서버 전부 종료
 rm -f server.pid server.port
 bash start_server.sh
+cat server.log
 ```
 
 브라우저에서 **Ctrl+Shift+R**(캐시 무시 새로고침).
+
+> **`git checkout -- db.json`을 먼저 하는 이유**
+> 배포된 사이트는 로그인이 없어 누구나 리뷰·데이터를 바꿀 수 있고,
+> 그 변경이 `db.json`에 남아 `git pull`과 충돌한다(5번 참고).
+> 웹 터미널의 db.json 변경은 시드가 아니므로 되돌리고 최신 시드를 받는다.
 
 ---
 
 ## 4. 문제 해결
 
-| 증상                                        | 원인                                | 해결                                                 |
-| ------------------------------------------- | ----------------------------------- | ---------------------------------------------------- |
-| `require is not defined in ES module scope` | `package.json`에 `"type": "module"` | 파일 확장자를 `.cjs`로                               |
-| `PathError: Missing parameter name`         | Express 5의 와일드카드 문법         | `/*` → `/*splat`                                     |
-| `server.log`가 비어 있고 프로세스가 없음    | 즉시 종료됨                         | `PORT=13000 node server.cjs`로 직접 실행해 에러 확인 |
-| JS·CSS가 404                                | `base` 미설정                       | `grep script dist/index.html`로 경로 확인            |
-| 이미지만 404                                | 런타임 경로에 base 미적용           | `asset()` 헬퍼 적용                                  |
-| `curl`은 200인데 브라우저는 404             | 프록시가 프리픽스를 자름            | 서버가 양쪽 경로를 모두 받게                         |
-| "현재 비공개 상태입니다"                    | 외부 공개 미설정                    | 마이페이지에서 공개 전환                             |
-| 마이페이지 목록에 프로젝트가 없음           | 서버가 죽어 있음                    | `ps aux \| grep server.cjs` 확인 후 재시작           |
-| `git pull` 충돌                             | 서버에서 파일을 직접 수정함         | `git checkout -- <파일>` 후 pull                     |
+| 증상                                          | 원인                                    | 해결                                                  |
+| --------------------------------------------- | --------------------------------------- | ----------------------------------------------------- |
+| CSS·JS가 MIME type(text/html) 에러, 완전 백지 | `BASE_PATH` 없이 빌드돼 base가 `/`로 됨 | `BASE_PATH=/g/kopo17/project-runshoes/ npm run build` |
+| 포트는 떴다는데 `curl` 연결 안 됨             | 이전 서버가 안 죽고 여러 개 쌓임        | `pkill -f server.cjs` 후 재시작                       |
+| `require is not defined in ES module scope`   | `package.json`에 `"type": "module"`     | 파일 확장자를 `.cjs`로                                |
+| `PathError: Missing parameter name`           | Express 5의 와일드카드 문법             | `/*` → `/*splat`                                      |
+| `server.log`가 비어 있고 프로세스가 없음      | 즉시 종료됨                             | `PORT=13000 node server.cjs`로 직접 실행해 에러 확인  |
+| JS·CSS가 404                                  | `base` 미설정                           | `grep script dist/index.html`로 경로 확인             |
+| 이미지만 404                                  | 런타임 경로에 base 미적용               | `asset()` 헬퍼 적용                                   |
+| `curl`은 200인데 브라우저는 404               | 프록시가 프리픽스를 자름                | 서버가 양쪽 경로를 모두 받게                          |
+| "현재 비공개 상태입니다"                      | 외부 공개 미설정                        | 마이페이지에서 공개 전환                              |
+| 마이페이지 목록에 프로젝트가 없음             | 서버가 죽어 있음                        | `ps aux \| grep server.cjs` 확인 후 재시작            |
+| `git pull` 충돌                               | 서버에서 파일을 직접 수정함             | `git checkout -- <파일>` 후 pull                      |
 
 ### 유용한 진단 명령
 
 ```bash
-ps aux | grep server.cjs                 # 프로세스 생존 확인
+ps aux | grep server.cjs                 # 프로세스 생존 확인 (여러 개면 좀비)
 cat server.log                           # 서버 로그
 cat server.port                          # 할당된 포트
 curl -I http://localhost:$(cat server.port)/g/<ID>/<폴더>/       # HTML 응답
 curl -I http://localhost:$(cat server.port)/g/<ID>/<폴더>/api/shoes  # API 응답
-grep script dist/index.html              # 빌드 base 경로 확인
+grep -o 'assets/[^"]*\.\(js\|css\)' dist/index.html   # 빌드 base 경로 확인
 tail -f server.log                       # 실시간 요청 로그
 ```
+
+> `grep`으로 확인한 경로가 `/g/kopo17/project-runshoes/assets/...`가 아니라
+> `/assets/...`로만 나오면 `BASE_PATH` 없이 빌드된 것이다.
 
 ---
 
@@ -235,6 +273,11 @@ tail -f server.log                       # 실시간 요청 로그
 
 **알림은 오지 않는다.** 요청 기록은 `server.log`에만 남는다.
 
+이 변경은 웹 터미널의 `db.json`에만 쌓이며, 시드가 아니다.
+갱신 시 `git checkout -- db.json`으로 되돌린다.
+(쿠버네티스 배포는 initContainer가 `db.json.seed`를 PVC로 복사하는 구조라
+런타임 변경과 시드가 분리되어 있어 이 문제가 없다 — [INFRA.md](INFRA.md) 참고.)
+
 ### 복구
 
 `db.json`이 git에 포함되어 있으므로 언제든 되돌릴 수 있다.
@@ -242,6 +285,7 @@ tail -f server.log                       # 실시간 요청 로그
 ```bash
 cd ~/project-runshoes
 git checkout -- db.json
+pkill -f server.cjs
 rm -f server.pid server.port
 bash start_server.sh
 ```
@@ -253,7 +297,7 @@ bash start_server.sh
 마이페이지의 **서버 중지** 버튼, 또는
 
 ```bash
-kill $(cat server.pid)
+pkill -f server.cjs
 rm -f server.pid server.port
 ```
 
@@ -276,12 +320,14 @@ rm -f server.pid server.port
 
 ## 7. 다른 프로젝트에 적용할 때
 
-바꿔야 할 것은 **경로 문자열 두 곳뿐**이다.
+바꿔야 할 것은 **경로 문자열 두 곳**이다.
 
-1. `vite.config.ts`의 `base`
+1. 빌드 시 `BASE_PATH=/g/<학번ID>/<폴더명>/`
 2. `server.cjs`의 `BASE`
 
 둘 다 `/g/<학번ID>/<폴더명>/` 형식으로 맞추고,
 웹 터미널의 폴더 이름을 동일하게 만들면 된다.
 
-나머지 파일(`start_server.sh`, `api.ts`의 `asset()`)은 그대로 재사용할 수 있다.
+나머지 파일(`vite.config.ts`, `start_server.sh`, `api.ts`의 `asset()`)은
+그대로 재사용할 수 있다. `vite.config.ts`는 `BASE_PATH` 환경변수를 읽으므로
+프로젝트마다 고칠 필요가 없다.
