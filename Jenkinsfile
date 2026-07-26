@@ -24,8 +24,8 @@ spec:
     volumeMounts:
     - name: harbor-config
       mountPath: /kaniko/.docker
-  - name: kubectl
-    image: alpine/kubectl:latest
+  - name: git
+    image: alpine/git:latest
     command: ["cat"]
     tty: true
   volumes:
@@ -42,6 +42,8 @@ spec:
   environment {
     IMAGE = "std-harbor.kopoctc.kr/kopo17/runshoes"
     NS    = "runshoes"
+    TAG   = "${BUILD_NUMBER}"
+
   }
 
   stages {
@@ -61,15 +63,26 @@ spec:
       }
     }
 
-    stage('Deploy') {
+stage('Update GitOps Manifest') {
       steps {
-        container('kubectl') {
-          sh """
-            kubectl -n ${NS} set image deployment/runshoes \
-              runshoes=${IMAGE}:${BUILD_NUMBER} \
-              seed-db=${IMAGE}:${BUILD_NUMBER}
-            kubectl -n ${NS} rollout status deployment/runshoes --timeout=180s
-          """
+        container('git') {
+          withCredentials([usernamePassword(
+            credentialsId: 'gitlab-token',
+            usernameVariable: 'GIT_USER',
+            passwordVariable: 'GIT_TOKEN'
+          )]) {
+            sh '''
+              rm -rf gitops
+              git clone https://oauth2:${GIT_TOKEN}@std-gitlab.kopoctc.kr/kopo17/gitops.git
+              cd gitops/apps/runshoes
+              sed -i "s|newTag:.*|newTag: \\"${TAG}\\"|" kustomization.yaml
+              git config user.email "jenkins@kopo17"
+              git config user.name "jenkins-ci"
+              git add kustomization.yaml
+              git commit -m "deploy: runshoes 이미지 :${TAG} [skip ci]"
+              git push origin main
+            '''
+          }
         }
       }
     }
