@@ -308,14 +308,11 @@ spec:
 `git push` 한 번으로 Jenkins가 이미지를 빌드해 Harbor에 올리고,
 gitops 레포의 `newTag`를 갱신하는 커밋까지 자동으로 남기는 것을 확인했다.
 
-5~7단계(ArgoCD 감지 → 배포)는 **Application 등록만 남았다.**
-정의 파일(`gitops/argocd/runshoes-app.yaml`)은 기존 앱과 동일한 형식으로 작성해
-레포에 커밋해 두었다. 다만 공용 ArgoCD의 `kopo17` 프로젝트에 새 Application을
-생성하는 권한(`applications, create`)은 관리자 영역이라, 등록은 관리자에게 요청한다.
+5~7단계(ArgoCD 감지 → 배포)도 등록 완료, 전 구간 작동 확인
+전 단계가 구성·검증 완료다. `git push` 한 번으로 Jenkins가 이미지를 빌드해
+Harbor에 올리고, gitops 레포의 `newTag`를 갱신하는 커밋을 남기며,
+ArgoCD가 이를 감지해 `runshoes` 네임스페이스에 자동 배포한다.
 
-이 권한 경계는 실무의 일반적인 구조와 같다. 개발자는 자신의 앱을 배포·운영(sync)하지만,
-새 앱을 클러스터에 **등록**하는 것은 플랫폼 관리자가 통제한다.
-Application을 선언적 YAML로 정의해 두었으므로, 등록은 `kubectl apply -f` 한 번으로 끝난다.
-
-등록이 완료되면 self-heal 특성상 Git의 태그(`:11`)와 클러스터 상태가 일치해
-무중단으로 인계된다.
+ArgoCD Application(`kopo17-runshoes`)은 auto sync + self-heal로 등록돼
+Deployment를 관리한다(tracking-id 어노테이션으로 인수 확인).
+`kopo17-runshoes.std.kopoctc.kr`에서 서비스 정상 응답.
