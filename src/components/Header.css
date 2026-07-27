@@ -13,10 +13,10 @@
   justify-content: space-between;
 }
 .header__logo {
-  font-family: "Anton", sans-serif;
+  font-family: "Archivo Black", sans-serif;
   font-size: 64px;
-  font-weight: 400; /* Anton은 400이 기본, 이미 굵음 */
-  letter-spacing: 0.12em;
+  font-weight: 400;
+  letter-spacing: 0.03em;
   color: var(--accent);
 }
 
