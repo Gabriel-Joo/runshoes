@@ -18,7 +18,7 @@
   padding: 72px 48px 96px;
   background:
     linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.01)),
-    url("/images/hero-bg2.jpg") 60% 40% / cover;
+    url("/images/hero-bg2.jpg") 60% 70% / cover;
 }
 
 .hero__title {
@@ -41,7 +41,7 @@
 .hero__pane--visual {
   display: flex;
   flex-direction: column;
-  border-left: 1px solid oklch(0.24 0 0);
+  border: 1px solid rgba(255, 255, 255, 0.08); /* 0.15 → 0.08, 훨씬 은은 */
   padding: 0;
 }
 
