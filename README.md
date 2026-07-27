@@ -260,8 +260,13 @@ yarn
 git remote set-url --add --push gitlab https://std-gitlab.kopoctc.kr/kopo17/runshoes.git
 git remote set-url --add --push gitlab https://github.com/Gabriel-Joo/runshoes.git
 ​```
+편의를 위해 alias를 등록해서 `git pp` 한 번으로 푸시한다.
 
+​```bash
+git config alias.pp 'push gitlab main'
+​```
 > GitLab이 원본, GitHub은 거울이다. GitHub에 직접 커밋하지 않는다.
+
 ### 실행 — 터미널 2개
 
 ```bash
