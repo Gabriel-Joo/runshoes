@@ -13,9 +13,10 @@
   justify-content: space-between;
 }
 .header__logo {
-  font-size: 50px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  font-family: "Anton", sans-serif;
+  font-size: 64px;
+  font-weight: 400; /* Anton은 400이 기본, 이미 굵음 */
+  letter-spacing: 0.12em;
   color: var(--accent);
 }
 
@@ -101,7 +102,7 @@
     padding: 16px 32px;
   }
   .header__logo {
-    font-size: 32px;
+    font-size: 40px;
   }
   .header__nav {
     gap: 20px;
@@ -114,7 +115,7 @@
     padding: 14px 20px;
   }
   .header__logo {
-    font-size: 26px;
+    font-size: 30px;
   }
   .header__nav {
     display: none;
