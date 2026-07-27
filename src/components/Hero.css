@@ -17,8 +17,8 @@
   justify-content: center;
   padding: 72px 48px 96px;
   background:
-    linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.02)),
-    url("/images/hero-bg.jpg") 60% 50% / cover;
+    linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.01)),
+    url("/images/hero-bg2.jpg") 60% 40% / cover;
 }
 
 .hero__title {
@@ -26,15 +26,15 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.03em;
-  color: var(--accent);
+  color: #fff;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
 }
 
 .hero__subtitle {
   margin-top: 20px;
-  font-size: 19px;
-  color: oklch(0.85 0 0); /* 회색 → 밝게 (0.65→0.85) */
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  font-size: 22px; /* 19px → 22px */
+  color: #fff; /* 흰 제목이랑 맞추려면 (또는 밝은 회색 유지) */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* 오른쪽 — 사진, 가장자리에 붙임 */
