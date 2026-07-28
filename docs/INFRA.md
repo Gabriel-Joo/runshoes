@@ -9,27 +9,24 @@ CI/CD 파이프라인을 설명한다. 애플리케이션 자체 문서는 [READ
 ---
 
 ## 1. 한눈에 보기
-
-```
- 개발자                Jenkins (cicd)            Harbor
-   │                       │                       │
-   │  git push             │                       │
-   ├──────────────────────▶│  ① Kaniko 빌드         │
-   │      (웹훅)            ├──────────────────────▶│  이미지 :BUILD_NUMBER
-   │                       │                       │
-   │                       │  ② gitops 레포          │
-   │                       │     태그 커밋           │
-   │                       ▼                       │
-   │              gitops 레포 (Git)                 │
-   │              apps/runshoes/kustomization.yaml  │
-   │                       │                       │
-   │                       │  ③ 감지               │
-   │                       ▼                       │
-   │                   ArgoCD  ─────────────────────┤  이미지 pull
-   │                       │                       │
-   │                       ▼                       │
-   │              runshoes 네임스페이스 (배포)        │
-```
+개발자 Jenkins (cicd) Harbor
+│ │ │
+│ git push │ │
+├──────────────────────▶│ ① Kaniko 빌드 │
+│ (웹훅) ├──────────────────────▶│ 이미지 :BUILD_NUMBER
+│ │ │
+│ │ ② gitops 레포 │
+│ │ 태그 커밋 │
+│ ▼ │
+│ gitops 레포 (Git) │
+│ apps/runshoes/kustomization.yaml │
+│ │ │
+│ │ ③ 감지 │
+│ ▼ │
+│ ArgoCD ─────────────────────┤ 이미지 pull
+│ │ │
+│ ▼ │
+│ runshoes 네임스페이스 (배포) │
 
 핵심은 **Jenkins와 ArgoCD가 서로를 직접 호출하지 않는다**는 점이다.
 둘 다 Git만 바라본다. Jenkins는 Git에 "새 태그"를 **쓰고**,
@@ -56,11 +53,7 @@ ArgoCD는 Git을 **읽어** 클러스터를 맞춘다. Git이 유일한 접점�
 ### Push형 vs Pull형
 
 초기에는 Jenkins가 클러스터에 직접 명령하는 **Push형**으로 구성했다.
-
-```
 Jenkins ──(kubectl set image)──▶ 클러스터
-```
-
 이 방식은 동작하지만 문제가 있다.
 
 - Jenkins가 클러스터를 수정할 권한(kubeconfig / SA)을 들고 있어야 한다.
@@ -69,10 +62,7 @@ Jenkins ──(kubectl set image)──▶ 클러스터
 - 누가 손으로 `kubectl edit`을 하면 그대로 반영되고 추적이 안 된다.
 
 그래서 **Pull형(GitOps)** 으로 전환했다.
-
-```
 Jenkins ──(git commit)──▶ Git ◀──(watch)── ArgoCD ──▶ 클러스터
-```
 
 ### 얻은 것
 
@@ -131,12 +121,9 @@ Jenkins ──(git commit)──▶ Git ◀──(watch)── ArgoCD ──▶ 
 - 태그는 `:BUILD_NUMBER`(추적용)와 `:latest`(편의용) 동시 push
 
 ### Dockerfile — 멀티스테이지
-
-```
-builder (node:20-alpine)         runtime (node:20-alpine)
-  yarn install                     프로덕션 의존성만
-  vite build           ──dist──▶   server.cjs (Express + json-server)
-```
+builder (node:20-alpine) runtime (node:20-alpine)
+yarn install 프로덕션 의존성만
+vite build ──dist──▶ server.cjs (Express + json-server)
 
 빌드 도구(vite · typescript)를 최종 이미지에서 제외해 크기를 줄인다.
 
@@ -179,6 +166,27 @@ builder (node:20-alpine)         runtime (node:20-alpine)
 이전 빌드의 에이전트 Pod가 완전히 종료되기 전 다음 빌드가 시작돼
 쿼터를 놓고 충돌, Pending이 길어졌다.
 → Jenkinsfile에 `disableConcurrentBuilds()` 추가.
+
+### vcluster는 학교 사설망(물리 네트워크)으로 직접 나가지 못한다
+
+리뷰 요약 기능(로컬 PC의 Ollama 호출)을 이 클러스터에서도 쓸 수 있는지
+검증하는 과정에서 확인했다.
+
+- VM(학교 계정 셸)과 웹 터미널(aisw-lab)에서는 로컬 PC의 사설 IP
+  (`192.168.x.x`)로 직접 `curl`이 성공한다 — 같은 물리 네트워크이기 때문이다.
+- 반면 `runshoes` 네임스페이스의 Pod 안에서 같은 주소로 요청하면
+  **항상 연결 타임아웃**이 발생한다(`kubectl exec ... -- curl ...`로 직접 확인).
+
+vcluster는 자체 오버레이 네트워크를 쓰기 때문에, Pod 입장에서는
+학교 사설망 대역으로 나가는 라우팅 경로 자체가 없다. 이는 방화벽 규칙
+추가로 해결되는 문제가 아니라 **vcluster 네트워크 아키텍처의 제약**이며,
+학생 권한으로 변경할 수 있는 범위 밖으로 판단했다.
+
+→ 이 때문에 리뷰 요약 기능은 이번 배포 범위에서 제외했다
+([README](../README.md) 11장, [DEPLOY.md](DEPLOY.md) 8장 참고).
+클러스터 안에 LLM을 직접 컨테이너로 띄우는 대안도 검토했으나,
+현재 리소스 상한(컨테이너당 2Gi)에서는 8B 모델 구동이 어려워
+추후 과제로 남겼다.
 
 ---
 
@@ -226,15 +234,12 @@ withCredentials([usernamePassword(
 ## 8. 매니페스트 — kustomize
 
 `gitops/apps/runshoes/`에 kustomize로 구성.
-
-```
 apps/runshoes/
-├─ kustomization.yaml    ← 리소스 목록 + 이미지 태그
+├─ kustomization.yaml ← 리소스 목록 + 이미지 태그
 ├─ pvc.yaml
-├─ deployment.yaml       ← runshoes 컨테이너 + seed-db initContainer
+├─ deployment.yaml ← runshoes 컨테이너 + seed-db initContainer
 ├─ service.yaml
 └─ ingress.yaml
-```
 
 `kustomization.yaml`의 `images:` 한 줄이 Deployment의 두 컨테이너
 (`runshoes` · initContainer `seed-db`)의 태그를 동시에 갱신한다.
@@ -253,6 +258,8 @@ images:
 - PVC(`nfs-std-1` StorageClass) — `db.json` 영속화
 - Ingress — traefik, 호스트 기반, `web`·`websecure` entrypoint + TLS
   (traefik의 전역 HTTPS 리다이렉트 때문에 TLS 블록이 없으면 404)
+- 리뷰 요약(Ollama) 관련 환경변수는 이 배포에는 없다 — 해당 기능은
+  쿠버네티스에 반영하지 않았다(6장 참고).
 
 ---
 
@@ -289,8 +296,6 @@ spec:
 ---
 
 ## 10. 전체 흐름 요약
-
-```
 1. 개발자가 앱 레포에 push
 2. GitLab 웹훅 → Jenkins 빌드 트리거
 3. Kaniko가 이미지 빌드 → Harbor에 :BUILD_NUMBER push
@@ -298,7 +303,6 @@ spec:
 5. ArgoCD가 gitops 레포 변경 감지
 6. ArgoCD가 Harbor에서 해당 태그 이미지를 받아 runshoes 네임스페이스에 배포
 7. self-heal로 이후 상태 유지
-```
 
 개발자가 하는 일은 **1번(코드 push) 하나**뿐이다. 나머지는 자동.
 
@@ -313,3 +317,6 @@ ArgoCD가 이를 감지해 `runshoes` 네임스페이스에 자동 배포한다.
 ArgoCD Application(`kopo17-runshoes`)은 auto sync + self-heal로 등록돼
 Deployment를 관리한다(tracking-id 어노테이션으로 인수 확인).
 `kopo17-runshoes.std.kopoctc.kr`에서 서비스 정상 응답.
+
+**리뷰 요약(Ollama) 기능은 이 배포에 포함되어 있지 않다.** 로컬 개발 환경과
+웹 터미널 배포에서만 동작하며, 이유는 6장을 참고.

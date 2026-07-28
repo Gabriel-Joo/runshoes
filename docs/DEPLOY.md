@@ -13,17 +13,14 @@ RUNSHOES 배포 과정에서 겪은 시행착오를 정리한 문서로, 다른 
 > | 방식      | `git pull` + `node server.cjs` 수동               | GitOps 자동 (push → 빌드 → 배포)      |
 > | base 경로 | `/g/kopo17/project-runshoes/` 필요                | 루트 `/`                              |
 > | 위치      | code-server 홈 디렉터리                           | RKE2 클러스터 `runshoes` 네임스페이스 |
+> | AI 리뷰 요약 | 동작함 (같은 물리 네트워크)                     | 미배포 (vcluster 네트워크 제약, 11장 참고) |
 
 ---
 
 ## 1. 환경 파악
 
 ### 웹 터미널
-
-```
 https://aisw-lab.kopoctc.kr/
-```
-
 code-server(브라우저 VS Code) 기반. 홈 디렉터리는 `/home/<학번ID>`.
 
 ```bash
@@ -42,10 +39,7 @@ npm -v      # 10.8.2
 - 공개 도메인은 **`aisw-apps.kopoctc.kr`** (작업 도메인 `aisw-lab`과 다름)
 - 마이페이지 → **내 공유 앱 → 외부 공개 체크 → 변경사항 저장**을 해야 실제로 열린다
 
-```
 최종 주소: https://aisw-apps.kopoctc.kr/g/<ID>/<폴더명>/
-```
-
 ---
 
 ## 2. 프로젝트에 미리 넣어둘 파일
@@ -72,6 +66,11 @@ export default defineConfig(() => ({
 >
 > `BASE_PATH` 없이 웹 터미널용을 빌드하면 base가 `/`가 되어
 > CSS·JS를 `/assets/`에서 찾다가 404 → **완전 백지**가 된다(4번 문제 해결 참고).
+>
+> ⚠️ **`--base=...` 커맨드라인 인자는 안 먹는다.** `vite.config.ts`가
+> `process.env.BASE_PATH`만 읽으므로, 반드시 환경변수로 넘겨야 한다.
+> `npm run build -- --base=...` 형태로 빌드하면 조용히 무시되고
+> base가 `/`로 빌드된다 — 에러 없이 실패하는 사례라 특히 주의.
 
 ### `src/main.tsx` — 라우터 basename
 
@@ -103,7 +102,10 @@ export const asset = (p: string) =>
 
 적용 위치: `<img src={asset(경로)} />`가 있는 모든 컴포넌트.
 
-### `server.cjs` — 프론트 + API 통합 서버
+### `server.cjs` — 프론트 + API + 리뷰 요약 통합 서버
+
+> 아래는 구조를 보여주는 예시다. **실제 파일의 최신 내용이 항상 기준**이며,
+> `BASE`·라우팅 방식은 리뷰 요약 기능 추가 이후 아래처럼 확장되었다.
 
 ```js
 const express = require("express");
@@ -112,18 +114,27 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BASE = "/g/kopo17/project-runshoes";
+const BASE = process.env.BASE_PATH
+  ? process.env.BASE_PATH.replace(/\/$/, "")
+  : ""; // 환경변수로 받는다 — 하드코딩하지 않음
+
+app.set("etag", false);
+app.use((req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 // API — 프리픽스 유무 양쪽 대응
-app.use("/api", jsonServer.defaults(), jsonServer.router("db.json"));
-app.use(`${BASE}/api`, jsonServer.defaults(), jsonServer.router("db.json"));
+const router = jsonServer.router("db.json");
+app.use("/api", jsonServer.defaults(), router);
+if (BASE) app.use(`${BASE}/api`, jsonServer.defaults(), router);
 
 // 정적 파일 — 프리픽스 유무 양쪽 대응
 app.use(express.static(path.join(__dirname, "dist")));
-app.use(BASE, express.static(path.join(__dirname, "dist")));
+if (BASE) app.use(BASE, express.static(path.join(__dirname, "dist")));
 
 // SPA 폴백 (새로고침 대응)
-app.get("/*splat", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
@@ -134,14 +145,20 @@ app.listen(PORT, () => console.log(`listening on ${PORT}`));
 Vite 프로젝트의 `package.json`에는 `"type": "module"`이 있어서
 `.js` 파일이 ES 모듈로 취급된다. `require`를 쓰려면 `.cjs`여야 한다.
 
-**`/*splat`인 이유**
-Express 5는 `path-to-regexp` 최신 버전을 써서 이름 없는 와일드카드(`/*`)를 거부한다.
-`PathError: Missing parameter name` 에러가 나면 이 문제다.
-Express 4를 쓰면 `/*` 그대로 가능하다.
+**`/*`인 이유**
+Express 5는 `path-to-regexp` 최신 버전을 써서 이름 없는 와일드카드(`/*`)를 거부하고
+`/*splat` 문법을 요구한다. 이 프로젝트는 **Express 4로 고정**했으므로(json-server
+정렬 파라미터 호환 문제, README 참고) `/*` 그대로 쓴다. Express 5로 바꾸면
+`/*splat`으로 변경해야 한다.
 
 **프리픽스 유무를 둘 다 받는 이유**
 플랫폼 프록시가 경로 앞부분을 잘라서 전달할 수 있다.
 서버 단독 `curl`은 200인데 브라우저는 404인 상황이면 이 문제다.
+
+> ⚠️ **`BASE`를 서버 코드에 하드코딩하지 말 것.** 예전 버전은 `const BASE = "/g/kopo17/project-runshoes"`처럼
+> 값을 파일에 직접 박아뒀는데, 이러면 **빌드 시 `BASE_PATH`와 서버 실행 시의 `BASE`가
+> 서로 다른 값으로 어긋날 수 있다.** 반드시 `process.env.BASE_PATH`로 읽고,
+> **빌드할 때와 서버를 실행할 때 모두 같은 값을 환경변수로 넘겨야 한다**(아래 `start_server.sh` 참고).
 
 ### `start_server.sh`
 
@@ -157,18 +174,36 @@ def free(p):
  s=socket.socket();r=s.connect_ex(('127.0.0.1',p));s.close();return r!=0
 for p in random.sample(range(10000,20000),100):
  if free(p): print(p); break")
-PORT=$PORT setsid node server.cjs > server.log 2>&1 &
+BASE_PATH=/g/kopo17/project-runshoes/ PORT=$PORT setsid node server.cjs > server.log 2>&1 &
 echo $! > server.pid; echo "$PORT" > server.port; sleep 1
 echo "서버 실행됨 (포트 $PORT)."
 ```
 
 10000~20000 사이 빈 포트를 잡아 백그라운드로 실행하고 `server.port`에 기록한다.
 
+> **`BASE_PATH`를 서버 실행 시에도 반드시 넘긴다.** 빌드할 때만 `BASE_PATH`를
+> 지정하고 서버 실행 시 빠뜨리면, 정적 파일(JS·CSS)은 프리픽스로 잘 빌드됐는데
+> 서버는 `BASE`를 빈 문자열로 인식해 `${BASE}/api` 라우트가 등록되지 않는다.
+> 증상은 **CSS·이미지까지 전부 404, API 요청도 404** — 겉보기엔 완전히 배포가
+> 깨진 것처럼 보이지만 원인은 이 한 줄 누락이다.
+
 > **주의 — 재시작 전 기존 프로세스를 반드시 종료한다.**
 > 이 스크립트는 `server.pid`가 유효하면 "이미 실행 중"으로 넘어가지만,
 > `rm -f server.pid`로 흔적만 지우고 다시 실행하면 **이전 프로세스가 살아있는 채로
 > 새 프로세스가 또 뜬다.** 서버가 여러 개 쌓이면 각기 다른 포트를 잡아
-> "포트는 떴다는데 연결 안 됨" 상태가 된다. 재시작 시 `pkill -f server.cjs`를 먼저 친다.
+> "포트는 떴다는데 연결 안 됨" 상태가 된다.
+>
+> ⚠️ **`pkill -f server.cjs`(또는 `pkill -f "node server.cjs"`)로 재시작할 때 주의.**
+> 이 명령은 **명령줄에 "server.cjs" 문자열이 들어간 모든 프로세스**를 찾아서 죽인다.
+> 웹 터미널 계정에 다른 프로젝트(예: hotel-site)도 같은 파일명(`server.cjs`)으로
+> 떠 있다면, 그 프로젝트 서버까지 의도치 않게 함께 종료된다.
+> **자기 프로젝트의 프로세스만 정확히 죽이려면 `server.pid`를 이용한다.**
+>
+> ```bash
+> kill -9 $(cat server.pid) 2>/dev/null
+> rm -f server.pid server.port
+> bash start_server.sh
+> ```
 
 ### `package.json`
 
@@ -180,12 +215,9 @@ yarn add express json-server@0.17.4
 ```
 
 ### `.gitignore`
-
-```
 server.pid
 server.port
 server.log
-```
 
 `dist`도 무시 대상이다. 서버에서 직접 빌드하므로 커밋하지 않는다.
 
@@ -214,8 +246,8 @@ cat server.log        # listening on <포트> 확인
 cd ~/project-runshoes
 git checkout -- db.json                              # 웹에서 바뀐 데이터 되돌리기
 git pull
-BASE_PATH=/g/kopo17/project-runshoes/ npm run build  # BASE_PATH 반드시 지정
-pkill -f server.cjs                                  # 기존 서버 전부 종료
+BASE_PATH=/g/kopo17/project-runshoes/ npm run build  # BASE_PATH 반드시 지정, --base= 인자 아님
+kill -9 $(cat server.pid) 2>/dev/null                # 자기 프로세스만 정확히 종료
 rm -f server.pid server.port
 bash start_server.sh
 cat server.log
@@ -227,17 +259,23 @@ cat server.log
 > 배포된 사이트는 로그인이 없어 누구나 리뷰·데이터를 바꿀 수 있고,
 > 그 변경이 `db.json`에 남아 `git pull`과 충돌한다(5번 참고).
 > 웹 터미널의 db.json 변경은 시드가 아니므로 되돌리고 최신 시드를 받는다.
+>
+> **`server.cjs`만 수정했다면 `npm run build`는 생략해도 된다.**
+> 프론트(컴포넌트·페이지·CSS)를 고쳤을 때만 다시 빌드가 필요하다.
+> 헷갈리면 매번 빌드해도 무방하다 — 시간이 조금 더 걸릴 뿐이다.
 
 ---
 
 ## 4. 문제 해결
 
 | 증상                                          | 원인                                    | 해결                                                  |
-| --------------------------------------------- | --------------------------------------- | ----------------------------------------------------- |
-| CSS·JS가 MIME type(text/html) 에러, 완전 백지 | `BASE_PATH` 없이 빌드돼 base가 `/`로 됨 | `BASE_PATH=/g/kopo17/project-runshoes/ npm run build` |
-| 포트는 떴다는데 `curl` 연결 안 됨             | 이전 서버가 안 죽고 여러 개 쌓임        | `pkill -f server.cjs` 후 재시작                       |
+| --------------------------------------------- | ---------------------------------------- | ------------------------------------------------------ |
+| CSS·JS가 MIME type(text/html) 에러, 완전 백지 | `BASE_PATH` 없이 빌드돼 base가 `/`로 됨 | `BASE_PATH=/g/kopo17/project-runshoes/ npm run build` (환경변수, `--base=` 인자 아님) |
+| CSS·이미지·API 전부 404 (빌드는 프리픽스 맞음) | `start_server.sh`가 서버 실행 시 `BASE_PATH`를 안 넘김 | 서버 실행 커맨드 앞에도 `BASE_PATH=...` 추가 |
+| 포트는 떴다는데 `curl` 연결 안 됨             | 이전 서버가 안 죽고 여러 개 쌓임        | `kill -9 $(cat server.pid)` 후 재시작                 |
+| 다른 프로젝트(hotel-site 등) 서버가 갑자기 내려감 | `pkill -f server.cjs`가 이름이 같은 다른 프로젝트 프로세스까지 종료 | `server.pid` 기반으로 자기 프로세스만 종료 |
 | `require is not defined in ES module scope`   | `package.json`에 `"type": "module"`     | 파일 확장자를 `.cjs`로                                |
-| `PathError: Missing parameter name`           | Express 5의 와일드카드 문법             | `/*` → `/*splat`                                      |
+| `PathError: Missing parameter name`           | Express 5의 와일드카드 문법             | `/*` → `/*splat` (또는 Express 4 유지)                |
 | `server.log`가 비어 있고 프로세스가 없음      | 즉시 종료됨                             | `PORT=13000 node server.cjs`로 직접 실행해 에러 확인  |
 | JS·CSS가 404                                  | `base` 미설정                           | `grep script dist/index.html`로 경로 확인             |
 | 이미지만 404                                  | 런타임 경로에 base 미적용               | `asset()` 헬퍼 적용                                   |
@@ -245,11 +283,13 @@ cat server.log
 | "현재 비공개 상태입니다"                      | 외부 공개 미설정                        | 마이페이지에서 공개 전환                              |
 | 마이페이지 목록에 프로젝트가 없음             | 서버가 죽어 있음                        | `ps aux \| grep server.cjs` 확인 후 재시작            |
 | `git pull` 충돌                               | 서버에서 파일을 직접 수정함             | `git checkout -- <파일>` 후 pull                      |
+| 리뷰 요약 요청이 계속 실패(`fetch failed`/timeout) | Ollama가 업데이트·재시작 중이었거나, Node fetch가 이 환경에서 사설 IP 연결에 실패 | Ollama 상태 먼저 확인(`curl`로 직접 테스트), 안정화되면 재시도. 11장 참고 |
 
 ### 유용한 진단 명령
 
 ```bash
-ps aux | grep server.cjs                 # 프로세스 생존 확인 (여러 개면 좀비)
+ps aux | grep server.cjs                 # 프로세스 생존 확인 (여러 개면 좀비, 다른 프로젝트와 구분 필요)
+ls -la /proc/<PID>/cwd                   # 그 PID가 어느 프로젝트 폴더에서 실행됐는지 확인
 cat server.log                           # 서버 로그
 cat server.port                          # 할당된 포트
 curl -I http://localhost:$(cat server.port)/g/<ID>/<폴더>/       # HTML 응답
@@ -260,6 +300,9 @@ tail -f server.log                       # 실시간 요청 로그
 
 > `grep`으로 확인한 경로가 `/g/kopo17/project-runshoes/assets/...`가 아니라
 > `/assets/...`로만 나오면 `BASE_PATH` 없이 빌드된 것이다.
+
+> 여러 프로젝트가 한 계정에 떠 있을 때는 `ps aux`의 PID만으로 어느 프로젝트인지
+> 구분할 수 없다. `ls -la /proc/<PID>/cwd`로 작업 디렉터리를 확인해야 확실하다.
 
 ---
 
@@ -285,7 +328,7 @@ tail -f server.log                       # 실시간 요청 로그
 ```bash
 cd ~/project-runshoes
 git checkout -- db.json
-pkill -f server.cjs
+kill -9 $(cat server.pid) 2>/dev/null
 rm -f server.pid server.port
 bash start_server.sh
 ```
@@ -297,7 +340,7 @@ bash start_server.sh
 마이페이지의 **서버 중지** 버튼, 또는
 
 ```bash
-pkill -f server.cjs
+kill -9 $(cat server.pid) 2>/dev/null
 rm -f server.pid server.port
 ```
 
@@ -306,14 +349,10 @@ rm -f server.pid server.port
 ## 6. 배포판 등록
 
 교내 프로젝트 배포판(키오스크)에 등록하려면:
-
-```
-본인 ID       kopo17
-프로젝트 이름  RUNSHOES
-진행상황      최종 테스트
-링크         https://aisw-apps.kopoctc.kr/g/kopo17/project-runshoes/
-```
-
+본인 ID kopo17
+프로젝트 이름 RUNSHOES
+진행상황 최종 테스트
+링크 https://aisw-apps.kopoctc.kr/g/kopo17/project-runshoes/
 `Insert`로 신규 등록, `정보 수정`으로 변경. 같은 ID로 여러 프로젝트를 등록할 수 있다.
 
 ---
@@ -323,11 +362,31 @@ rm -f server.pid server.port
 바꿔야 할 것은 **경로 문자열 두 곳**이다.
 
 1. 빌드 시 `BASE_PATH=/g/<학번ID>/<폴더명>/`
-2. `server.cjs`의 `BASE`
+2. `start_server.sh`의 서버 실행 커맨드에 붙는 `BASE_PATH=/g/<학번ID>/<폴더명>/`
 
 둘 다 `/g/<학번ID>/<폴더명>/` 형식으로 맞추고,
 웹 터미널의 폴더 이름을 동일하게 만들면 된다.
 
-나머지 파일(`vite.config.ts`, `start_server.sh`, `api.ts`의 `asset()`)은
+나머지 파일(`vite.config.ts`, `api.ts`의 `asset()`)은
 그대로 재사용할 수 있다. `vite.config.ts`는 `BASE_PATH` 환경변수를 읽으므로
 프로젝트마다 고칠 필요가 없다.
+
+---
+
+## 8. 리뷰 요약(Ollama) — 웹 터미널에서의 동작
+
+웹 터미널과 Ollama(별도 PC)는 학교의 같은 물리 네트워크에 있어
+사설 IP로 직접 통신이 가능하며, 실제로 리뷰 요약 기능이 정상 동작한다.
+(쿠버네티스 배포에서는 동작하지 않는다 — [INFRA.md](INFRA.md) 11장 참고.)
+
+디버깅 중 다음을 확인했다.
+
+- **`curl`은 되는데 Node의 `fetch`(undici)만 실패하는 경우가 있었다.**
+  프록시 환경변수(`NO_PROXY`) 문제로 추정했으나, 재현 결과 실제 원인은
+  **그 시점에 Ollama가 업데이트·재시작 중이었던 것**이었다. 요청이 계속
+  실패하면 먼저 Ollama가 응답 가능한 상태인지(`curl`로 가벼운 GET 요청)
+  확인하는 것이 순서다.
+- 현재 `server.cjs`는 안정성을 위해 `fetch` 대신 `curl`을 자식 프로세스로
+  실행(`execFile`)해 Ollama를 호출한다.
+- 첫 요청은 모델이 메모리에 로드되는 시간(수 초~십수 초)이 포함돼 느릴 수
+  있다. 이후 요청은 캐시된 결과를 즉시 반환한다.
