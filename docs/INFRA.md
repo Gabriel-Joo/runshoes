@@ -39,15 +39,15 @@ ArgoCD는 Git을 **읽어** 클러스터를 맞춘다. Git이 유일한 접점�
 
 ## 2. 구성 요소
 
-| 요소 | 위치 | 역할 |
-|---|---|---|
-| **앱 레포** | `std-gitlab.kopoctc.kr/kopo17/runshoes` | 소스 · Dockerfile · Jenkinsfile (GitHub `Gabriel-Joo/runshoes` 미러) |
-| **Jenkins** | `kopo17-jenkins.std.kopoctc.kr` · `cicd` 네임스페이스 | 빌드 트리거 · Kaniko 빌드 · gitops 태그 커밋 |
-| **Kaniko** | 빌드 시 에이전트 Pod 내 컨테이너 | 도커 데몬 없이 이미지 빌드 |
-| **Harbor** | `std-harbor.kopoctc.kr/kopo17/runshoes` | 이미지 레지스트리 (창고) |
-| **gitops 레포** | `std-gitlab.kopoctc.kr/kopo17/gitops` · `apps/runshoes/` | 배포 명세 (무엇을 어떤 태그로 배포할지) |
-| **ArgoCD** | `vcluster-argocd.kopoctc.kr` · Project `kopo17` | Git → 클러스터 동기화 |
-| **배포 대상** | `runshoes` 네임스페이스 · `kopo17-runshoes.std.kopoctc.kr` | 실제 서비스 |
+| 요소            | 위치                                                       | 역할                                                                 |
+| --------------- | ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| **앱 레포**     | `std-gitlab.kopoctc.kr/kopo17/runshoes`                    | 소스 · Dockerfile · Jenkinsfile (GitHub `Gabriel-Joo/runshoes` 미러) |
+| **Jenkins**     | `kopo17-jenkins.std.kopoctc.kr` · `cicd` 네임스페이스      | 빌드 트리거 · Kaniko 빌드 · gitops 태그 커밋                         |
+| **Kaniko**      | 빌드 시 에이전트 Pod 내 컨테이너                           | 도커 데몬 없이 이미지 빌드                                           |
+| **Harbor**      | `std-harbor.kopoctc.kr/kopo17/runshoes`                    | 이미지 레지스트리 (창고)                                             |
+| **gitops 레포** | `std-gitlab.kopoctc.kr/kopo17/gitops` · `apps/runshoes/`   | 배포 명세 (무엇을 어떤 태그로 배포할지)                              |
+| **ArgoCD**      | `vcluster-argocd.kopoctc.kr` · Project `kopo17`            | Git → 클러스터 동기화                                                |
+| **배포 대상**   | `runshoes` 네임스페이스 · `kopo17-runshoes.std.kopoctc.kr` | 실제 서비스                                                          |
 
 ---
 
@@ -76,12 +76,12 @@ Jenkins ──(git commit)──▶ Git ◀──(watch)── ArgoCD ──▶ 
 
 ### 얻은 것
 
-| | 효과 |
-|---|---|
-| 자격증명 축소 | Jenkins는 Git에 커밋만 한다. 클러스터 조작 권한 불필요 → `rbac-jenkins.yaml` 제거 |
-| 단일 진실 원천 | "무엇이 배포됐나"의 답이 항상 Git에 있다. 롤백은 `git revert` |
-| self-heal | 누가 클러스터를 손대도 ArgoCD가 Git 기준으로 되돌린다 |
-| 감사 추적 | 모든 배포가 Git 커밋으로 남는다 |
+|                | 효과                                                                              |
+| -------------- | --------------------------------------------------------------------------------- |
+| 자격증명 축소  | Jenkins는 Git에 커밋만 한다. 클러스터 조작 권한 불필요 → `rbac-jenkins.yaml` 제거 |
+| 단일 진실 원천 | "무엇이 배포됐나"의 답이 항상 Git에 있다. 롤백은 `git revert`                     |
+| self-heal      | 누가 클러스터를 손대도 ArgoCD가 Git 기준으로 되돌린다                             |
+| 감사 추적      | 모든 배포가 Git 커밋으로 남는다                                                   |
 
 ### 오해하기 쉬운 점
 
@@ -103,12 +103,12 @@ Jenkins ──(git commit)──▶ Git ◀──(watch)── ArgoCD ──▶ 
 
 매니페스트를 앱 레포가 아니라 별도의 gitops 레포에 둔다.
 
-| | 앱 레포 (`runshoes`) | gitops 레포 |
-|---|---|---|
-| 담는 것 | 소스 · Dockerfile · Jenkinsfile | 매니페스트 · Application 정의 |
-| 바뀌는 이유 | 기능 · 버그 | 배포 설정 · 이미지 태그 |
-| 바꾸는 주체 | 개발자 | 운영자 또는 CI 자동 |
-| 산출물 | 이미지 | 클러스터 상태 |
+|             | 앱 레포 (`runshoes`)            | gitops 레포                   |
+| ----------- | ------------------------------- | ----------------------------- |
+| 담는 것     | 소스 · Dockerfile · Jenkinsfile | 매니페스트 · Application 정의 |
+| 바뀌는 이유 | 기능 · 버그                     | 배포 설정 · 이미지 태그       |
+| 바꾸는 주체 | 개발자                          | 운영자 또는 CI 자동           |
+| 산출물      | 이미지                          | 클러스터 상태                 |
 
 **분리 이유**
 
@@ -151,10 +151,12 @@ builder (node:20-alpine)         runtime (node:20-alpine)
 `vite build`가 메모리를 크게 써서 빌드 도중 Pod가 OOM으로 죽었다.
 
 **원인 두 가지**
+
 - vcluster에 컨테이너당 메모리 상한(LimitRange 2Gi)이 걸려 있어 4Gi 요청이 거부됨
 - Node가 컨테이너 limit을 모르고 시스템 메모리 기준으로 힙을 잡음
 
 **해결**
+
 - kaniko `resources`를 requests 1Gi / limits 2Gi로 상한에 맞춤
 - Kaniko에 `--snapshot-mode=redo --single-snapshot` 추가 (메모리 · 시간 절약)
 - Dockerfile 빌드 스테이지에 `ENV NODE_OPTIONS=--max-old-space-size=1536`
@@ -170,7 +172,7 @@ builder (node:20-alpine)         runtime (node:20-alpine)
 만료 · 폐기된 GitLab 토큰이 Jenkins와 ArgoCD 여러 곳에서 공유되고 있었다.
 하나를 폐기하자 ArgoCD가 gitops 레포를 못 읽어 sync가 깨졌다.
 → 새 PAT를 발급해 재정비. **용도별 토큰 분리**(로컬 / Jenkins / ArgoCD 읽기전용)가
-   원칙임을 체감한 사례.
+원칙임을 체감한 사례.
 
 ### 쿼터 · 동시 빌드
 
@@ -274,8 +276,8 @@ spec:
     namespace: runshoes
   syncPolicy:
     automated:
-      prune: true        # Git에서 지우면 클러스터에서도 제거
-      selfHeal: true     # 수동 변경을 Git 기준으로 되돌림
+      prune: true # Git에서 지우면 클러스터에서도 제거
+      selfHeal: true # 수동 변경을 Git 기준으로 되돌림
     syncOptions:
       - CreateNamespace=true
 ```
@@ -304,11 +306,6 @@ spec:
 
 ## 11. 현재 상태
 
-1~4단계(코드 push → 빌드 → Harbor → gitops 태그 자동 커밋)는 **구성·검증 완료**다.
-`git push` 한 번으로 Jenkins가 이미지를 빌드해 Harbor에 올리고,
-gitops 레포의 `newTag`를 갱신하는 커밋까지 자동으로 남기는 것을 확인했다.
-
-5~7단계(ArgoCD 감지 → 배포)도 등록 완료, 전 구간 작동 확인
 전 단계가 구성·검증 완료다. `git push` 한 번으로 Jenkins가 이미지를 빌드해
 Harbor에 올리고, gitops 레포의 `newTag`를 갱신하는 커밋을 남기며,
 ArgoCD가 이를 감지해 `runshoes` 네임스페이스에 자동 배포한다.
