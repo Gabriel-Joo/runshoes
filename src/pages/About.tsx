@@ -151,6 +151,16 @@ const About = () => {
             </p>
           </div>
         </div>
+        <h3 className="about__subtitle">리뷰가 많으면, 요약도 보여줍니다</h3>
+        <p className="about__body">
+          리뷰가 3개 이상인 신발은 Ollama로 구동한 로컬 언어 모델(gemma4 8B)이
+          리뷰를 읽고 좋았던 점과 아쉬운 점을 나눠 정리합니다. 공감을 많이 받은
+          리뷰일수록 더 비중 있게 반영되며, 리뷰들의 의견이 서로 반대되는
+          경우에는 한쪽만 골라 보여주지 않고 "의견이 갈립니다"처럼 양쪽을 함께
+          안내하도록 프롬프트를 설계했습니다. 계산된 요약은 리뷰가 바뀔 때만
+          새로 생성해 저장해두고, 그 외에는 저장된 결과를 보여줍니다.
+        </p>
+
         <h3 className="about__subtitle">주요 화면</h3>
 
         <figure className="about__shot">
@@ -192,16 +202,28 @@ const About = () => {
           </figcaption>
         </figure>
 
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/detail-review.png")}
+            alt="리뷰"
+          />
+          <figcaption>
+            리뷰 — 도움이 된 리뷰는 베스트로 상단에 고정됩니다
+          </figcaption>
+        </figure>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/detail-summary.png")}
+            alt="리뷰 요약"
+          />
+          <figcaption>
+            로컬 LLM(Ollama)이 리뷰를 읽고 요약합니다. 이 사례는 리뷰 의견이
+            갈리는 경우를 보여줍니다
+          </figcaption>
+        </figure>
+
         <div className="about__shots">
-          <figure className="about__shot">
-            <img
-              src={asset("/images/screenshots/detail-review.png")}
-              alt="리뷰"
-            />
-            <figcaption>
-              리뷰 — 도움이 된 리뷰는 베스트로 상단에 고정됩니다
-            </figcaption>
-          </figure>
           <figure className="about__shot">
             <img
               src={asset("/images/screenshots/recommend-question.png")}
@@ -233,17 +255,15 @@ const About = () => {
               등록·관리 — 브랜드 필터와 검색, 행마다 수정·삭제
             </figcaption>
           </figure>
-          <figure className="about__shot">
-            <img
-              src={asset("/images/screenshots/admin-form.png")}
-              alt="등록 폼"
-            />
-            <figcaption>
-              등록·수정 폼 — 공개되지 않은 스펙은 비워두면 "정보 없음"으로
-              저장됩니다
-            </figcaption>
-          </figure>
         </div>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/admin-form.png")}
+            alt="등록 폼"
+          />
+          <figcaption>등록·수정 폼 — 스펙 입력과 삭제</figcaption>
+        </figure>
       </section>
 
       <hr className="about__divider" />
@@ -395,6 +415,54 @@ const About = () => {
               </dd>
             </dl>
           </article>
+          <article>
+            <h4>같은 학교 네트워크인데도 서버가 서로를 못 찾았다</h4>
+            <dl>
+              <dt>시도</dt>
+              <dd>
+                리뷰 요약에 로컬 PC의 Ollama(gemma4 8B)를 그대로 활용하기로
+                했습니다. 클러스터 안에 별도로 LLM을 띄우는 대신, 이미 로컬에
+                있던 모델을 재사용하는 쪽을 택했습니다.
+              </dd>
+              <dt>막힌 지점</dt>
+              <dd>
+                같은 학교 네트워크 안이라 ping은 됐지만, VM에서 로컬 PC의
+                포트로는 연결이 안 됐습니다. Ollama가 내부 인터페이스에서만 듣고
+                있었고, 윈도우 방화벽도 외부 연결을 막고 있었습니다.
+              </dd>
+              <dt>해결</dt>
+              <dd>
+                <code>OLLAMA_HOST=0.0.0.0</code>으로 외부 인터페이스에서도 듣게
+                하고, 방화벽에 해당 포트의 인바운드 규칙을 추가했습니다.
+              </dd>
+            </dl>
+          </article>
+
+          <article>
+            <h4>요약이 매번 다르게 나왔다 — 존댓말 혼용, 소수 의견 누락</h4>
+            <dl>
+              <dt>증상</dt>
+              <dd>
+                같은 형식으로 요청해도 어떤 리뷰는 존댓말, 어떤 리뷰는 반말로
+                요약됐습니다. 좋아요 수가 비슷한 리뷰끼리 의견이 정반대인데도,
+                한쪽만 반영되고 다른 쪽은 사라지는 경우도 있었습니다.
+              </dd>
+              <dt>원인</dt>
+              <dd>
+                문체를 지정하지 않아 모델이 리뷰 원문의 말투를 따라간
+                것이었습니다. 상반된 의견 처리도 규칙이 없어, 모델이 더
+                두드러지는 쪽 하나만 골라 담고 있었습니다.
+              </dd>
+              <dt>해결</dt>
+              <dd>
+                프롬프트에 존댓말 사용을 명시하고, 의견이 반대되면 한쪽만 고르지
+                말고 함께 언급하라는 규칙을 추가했습니다. 좋아요 수도 함께
+                전달해 공감을 많이 받은 의견에 더 비중을 두도록 했습니다. 8B급
+                로컬 모델이라 완벽하진 않지만, 실제로 상반된 두 의견을 "의견이
+                갈립니다"로 함께 담아내는 것을 확인했습니다.
+              </dd>
+            </dl>
+          </article>
         </div>
         <h3 className="about__subtitle">동작 확인</h3>
         <p className="about__body">
@@ -469,6 +537,13 @@ const About = () => {
               <li>Harbor</li>
               <li>ArgoCD</li>
               <li>Kustomize</li>
+            </ul>
+          </div>
+          <div>
+            <h4>AI 연동</h4>
+            <ul>
+              <li>Ollama</li>
+              <li>gemma4 (8B)</li>
             </ul>
           </div>
         </div>
