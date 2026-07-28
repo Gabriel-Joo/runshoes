@@ -352,6 +352,17 @@
   padding: 1px 6px;
   font-size: 14px;
 }
+.about__prompt {
+  background: #1a1a1a;
+  color: #d4d4d4;
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  border-radius: 3px;
+  white-space: pre-wrap;
+  font-family: "Consolas", "Monaco", monospace;
+}
 .about__stack {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

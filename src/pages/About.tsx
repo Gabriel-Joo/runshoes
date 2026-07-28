@@ -460,13 +460,19 @@ const About = () => {
                 전달해 공감을 많이 받은 의견에 더 비중을 두도록 했습니다. 8B급
                 로컬 모델이라 완벽하진 않지만, 실제로 상반된 두 의견을 "의견이
                 갈립니다"로 함께 담아내는 것을 확인했습니다.
+                <pre className="about__prompt">
+                  {`각 리뷰 앞의 "(공감 N개)"는 다른 사용자들이 그 리뷰에 공감한 수입니다. 공감을 많이 받은 리뷰의 의견을 더 비중 있게 반영하세요. 의견이 서로 반대된다면, 한쪽만 고르지 말고 "의견이 갈립니다"처럼 양쪽을 함께 언급하세요. 문장은 반드시 정중한 존댓말(합니다체)로 작성하세요.`}
+                </pre>
               </dd>
             </dl>
           </article>
         </div>
-        <h3 className="about__subtitle">동작 확인</h3>
+        <h3 className="about__subtitle">
+          파이프라인 및 AI연동의 실제 동작 화면
+        </h3>
         <p className="about__body">
-          push 이후 실제로 무슨 일이 일어나는지, 각 도구에 남은 기록입니다.
+          push 이후 실제로 무슨 일이 일어나는지, 그리고 리뷰 요약이 어떻게
+          처리되는지 각 도구에 남은 기록입니다.
         </p>
 
         <figure className="about__shot">
@@ -499,6 +505,26 @@ const About = () => {
           <figcaption>
             Jenkins — push마다 이미지 빌드·푸시와 매니페스트 갱신이 순서대로
             실행됩니다
+          </figcaption>
+        </figure>
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/network-check.png")}
+            alt="네트워크 연결 확인"
+          />
+          <figcaption>
+            학교 VM에서 로컬 PC의 Ollama로 연결이 확인됩니다
+          </figcaption>
+        </figure>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/summary-log.png")}
+            alt="요약 생성 로그"
+          />
+          <figcaption>
+            리뷰 조회 후 요약이 생성되는 서버 로그 — 리뷰 5개를 읽고 요약을
+            생성한 기록입니다
           </figcaption>
         </figure>
         <h3 className="about__subtitle">기술 스택</h3>
