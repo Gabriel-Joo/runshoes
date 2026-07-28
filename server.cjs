@@ -1,6 +1,10 @@
 const express = require("express");
 const jsonServer = require("json-server");
 const path = require("path");
+const { execFile } = require("child_process");
+const { promisify } = require("util");
+const execFileAsync = promisify(execFile);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE = process.env.BASE_PATH
@@ -52,23 +56,24 @@ const summaryHandler = async (req, res) => {
 ${reviewText}`;
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45000);
+    const { stdout } = await execFileAsync(
+      "curl",
+      [
+        "-s",
+        "-m",
+        "40",
+        "-X",
+        "POST",
+        `${OLLAMA_URL}/api/generate`,
+        "-H",
+        "Content-Type: application/json",
+        "-d",
+        JSON.stringify({ model: "gemma4", prompt, stream: false }),
+      ],
+      { maxBuffer: 1024 * 1024 * 10 },
+    );
 
-    const response = await fetch(`${OLLAMA_URL}/api/generate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "gemma4",
-        prompt,
-        stream: false,
-      }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    if (!response.ok) throw new Error(`Ollama ${response.status}`);
-    const data = await response.json();
+    const data = JSON.parse(stdout);
 
     let parsed;
     try {
@@ -77,6 +82,7 @@ ${reviewText}`;
     } catch {
       parsed = { positive: data.response.trim(), negative: null };
     }
+
     summaryCache.set(shoeId, { summary: parsed, reviewCount: reviews.length });
     console.log(
       `[summary] shoeId=${shoeId} 요약 생성 완료 (리뷰 ${reviews.length}개)`,
