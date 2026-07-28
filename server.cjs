@@ -53,7 +53,7 @@ ${reviewText}`;
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = setTimeout(() => controller.abort(), 45000);
 
     const response = await fetch(`${OLLAMA_URL}/api/generate`, {
       method: "POST",
