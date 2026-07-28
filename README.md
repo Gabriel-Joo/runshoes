@@ -18,6 +18,7 @@ Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?logo=jenkins&logoColor=white)
 ![Argo CD](https://img.shields.io/badge/Argo%20CD-EF7B4D?logo=argo&logoColor=white)
 ![Harbor](https://img.shields.io/badge/Harbor-60B932?logo=harbor&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-000?logo=ollama&logoColor=white)
 
 > **문서 안내**
 >
@@ -50,6 +51,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | 해부도 히어로      | 뒤꿈치 · 밑창 · 측면 클로즈업 슬라이드에 용어 캡션을 붙여 사이트 성격을 첫 화면에서 전달 |
 | 정보 없음의 명시   | 브랜드가 공개하지 않은 스펙은 추측하지 않고 "정보 없음"으로 표기                         |
 | 발볼 · 와이드 정보 | 한국 러너에게 중요하지만 해외 사이트가 다루지 않는 항목을 전면에 노출                    |
+| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 로컬 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리                       |
 
 ### 비주얼 컨셉 — 표본 전시실
 
@@ -174,6 +176,8 @@ git checkout -- db.json
 - [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
 - [x] **Kubernetes GitOps 배포** — Jenkins(Kaniko) → Harbor → ArgoCD
 - [x] **About 페이지 `/about`** — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지
+- [x] **리뷰 요약 (Ollama)** — 로컬 LLM으로 리뷰의 긍정·부정 의견을 요약 (로컬/웹 터미널 전용, 아래 11장 참고)
+
 ---
 
 ## 4. 데이터 설계
@@ -347,54 +351,51 @@ git config alias.pp 'push gitlab main'
 ---
 
 ## 6. 폴더 구조
-
-```
 runshoes/
-├─ db.json                  ← 루트 (src/ 아님)
+├─ db.json ← 루트 (src/ 아님)
 ├─ Dockerfile
-├─ server.cjs               ← express(정적) + json-server(/api) 통합
+├─ server.cjs ← express(정적) + json-server(/api) + 리뷰 요약(Ollama) 통합
 ├─ docs/
-│  ├─ INFRA.md              ← K8s GitOps CI/CD
-│  ├─ DEPLOY.md             ← 웹 터미널 배포
-│  ├─ design-prompt.md      ← 디자인 요청 및 수정 이력
-│  └─ design-handoff.md     ← 디자인 확정 명세
+│ ├─ INFRA.md ← K8s GitOps CI/CD
+│ ├─ DEPLOY.md ← 웹 터미널 배포
+│ ├─ design-prompt.md ← 디자인 요청 및 수정 이력
+│ └─ design-handoff.md ← 디자인 확정 명세
 ├─ public/
-│  └─ images/
-│     ├─ (신발 이미지)
-│     └─ screenshots/       ← About 화면 캡쳐
+│ └─ images/
+│ ├─ (신발 이미지)
+│ └─ screenshots/ ← About 화면 캡쳐
 └─ src/
-   ├─ api.ts                ← API 주소 상수
-   ├─ types/
-   │  └─ index.ts           ← Shoe, Review, Term
-   ├─ utils/
-   │  └─ date.ts            ← formatDate (상대 시간 표시)
-   ├─ components/
-   │  ├─ Header.tsx         ← 상단 메뉴 · 햄버거
-   │  ├─ Hero.tsx           ← 해부도 슬라이드
-   │  ├─ FilterBar.tsx      ← 용도별 필터
-   │  ├─ SortBar.tsx        ← 정렬 · 찜 토글
-   │  ├─ ShoeCard.tsx       ← 카드 (랭킹 모드 겸용)
-   │  ├─ ShoeImage.tsx      ← 이미지 + 플레이스홀더
-   │  ├─ ShoeGallery.tsx    ← 모달 이미지 슬라이드 + 썸네일
-   │  ├─ ShoeModal.tsx      ← 상세 모달
-   │  ├─ ReviewSection.tsx  ← 리뷰 CRUD
-   │  ├─ ReviewItem.tsx     ← 리뷰 1건 (좋아요 · 인라인 편집)
-   │  ├─ TermTooltip.tsx    ← 용어 툴팁
-   │  ├─ ConfirmModal.tsx   ← 삭제 확인
-   │  ├─ ScrollTop.tsx      ← 라우트 이동 시 스크롤 초기화
-   │  └─ PipelineDiagram.tsx ← About용 CI/CD 파이프라인 SVG 도식
-   ├─ pages/
-   │  ├─ ShoeList.tsx       ← /
-   │  ├─ Recommend.tsx      ← /recommend
-   │  ├─ Best.tsx           ← /best
-   │  ├─ About.tsx          ← /about
-   │  ├─ Admin.tsx          ← /admin
-   │  ├─ ShoeForm.tsx       ← /new, /edit/:id
-   │  └─ NotFound.tsx       ← *
-   ├─ App.tsx
-   └─ main.tsx
-```
-
+├─ api.ts ← API 주소 상수
+├─ types/
+│ └─ index.ts ← Shoe, Review, Term
+├─ utils/
+│ └─ date.ts ← formatDate (상대 시간 표시)
+├─ components/
+│ ├─ Header.tsx ← 상단 메뉴 · 햄버거
+│ ├─ Hero.tsx ← 해부도 슬라이드
+│ ├─ FilterBar.tsx ← 용도별 필터
+│ ├─ SortBar.tsx ← 정렬 · 찜 토글
+│ ├─ ShoeCard.tsx ← 카드 (랭킹 모드 겸용)
+│ ├─ ShoeImage.tsx ← 이미지 + 플레이스홀더
+│ ├─ ShoeGallery.tsx ← 모달 이미지 슬라이드 + 썸네일
+│ ├─ ShoeModal.tsx ← 상세 모달
+│ ├─ ReviewSection.tsx ← 리뷰 CRUD
+│ ├─ ReviewItem.tsx ← 리뷰 1건 (좋아요 · 인라인 편집)
+│ ├─ ReviewSummary.tsx ← 리뷰 요약 카드 (Ollama)
+│ ├─ TermTooltip.tsx ← 용어 툴팁
+│ ├─ ConfirmModal.tsx ← 삭제 확인
+│ ├─ ScrollTop.tsx ← 라우트 이동 시 스크롤 초기화
+│ └─ PipelineDiagram.tsx ← About용 CI/CD 파이프라인 SVG 도식
+├─ pages/
+│ ├─ ShoeList.tsx ← /
+│ ├─ Recommend.tsx ← /recommend
+│ ├─ Best.tsx ← /best
+│ ├─ About.tsx ← /about
+│ ├─ Admin.tsx ← /admin
+│ ├─ ShoeForm.tsx ← /new, /edit/:id
+│ └─ NotFound.tsx ← *
+├─ App.tsx
+└─ main.tsx
 CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)만 `index.css`에 둔다.
 
 ---
@@ -413,10 +414,7 @@ CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)�
 | `*`          | NotFound      |                                                              |
 
 ### 종합 점수
-
-```
 score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
-```
 
 평점만으로 순위를 매기면 "리뷰 1개에 5점"이 1위가 된다.
 그래서 리뷰 수를 더하는 대신, 리뷰가 적을수록 평점 반영률을 낮추는
@@ -442,18 +440,14 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 ## 8. 배포
 
 로컬 개발 → 웹 터미널(aisw-lab) → **Kubernetes GitOps**로 단계적으로 발전시켰다.
-
-```
 개발자 ──git push──▶ GitLab ──webhook──▶ Jenkins
-                                          │ Kaniko 빌드
-                                          ▼
-                                       Harbor  (std-harbor.kopoctc.kr/kopo17)
-                                          │
-                          gitops 레포 ◀───┘ 이미지 태그 커밋
-                                │
-                             ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
-```
-
+│ Kaniko 빌드
+▼
+Harbor (std-harbor.kopoctc.kr/kopo17)
+│
+gitops 레포 ◀───┘ 이미지 태그 커밋
+│
+ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 - 클러스터: 학교 RKE2 클러스터 위의 **vcluster(`vc-kopo17`)**
 - Ingress: Traefik. 전역 HTTP→HTTPS 리다이렉트가 걸려 있어
   `web,websecure` 엔트리포인트와 `tls` 블록을 모두 선언해야 한다.
@@ -470,12 +464,13 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 항목          | 내용                                                                 |
 | ------------- | -------------------------------------------------------------------- |
 | 기본 요건     | 목록 · 필터 · 정렬 · 찜 · 상세 모달 · 리뷰 CRUD · 등록/관리 · 반응형 |
-| 데이터 확충   | 러닝화 20종 · 리뷰 71개                                              |
+| 데이터 확충   | 러닝화 20종 · 리뷰 101개                                             |
 | 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일                         |
 | 리뷰 좋아요   | 리뷰별 좋아요 + 베스트 리뷰 상단 고정                                |
 | 맞춤 추천     | `/recommend` 5문항 점수제                                            |
 | 배포          | 웹 터미널 → Kubernetes GitOps CI/CD                                  |
-| About 페이지            | 기술 스택 · 아키텍처 · 주요 화면 · 배운 점                   |
+| About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅       |
+| 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (로컬 · 웹 터미널 전용)        |
 
 ### 예정
 
@@ -486,16 +481,13 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 러닝 코스 · 대회 도메인 | 신발 엔진(항목+리뷰+평점+찜) 재사용            |
 
 ### 확장 로드맵
-
-```
-        [ 러닝 통합 플랫폼 ]
-              │
-   ┌──────────┼──────────┐
-  신발        코스        대회
- (현재)     (예정)      (예정)
-   │
- 리뷰·평점·찜  ← 엔진 공유
-```
+[ 러닝 통합 플랫폼 ]
+           │
+┌──────────┼──────────┐
+신발 코스 대회
+(현재) (예정) (예정)
+│
+리뷰·평점·찜 ← 엔진 공유
 
 세 도메인 모두 "항목 + 리뷰 + 평점 + 찜" 구조가 동일하다.
 현재 신발 도메인에서 이 엔진을 완성해 두었으므로,
@@ -511,3 +503,38 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 수치가 자료마다 다른 경우 **브랜드 공식 발표를 우선**하고,
 성별·발볼별로 스펙이 다른 모델은 **남성 레귤러 기준**으로 통일했다.
+
+---
+
+## 11. 리뷰 요약 (Ollama)
+
+리뷰가 3개 이상인 신발은 로컬에서 구동한 언어 모델(Ollama, gemma4 8B)이
+리뷰를 읽고 좋았던 점과 아쉬운 점을 나눠 요약한다.
+
+### 동작 방식
+
+- `server.cjs`가 `/api/shoes/:id/summary`에서 해당 신발의 리뷰를 모아 프롬프트로 구성
+- 공감(좋아요) 수가 많은 리뷰일수록 더 비중 있게 반영하도록 프롬프트에 명시
+- 의견이 서로 반대되는 경우, 한쪽만 고르지 않고 "의견이 갈립니다"처럼 양쪽을 함께 언급하도록 지시
+- 요약은 서버 메모리에 캐싱하고, 해당 신발의 리뷰 개수(`reviewCount`)가 바뀔 때만 재생성한다.
+  같은 개수로는 재호출하지 않으므로, 방문자가 반복해서 확인해도 추가 연산이 발생하지 않는다.
+- Ollama 호출은 `fetch`가 아니라 `curl` 프로세스 실행(`execFile`)으로 처리한다.
+  일부 네트워크 환경에서 Node의 내장 fetch(undici)가 사설 네트워크 연결에
+  실패하는 사례가 있어, 항상 안정적으로 동작한 `curl`로 우회했다.
+
+### 왜 Live Demo(쿠버네티스)에는 없는가
+
+이 기능은 **로컬 개발 환경과 웹 터미널(aisw-lab) 배포에서만 동작**하며,
+쿠버네티스 배포에는 포함하지 않았다.
+
+Ollama는 별도 PC에서 구동 중이고, 로컬 개발 환경과 웹 터미널은 학교의
+같은 물리 네트워크에 있어 사설 IP로 직접 통신이 가능하다. 반면 쿠버네티스
+Pod는 vcluster의 오버레이 네트워크 안에 있어, 같은 사설 IP 대역으로도
+경로 자체가 존재하지 않는다(Pod 안에서 직접 확인함 — `curl` 요청이
+항상 타임아웃으로 실패). 이는 방화벽 설정으로 해결되는 문제가 아니라
+vcluster 네트워크 구조 자체의 제약이라 판단해, 이번 배포 범위에서는
+제외했다.
+
+Ollama를 클러스터 안에 컨테이너로 직접 띄우는 방법도 있으나, 현재
+vcluster의 리소스 상한(컨테이너당 2Gi)에서는 8B 모델 구동이 어려워
+추후 과제로 남겨두었다.
