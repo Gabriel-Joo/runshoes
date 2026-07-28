@@ -4,6 +4,7 @@ import ShoeList from './pages/ShoeList'
 import Recommend from './pages/Recommend'
 import Best from './pages/Best'
 import ShoeForm from './pages/ShoeForm'
+import About from './pages/About'
 import Admin from './pages/Admin'
 import NotFound from './pages/NotFound'
 import ScrollTop from './components/ScrollTop'
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<ShoeList />} />
         <Route path="/recommend" element={<Recommend />} />
         <Route path="/best" element={<Best />} />
+        <Route path="/about" element={<About />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/new" element={<ShoeForm />} />
         <Route path="/edit/:id" element={<ShoeForm />} />

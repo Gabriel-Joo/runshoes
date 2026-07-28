@@ -770,7 +770,9 @@
       "author": "카본첫경험",
       "rating": 4,
       "content": "반발력은 엄청난데 초보가 신기엔 확실히 부담됩니다. 종아리가 며칠 아팠어요.",
-      "createdAt": "2026-07-14"
+      "createdAt": "2026-07-14",
+      "liked": true,
+      "likeCount": 1
     },
     {
       "id": 25,
