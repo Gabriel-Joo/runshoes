@@ -77,8 +77,10 @@ ${reviewText}`;
     } catch {
       parsed = { positive: data.response.trim(), negative: null };
     }
-
     summaryCache.set(shoeId, { summary: parsed, reviewCount: reviews.length });
+    console.log(
+      `[summary] shoeId=${shoeId} 요약 생성 완료 (리뷰 ${reviews.length}개)`,
+    );
     res.json({ summary: parsed });
   } catch (err) {
     console.error("summary error:", err.message);
