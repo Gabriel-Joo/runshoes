@@ -90,6 +90,7 @@ ${reviewText}`;
     res.json({ summary: parsed });
   } catch (err) {
     console.error("summary error:", err.message);
+    console.error("stderr:", err.stderr);
     res.json({ summary: null, reason: "요약을 불러오지 못했습니다" });
   }
 };
