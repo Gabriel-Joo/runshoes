@@ -31,6 +31,7 @@
   font-size: 23px;
   font-weight: 600;
   color: var(--text-strong);
+  white-space: nowrap;
 }
 .header__link--point {
   color: #2a6f97;
@@ -39,7 +40,10 @@
   font-weight: 600;
   color: var(--text-strong);
 }
-
+.header__link--about {
+  border-left: 1px solid #000000;
+  padding-left: 20px;
+}
 .header__link--admin {
   font-weight: 600;
   color: var(--text-weak);

@@ -1,0 +1,233 @@
+.about {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.about__title {
+  font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+}
+
+.about__partlabel {
+  font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.about__part {
+  padding: 56px 0;
+}
+
+.about__parttitle {
+  font-size: 30px;
+  margin: 0;
+}
+
+.about__lead {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 32px 0 20px;
+  line-height: 1.5;
+}
+
+.about__body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #444;
+  margin: 0 0 16px;
+}
+
+.about__points {
+  list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.about__point {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  padding: 24px;
+  transition: background 0.2s;
+}
+.about__point:hover {
+  background: #fff;
+}
+.about__point h3 {
+  font-size: 17px;
+  margin: 0 0 10px;
+  color: #1d7a72;
+}
+
+.about__point p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
+}
+
+.about__subtitle {
+  font-size: 20px;
+  margin: 56px 0 16px;
+}
+
+.about__formula {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+  margin: 24px 0 20px;
+}
+
+.about__formula code {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.about__formulanote {
+  font-size: 14px;
+  color: #666;
+  margin: 12px 0 0;
+}
+
+.about__ratio {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 12px;
+}
+
+.about__ratio li {
+  flex: 1;
+  border-left: 2px solid #1d7a72;
+  padding: 8px 0 8px 14px;
+}
+
+.about__ratio strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.about__ratio span {
+  font-size: 14px;
+  color: #666;
+}
+.about__score {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.about__score li {
+  flex: 1;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  padding: 18px 12px;
+  text-align: center;
+}
+
+.about__score span {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.about__score strong {
+  font-size: 26px;
+  font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+}
+
+.about__score--total strong {
+  color: #1d7a72;
+}
+
+.about__note {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.about__principle {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin: 24px 0 0;
+}
+
+.about__principle h4 {
+  font-size: 17px;
+  margin: 0 0 12px;
+  padding-left: 14px;
+  border-left: 3px solid #1d7a72;
+}
+
+.about__principle p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #555;
+  margin: 0;
+}
+
+.about__principle code {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  font-size: 14px;
+}
+.about__shots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.about__shot {
+  margin: 0 0 28px;
+}
+
+.about__shot img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--border);
+}
+
+.about__shot figcaption {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .about__points {
+    grid-template-columns: 1fr;
+  }
+  .about__ratio {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .about__score {
+    flex-wrap: wrap;
+  }
+  .about__score li {
+    flex: 0 0 calc(33.333% - 7px);
+  }
+  .about__principle {
+    grid-template-columns: 1fr;
+  }
+  .about__shots {
+    grid-template-columns: 1fr;
+  }
+}

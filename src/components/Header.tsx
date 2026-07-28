@@ -20,10 +20,13 @@ function Header() {
             홈
           </Link>
           <Link to="/recommend" className="header__link header__link--point">
-            맞춤 추천
+            맞춤추천
           </Link>
           <Link to="/best" className="header__link header__link--sub">
             러너들의 선택
+          </Link>
+          <Link to="/about" className="header__link header__link--about">
+            About
           </Link>
           <Link to="/admin" className="header__link header__link--admin">
             등록·관리
@@ -64,6 +67,13 @@ function Header() {
             onClick={close}
           >
             러너들의 선택
+          </Link>
+          <Link
+            to="/about"
+            className={`header__drawerlink ${location.pathname === "/about" ? "is-active" : ""}`}
+            onClick={close}
+          >
+            About
           </Link>
           <Link
             to="/admin"
