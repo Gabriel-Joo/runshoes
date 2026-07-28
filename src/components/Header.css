@@ -28,7 +28,7 @@
 
 .header__link {
   font-family: "Archivo Black", sans-serif;
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -41,8 +41,7 @@
 }
 
 .header__link--admin {
-  font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-weak);
 }
 /* 햄버거 — 데스크톱에서 숨김 */
