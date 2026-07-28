@@ -1,0 +1,38 @@
+.review-summary {
+  background: linear-gradient(
+    135deg,
+    rgba(147, 112, 219, 0.06),
+    rgba(147, 112, 219, 0.02)
+  );
+  border: 1px solid rgba(147, 112, 219, 0.25);
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.review-summary__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #8b6fc9;
+  letter-spacing: 0.05em;
+  margin: 0 0 10px;
+}
+
+.review-summary__loading-text,
+.review-summary__empty {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
+
+.review-summary__positive,
+.review-summary__negative {
+  margin: 0 0 6px;
+}
+
+.review-summary__negative {
+  color: #666;
+}
