@@ -85,7 +85,7 @@ function Best() {
       <div className="best__head">
         <h2 className="best__title">러너들의 선택</h2>
         <p className="best__desc">
-          평점과 리뷰 수, 좋아요를 합산한 종합 점수로 순위를 매겼습니다.
+          평점과 리뷰 수, 좋아요를 함께 반영한 종합 점수로 순위를 매겼습니다.
           <em>
             종합 점수 = 평점 × 20 × 신뢰도 + 좋아요 × 0.5
             <br />
