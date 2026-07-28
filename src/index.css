@@ -1,6 +1,6 @@
 :root {
   /* 색상 */
-  --accent: #1D7A72;
+  --accent: #1d7a72;
   --bg-dark: oklch(0.11 0 0);
   --bg-panel: oklch(0.13 0 0);
   --bg-light: oklch(0.965 0.002 90);
@@ -15,8 +15,8 @@
   --border-light: oklch(0.85 0 0);
 
   /* 폰트 */
-  --font-base: 'Noto Sans KR', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-base: "Noto Sans KR", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
 * {
@@ -43,11 +43,15 @@ a {
   text-decoration: none;
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
 img {
   display: block;
   max-width: 100%;
+}
+html {
+  scroll-behavior: smooth;
 }
