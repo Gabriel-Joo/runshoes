@@ -3,6 +3,7 @@ import type { Shoe, Term } from "../types";
 import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
 import ShoeGallery from "./ShoeGallery";
+import ReviewSummary from "./ReviewSummary";
 import "./ShoeModal.css";
 
 interface ShoeModalProps {
@@ -13,6 +14,11 @@ interface ShoeModalProps {
 }
 
 function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
+  const [reviewVersion, setReviewVersion] = useState(0);
+  const handleReviewChange = () => {
+    setReviewVersion((v) => v + 1);
+    onReviewChange();
+  };
   const [openTerm, setOpenTerm] = useState<string | null>(null); // ← 이 줄
   useEffect(() => {
     const scrollbarWidth =
@@ -159,8 +165,8 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
             </div>
           </div>
         </div>
-
-        <ReviewSection shoeId={shoe.id} onReviewChange={onReviewChange} />
+        <ReviewSummary key={reviewVersion} shoeId={shoe.id} />
+        <ReviewSection shoeId={shoe.id} onReviewChange={handleReviewChange} />
       </div>
     </div>
   );
