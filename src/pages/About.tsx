@@ -1,12 +1,21 @@
 import "./About.css";
 import { asset } from "../api";
+import PipelineDiagram from "../components/PipelineDiagram";
 
 const About = () => {
   return (
     <main className="about">
       <h1 className="about__title">About</h1>
-
-      <section className="about__part">
+      <nav className="about__anchors">
+        <a href="#part1">
+          <span>PART.01</span>이 사이트에 대해
+        </a>
+        <a href="#part2">
+          <span>PART.02</span>
+          어떻게 만들었나
+        </a>
+      </nav>
+      <section className="about__part" id="part1">
         <p className="about__partlabel">PART.01</p>
         <h2 className="about__parttitle">이 사이트에 대해</h2>
 
@@ -239,9 +248,238 @@ const About = () => {
 
       <hr className="about__divider" />
 
-      <section className="about__part">
+      <section className="about__part" id="part2">
         <p className="about__partlabel">PART.02</p>
         <h2 className="about__parttitle">어떻게 만들었나</h2>
+
+        <p className="about__lead">수동 배포에서 GitOps까지</p>
+        <p className="about__body">
+          처음부터 쿠버네티스로 시작하지 않았습니다. 배포 방식이 불편해질 때마다
+          한 단계씩 옮겼고, 그 과정에서 왜 그 도구가 필요한지를 알게 됐습니다.
+        </p>
+
+        <ol className="about__steps">
+          <li>
+            <span className="about__stepnum">01</span>
+            <h4>웹 터미널 수동 배포</h4>
+            <p>
+              학교 웹 터미널에 접속해 <code>git pull</code>, 빌드, 서버 재시작을
+              직접 실행했습니다. 배포할 때마다 같은 명령을 반복해야 했고, 빌드
+              옵션을 빠뜨리면 화면이 백지로 떴습니다.
+            </p>
+          </li>
+          <li>
+            <span className="about__stepnum">02</span>
+            <h4>컨테이너와 쿠버네티스</h4>
+            <p>
+              Dockerfile로 실행 환경을 고정하고 클러스터에 올렸습니다. 데이터가
+              파드와 함께 사라지지 않도록 PVC를 붙였고,
+              <code>initContainer</code>가 최초 1회 <code>db.json</code>을
+              복사하도록 했습니다.
+            </p>
+          </li>
+          <li>
+            <span className="about__stepnum">03</span>
+            <h4>Jenkins CI</h4>
+            <p>
+              push하면 Kaniko가 이미지를 빌드해 Harbor에 올리도록 했습니다.
+              빌드는 자동이 됐지만 배포는 여전히 <code>kubectl</code>{" "}
+              명령이었습니다.
+            </p>
+          </li>
+          <li>
+            <span className="about__stepnum">04</span>
+            <h4>ArgoCD GitOps</h4>
+            <p>
+              명령으로 클러스터를 바꾸는 대신, Git에 적힌 상태를 클러스터가
+              따라오게 했습니다. 지금 무엇이 배포돼 있는지가 레포에 그대로
+              남습니다.
+            </p>
+          </li>
+        </ol>
+        <h3 className="about__subtitle">파이프라인</h3>
+        <PipelineDiagram />
+        <p className="about__note">
+          push 한 번으로 빌드 · 이미지 저장 · 매니페스트 갱신 · 배포가
+          이어집니다.
+        </p>
+        <h3 className="about__subtitle">막혔던 지점</h3>
+        <p className="about__body">
+          구축 과정에서 실제로 멈춰 섰던 문제들입니다. 원인을 찾는 데 걸린
+          시간이 대부분 배운 시간이었습니다.
+        </p>
+
+        <div className="about__trouble">
+          <article>
+            <h4>이미지 빌드가 메모리 부족으로 죽었다</h4>
+            <dl>
+              <dt>증상</dt>
+              <dd>
+                Kaniko가 <code>yarn install</code>까지 통과한 뒤 OOMKilled로
+                에이전트 파드째 사라졌습니다.
+              </dd>
+              <dt>원인</dt>
+              <dd>
+                메모리를 늘려 잡았더니 이번엔 파드가 아예 뜨지 않았습니다.
+                vcluster에 컨테이너당 2Gi 상한의 LimitRange가 걸려 있어 요청
+                자체가 거부된 것이었습니다.
+              </dd>
+              <dt>해결</dt>
+              <dd>
+                상한 안에서 requests 1Gi / limits 2Gi로 맞추고, Kaniko의 스냅샷
+                옵션(<code>--snapshot-mode=redo</code>,{" "}
+                <code>--single-snapshot</code>)으로 빌드 중 메모리 사용을
+                줄였습니다. 빌드 스테이지의 Node 힙도 함께 제한했습니다.
+              </dd>
+            </dl>
+          </article>
+
+          <article>
+            <h4>HTTPS로 들어가면 404가 떴다</h4>
+            <dl>
+              <dt>증상</dt>
+              <dd>Ingress를 만들었는데 HTTP는 되고 HTTPS는 404였습니다.</dd>
+              <dt>원인</dt>
+              <dd>
+                클러스터의 Traefik이 HTTP를 HTTPS로 전역 리다이렉트하는데,
+                Ingress가 <code>websecure</code> 엔트리포인트를 받지 않아 넘어온
+                요청을 처리할 라우터가 없었습니다.
+              </dd>
+              <dt>해결</dt>
+              <dd>
+                엔트리포인트에 <code>web,websecure</code>를 함께 선언하고{" "}
+                <code>tls</code> 블록을 추가했습니다.
+              </dd>
+            </dl>
+          </article>
+
+          <article>
+            <h4>빌드는 되는데 배포가 안 바뀌었다</h4>
+            <dl>
+              <dt>증상</dt>
+              <dd>새 이미지를 올려도 파드가 그대로였습니다.</dd>
+              <dt>원인</dt>
+              <dd>
+                이미지 태그를 <code>:main</code>으로 고정해 쓰고 있었습니다.
+                매니페스트가 변하지 않으니 쿠버네티스 입장에서는 바꿀 것이
+                없었습니다.
+              </dd>
+              <dt>해결</dt>
+              <dd>
+                빌드 번호를 태그로 붙였습니다. 태그가 매번 달라지니 롤아웃이
+                걸리고, 어느 빌드가 배포됐는지도 태그만 보면 알 수 있게
+                됐습니다.
+              </dd>
+            </dl>
+          </article>
+
+          <article>
+            <h4>배포 명령을 파이프라인에 넣는 게 맞을까</h4>
+            <dl>
+              <dt>상황</dt>
+              <dd>
+                처음에는 Jenkins가 <code>kubectl set image</code>로 직접
+                배포했습니다. 동작은 했지만 클러스터의 현재 상태가 어디에도
+                기록되지 않았습니다.
+              </dd>
+              <dt>판단</dt>
+              <dd>
+                명령으로 바꾸면 누가 언제 무엇을 배포했는지 로그를 뒤져야 알 수
+                있습니다. 원하는 상태를 Git에 적어두고 클러스터가 그걸 따라오게
+                하면, 레포를 보는 것만으로 현재 상태를 알 수 있습니다.
+              </dd>
+              <dt>변경</dt>
+              <dd>
+                Jenkins는 gitops 레포의 이미지 태그를 커밋하는 데까지만 하고,
+                배포는 ArgoCD가 맡도록 했습니다.
+              </dd>
+            </dl>
+          </article>
+        </div>
+        <h3 className="about__subtitle">동작 확인</h3>
+        <p className="about__body">
+          push 이후 실제로 무슨 일이 일어나는지, 각 도구에 남은 기록입니다.
+        </p>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/argocd-tree.png")}
+            alt="ArgoCD 리소스 트리"
+          />
+          <figcaption>
+            ArgoCD — Synced · Healthy 상태. jenkins-ci가 올린 커밋을 읽어
+            배포하고, Deployment 아래 ReplicaSet 이력이 리비전별로 남습니다
+          </figcaption>
+        </figure>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/harbor-tags.png")}
+            alt="Harbor 아티팩트"
+          />
+          <figcaption>
+            Harbor — 빌드 번호가 태그로 쌓입니다. latest는 최신 빌드를 함께
+            가리킵니다
+          </figcaption>
+        </figure>
+
+        <figure className="about__shot">
+          <img
+            src={asset("/images/screenshots/jenkins-stages.png")}
+            alt="Jenkins Stage View"
+          />
+          <figcaption>
+            Jenkins — push마다 이미지 빌드·푸시와 매니페스트 갱신이 순서대로
+            실행됩니다
+          </figcaption>
+        </figure>
+        <h3 className="about__subtitle">기술 스택</h3>
+
+        <div className="about__stack">
+          <div>
+            <h4>프론트엔드</h4>
+            <ul>
+              <li>React 19</li>
+              <li>TypeScript 6</li>
+              <li>Vite 8</li>
+              <li>React Router 7</li>
+            </ul>
+          </div>
+          <div>
+            <h4>서버 · 데이터</h4>
+            <ul>
+              <li>Express 4</li>
+              <li>json-server</li>
+              <li>PVC 영속화</li>
+            </ul>
+          </div>
+          <div>
+            <h4>컨테이너 · 오케스트레이션</h4>
+            <ul>
+              <li>Docker</li>
+              <li>Kubernetes (RKE2)</li>
+              <li>Traefik Ingress</li>
+            </ul>
+          </div>
+          <div>
+            <h4>CI · CD</h4>
+            <ul>
+              <li>Jenkins</li>
+              <li>Kaniko</li>
+              <li>Harbor</li>
+              <li>ArgoCD</li>
+              <li>Kustomize</li>
+            </ul>
+          </div>
+        </div>
+
+        <p className="about__closing">
+          요건을 채우는 것으로 시작했지만, 만들고 나니 배포하는 방법이 문제가
+          됐습니다. 수동 배포의 불편함이 CI를 부르고, 명령형 배포의 한계가
+          GitOps를 부르는 과정을 직접 겪으면서 각 도구가 왜 존재하는지를 알게
+          됐습니다. 지금도 <code>git push</code> 한 번이면 이 사이트가
+          갱신됩니다.
+        </p>
       </section>
     </main>
   );
