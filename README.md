@@ -3,7 +3,26 @@
 > **러닝화, 제대로 읽기**
 > 스펙은 빠짐없이, 용어는 설명과 함께
 
-React · TypeScript · json-server 기반 번외 산출물
+React · TypeScript · json-server 기반 러닝화 리뷰 아카이브를
+Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
+
+**🔗 Live Demo — https://kopo17-runshoes.std.kopoctc.kr**
+
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-000?logo=vite&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-7-CA4245?logo=reactrouter&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000?logo=express&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?logo=jenkins&logoColor=white)
+![Argo CD](https://img.shields.io/badge/Argo%20CD-EF7B4D?logo=argo&logoColor=white)
+![Harbor](https://img.shields.io/badge/Harbor-60B932?logo=harbor&logoColor=white)
+
+> **문서 안내**
+> - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면)
+> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인
+> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차
 
 ---
 
@@ -21,12 +40,6 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 
 쇼핑몰이 아니라 **평점·리뷰 아카이브**다. 구매 버튼도, 가격 강조도 없다.
 사용자의 목표는 "예쁜 걸 사는 것"이 아니라 **"나에게 맞는 신발을 찾는 것"** 이다.
-
-> **문서 안내**
-> - 이 문서: 애플리케이션 (요건 · 데이터 설계 · 화면)
-> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인
-> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차
-
 
 ### 차별점
 
@@ -49,7 +62,47 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 
 ---
 
-## 2. 요건 체크리스트
+## 2. 빠르게 실행하기
+
+### Docker
+
+```bash
+docker build -t runshoes .
+docker run -p 8080:3000 runshoes
+# http://localhost:8080
+```
+
+### 로컬 개발 — 터미널 2개
+
+```bash
+git clone https://github.com/Gabriel-Joo/runshoes.git
+cd runshoes
+yarn
+
+yarn dev       # Vite         http://localhost:5173
+yarn server    # json-server  http://localhost:3000
+```
+
+> json-server는 **0.17.4 고정.**
+> 1.x는 id를 nanoid 문자열로 생성해 `/edit/:id` 라우팅과 맞지 않는다.
+
+> Express는 **4.x 고정.**
+> Express 5는 `req.query`가 읽기 전용이라 json-server의 정렬 파라미터
+> (`?_sort=&_order=`) 처리가 깨진다. SPA 폴백도 Express 4 문법인 `app.get("/*", ...)`을 쓴다.
+
+### API 주소
+
+`src/api.ts`가 API 주소를 한 곳에서 관리한다. 운영 배포(Kubernetes)에서는 `server.cjs`가 정적 파일과 `/api`를 같은 오리진에서 함께 서비스하므로 별도 설정이 필요 없다.
+
+### 데이터 초기화
+
+```bash
+git checkout -- db.json
+```
+
+---
+
+## 3. 요건 체크리스트
 
 > 출처: 번외 산출물 안내 PART_02 (12~18p)
 
@@ -113,12 +166,16 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 - [x] **리뷰 수정** — `PATCH`, 인라인 편집 모드
 - [x] **삭제 확인 모달** — `ConfirmModal` 공통 컴포넌트 (러닝화 · 리뷰 양쪽에서 재사용)
 - [x] **관리 페이지 `/admin`** — 브랜드 필터 · 모델명 검색 · 정렬
-- [x] **종합 점수 랭킹** — 평점 · 리뷰 수 · 좋아요를 합산한 단일 지표
+- [x] **종합 점수 랭킹** — 신뢰도 가중 평점에 좋아요를 반영한 단일 지표
 - [x] **이미지 플레이스홀더** — 이미지가 없거나 로드 실패해도 레이아웃 유지
+- [x] **모달 이미지 갤러리** — 다중 이미지 슬라이드 + 썸네일 드래그 스크롤
+- [x] **리뷰 좋아요 + 베스트 리뷰 상단 고정**
+- [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
+- [x] **Kubernetes GitOps 배포** — Jenkins(Kaniko) → Harbor → ArgoCD
 
 ---
 
-## 3. 데이터 설계
+## 4. 데이터 설계
 
 ### shoes
 
@@ -137,7 +194,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | `wideAvailable` | boolean | 와이드 모델 출시 여부 |
 | `carbon` | boolean | 카본 플레이트 유무 |
 | `price` | number \| null | 정가 (원) |
-| `image` | string | `/images/pegasus-42.png` |
+| `images` | string[] | 제품컷 경로 배열 — 모달 슬라이드 + 썸네일 |
 | `summary` | string | 카드용 한 줄 요약 (`○○한 분에게`) |
 | `description` | string | 모달용 상세 설명 |
 | `rating` | number | 평균 별점 — **정렬용으로 저장** |
@@ -159,6 +216,10 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
   `liked`는 내가 찜했는지(토글용), `likeCount`는 총 몇 명이 찜했는지(정렬용).
   로그인이 없는 구조에서 "좋아요순 정렬"을 성립시키기 위한 구분이다.
 
+- **`image` → `images[]`로 바꾼 이유**
+  모달에서 뒤꿈치·밑창·측면 등 여러 각도를 보여주기 위해 배열로 확장했다.
+  카드 썸네일은 `images[0]`을 쓴다.
+
 ### reviews
 
 | 필드 | 타입 | 설명 |
@@ -168,10 +229,14 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | `author` | string | 작성자 닉네임 |
 | `rating` | number | 별점 1~5 |
 | `content` | string | 내용 |
-| `createdAt` | string | 작성일 |
+| `likeCount` | number | "도움이 돼요 👍" 수 — 베스트 리뷰 상단 고정에 사용 |
+| `createdAt` | string | 작성일 — **전체 ISO 문자열로 저장** |
 
 > `shoeId`로 이름을 맞추면 json-server의 `_embed` / `_expand`를 쓸 수 있다.
 > `GET /shoes/1?_embed=reviews`로 신발과 리뷰를 한 번에 조회 가능.
+
+> `createdAt`은 날짜만 잘라 저장하면 UTC 기준으로 하루가 밀린다.
+> 전체 ISO 문자열로 저장하고 `src/utils/date.ts`의 `formatDate`에서 상대 시간으로 표시한다.
 
 ### terms — 용어 툴팁
 
@@ -183,17 +248,19 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | `short` | string | 툴팁용 한 줄 |
 | `description` | string | 전문 — 툴팁 본문 및 추후 `/glossary` 페이지용 |
 
-**등록된 용어 (11개)**
+**등록된 용어 (13개)**
 드롭 · 스택하이트 · 프로네이션 · 중립화 · 안정화 · 카본 플레이트 ·
-발볼 · 미드솔 · 트레일 러닝 · 템포런 · LSD
+발볼 · 미드솔 · 트레일 러닝 · 템포런 · LSD · 무게 · 아웃솔
 
----
+> 각 용어의 설명은 웹사이트의 용어 툴팁(`TermTooltip`)으로도 제공된다.
+> 아래는 전체 설명이다.
 
-## 4. 용어 정리
+<details>
+<summary><strong>용어 사전 (13개) — 펼쳐서 보기</strong></summary>
 
 **드롭 (Drop)**
 뒤꿈치와 앞꿈치의 높이 차이(mm). 클수록 뒤꿈치 착지가 편하고 무릎 부담이 줄지만,
-낮으면 종아리·아킬레스건을 더 쓰게 되어 적응 기간이 필요하다.
+낮으면 종아리와 아킬레스건을 더 쓰게 되어 적응 기간이 필요하다.
 시중 제품은 대체로 6~12mm이며 초보는 8~10mm가 무난하다.
 
 **스택하이트 (Stack Height)**
@@ -215,35 +282,47 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 과내전인 사람에게 필요하며, **해당되지 않는 사람이 신으면 오히려 불편하다.**
 안정화가 더 좋은 신발이 아니라 발 유형에 맞춰 고르는 것이다.
 
-**미드솔 (Midsole)**
-겉창(아웃솔)과 안창 사이의 쿠션층. 러닝화의 성격을 결정하는 핵심 부위다.
-브랜드마다 폼 소재에 고유한 이름을 붙인다(줌X, FF Blast Plus, 리액트X 등).
-호카처럼 폼 이름을 공개하지 않는 브랜드도 있다.
+**카본 플레이트 (Carbon Plate)**
+미드솔에 삽입된 탄소섬유 판. 반발력을 크게 높여주지만 가격이 비싸고
+근력과 러닝 기술이 충분하지 않은 상태에서 신으면
+종아리·발목·아킬레스에 부담이 집중될 수 있다.
 
 **발볼 (Width)**
 신발 앞쪽의 좌우 폭. 한국인은 발볼이 넓은 편이라 서양 브랜드의 기본 사이즈가 조이는 경우가 있다.
 같은 모델의 와이드(2E, 4E) 버전을 확인해 보는 것이 좋다.
 
+**미드솔 (Midsole)**
+겉창(아웃솔)과 안창 사이에 있는 쿠션층. 러닝화의 성격을 결정하는 핵심 부위다.
+브랜드마다 폼 소재에 고유한 이름을 붙인다(줌X, FF Blast+, 리액트X 등).
+호카처럼 폼 이름을 공개하지 않는 브랜드도 있다.
+
 **트레일 러닝 (Trail Running)**
 포장도로가 아닌 산길·흙길·자갈길을 달리는 러닝.
-트레일화는 밑창 돌기가 깊고, 어퍼가 튼튼하며, 앞코에 토캡 보강이 들어가 무게가 무거운 편이다.
+트레일화는 밑창 돌기가 깊고 어퍼가 튼튼하며 앞코에 토캡 보강이 들어가 무게가 무거운 편이다.
 
-**카본 플레이트**
-미드솔에 삽입된 탄소섬유 판. 반발력을 크게 높여주지만 가격이 비싸고
-근력이 충분하지 않은 초보에게는 종아리·아킬레스에 부담이 될 수 있다.
+**템포런 (Tempo Run)**
+평소 조깅보다 빠른 페이스를 일정하게 유지하며 달리는 훈련.
+숨이 약간 찰 정도의 강도로, 지구력을 끌어올리는 데 쓰인다.
+
+**LSD (Long Slow Distance)**
+느린 페이스를 유지하며 긴 거리를 달리는 훈련.
+심폐 지구력을 기르는 데 쓰이며 쿠션이 두꺼운 신발이 유리하다.
+
+**무게 (Weight)**
+신발 한 짝의 무게. 브랜드가 정한 대표 사이즈(보통 270~280mm) 기준으로 표기하므로
+실제 신는 사이즈에 따라 달라진다. 사이즈가 10mm 커질 때마다 5~10g 정도 늘어난다.
+220g 이하면 가벼운 편, 300g 이상이면 무거운 편이다.
+
+**아웃솔 (Outsole)**
+지면에 직접 닿는 겉창. 고무 소재로 접지력과 내구성을 담당하며,
+마모가 잦은 부위에 고무를 더 두껍게 배치하기도 한다.
+트레일화는 흙길에서 미끄러지지 않도록 돌기가 깊게 파여 있다.
+
+</details>
 
 ---
 
-## 5. 개발 환경
-
-### 설치
-
-```bash
-git clone https://github.com/Gabriel-Joo/runshoes.git
-cd runshoes
-yarn
-```
-### 레포 구성
+## 5. 레포 구성
 
 두 원격 저장소를 함께 쓴다.
 
@@ -256,43 +335,13 @@ yarn
 `git push gitlab main` 한 번으로 양쪽에 동시 반영한다.
 (학교 GitLab 서버 미러링은 외부 push가 막혀 있어, 로컬에서 직접 두 곳에 미는 방식을 쓴다.)
 
-​```bash
+```bash
 git remote set-url --add --push gitlab https://std-gitlab.kopoctc.kr/kopo17/runshoes.git
 git remote set-url --add --push gitlab https://github.com/Gabriel-Joo/runshoes.git
-​```
-편의를 위해 alias를 등록해서 `git pp` 한 번으로 푸시한다.
-
-​```bash
 git config alias.pp 'push gitlab main'
-​```
+```
+
 > GitLab이 원본, GitHub은 거울이다. GitHub에 직접 커밋하지 않는다.
-
-### 실행 — 터미널 2개
-
-```bash
-yarn dev       # Vite         http://localhost:5173
-yarn server    # json-server  http://localhost:3000
-```
-
-> json-server는 **0.17.4 고정.**
-> 1.x는 id를 nanoid 문자열로 생성해 `/edit/:id` 라우팅과 맞지 않는다.
-
-### API 주소 변경
-
-`src/api.ts`가 API 주소를 한 곳에서 관리한다.
-배포 환경에서는 프로젝트 루트에 `.env`를 만들어 덮어쓴다.
-
-```
-VITE_API_URL=http://<배포주소>:3000
-```
-
-### 데이터 초기화
-
-테스트로 `db.json`이 변경된 경우:
-
-```bash
-git checkout -- db.json
-```
 
 ---
 
@@ -301,7 +350,11 @@ git checkout -- db.json
 ```
 runshoes/
 ├─ db.json                  ← 루트 (src/ 아님)
+├─ Dockerfile
+├─ server.cjs               ← express(정적) + json-server(/api) 통합
 ├─ docs/
+│  ├─ INFRA.md              ← K8s GitOps CI/CD
+│  ├─ DEPLOY.md             ← 웹 터미널 배포
 │  ├─ design-prompt.md      ← 디자인 요청 및 수정 이력
 │  └─ design-handoff.md     ← 디자인 확정 명세
 ├─ public/
@@ -310,6 +363,8 @@ runshoes/
    ├─ api.ts                ← API 주소 상수
    ├─ types/
    │  └─ index.ts           ← Shoe, Review, Term
+   ├─ utils/
+   │  └─ date.ts            ← formatDate (상대 시간 표시)
    ├─ components/
    │  ├─ Header.tsx         ← 상단 메뉴 · 햄버거
    │  ├─ Hero.tsx           ← 해부도 슬라이드
@@ -317,12 +372,16 @@ runshoes/
    │  ├─ SortBar.tsx        ← 정렬 · 찜 토글
    │  ├─ ShoeCard.tsx       ← 카드 (랭킹 모드 겸용)
    │  ├─ ShoeImage.tsx      ← 이미지 + 플레이스홀더
+   │  ├─ ShoeGallery.tsx    ← 모달 이미지 슬라이드 + 썸네일
    │  ├─ ShoeModal.tsx      ← 상세 모달
    │  ├─ ReviewSection.tsx  ← 리뷰 CRUD
+   │  ├─ ReviewItem.tsx     ← 리뷰 1건 (좋아요 · 인라인 편집)
    │  ├─ TermTooltip.tsx    ← 용어 툴팁
-   │  └─ ConfirmModal.tsx   ← 삭제 확인
+   │  ├─ ConfirmModal.tsx   ← 삭제 확인
+   │  └─ ScrollTop.tsx      ← 라우트 이동 시 스크롤 초기화
    ├─ pages/
    │  ├─ ShoeList.tsx       ← /
+   │  ├─ Recommend.tsx      ← /recommend
    │  ├─ Best.tsx           ← /best
    │  ├─ Admin.tsx          ← /admin
    │  ├─ ShoeForm.tsx       ← /new, /edit/:id
@@ -333,6 +392,8 @@ runshoes/
 
 CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)만 `index.css`에 둔다.
 
+> **메모** — About 페이지 추가 시 `src/pages/About.tsx` 및 `/about` 라우트를 위 트리와 아래 화면 구성 표에 반영할 것
+
 ---
 
 ## 7. 화면 구성
@@ -340,6 +401,7 @@ CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)�
 | 라우트 | 화면 | 내용 |
 |---|---|---|
 | `/` | 홈 | 히어로 슬라이드 + 용도 필터 + 정렬 + 카드 그리드 + 상세 모달 |
+| `/recommend` | 맞춤 추천 | 5문항 점수제 설문 → 추천 결과 |
 | `/best` | 러너들의 선택 | 종합 점수 1~5위 + 용도별 1위 |
 | `/admin` | 등록·관리 | 브랜드 필터 · 검색 · 정렬, 행별 수정·삭제 |
 | `/new` | 등록 | 러닝화 등록 폼 |
@@ -349,38 +411,77 @@ CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)�
 ### 종합 점수
 
 ```
-score = rating × 20 + reviewCount × 3 + likeCount × 0.5
+score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 ```
 
-평점만으로 순위를 매기면 "리뷰 1개에 5점"이 1위가 되므로
-리뷰 수와 좋아요를 함께 반영한다. 산식은 화면에 함께 표기한다.
+평점만으로 순위를 매기면 "리뷰 1개에 5점"이 1위가 된다.
+그래서 리뷰 수를 더하는 대신, 리뷰가 적을수록 평점 반영률을 낮추는
+**신뢰도 가중치** `reviewCount / (reviewCount + 3)`를 평점에 곱한다.
+리뷰 1개면 평점의 25%, 3개면 50%, 10개면 약 77%만 반영한다.
+좋아요는 보조 지표로 소폭 가산한다. 산식은 화면에도 함께 표기한다.
+
+### 맞춤 추천 배점
+
+| 항목 | 배점 |
+|---|---|
+| 용도 | 40 |
+| 발볼 | 30 / 20 |
+| 안정성 | 30 |
+| 쿠션 | 20 |
+| 예산 | 20 |
+| **합계** | **140** |
+
+동점일 경우 리뷰 수를 가중한 신뢰도 보정 평점으로 순위를 가른다.
 
 ---
 
-## 8. 작업 순서
+## 8. 배포
 
-1. [x] 주제 · 컨셉 확정
-2. [x] 요건 정리
-3. [x] db.json 스키마 확정
-4. [x] 개발 환경 세팅
-5. [x] db.json 시드 데이터 + `yarn server` 확인
-6. [x] 타입 정의 · 라우팅 뼈대
-7. [x] 히어로 슬라이드
-8. [x] 목록 화면 (렌더링 → 필터 → 정렬 → 찜)
-9. [x] 상세 모달 (정보 → 용어 툴팁 → 리뷰 CRUD)
-10. [x] 등록·관리 화면 + 관리 목록
-11. [x] 러너들의 선택 화면
-12. [x] 반응형
-13. [x] 데이터 20종·리뷰 68개까지 확충
-14. [x] 배포 — 웹 터미널(aisw-lab) → 쿠버네티스 GitOps로 발전
-15. [x] 모달 이미지 슬라이드 (다중 이미지)
-16. [x] 리뷰 좋아요 + 베스트 리뷰 상단 고정
-17. [x] 맞춤 추천 (/recommend, 5문항 점수제)
-18. [ ] 컬러웨이 선택
-19. [ ] /glossary 용어사전
+로컬 개발 → 웹 터미널(aisw-lab) → **Kubernetes GitOps**로 단계적으로 발전시켰다.
+
+```
+개발자 ──git push──▶ GitLab ──webhook──▶ Jenkins
+                                          │ Kaniko 빌드
+                                          ▼
+                                       Harbor  (std-harbor.kopoctc.kr/kopo17)
+                                          │
+                          gitops 레포 ◀───┘ 이미지 태그 커밋
+                                │
+                             ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
+```
+
+- 클러스터: 학교 RKE2 클러스터 위의 **vcluster(`vc-kopo17`)**
+- Ingress: Traefik. 전역 HTTP→HTTPS 리다이렉트가 걸려 있어
+  `web,websecure` 엔트리포인트와 `tls` 블록을 모두 선언해야 한다.
+- 데이터: `db.json`을 PVC에 두고 initContainer로 시드. 파드 재시작에도 유지된다.
+
+자세한 내용은 [docs/INFRA.md](docs/INFRA.md).
+
 ---
 
-## 9. 확장 로드맵
+## 9. 진행 상황
+
+### 완료
+
+| 항목 | 내용 |
+|---|---|
+| 기본 요건 | 목록 · 필터 · 정렬 · 찜 · 상세 모달 · 리뷰 CRUD · 등록/관리 · 반응형 |
+| 데이터 확충 | 러닝화 20종 · 리뷰 71개 |
+| 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일 |
+| 리뷰 좋아요 | 리뷰별 좋아요 + 베스트 리뷰 상단 고정 |
+| 맞춤 추천 | `/recommend` 5문항 점수제 |
+| 배포 | 웹 터미널 → Kubernetes GitOps CI/CD |
+
+### 예정
+
+| 항목 | 내용 |
+|---|---|
+| About 페이지 | 기술 스택 · 아키텍처 · 주요 화면 · 배운 점 |
+| 컬러웨이 선택 | 같은 모델의 다른 색상 전환 |
+| `/glossary` | 용어사전 페이지 (`terms`의 `description` 활용) |
+| 러닝 코스 · 대회 도메인 | 신발 엔진(항목+리뷰+평점+찜) 재사용 |
+
+### 확장 로드맵
 
 ```
         [ 러닝 통합 플랫폼 ]
@@ -396,24 +497,6 @@ score = rating × 20 + reviewCount × 3 + likeCount × 0.5
 현재 신발 도메인에서 이 엔진을 완성해 두었으므로,
 코스·대회는 데이터와 표시 필드만 추가하면 된다.
 
-### 예정 작업
-
-### 완료
-
-| 항목 | 내용 |
-|---|---|
-| 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일 |
-| 리뷰 좋아요 | 리뷰별 좋아요 + 베스트 리뷰 상단 고정 |
-| 맞춤 추천 | /recommend 5문항 점수제 (용도·발볼·안정성·쿠션·예산) |
-
-### 예정
-
-| 항목 | 내용 |
-|---|---|
-| 컬러웨이 선택 | 같은 모델의 다른 색상 전환 |
-| `/glossary` | 용어사전 페이지 (`terms`의 `description` 활용) |
-| 러닝 코스 · 대회 도메인 | 신발 엔진(항목+리뷰+평점+찜) 재사용 |
-
 ---
 
 ## 10. 데이터 출처
@@ -424,9 +507,3 @@ score = rating × 20 + reviewCount × 3 + likeCount × 0.5
 
 수치가 자료마다 다른 경우 **브랜드 공식 발표를 우선**하고,
 성별·발볼별로 스펙이 다른 모델은 **남성 레귤러 기준**으로 통일했다.
-
----
-
-### 마감
-
-**7/23 (목)**
