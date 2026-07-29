@@ -7,10 +7,10 @@ const About = () => {
     <main className="about">
       <h1 className="about__title">About</h1>
       <nav className="about__anchors">
-        <a href="#part1">
+        <a href={`${import.meta.env.BASE_URL}about#part1`}>
           <span>PART.01</span>이 사이트에 대해
         </a>
-        <a href="#part2">
+        <a href={`${import.meta.env.BASE_URL}about#part2`}>
           <span>PART.02</span>
           어떻게 만들었나
         </a>
