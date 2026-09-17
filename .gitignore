@@ -26,3 +26,8 @@ dist-ssr
 server.pid
 server.port
 server.log
+
+runshoes_env/
+
+.bkit/
+.omc/
