@@ -3,6 +3,7 @@ const jsonServer = require("json-server");
 const path = require("path");
 const { execFile } = require("child_process");
 const { promisify } = require("util");
+const { WebSocketServer } = require("ws");
 const execFileAsync = promisify(execFile);
 
 const app = express();
@@ -11,7 +12,7 @@ const BASE = process.env.BASE_PATH
   ? process.env.BASE_PATH.replace(/\/$/, "")
   : "";
 const DB = process.env.DB_PATH || path.join(__dirname, "db.json");
-const OLLAMA_URL = process.env.OLLAMA_URL || "http://192.168.23.202:11434";
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:5012";
 app.set("etag", false);
 app.use((req, res, next) => {
   res.set("Access-Control-Allow-Origin", "*");
@@ -68,7 +69,7 @@ ${reviewText}`;
         "-H",
         "Content-Type: application/json",
         "-d",
-        JSON.stringify({ model: "gemma4", prompt, stream: false }),
+        JSON.stringify({ model: "gemma4:e4b", prompt, stream: false }),
       ],
       { maxBuffer: 1024 * 1024 * 10 },
     );
@@ -99,6 +100,8 @@ if (!BASE && process.env.NODE_ENV !== "production") {
   app.get("/shoes/:id/summary", summaryHandler);
 }
 // ────────────────────────────────────────────────────
+
+
 
 const router = jsonServer.router(DB);
 app.use("/api", jsonServer.defaults(), router);
