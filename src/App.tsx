@@ -1,14 +1,15 @@
-import { Routes, Route } from 'react-router-dom'
-import Header from './components/Header'
-import ShoeList from './pages/ShoeList'
-import Recommend from './pages/Recommend'
-import Best from './pages/Best'
-import ShoeForm from './pages/ShoeForm'
-import About from './pages/About'
-import Admin from './pages/Admin'
-import NotFound from './pages/NotFound'
-import ScrollTop from './components/ScrollTop'
-import "./App.css"
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import ShoeList from "./pages/ShoeList";
+import Recommend from "./pages/Recommend";
+import Best from "./pages/Best";
+import ShoeForm from "./pages/ShoeForm";
+import About from "./pages/About";
+import Admin from "./pages/Admin";
+import NotFound from "./pages/NotFound";
+import ScrollTop from "./components/ScrollTop";
+import ChatBot from "./components/ChatBot";
+import "./App.css";
 
 function App() {
   return (
@@ -25,8 +26,9 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <ScrollTop />
+      <ChatBot />
     </>
-  )
+  );
 }
 
 export default App;
