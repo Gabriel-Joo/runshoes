@@ -1,10 +1,7 @@
 const express = require("express");
 const jsonServer = require("json-server");
 const path = require("path");
-const { execFile } = require("child_process");
-const { promisify } = require("util");
 const { WebSocketServer } = require("ws");
-const execFileAsync = promisify(execFile);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,24 +54,18 @@ const summaryHandler = async (req, res) => {
 ${reviewText}`;
 
   try {
-    const { stdout } = await execFileAsync(
-      "curl",
-      [
-        "-s",
-        "-m",
-        "40",
-        "-X",
-        "POST",
-        `${OLLAMA_URL}/api/generate`,
-        "-H",
-        "Content-Type: application/json",
-        "-d",
-        JSON.stringify({ model: "gemma4:e4b", prompt, stream: false }),
-      ],
-      { maxBuffer: 1024 * 1024 * 10 },
-    );
+    const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "gemma4:e4b", prompt, stream: false }),
+      signal: AbortSignal.timeout(40000),
+    });
 
-    const data = JSON.parse(stdout);
+    if (!response.ok) {
+      throw new Error(`Ollama HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
 
     let parsed;
     try {
