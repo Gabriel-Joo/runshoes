@@ -7,6 +7,7 @@ React · TypeScript · json-server 기반 러닝화 리뷰 아카이브를
 Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 
 **🔗 Live Demo — https://kopo17-runshoes.std.kopoctc.kr**
+**🌍 외부 접속 — https://runshoes.ronanlab.dev** (Cloudflare Tunnel)
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
@@ -19,12 +20,13 @@ Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 ![Argo CD](https://img.shields.io/badge/Argo%20CD-EF7B4D?logo=argo&logoColor=white)
 ![Harbor](https://img.shields.io/badge/Harbor-60B932?logo=harbor&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-000?logo=ollama&logoColor=white)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel_+_Access-F38020?logo=cloudflare&logoColor=white)
 
 > **문서 안내**
 >
 > - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면)
 > - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인
-> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차
+> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차 (레거시)
 
 ---
 
@@ -51,7 +53,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | 해부도 히어로      | 뒤꿈치 · 밑창 · 측면 클로즈업 슬라이드에 용어 캡션을 붙여 사이트 성격을 첫 화면에서 전달 |
 | 정보 없음의 명시   | 브랜드가 공개하지 않은 스펙은 추측하지 않고 "정보 없음"으로 표기                         |
 | 발볼 · 와이드 정보 | 한국 러너에게 중요하지만 해외 사이트가 다루지 않는 항목을 전면에 노출                    |
-| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 로컬 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리                      |
+| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리 (터널 연동)             |
 
 ### 비주얼 컨셉 — 표본 전시실
 
@@ -176,7 +178,8 @@ git checkout -- db.json
 - [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
 - [x] **Kubernetes GitOps 배포** — Jenkins(Kaniko) → Harbor → ArgoCD
 - [x] **About 페이지 `/about`** — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지
-- [x] **리뷰 요약 (Ollama)** — 로컬 LLM으로 리뷰의 긍정·부정 의견을 요약 (로컬/웹 터미널 전용, 아래 11장 참고)
+- [x] **리뷰 요약 (Ollama)** — LLM으로 리뷰의 긍정·부정 의견을 요약. 터널 연동으로 프로덕션 K8s에서도 동작 (아래 11장 참고)
+- [x] **웹소켓 챗봇** — 파이썬 사이드카 컨테이너, Ollama 연동 (`/ws/chat`)
 
 ---
 
@@ -355,10 +358,15 @@ git config alias.pp 'push gitlab main'
 runshoes/
 ├─ db.json ← 루트 (src/ 아님)
 ├─ Dockerfile
+├─ Dockerfile.chatbot ← 챗봇 사이드카 이미지 (python:3.12-alpine, 8766)
+├─ Jenkinsfile ← Jenkins 파이프라인 (kaniko × 2 + gitops 커밋)
 ├─ server.cjs ← express(정적) + json-server(/api) + 리뷰 요약(Ollama) 통합
+├─ chatbot_server.py ← 웹소켓 챗봇 서버 (Ollama · CF Access 인증)
+├─ start_server.sh ← (레거시) 웹 터미널 수동 배포용 시작 스크립트
+├─ scripts/ ← seed 스크립트 (run-once, 이미 반영 완료)
 ├─ docs/
 │ ├─ INFRA.md ← K8s GitOps CI/CD
-│ ├─ DEPLOY.md ← 웹 터미널 배포
+│ ├─ DEPLOY.md ← 웹 터미널 배포 (레거시)
 │ ├─ design-prompt.md ← 디자인 요청 및 수정 이력
 │ └─ design-handoff.md ← 디자인 확정 명세
 ├─ public/
@@ -443,17 +451,31 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 로컬 개발 → 웹 터미널(aisw-lab) → **Kubernetes GitOps**로 단계적으로 발전시켰다.
 개발자 ──git push──▶ GitLab ──webhook──▶ Jenkins
-│ Kaniko 빌드
+│ Kaniko × 2 (runshoes / runshoes-chatbot)
 ▼
 Harbor (std-harbor.kopoctc.kr/kopo17)
 │
 gitops 레포 ◀───┘ 이미지 태그 커밋
 │
 ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
+│
+Pod = runshoes(3000) + chatbot 사이드카(8766)
 
 - 클러스터: 학교 RKE2 클러스터 위의 **vcluster(`vc-kopo17`)**
 - Ingress: Traefik. 전역 HTTP→HTTPS 리다이렉트가 걸려 있어
   `web,websecure` 엔트리포인트와 `tls` 블록을 모두 선언해야 한다.
+  단일 호스트에서 path 기반 라우팅 — `/` → runshoes(3000), `/ws/chat` → chatbot(8766).
+- 챗봇 사이드카: 파이썬 웹소켓 챗봇(`chatbot_server.py`)을 같은 파드의 별도 컨테이너로 배포.
+  빌드 시 kaniko 컨테이너를 분리해 `runshoes-chatbot` 이미지를 따로 만든다
+  (한 컨테이너에서 재사용하면 kaniko 상태가 손상되는 문제가 있었다).
+- Ollama 연동: GPU 서버의 Ollama를 **Cloudflare Tunnel(ollama-tunnel)**로 공개 HTTPS 노출 →
+  `OLLAMA_URL=https://ollama.ronanlab.dev`. 앞단의 **Cloudflare Access**를
+  Service Token(`CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`)으로 통과한다.
+  자격증명은 Kubernetes Secret(`cf-access-credentials`)에서 환경변수로 주입하며,
+  runshoes · chatbot 두 컨테이너가 모두 사용한다.
+- 외부 노출: **runshoes-tunnel**이 학교 인그레스(kopo17-runshoes.std.kopoctc.kr)를
+  학교 밖에서도 접근 가능하게 한다 → https://runshoes.ronanlab.dev.
+  cloudflared는 클러스터 밖 서버에서 구동된다(레포에 매니페스트 없음).
 - 데이터: `db.json`을 PVC에 두고 initContainer로 시드. 파드 재시작에도 유지된다.
 
 자세한 내용은 [docs/INFRA.md](docs/INFRA.md).
@@ -472,8 +494,10 @@ ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 | 리뷰 좋아요   | 리뷰별 좋아요 + 베스트 리뷰 상단 고정                                |
 | 맞춤 추천     | `/recommend` 5문항 점수제                                            |
 | 배포          | 웹 터미널 → Kubernetes GitOps CI/CD                                  |
+| 챗봇          | 파이썬 웹소켓 챗봇 → 사이드카 컨테이너 배포 (`/ws/chat`)             |
+| 인프라        | Cloudflare Tunnel·Access로 Ollama · 사이트 외부 노출 및 인증        |
 | About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅     |
-| 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (로컬 · 웹 터미널 전용)      |
+| 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작 — 터널 연동) |
 
 ### 예정
 
@@ -481,7 +505,6 @@ ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 | ----------------------- | ------------------------------------------------------------------------------------ |
 | 로그인 · 스프링 백엔드  | json-server 대신 Spring(Java) API 신설, 사용자 계정 도입 (→ 12장)                    |
 | MySQL 이관              | `db.json` → MySQL, 앱 무상태화 후 무중단 배포 · 수평 확장 (→ 12장)                   |
-| Gemini API 전환         | 리뷰 요약을 Ollama → Gemini로, Live Demo(K8s)에서도 실시간 동작 (→ 11장)             |
 | 인프라 심화             | probe · RollingUpdate · Argo Rollouts · 사이드카 로그 · CronJob 통계 스냅샷 (→ 12장) |
 | 비교 (레이더 차트)      | 신발 2~3개 스펙을 오각형 레이더 차트로 겹쳐 비교                                     |
 | 컬러웨이 선택           | 같은 모델의 다른 색상 전환                                                           |
@@ -494,9 +517,8 @@ ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 
 1. **로그인 + 스프링 백엔드** — 사용자 계정 도입, json-server를 Spring API로 대체
 2. **MySQL 이관** — 데이터 계층 교체. **인프라 잠금 해제 지점**으로, 앱 무상태화 · 무중단 배포 · 수평 확장이 모두 여기서 열린다
-3. **Gemini API 전환** — 리뷰 요약을 클러스터 배포에서도 실시간 동작하게 전환
-4. **인프라 심화** — probe · 무중단 배포 · Argo Rollouts · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷
-5. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
+3. **인프라 심화** — probe · 무중단 배포 · Argo Rollouts · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷
+4. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
 
 > CKA 자격증 학습 범위(probe · rolling update · CronJob 등)가 4단계와 직접 겹쳐,
 > 자격증 공부가 곧 프로젝트 인프라 구현으로 이어지는 선순환 구조다.
@@ -545,11 +567,11 @@ ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 
 ---
 
-## 11. 리뷰 요약 (Ollama → Gemini 전환 예정)
+## 11. 리뷰 요약 (Ollama · Cloudflare Tunnel)
 
 리뷰가 3개 이상인 신발은 언어 모델이 리뷰를 읽고 좋았던 점과 아쉬운 점을
-나눠 요약한다. **현재 구현은 로컬 Ollama(gemma4 8B)** 이며,
-아래 "해결 방향"에 따라 **Gemini API로 전환할 예정**이다.
+나눠 요약한다. **Ollama(gemma4 8B)** 기반이며, GPU 서버의 Ollama를
+Cloudflare Tunnel로 공개 노출해 **쿠버네티스 프로덕션에서도 실시간 동작**한다.
 
 ### 동작 방식 (현재 · Ollama)
 
@@ -558,53 +580,33 @@ ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
 - 의견이 서로 반대되는 경우, 한쪽만 고르지 않고 "의견이 갈립니다"처럼 양쪽을 함께 언급하도록 지시
 - 요약은 서버 메모리에 캐싱하고, 해당 신발의 리뷰 개수(`reviewCount`)가 바뀔 때만 재생성한다.
   같은 개수로는 재호출하지 않으므로, 방문자가 반복해서 확인해도 추가 연산이 발생하지 않는다.
-- Ollama 호출은 `fetch`가 아니라 `curl` 프로세스 실행(`execFile`)으로 처리한다.
-  일부 네트워크 환경에서 Node의 내장 fetch(undici)가 사설 네트워크 연결에
-  실패하는 사례가 있어, 항상 안정적으로 동작한 `curl`로 우회했다.
+- Ollama 호출은 Node 내장 `fetch`로 처리한다.
+  `OLLAMA_URL` 환경변수(프로덕션: `https://ollama.ronanlab.dev`)로 대상을 지정한다.
 
-### 문제 — 로컬 Ollama는 Live Demo(쿠버네티스)에서 동작하지 않는다
+### 해결 이력 — Pod에서 Ollama로 닿지 않던 문제
 
-Ollama 기반 요약은 **로컬 개발 환경과 웹 터미널(aisw-lab) 배포에서만 동작**하며,
-쿠버네티스 배포에는 포함하지 못했다.
+처음에는 Ollama가 별도 PC(사설 IP)에서 구동 중이었다. 로컬 개발 환경과
+웹 터미널은 학교의 같은 물리 네트워크에 있어 직접 통신이 가능했지만,
+쿠버네티스 Pod는 vcluster의 오버레이 네트워크 안에 있어 같은 사설 IP 대역으로도
+경로 자체가 존재하지 않았다(Pod 안에서 직접 확인 — 요청이 항상 타임아웃).
+방화벽 문제가 아니라 vcluster 네트워크 구조 자체의 제약이라,
+Ollama를 클러스터 안에 띄우는 방안도 검토했으나 컨테이너 리소스 상한(2Gi)에서
+8B 모델 구동이 어려워 기각했다.
 
-Ollama는 별도 PC에서 구동 중이고, 로컬 개발 환경과 웹 터미널은 학교의
-같은 물리 네트워크에 있어 사설 IP로 직접 통신이 가능하다. 반면 쿠버네티스
-Pod는 vcluster의 오버레이 네트워크 안에 있어, 같은 사설 IP 대역으로도
-경로 자체가 존재하지 않는다(Pod 안에서 직접 확인함 — `curl` 요청이
-항상 타임아웃으로 실패). 이는 방화벽 설정으로 해결되는 문제가 아니라
-vcluster 네트워크 구조 자체의 제약이다. Ollama를 클러스터 안에 컨테이너로
-직접 띄우는 방법도 있으나, vcluster 리소스 상한(컨테이너당 2Gi)에서는
-8B 모델 구동이 어렵다.
+**현재 해결책 — Cloudflare Tunnel + Access:**
 
-### 해결 방향 — Gemini API 전환
+- **ollama-tunnel** 이 GPU 서버의 Ollama를 공개 HTTPS로 노출한다 →
+  `https://ollama.ronanlab.dev`. Pod에서 공개 인터넷으로 나가는 경로(egress)는
+  열려 있으므로 사설망 라우팅 제약을 우회한다.
+- 앞단의 **Cloudflare Access**를 Service Token으로 통과한다.
+  `CF-Access-Client-Id` / `CF-Access-Client-Secret` 헤더를 실어 호출하며,
+  자격증명은 Kubernetes Secret(`cf-access-credentials`) → 환경변수로 주입한다.
+  코드에 비밀값을 두지 않는 12장의 외부화 패턴과 같은 구조다.
+- runshoes · chatbot 두 서버 모두 이 방식으로 Ollama을 호출한다.
 
-문제의 본질은 "오버레이 네트워크 안의 Pod가 학교 물리망의 **사설 IP**에
-닿지 못한다"는 것이었다. 그래서 추론 백엔드를 로컬 Ollama가 아니라
-**Google Gemini API(클라우드)** 로 바꾼다.
-
-- **왜 되는가** — Gemini 호출은 사설 IP가 아니라 공개 인터넷의 구글 주소로
-  나간다(egress). Pod에서 바깥 인터넷으로 나가는 경로는 열려 있으므로,
-  Ollama가 겪던 사설망 라우팅 문제가 애초에 발생하지 않는다.
-  즉 **쿠버네티스 배포(Live Demo)에서도 요약이 실시간으로 동작**한다.
-- **계정** — 학교에서 지급한 Google Workspace for Education 계정을 사용한다.
-  이 계정은 **입력 데이터가 모델 학습에 사용되지 않으며**, 교육용 한도 내에서
-  **비용이 사실상 없다**. (개인 무료 티어와 데이터 정책·한도가 다르다.)
-- **구현** — `server.cjs`의 Ollama `curl`/`execFile` 호출부만 Gemini REST 호출로
-  교체한다. 프롬프트(좋아요 가중 · 의견 갈림 병기)와 캐싱 로직
-  (리뷰 개수가 바뀔 때만 재생성)은 그대로 재사용한다.
-- **인프라 연계** — Gemini API 키는 코드에 넣지 않고 **Kubernetes Secret →
-  환경변수**로 주입한다. 이는 12장에서 다루는 DB 접속 정보 외부화와 동일한
-  패턴이다.
-- **트레이드오프** — 로컬 Ollama는 완전 자립·오프라인·데이터 100% 로컬이라는
-  장점이 있으나, 사실상 학교 물리망에 묶여 있어 그 밖에서는 사용할 수 없다.
-  Gemini는 인터넷만 되면 어디서든 동작(이식성 우위)하는 대신 외부 의존이
-  생기고 리뷰 텍스트가 외부로 전송된다. 이 프로젝트의 리뷰는 시드 데이터이고,
-  "Live Demo에서 AI 요약이 실제로 동작"하는 것이 포트폴리오상 더 중요하므로
-  Gemini 쪽이 더 적합하다고 판단했다.
-
-> Gemini 전환으로 클러스터에서 실시간 추론이 가능해지므로,
-> 이전에 검토하던 "요약을 주기적으로 재계산해 `db.json`에 커밋하는" 정적
-> 노출 우회책은 더 이상 필요하지 않다.
+> Gemini API 전환은 한때 검토했던 방향이나, 터널 + Access로 클러스터에서
+> 실시간 추론이 가능해져 **전환 보류**. 비용·응답속도 문제가 생기면
+> 그때 대안으로 다시 검토한다.
 
 ---
 
