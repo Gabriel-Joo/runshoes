@@ -106,7 +106,7 @@ async def handler(websocket):
 
 async def main():
     host, port = "0.0.0.0", 8766  # 컨테이너 안에서 외부 접근 가능하게
-        async with websockets.serve(handler, host, port):
+    async with websockets.serve(handler, host, port):
         print(f"챗봇 서버 실행 중: ws://{host}:{port}")
         print("종료하려면 Ctrl+C")
         await asyncio.Future()
