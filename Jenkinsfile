@@ -24,6 +24,20 @@ spec:
     volumeMounts:
     - name: harbor-config
       mountPath: /kaniko/.docker
+  - name: kaniko-chatbot
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["/busybox/cat"]
+    tty: true
+    resources:
+      requests:
+        memory: "512Mi"
+        cpu: "300m"
+      limits:
+        memory: "1Gi"
+        cpu: "1"
+    volumeMounts:
+    - name: harbor-config
+      mountPath: /kaniko/.docker
   - name: git
     image: alpine/git:latest
     command: ["cat"]
@@ -65,7 +79,7 @@ spec:
 
     stage('Build & Push Chatbot') {
       steps {
-        container('kaniko') {
+        container('kaniko-chatbot') {
           sh """
             /kaniko/executor \
               --context=dir://${WORKSPACE} \
