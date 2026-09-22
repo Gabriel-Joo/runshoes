@@ -11,8 +11,7 @@ import requests
 import websockets
 from datetime import datetime
 
-OLLAMA_URL = "http://localhost:5012"  # 이 서버 자체에서 Ollama를 부를 수 있으면 이대로,
-                                          # 아니면 PuTTY 터널 포트(5012 등)로 변경
+OLLAMA_URL = "https://ollama.ronanlab.dev"
 
 SYSTEM_PROMPT = """너는 러닝화 스펙 아카이브 사이트 "RUNSHOES"의 친근한 챗봇 도우미야.
 말투는 반말로, 친구한테 편하게 설명하듯이 답해줘.
@@ -106,8 +105,8 @@ async def handler(websocket):
 
 
 async def main():
-    host, port = "localhost", 8766  # 아까 채팅서버(8765)와 겹치지 않게 다른 포트
-    async with websockets.serve(handler, host, port):
+    host, port = "0.0.0.0", 8766  # 컨테이너 안에서 외부 접근 가능하게
+        async with websockets.serve(handler, host, port):
         print(f"챗봇 서버 실행 중: ws://{host}:{port}")
         print("종료하려면 Ctrl+C")
         await asyncio.Future()

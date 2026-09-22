@@ -1,0 +1,8 @@
+FROM python:3.12-alpine
+WORKDIR /app
+
+COPY chatbot_server.py .
+RUN pip install --no-cache-dir websockets requests
+
+EXPOSE 8766
+CMD ["python", "chatbot_server.py"]
