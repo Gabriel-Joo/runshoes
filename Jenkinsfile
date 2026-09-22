@@ -16,8 +16,8 @@ spec:
     tty: true
     resources:
       requests:
-        memory: "1Gi"
-        cpu: "500m"
+        memory: "512Mi"
+        cpu: "200m"
       limits:
         memory: "2Gi"
         cpu: "2"
@@ -30,8 +30,8 @@ spec:
     tty: true
     resources:
       requests:
-        memory: "512Mi"
-        cpu: "300m"
+        memory: "256Mi"
+        cpu: "100m"
       limits:
         memory: "1Gi"
         cpu: "1"
