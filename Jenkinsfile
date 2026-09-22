@@ -63,6 +63,22 @@ spec:
       }
     }
 
+    stage('Build & Push Chatbot') {
+      steps {
+        container('kaniko') {
+          sh """
+            /kaniko/executor \
+              --context=dir://${WORKSPACE} \
+              --dockerfile=${WORKSPACE}/Dockerfile.chatbot \
+              --snapshot-mode=redo \
+              --single-snapshot \
+              --destination=${IMAGE}-chatbot:${BUILD_NUMBER} \
+              --destination=${IMAGE}-chatbot:latest
+          """
+        }
+      }
+    }
+
 stage('Update GitOps Manifest') {
       steps {
         container('git') {
