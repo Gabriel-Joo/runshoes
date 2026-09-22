@@ -56,7 +56,11 @@ ${reviewText}`;
   try {
     const response = await fetch(`${OLLAMA_URL}/api/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "CF-Access-Client-Id": process.env.CF_ACCESS_CLIENT_ID,
+        "CF-Access-Client-Secret": process.env.CF_ACCESS_CLIENT_SECRET,
+      },
       body: JSON.stringify({ model: "gemma4:e4b", prompt, stream: false }),
       signal: AbortSignal.timeout(40000),
     });
@@ -91,8 +95,6 @@ if (!BASE && process.env.NODE_ENV !== "production") {
   app.get("/shoes/:id/summary", summaryHandler);
 }
 // ────────────────────────────────────────────────────
-
-
 
 const router = jsonServer.router(DB);
 app.use("/api", jsonServer.defaults(), router);

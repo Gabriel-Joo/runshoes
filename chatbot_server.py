@@ -10,6 +10,10 @@ import json
 import requests
 import websockets
 from datetime import datetime
+import os
+
+CF_ACCESS_CLIENT_ID = os.environ.get("CF_ACCESS_CLIENT_ID", "")
+CF_ACCESS_CLIENT_SECRET = os.environ.get("CF_ACCESS_CLIENT_SECRET", "")
 
 OLLAMA_URL = "https://ollama.ronanlab.dev"
 
@@ -52,6 +56,10 @@ def ask_ollama(history, message):
                 "top_p": 0.9, 
                 "repeat_penalty": 1.2
                 },
+        },
+        headers={
+            "CF-Access-Client-Id": CF_ACCESS_CLIENT_ID,
+            "CF-Access-Client-Secret": CF_ACCESS_CLIENT_SECRET,
         },
         timeout=40,
     )
