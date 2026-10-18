@@ -8,6 +8,14 @@
 >
 > 이 문서는 실행하지 않고 보존하는 계획서다. 실제 구현 시작 시 Phase 0부터 순서대로 진행한다.
 > 배경이 되는 설계 논의는 README 12장(데이터 계층 이관과 무중단 배포)을 참고.
+>
+> **2026-10-18 갱신 — 자체 클러스터 이주 뒤.** 학교 환경(vcluster · std-harbor · GitLab gitops · ollama 터널)에서
+> 자체 kubeadm 클러스터로 옮겼다(docs/INFRA.md 11장).
+> - **Phase 0 완료** — 응답 기준선을 녹화했다(`contract/`). 계획서와 실제 응답이 다른 곳이 있다 — `contract/README.md` "계획서와 다른 점"이 이 문서보다 우선한다
+>   (`/api/*` Cache-Control 은 `no-cache`, DELETE 본문은 `{}`, OPTIONS 는 204)
+> - **Phase 5 는 새 환경 기준으로 다시 썼다**(ronanlab-infra, local-path, 사람이 만드는 Secret, 수동 Sync, Ollama 직접 연결)
+> - 아직 학교 기준인 곳 — 고칠 때 Phase 5 를 따른다: 상단 quota 확인, 0장 정정 2(gitops 경로), 1장 아키텍처(`nfs-std-1`, ollama 터널),
+>   2.3·2.5의 CF Access 헤더(직접 연결이라 필요 없다), Phase 4(kaniko → BuildKit, 이미지는 지금도 둘), Phase 6, 부록 경로
 
 ---
 
@@ -216,7 +224,8 @@ app:
             cf-client-id: ${CF_ACCESS_CLIENT_ID:}, cf-client-secret: ${CF_ACCESS_CLIENT_SECRET:} }
 management:
   endpoints.web.exposure.include: health
-  endpoint.health.probes.enabled: true        # /actuator/health/liveness|readiness (DB SELECT 1 포함)
+  endpoint.health.probes.enabled: true        # /actuator/health/liveness|readiness
+  endpoint.health.group.readiness.include: readinessState,db   # 이게 있어야 readiness 가 DB 를 본다(기본은 readinessState 만)
 ```
 
 ### 2.6 Jackson 시간 규칙 (createdAt)
@@ -254,7 +263,11 @@ management:
 
 ## 4. Phase 구성 (게이트 포함)
 
-### Phase 0 — 기준선 캡처 (반나절)
+### Phase 0 — 기준선 캡처 (반나절) — ✅ 2026-10-18 완료
+> 산출물은 `contract/`(scenarios · record · diff · mock-ollama, 기준선 `contract/baseline/node` 50건 + `node-summary` 9건).
+> 본 녹화는 운영 Pod(`runshoes:781be0832c14`)에서 시드 db.json 으로 시작해 떴고, 끝난 뒤 db.json 을 되돌렸다.
+> 요약(시나리오 14)은 GPU 를 쓰지 않으려고 로컬 server.cjs + mock-ollama 로 떴다. 사용법은 `contract/README.md`.
+
 **산출물**: `scripts/mock-ollama.mjs`(고정 응답 LLM stub, 20줄), `scripts/contract-diff.mjs` 골격.
 **게이트**: 구서버(`PORT=3101 DB_PATH=<임시복사본> NODE_ENV=production OLLAMA_URL=http://localhost:3109
 node server.cjs`) 기준 응답 녹화 — 아래 Phase 2의 전체 시나리오 목록이 이 시점에 확정됨.
@@ -348,75 +361,133 @@ ENTRYPOINT ["java","-XX:MaxRAMPercentage=65","-jar","app.jar"]
 `docker run -p 3000:3000 --network host`(compose MySQL)로 **harness 전 시나리오 재실행 green**
 (컨테이너 환경 패리티).
 
-### Phase 5 — GitOps 매니페스트 + cutover (1–2일)
-**gitops 신규/수정 파일** (`/home/ubuntu/workspaces/gitops/apps/runshoes/`):
+### Phase 5 — 매니페스트 + cutover (1–2일) — 자체 클러스터 기준 (2026-10-18 다시 씀)
 
-1. `mysql-secret.yaml` — `runshoes-mysql`: `mysql-root-password`,
-   `mysql-password`(app 계정 `runshoes`), `mysql-database=runshoes`.
-   (학생 프로젝트 특성상 stringData 커밋 + 노트: 실무는 SealedSecret/External Secret.
-   변형: 수동 생성 secret은 ArgoCD 관리 제외)
-2. `mysql-configmap.yaml` — `my.cnf`: `innodb_flush_method=fsync`
-   (**NFS에서 O_DIRECT 불가 — 필수**), `performance_schema=OFF`(메모리 수백 MB 절감),
-   `innodb_buffer_pool_size=256M`, `skip-symbolic-links`, `default-time-zone=+00:00`,
-   `max_connections=100`, `character-set-server=utf8mb4`.
-3. `mysql-service.yaml` — headless(`clusterIP: None`) `runshoes-mysql:3306`.
-4. `mysql-statefulset.yaml` — `replicas:1`, `serviceName: runshoes-mysql`,
-   image `mysql:8.0`(고정 태그, **kustomization `images:`에 넣지 않음 → Jenkins sed 무관**),
-   env from secret, readiness/liveness `exec: mysqladmin ping`,
-   `volumeClaimTemplates` 2Gi `nfs-std-1`, resources req **250m/512Mi** · limit 1/1536Mi
-   (LimitRange 2Gi 이내).
-5. `deployment.yaml` 수정 — seed-db initContainer·`/data` 볼륨 마운트 제거
-   (볼륨 선언·PVC는 롤백용 유지), `strategy: RollingUpdate {maxUnavailable:0, maxSurge:1}`
-   (무상태화 완료), env 추가:
-   `SPRING_DATASOURCE_URL=jdbc:mysql://runshoes-mysql:3306/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC`
-   + `USERNAME`/`PASSWORD`(secret), `TZ=UTC`. 기존 `OLLAMA_URL`/`CF_ACCESS_*` 그대로.
-   probes: **startup** `/actuator/health`(failureThreshold 30, period 2s — Flyway 첫 부팅 감안),
-   **readiness** `/actuator/health/readiness`, **liveness** `/actuator/health/liveness`.
-   resources: runshoes req 200m/512Mi · limit 1/1Gi. **chatbot 컨테이너 완전 불변.**
-6. `kustomization.yaml` — `resources:`에 4개 mysql 파일 추가.
-   **`images:`는 기존 2개만 유지**(절대 mysql 이미지 추가 금지 — sed가 잘못된 태그로 재지정).
-7. `pvc.yaml`(`runshoes-data`) — 유지(롤백 시 db.json 보존). 최종 검증 후 별도 커밋으로 정리 가능.
+> 전 판(학교 vcluster · `nfs-std-1` · gitops 레포에 stringData Secret · ollama 터널)을 바꿨다. 지금 배포의 사실은
+> ronanlab-infra `apps/runshoes/README.md` · docs/INFRA.md 8·9장.
 
-**쿼터 계산**(requests 기준 1500m/4Gi, CI agent와 공유 — 실제 값은 배포 시 확인 필요):
+**지금(전환 전) 상태** — ronanlab-infra `apps/runshoes/`:
 
-| | CPU req | MEM req |
+```
+kustomization.yaml   images 2개(runshoes, runshoes-chatbot) — Jenkins sed 가 두 newTag 를 같은 커밋 해시 12자리로
+app/pvc.yaml         runshoes-data (local-path 1Gi, RWO) — db.json
+app/deployment.yaml  replicas 1 · Recreate · seed-db initContainer · runshoes(:3000) + chatbot(:8766)
+                     OLLAMA_URL=http://192.168.122.1:11434 (CF_ACCESS_* 없음) · root 실행
+app/service.yaml     http 80→3000 · chatbot 8766
+app/ingress.yaml     ingress-nginx, runshoes.ronanlab.dev — / → http, /ws/chat → chatbot
+scripts/create-secrets.sh   harbor-pull (사람이 돌린다)
+```
+
+ArgoCD Application `runshoes`(`platform/argocd/applications/runshoes.yaml`)는 **수동 Sync**(2026-10-18 자동을 껐다), prune · finalizer 없음,
+Namespace 는 사람이 만든다. 이미지 태그는 Jenkins `runshoes-app` 이 커밋하지만 **Sync 를 누르기 전에는 배포되지 않는다** — 이것을 cutover 에 쓴다.
+
+#### 5.1 MySQL — 결정: runshoes 네임스페이스에 자기 인스턴스
+
+같은 클러스터의 petmint 가 MySQL StatefulSet(`petmint/mysql`, 데이터베이스를 앱별로 나누는 구조, 주석에 "나중에 runshoes")을 이미 운영한다.
+
+| | A. 자기 인스턴스 (기본값) | B. petmint MySQL 에 데이터베이스 추가 |
 |---|---|---|
-| runshoes(Spring) | 200m | 512Mi |
-| chatbot | 50m | 128Mi |
-| mysql | 250m | 512Mi |
-| **상시 합계** | **500m** | **1152Mi** |
-| CI agent 스파이크(kaniko 200m/512Mi + kaniko-chatbot 100m/256Mi + git) | +300~350m | +768Mi+ |
-| **피크** | **~850m** | **~1.9Gi** |
+| 격리 | 네임스페이스 · Secret · PVC 가 runshoes 안에 | petmint 네임스페이스의 StatefulSet · root 비밀번호에 기댄다 |
+| 메모리 | +512Mi requests | 거의 0 |
+| 바꿀 곳 | `apps/runshoes/` 만 | petmint 초기화 Job(`BOOTSTRAP_APPS`)과 Secret — petmint 를 건드린다 |
+| 롤백 · 실험 | 혼자 지우고 다시 만든다 | petmint 와 같이 산다 |
 
-→ 여유 확보. (주의: kaniko 실제 사용 메모리는 limit 2Gi까지 — requests 아님.)
+→ **A**. 학습 목표(StatefulSet 직접 운영)와 맞고, 다른 프로젝트를 건드리지 않는다. 메모리가 모자라면 B 를 다시 본다(5.4).
+설정은 petmint MySQL 과 맞춘다(같은 클러스터에서 검증된 값).
 
-**Cutover 순서**:
-1. gitops 커밋 A: MySQL 4파일 + kustomization resources → ArgoCD sync →
-   `runshoes-mysql-0` Running/Ready 확인(빈 DB).
-2. 앱 레포 push(Spring 코드 + Dockerfile) → Jenkins 빌드 태그 N → 자동 gitops 커밋
-   (newTag=N, 아직 구 매니페스트) — **이 시점 새 이미지는 DB env 부재로 CrashLoopBackOff**.
-   기존 배포도 Recreate로 이미 다운타임이 있으므로 수용(변형: application.yml 기본값에
-   클러스터 DB 접속정보를 심어 이 창을 없앨 수 있으나 이미지에 비밀번호 노출 — 미권장, 노트로만 기록).
-3. 즉시 gitops 커밋 B: 신규 `deployment.yaml`(env·probes·RollingUpdate) → ArgoCD sync →
-   Spring 기동 → **Flyway V1/V2 자동 적용(데이터 이관 완료)** → readiness 통과 → 트래픽 전환.
-4. 이후 배포는 기존과 동일(push → Jenkins → sed → ArgoCD).
+#### 5.2 ronanlab-infra 신규 · 수정 파일 (`apps/runshoes/`)
 
-**Prod smoke list**:
-- `https://kopo17-runshoes.std.kopoctc.kr` 각 페이지·이미지 로드, 임의 경로 새로고침(SPA 폴백)
-- `/api/shoes|reviews?shoeId=1|terms` — 배열 형태·개수·필드 확인,
-  `Cache-Control: no-store`/`ACAO: *` 헤더
-- 좋아요 토글, 리뷰 등록/수정/삭제, 관리자 등록/수정/삭제 전체 왕복 후 `kubectl` 없이 UI 재확인
-- 요약 위젯 실제 동작(ollama.ronanlab.dev + CF 헤더 — pod에서 공개 인터넷 egress OK)
-- 챗봇 `wss://…/ws/chat` 연결·응답 (불변 확인)
-- `kubectl -n runshoes get pods` — mysql/app/chatbot 정상, `logs`에서
-  Flyway "Successfully applied 2 migrations" 1회(재시작 시 "up to date")
-- ArgoCD 앱 Synced/Healthy
+1. **`mysql/statefulset.yaml`** — `runshoes-mysql`, `replicas: 1`, `serviceName: runshoes-mysql`
+   - image `mysql:8.0.46`(petmint 와 같은 고정 태그). **kustomization `images:` 에 넣지 않는다** — Jenkins sed 가 이 줄까지 바꾼다
+   - args `--innodb-buffer-pool-size=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone=+00:00 --performance-schema=OFF`
+     (local-path 는 노드 디스크라 NFS 때의 `innodb_flush_method=fsync` 강제는 필요 없다)
+   - env `MYSQL_ROOT_PASSWORD` · `MYSQL_DATABASE=runshoes` · `MYSQL_USER=runshoes` · `MYSQL_PASSWORD` — 전부 Secret `runshoes-mysql`
+     (빈 데이터 디렉터리에서 처음 뜰 때 이미지가 DB · 계정을 만든다 — petmint 처럼 bootstrap Job 을 두지 않는다. 스키마 · 시드는 Flyway)
+   - readiness/liveness `exec: mysqladmin ping -h 127.0.0.1 --silent`(비밀번호를 인자에 남기지 않는다), liveness `initialDelaySeconds: 60`
+   - `terminationGracePeriodSeconds: 60`, `fsGroup: 999`
+   - `volumeClaimTemplates` **local-path 2Gi**, `persistentVolumeClaimRetentionPolicy: Retain/Retain`
+     (local-path StorageClass 의 reclaimPolicy 는 Delete — PVC 를 지우면 데이터도 사라진다. StatefulSet 을 지워도 PVC 는 남게)
+   - resources req **200m/512Mi** · limit mem **1Gi**(petmint 와 같다)
+2. **`mysql/service.yaml`** — headless(`clusterIP: None`) `runshoes-mysql:3306`
+3. **`scripts/create-secrets.sh`** 확장 — `runshoes-mysql`(키 `MYSQL_ROOT_PASSWORD` · `MYSQL_PASSWORD`, 무작위)를 **없을 때만** 만든다.
+   **평문은 git 에 두지 않는다**(전 판의 stringData 커밋을 버린다 — ronanlab-infra 의 다른 앱 · platform 과 같은 규칙).
+   root 비밀번호는 데이터 디렉터리를 처음 만들 때만 쓰이므로 이미 있는 Secret 은 건드리지 않는다
+4. **`app/deployment.yaml`** 수정
+   - initContainer `seed-db`, `/data` 볼륨 마운트, **Pod 의 `volumes:` 항목까지** 제거 — 선언이 남으면 마운트하지 않아도 새 Pod 가
+     local-path PV 에 붙어 그 노드에 묶인다. 롤백용으로는 PVC 오브젝트(`app/pvc.yaml`)만 남긴다(5.2-6)
+   - `strategy: RollingUpdate {maxUnavailable: 0, maxSurge: 1}` — 앱이 무상태가 됐다. replicas 는 1 로 시작(늘리는 것은 따로)
+   - runshoes env: `SPRING_DATASOURCE_URL=jdbc:mysql://runshoes-mysql:3306/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC`,
+     `SPRING_DATASOURCE_USERNAME=runshoes`, `SPRING_DATASOURCE_PASSWORD`(Secret `runshoes-mysql` `MYSQL_PASSWORD`), `TZ=UTC`,
+     `OLLAMA_URL=http://192.168.122.1:11434` 그대로. **`CF_ACCESS_*` 는 넣지 않는다**(사설망 직접 연결 — Access 를 거치지 않는다).
+     `DB_PATH` 는 뺀다
+   - probes: **startup** `/actuator/health`(period 2s, failureThreshold 60 — Flyway 첫 부팅), **readiness** `/actuator/health/readiness`,
+     **liveness** `/actuator/health/liveness`. readiness 그룹은 기본으로 `readinessState` 만 본다 — DB 에 못 붙은 Pod 에 트래픽이 가지 않게
+     application.yml 에 `management.endpoint.health.group.readiness.include: readinessState,db`(2.5 의 "DB SELECT 1 포함"은 이 설정이 있어야 맞다)
+   - resources runshoes req 200m/512Mi · limit mem 1Gi. **chatbot 컨테이너는 그대로**(이미지 · 태그 · env)
+   - 이미지는 root 로 돌던 Node 와 달리 Spring 이미지에서 `USER` 를 둔다면 `securityContext.runAsNonRoot` 를 이때 켠다(Phase 4 Dockerfile 과 같이 정한다)
+5. **`kustomization.yaml`** — `resources:` 에 `mysql/service.yaml` · `mysql/statefulset.yaml` 추가. **`images:` 는 2개 그대로**
+6. **`app/pvc.yaml`(`runshoes-data`)** — 유지(롤백 때 db.json). 관찰 기간 뒤 별도 커밋으로 지운다 — prune 이 없으니 클러스터에서도 손으로
+7. **`README.md`** — MySQL · Secret · 데이터 · 롤백 절을 고친다
 
-**롤백**: gitops에서 커밋 B revert + newTag 커밋 revert → ArgoCD가 구 Node 배포 복원
-(구 이미지 태그는 Harbor에 존재, db.json PVC도 온전).
-**주의: 전환 후 MySQL에 쓴 데이터는 롤백 시 유실**(구 앱은 db.json 읽음) —
-cutover 직후 잠정 관찰 기간 운영 권고. MySQL은 롤백 시에도 그대로 둠
-(prune 대상이 되지 않도록 리소스 유지).
+#### 5.3 Ollama
+
+`OLLAMA_URL=http://192.168.122.1:11434` — Pod 가 VM 사설망(libvirt 192.168.122.0/24)으로 GPU 호스트에 바로 닿는다(petmint 도 같은 길).
+`ollama.ronanlab.dev`(ollama-tunnel + Access Service Token)는 쓰지 않는다 — 2.3 · 2.5 의 `cf-client-id/secret` 설정은 빈 값이면 헤더를 보내지 않으므로 그대로 두거나 지운다.
+**GPU 를 다른 프로젝트가 쓰는 동안에는 요약 실호출을 시험하지 않는다** — 5.6 smoke 에서 요약은 리뷰 3개 미만(Ollama 안 부름)만, 실호출은 GPU 가 빌 때.
+
+#### 5.4 자원 계산
+
+노드: 워커 3대 + control-plane, 각 메모리 약 3.9GiB(2026-10-18). 같은 노드에 Jenkins · Harbor · ArgoCD · ingress-nginx · cloudflared ·
+petmint(앱 2 · MySQL)가 함께 산다. 학교 때와 달리 namespace quota 는 없다 — 대신 **노드 메모리가 상한**이다.
+
+| | CPU req | MEM req | MEM limit |
+|---|---|---|---|
+| runshoes(Spring) | 200m | 512Mi | 1Gi |
+| chatbot | 10m | 48Mi | 256Mi |
+| runshoes-mysql | 200m | 512Mi | 1Gi |
+| **상시 합계(지금 Node 50m/128Mi + 10m/48Mi 대비)** | **410m** | **~1.05Gi (+~900Mi)** | |
+| CI 빌드 Pod(BuildKit — 웹 · Maven 두 스테이지) | +500m | +1.5Gi | 3Gi |
+
+- 노드 하나에 MySQL · Spring · 빌드 Pod 가 겹치면 requests 만 ~2.5Gi — 스케줄러는 다른 노드로 보내지만, **limits 합이 노드 용량을 넘는 노드가 생긴다**
+  (모니터링 README 실측: w3 limits 이미 89%). 적용 전에 `kubectl describe nodes` 의 Allocated resources 를 다시 보고,
+  모자라면 VM 메모리 증설(모니터링과 같이 4096 → 8192) 또는 5.1 B 를 택한다
+- Maven 빌드가 BuildKit limit 3Gi 안에 드는지(Node 스테이지 힙 1536Mi + `MAVEN_OPTS=-Xmx1024m`, 스테이지는 차례로 돈다) — Phase 4 게이트에서 확인
+
+#### 5.5 Cutover 순서
+
+수동 Sync 라 **앱 이미지와 매니페스트를 한 번의 Sync 로 같이 바꿀 수 있다** — 전 판의 "새 이미지가 DB env 없이 CrashLoopBackOff 하는 창"이 없다.
+
+1. **MySQL 먼저** — ronanlab-infra 커밋 A: `mysql/` 2파일 + kustomization `resources` + `create-secrets.sh` 확장 → push
+   → 사람이 `apps/runshoes/scripts/create-secrets.sh`(Secret `runshoes-mysql`) → **ArgoCD Sync(사람)**
+   → `runshoes-mysql-0` Running/Ready, `kubectl -n runshoes exec runshoes-mysql-0 -- mysql -urunshoes -p… -e 'select 1' runshoes` (빈 DB)
+   — 이 Sync 는 앱 Deployment 를 바꾸지 않는다(Node 그대로 서비스)
+2. **앱 이미지** — 앱 레포 main 에 Spring 코드 + Dockerfile push → Jenkins 빌드 → 태그 커밋(newTag=N). **Sync 하지 않는다**(배포 안 됨, 이 상태로 둬도 된다)
+3. **매니페스트** — ronanlab-infra 커밋 B: `app/deployment.yaml`(5.2-4) → push. ArgoCD 화면에 OutOfSync 로 Deployment 변경이 보인다 — diff 를 읽고
+4. **Sync(사람) 한 번** — 이미지 N + 새 Deployment 가 같이 나간다 → Spring 기동 → Flyway V1/V2(데이터 이관) → readiness 통과 →
+   옛 Node Pod 종료(RollingUpdate, maxUnavailable 0 — 끊김 없이 넘어가야 한다. 첫 배포만 Recreate → RollingUpdate 전환이라 확인한다)
+5. **계약 확인** — 운영에서는 읽기만:
+   `node contract/record.mjs --read-only --base http://192.168.122.240 --host runshoes.ronanlab.dev --out contract/run/prod-spring`
+   → `node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spring` 가 PASS
+   (쓰기 시나리오는 Phase 2 · 4 에서 로컬 · 컨테이너로 이미 green 이어야 한다 — 운영 MySQL 은 되돌리기가 db.json 보다 어렵다)
+6. **이후** — 배포는 push → Jenkins → 태그 커밋 → Sync(사람). 자동 Sync 를 다시 켤지는 관찰 기간 뒤 정한다(`runshoes.yaml` 에 `automated` + `kubectl apply`)
+
+#### 5.6 Prod smoke
+
+- `https://runshoes.ronanlab.dev` — 홈 · 추천 · 베스트 · 관리, 이미지 로드, 임의 경로(`/best`, `/admin`) 새로고침(SPA 폴백 200)
+- `/api/shoes` · `/api/reviews?shoeId=1` · `/api/terms` — 배열 · 개수(20/105/13) · 필드, 헤더는 **기준선과 같게**(`Cache-Control: no-cache`, `Access-Control-Allow-Origin: *`)
+- 좋아요 토글, 리뷰 등록 → "방금 전"(9시간 전이면 직렬화 버그) → 수정 → 삭제, 관리 화면 등록 → 수정(빈 칸 null) → 삭제
+  — 검증용으로 만든 것은 끝나면 지운다(MySQL 이라 db.json 처럼 파일을 되돌릴 수 없다)
+- 요약 — 리뷰 3개 미만인 새 신발에서 숨김 확인. 실호출(리뷰 5개 신발)은 **GPU 가 빌 때만**
+- 챗봇 `wss://runshoes.ronanlab.dev/ws/chat` 연결 · 환영 메시지(불변 확인). 질문은 GPU 가 빌 때
+- `kubectl -n runshoes get pods` — runshoes-mysql-0 · runshoes(2/2) Ready, 로그에 Flyway `Successfully applied 2 migrations` 한 번(재시작 뒤 `up to date`)
+- ArgoCD `runshoes` Synced/Healthy
+
+#### 5.7 롤백
+
+ronanlab-infra 에서 커밋 B 와 태그 커밋 N 을 revert → push → **Sync(사람)** → Node 배포가 돌아온다
+(옛 이미지 태그는 Harbor 에 있고, `runshoes-data` PVC 의 db.json 도 그대로 — seed-db 는 파일이 있으면 건드리지 않는다).
+**전환 뒤 MySQL 에 쓴 데이터는 롤백하면 안 보인다**(Node 는 db.json 을 읽는다) — 전환 직후 관찰 기간을 둔다.
+MySQL StatefulSet · PVC 는 롤백해도 그대로 둔다(prune 없음).
 
 ### Phase 6 — 문서화·정리 (반나절)
 - README 12장 "설계" → "완료"로 갱신(구현·검증 결과, 정정 1 패치 의미론 등),

@@ -1,0 +1,30 @@
+{
+  "id": "48",
+  "plan": 12,
+  "name": "DELETE 새 shoe → 200 + 본문",
+  "contract": true,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/shoes/21",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "2",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {}
+  }
+}

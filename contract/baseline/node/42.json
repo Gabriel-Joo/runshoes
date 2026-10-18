@@ -1,0 +1,79 @@
+{
+  "id": "42",
+  "plan": null,
+  "name": "PUT 새 shoe 전체 치환(프런트 미사용, harness용)",
+  "contract": true,
+  "request": {
+    "method": "PUT",
+    "path": "/api/shoes/21",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "Contract Runner PUT",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "likeCount": 0,
+      "liked": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "497",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "Contract Runner PUT",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "rating": 0,
+      "reviewCount": 0,
+      "likeCount": 0,
+      "liked": false,
+      "id": 21
+    }
+  }
+}

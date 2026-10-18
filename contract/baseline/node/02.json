@@ -1,0 +1,987 @@
+{
+  "id": "02",
+  "plan": 1,
+  "name": "reviews 전체",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "22541",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": [
+      {
+        "id": 1,
+        "shoeId": 1,
+        "author": "달리는곰",
+        "rating": 5,
+        "content": "평발이라 안정화 찾다가 샀는데 5km 뛰어도 발목이 안 꺾이는 느낌입니다. 대신 확실히 무겁긴 하네요!!",
+        "createdAt": "2026-07-18",
+        "likeCount": 2
+      },
+      {
+        "id": 2,
+        "shoeId": 1,
+        "author": "주말러너",
+        "rating": 4,
+        "content": "기본 사이즈는 발볼이 좀 조여서 4E로 교환했습니다. 그 뒤로는 만족하고 있어요.",
+        "createdAt": "2026-07-19",
+        "likeCount": 0
+      },
+      {
+        "id": 3,
+        "shoeId": 2,
+        "author": "퇴근런",
+        "rating": 4,
+        "content": "무난합니다. 특별히 좋은 것도 나쁜 것도 없는데 그게 장점인 것 같아요. 첫 신발로 추천합니다.",
+        "createdAt": "2026-07-17",
+        "likeCount": 7
+      },
+      {
+        "id": 4,
+        "shoeId": 2,
+        "author": "10K도전중",
+        "rating": 5,
+        "content": "뒤꿈치 착지 습관이 있는데 편했습니다. 다만 무게가 300g 가까워서 후반에 좀 무겁게 느껴집니다!",
+        "createdAt": "2026-07-20",
+        "likeCount": 4
+      },
+      {
+        "id": 5,
+        "shoeId": 3,
+        "author": "한강새벽",
+        "rating": 5,
+        "content": "구름 위를 뛰는 느낌이라는 말이 과장이 아니네요. 회복주용으로 계속 신고 있습니다.",
+        "createdAt": "2026-07-15",
+        "likeCount": 6
+      },
+      {
+        "id": 6,
+        "shoeId": 3,
+        "author": "느리게멀리",
+        "rating": 5,
+        "content": "무릎이 안 좋아서 쿠션 위주로 찾았는데 만족합니다. 와이드로 샀더니 발볼도 편해요.",
+        "createdAt": "2026-07-16",
+        "likeCount": 2
+      },
+      {
+        "id": 7,
+        "shoeId": 3,
+        "author": "초보탈출",
+        "rating": 4,
+        "content": "푹신한 건 좋은데 페이스를 올리면 살짝 무르다는 느낌이 있습니다. 조깅 전용으로 쓰고 있어요.",
+        "createdAt": "2026-07-20",
+        "likeCount": 0
+      },
+      {
+        "id": 8,
+        "shoeId": 4,
+        "author": "장거리연습",
+        "rating": 4,
+        "content": "15km 넘어가도 발바닥이 덜 아픕니다. 드롭이 낮아서 처음엔 종아리가 좀 당겼어요.",
+        "createdAt": "2026-07-14",
+        "likeCount": 1
+      },
+      {
+        "id": 9,
+        "shoeId": 5,
+        "author": "템포입문",
+        "rating": 5,
+        "content": "확실히 통통 튑니다. 카본 없이 이 정도면 충분한 것 같아요.",
+        "createdAt": "2026-07-13",
+        "likeCount": 0
+      },
+      {
+        "id": 10,
+        "shoeId": 5,
+        "author": "야간러닝",
+        "rating": 4,
+        "content": "인터벌 할 때 좋습니다. 다만 천천히 뛸 땐 오히려 불편한 느낌이 있어요.",
+        "createdAt": "2026-07-19",
+        "likeCount": 3
+      },
+      {
+        "id": 11,
+        "shoeId": 6,
+        "author": "서브포",
+        "rating": 5,
+        "content": "대회용으로만 신고 있습니다. 확실히 다르긴 한데 훈련에 신었다가 종아리가 뭉쳤어요. 용도대로 쓰는 게 맞습니다.",
+        "createdAt": "2026-07-12",
+        "likeCount": 0
+      },
+      {
+        "id": 12,
+        "shoeId": 1,
+        "author": "무릎지킴이",
+        "rating": 5,
+        "content": "과내전이 심해서 안정화만 신는데 32는 그중에서도 편합니다. 예전 카야노보다 덜 딱딱해졌어요.",
+        "createdAt": "2026-06-14",
+        "likeCount": 4
+      },
+      {
+        "id": 13,
+        "shoeId": 1,
+        "author": "주말10K",
+        "rating": 4,
+        "content": "안정성은 확실한데 300g이 확실히 무겁긴 합니다. 회복주용으로만 쓰는 중입니다.",
+        "createdAt": "2026-07-02",
+        "likeCount": 2
+      },
+      {
+        "id": 14,
+        "shoeId": 2,
+        "author": "런린이탈출",
+        "rating": 4,
+        "content": "첫 러닝화로 샀는데 무난합니다. 다만 앞이 조금 좁게 느껴져서 와이드로 다시 살까 고민 중이에요.",
+        "createdAt": "2026-06-21",
+        "liked": true,
+        "likeCount": 1
+      },
+      {
+        "id": 15,
+        "shoeId": 2,
+        "author": "새벽6시",
+        "rating": 5,
+        "content": "3년째 페가수스만 신고 있습니다. 매년 크게 안 바뀌는 게 오히려 장점 같아요.",
+        "createdAt": "2026-07-09",
+        "liked": true,
+        "likeCount": 1
+      },
+      {
+        "id": 16,
+        "shoeId": 3,
+        "author": "발바닥통증",
+        "rating": 5,
+        "content": "족저근막염 때문에 쿠션 찾다가 골랐는데 확실히 편합니다. 무게도 278g으로 가벼운 편이라 좋아요.",
+        "createdAt": "2026-06-18",
+        "likeCount": 0
+      },
+      {
+        "id": 17,
+        "shoeId": 3,
+        "author": "호카입문",
+        "rating": 4,
+        "content": "푹신하긴 한데 생각보다 지면 감각이 없어서 처음엔 어색했습니다. 지금은 적응했어요.",
+        "createdAt": "2026-07-05",
+        "likeCount": 3
+      },
+      {
+        "id": 18,
+        "shoeId": 4,
+        "author": "30K주자",
+        "rating": 5,
+        "content": "장거리 끝나고 다리가 확실히 덜 아픕니다. 무겁지만 그만한 값을 합니다.",
+        "createdAt": "2026-06-25",
+        "likeCount": 5
+      },
+      {
+        "id": 19,
+        "shoeId": 4,
+        "author": "발볼왕",
+        "rating": 4,
+        "content": "발볼 넓은 사람에게 정말 편합니다. 다만 드롭 5mm라 종아리가 처음엔 좀 당겼어요.",
+        "createdAt": "2026-07-08",
+        "likeCount": 4
+      },
+      {
+        "id": 20,
+        "shoeId": 4,
+        "author": "퇴근런",
+        "rating": 5,
+        "content": "출퇴근 겸용으로도 신는데 하루 종일 서 있어도 발이 편합니다.",
+        "createdAt": "2026-07-16",
+        "likeCount": 4
+      },
+      {
+        "id": 21,
+        "shoeId": 5,
+        "author": "인터벌지옥",
+        "rating": 5,
+        "content": "255g에 이 쿠션이면 반칙 아닌가요. 템포런에서 확실히 잘 튕겨줍니다.",
+        "createdAt": "2026-06-29",
+        "likeCount": 3
+      },
+      {
+        "id": 22,
+        "shoeId": 5,
+        "author": "트랙러너",
+        "rating": 5,
+        "content": "스택 41.5mm인데 불안하지 않은 게 신기합니다. 인터벌부터 조깅까지 다 되는 만능이에요.",
+        "createdAt": "2026-07-13",
+        "likeCount": 0
+      },
+      {
+        "id": 23,
+        "shoeId": 6,
+        "author": "서브3도전",
+        "rating": 5,
+        "content": "풀코스에서 신었는데 30K 이후가 확실히 다릅니다. 가격만 빼면 완벽해요.",
+        "createdAt": "2026-06-30",
+        "likeCount": 2
+      },
+      {
+        "id": 24,
+        "shoeId": 6,
+        "author": "카본첫경험",
+        "rating": 4,
+        "content": "반발력은 엄청난데 초보가 신기엔 확실히 부담됩니다. 종아리가 며칠 아팠어요.",
+        "createdAt": "2026-07-14",
+        "liked": true,
+        "likeCount": 1
+      },
+      {
+        "id": 25,
+        "shoeId": 7,
+        "author": "넓은발러너",
+        "rating": 4,
+        "content": "폭 옵션이 많아서 4E로 샀는데 드디어 발이 안 조입니다. 이것만으로도 만족해요.",
+        "createdAt": "2026-06-16",
+        "likeCount": 2
+      },
+      {
+        "id": 26,
+        "shoeId": 7,
+        "author": "출근전달리기",
+        "rating": 5,
+        "content": "특별한 건 없는데 그게 장점입니다. 매일 신어도 질리지 않아요.",
+        "createdAt": "2026-07-01",
+        "likeCount": 4
+      },
+      {
+        "id": 27,
+        "shoeId": 7,
+        "author": "속도욕심",
+        "rating": 4,
+        "content": "편하긴 한데 페이스를 올리면 좀 둔합니다. 조깅 전용으로 쓰는 게 맞는 것 같아요.",
+        "createdAt": "2026-07-17",
+        "likeCount": 2
+      },
+      {
+        "id": 28,
+        "shoeId": 8,
+        "author": "뉴발매니아",
+        "rating": 4,
+        "content": "쿠션이 확 늘었는데 드롭이 6mm라 예전 880과는 느낌이 많이 다릅니다. 적응 기간이 필요했어요.",
+        "createdAt": "2026-06-22",
+        "likeCount": 0
+      },
+      {
+        "id": 29,
+        "shoeId": 8,
+        "author": "회복주전용",
+        "rating": 4,
+        "content": "300g이라 무겁긴 한데 쿠션은 확실합니다. 훈련 다음 날 회복주로 딱이에요.",
+        "createdAt": "2026-07-11",
+        "likeCount": 2
+      },
+      {
+        "id": 30,
+        "shoeId": 9,
+        "author": "데일리슈즈",
+        "rating": 3,
+        "content": "일상화로는 정말 좋은데 러닝화로 보면 무겁습니다. 5K 넘어가면 발이 무거워져요.",
+        "createdAt": "2026-06-19",
+        "likeCount": 3
+      },
+      {
+        "id": 31,
+        "shoeId": 9,
+        "author": "디자인우선",
+        "rating": 4,
+        "content": "솔직히 예뻐서 샀습니다. 가볍게 뛰는 정도면 충분히 괜찮아요.",
+        "createdAt": "2026-07-03",
+        "likeCount": 4,
+        "liked": false
+      },
+      {
+        "id": 32,
+        "shoeId": 9,
+        "author": "부스트팬",
+        "rating": 4,
+        "content": "라이트부스트로 바뀌면서 확실히 가벼워졌습니다. 다만 가격이 좀 부담스럽네요.",
+        "createdAt": "2026-07-19",
+        "likeCount": 2,
+        "liked": false
+      },
+      {
+        "id": 33,
+        "shoeId": 10,
+        "author": "템포런중독",
+        "rating": 5,
+        "content": "카본 없이 이 정도 반발이면 충분합니다. 나일론 플레이트라 발이 덜 피곤해요.",
+        "createdAt": "2026-06-17",
+        "likeCount": 4
+      },
+      {
+        "id": 34,
+        "shoeId": 10,
+        "author": "하프준비중",
+        "rating": 5,
+        "content": "233g이 정말 가볍게 느껴집니다. 훈련용과 레이스용을 한 켤레로 해결했어요.",
+        "createdAt": "2026-07-04",
+        "likeCount": 1
+      },
+      {
+        "id": 35,
+        "shoeId": 10,
+        "author": "발볼걱정",
+        "rating": 4,
+        "content": "성능은 최고인데 앞볼이 좁습니다. 반 사이즈 크게 사는 걸 추천해요.",
+        "createdAt": "2026-07-12",
+        "liked": true,
+        "likeCount": 1
+      },
+      {
+        "id": 36,
+        "shoeId": 10,
+        "author": "사우코니처음",
+        "rating": 5,
+        "content": "카본화 사기 전에 이걸 먼저 신어보라는 말이 무슨 뜻인지 알겠습니다.",
+        "createdAt": "2026-07-20",
+        "likeCount": 1
+      },
+      {
+        "id": 37,
+        "shoeId": 11,
+        "author": "온첫구매",
+        "rating": 4,
+        "content": "쿠션이 푹신하지 않고 단단하게 튕깁니다. 물렁한 신발 싫어하는 분에게 맞아요.",
+        "createdAt": "2026-06-23",
+        "likeCount": 0
+      },
+      {
+        "id": 38,
+        "shoeId": 11,
+        "author": "가성비고민",
+        "rating": 3,
+        "content": "성능 대비 가격이 아쉽습니다. 295g으로 무겁기도 하고요.",
+        "createdAt": "2026-07-06",
+        "likeCount": 4
+      },
+      {
+        "id": 39,
+        "shoeId": 11,
+        "author": "발볼넓음",
+        "rating": 4,
+        "content": "온 치고는 앞이 넓게 나와서 좋았습니다. 다만 반 사이즈 줄여야 맞더라고요.",
+        "createdAt": "2026-07-18",
+        "likeCount": 2
+      },
+      {
+        "id": 40,
+        "shoeId": 12,
+        "author": "10K레이스",
+        "rating": 5,
+        "content": "에너지로드가 통짜 플레이트보다 자연스럽습니다. 발이 따로 노는 느낌이 없어요.",
+        "createdAt": "2026-06-20",
+        "likeCount": 3
+      },
+      {
+        "id": 41,
+        "shoeId": 12,
+        "author": "훈련도레이스도",
+        "rating": 4,
+        "content": "255g에 이 정도 반발이면 훌륭합니다. 다만 앞볼이 좁아 사이즈 확인은 필수예요.",
+        "createdAt": "2026-07-07",
+        "likeCount": 3
+      },
+      {
+        "id": 42,
+        "shoeId": 12,
+        "author": "아디제로파",
+        "rating": 5,
+        "content": "컨티넨탈 아웃솔이 정말 잘 붙습니다. 비 오는 날에도 미끄러진 적이 없어요.",
+        "createdAt": "2026-07-15",
+        "likeCount": 1
+      },
+      {
+        "id": 43,
+        "shoeId": 13,
+        "author": "마라톤준비",
+        "rating": 5,
+        "content": "43.5mm 스택인데 흔들리지 않는 게 인상적입니다. 장거리 훈련이 훨씬 편해졌어요.",
+        "createdAt": "2026-06-15",
+        "likeCount": 0
+      },
+      {
+        "id": 44,
+        "shoeId": 13,
+        "author": "무게민감",
+        "rating": 4,
+        "content": "쿠션은 최고지만 305g은 확실히 무겁습니다. 속도 훈련에는 안 맞아요.",
+        "createdAt": "2026-06-28",
+        "likeCount": 0
+      },
+      {
+        "id": 45,
+        "shoeId": 13,
+        "author": "님버스26에서",
+        "rating": 5,
+        "content": "26보다 2mm 두꺼워졌는데 무게는 그대로입니다. 발 뒤꿈치 충격이 확실히 줄었어요.",
+        "createdAt": "2026-07-10",
+        "likeCount": 3
+      },
+      {
+        "id": 46,
+        "shoeId": 13,
+        "author": "체중많이나감",
+        "rating": 4,
+        "content": "80kg 넘는데 이 정도 쿠션이면 안심됩니다. 다만 여름엔 좀 덥네요.",
+        "createdAt": "2026-07-21",
+        "likeCount": 4
+      },
+      {
+        "id": 47,
+        "shoeId": 14,
+        "author": "가성비추구",
+        "rating": 4,
+        "content": "이 가격에 이 성능이면 훌륭합니다. 요즘 러닝화 가격 생각하면 더 그래요.",
+        "createdAt": "2026-06-24",
+        "likeCount": 3
+      },
+      {
+        "id": 48,
+        "shoeId": 14,
+        "author": "매일10K",
+        "rating": 5,
+        "content": "264g으로 가벼워서 매일 신기 좋습니다. 폼도 통통 튀는 게 재밌어요.",
+        "createdAt": "2026-07-02",
+        "likeCount": 0
+      },
+      {
+        "id": 49,
+        "shoeId": 14,
+        "author": "좁은신발싫어",
+        "rating": 4,
+        "content": "성능은 만족하는데 앞볼이 살짝 좁습니다. 발 넓은 분은 신어보고 사세요.",
+        "createdAt": "2026-07-16",
+        "likeCount": 2
+      },
+      {
+        "id": 50,
+        "shoeId": 15,
+        "author": "미즈노20년",
+        "rating": 4,
+        "content": "드디어 드롭이 10mm로 내려왔네요. 12mm 시절보다 훨씬 자연스럽습니다.",
+        "createdAt": "2026-06-26",
+        "likeCount": 5
+      },
+      {
+        "id": 51,
+        "shoeId": 15,
+        "author": "안정지향",
+        "rating": 4,
+        "content": "튀는 구석 없이 안정적입니다. 재미는 없어도 믿고 신을 수 있어요.",
+        "createdAt": "2026-07-08",
+        "likeCount": 4
+      },
+      {
+        "id": 52,
+        "shoeId": 15,
+        "author": "장거리위주",
+        "rating": 5,
+        "content": "웨이브 플레이트 덕인지 긴 거리에서도 안 흔들립니다. 발볼만 조금 넓었으면 좋겠어요.",
+        "createdAt": "2026-07-19",
+        "likeCount": 1
+      },
+      {
+        "id": 53,
+        "shoeId": 16,
+        "author": "하프서브90",
+        "rating": 5,
+        "content": "167g이 진짜 아무것도 안 신은 것 같습니다. 하프에서 개인 기록 경신했어요.",
+        "createdAt": "2026-06-27",
+        "likeCount": 6
+      },
+      {
+        "id": 54,
+        "shoeId": 16,
+        "author": "카본입문",
+        "rating": 5,
+        "content": "알파플라이보다 다루기 쉽습니다. 첫 카본화로 이걸 고른 게 잘한 선택이었어요.",
+        "createdAt": "2026-07-05",
+        "likeCount": 2
+      },
+      {
+        "id": 55,
+        "shoeId": 16,
+        "author": "발볼넓은편",
+        "rating": 4,
+        "content": "성능은 의심의 여지가 없는데 발볼이 정말 좁습니다. 저는 반 사이즈 올렸어요.",
+        "createdAt": "2026-07-13",
+        "likeCount": 1
+      },
+      {
+        "id": 56,
+        "shoeId": 16,
+        "author": "스택낮아짐",
+        "rating": 5,
+        "content": "3세대보다 스택을 낮춘 게 오히려 좋습니다. 지면이 가까워서 안정감이 있어요.",
+        "createdAt": "2026-07-22",
+        "likeCount": 4
+      },
+      {
+        "id": 57,
+        "shoeId": 17,
+        "author": "풀코스전용",
+        "rating": 5,
+        "content": "마라톤에서 신으려고 아껴 신고 있습니다. 30K 이후에도 폼이 죽지 않아요.",
+        "createdAt": "2026-06-21",
+        "likeCount": 1
+      },
+      {
+        "id": 58,
+        "shoeId": 17,
+        "author": "로드vs플레이트",
+        "rating": 4,
+        "content": "카본 로드라 통짜 플레이트보다 부드럽습니다. 대신 그만큼 추진력은 덜한 느낌이에요.",
+        "createdAt": "2026-07-06",
+        "liked": false,
+        "likeCount": 2
+      },
+      {
+        "id": 59,
+        "shoeId": 17,
+        "author": "비오는날레이스",
+        "rating": 5,
+        "content": "젖은 노면에서 접지력이 압도적입니다. 컨티넨탈 고무가 확실히 다르네요.",
+        "createdAt": "2026-07-17",
+        "liked": false,
+        "likeCount": 1
+      },
+      {
+        "id": 60,
+        "shoeId": 18,
+        "author": "진흙산길",
+        "rating": 4,
+        "content": "진흙에서 이만한 게 없습니다. 럭이 깊어서 잘 파고들고 털어내기도 좋아요.",
+        "createdAt": "2026-06-18",
+        "liked": false,
+        "likeCount": 3
+      },
+      {
+        "id": 61,
+        "shoeId": 18,
+        "author": "트레일10년",
+        "rating": 5,
+        "content": "5세대보다 가벼워지고 앞볼도 넓어졌습니다. 스피드크로스의 정체성은 그대로예요.",
+        "createdAt": "2026-07-01",
+        "liked": false,
+        "likeCount": 0
+      },
+      {
+        "id": 62,
+        "shoeId": 18,
+        "author": "여름트레일",
+        "rating": 2,
+        "content": "그립은 최고인데 어퍼가 촘촘해서 여름엔 발이 정말 더워요!",
+        "createdAt": "2026-07-14",
+        "liked": true,
+        "likeCount": 1
+      },
+      {
+        "id": 63,
+        "shoeId": 19,
+        "author": "울트라준비",
+        "rating": 5,
+        "content": "50K 뛰었는데 발바닥이 멀쩡합니다. 트레일화 중에 이만한 쿠션이 없어요.",
+        "createdAt": "2026-06-16",
+        "likeCount": 0
+      },
+      {
+        "id": 64,
+        "shoeId": 19,
+        "author": "젖은바위",
+        "rating": 5,
+        "content": "비브람 메가그립이 젖은 바위에서도 잘 붙습니다. 내리막에서 겁이 안 나요.",
+        "createdAt": "2026-06-29",
+        "likeCount": 1
+      },
+      {
+        "id": 65,
+        "shoeId": 19,
+        "author": "스피드고트5에서",
+        "rating": 4,
+        "content": "5세대보다 뻣뻣해진 느낌입니다. 쿠션은 늘었는데 지면 감각은 줄었어요.",
+        "createdAt": "2026-07-11",
+        "likeCount": 4
+      },
+      {
+        "id": 66,
+        "shoeId": 19,
+        "author": "산악마라톤",
+        "rating": 4,
+        "content": "무난하게 다 잘합니다. 대신 아주 기술적인 구간에선 조금 둔하게 느껴져요.",
+        "createdAt": "2026-07-20",
+        "likeCount": 0
+      },
+      {
+        "id": 67,
+        "shoeId": 20,
+        "author": "로드에서트레일로",
+        "rating": 4,
+        "content": "포장도로 구간이 섞인 코스에서도 무리 없습니다. 트레일 입문용으로 추천해요.",
+        "createdAt": "2026-06-25",
+        "likeCount": 0
+      },
+      {
+        "id": 68,
+        "shoeId": 20,
+        "author": "돌밭주의",
+        "rating": 5,
+        "content": "록플레이트 덕에 돌을 밟아도 발바닥이 아프지 않습니다. 이 가격에 이 정도면 훌륭해요.",
+        "createdAt": "2026-07-09",
+        "likeCount": 0
+      },
+      {
+        "shoeId": 16,
+        "author": "주갑열",
+        "rating": 5,
+        "content": "일단 디자인이 너무 예뻐서 구매했어요...!!!",
+        "createdAt": "2026-07-23",
+        "id": 69,
+        "liked": false,
+        "likeCount": 3
+      },
+      {
+        "shoeId": 2,
+        "author": "ㅁㅁㅁ",
+        "rating": 4,
+        "content": "신발이 너무 좋아요!",
+        "createdAt": "2026-07-23T07:04:54.447Z",
+        "id": 70,
+        "liked": false,
+        "likeCount": 2
+      },
+      {
+        "shoeId": 12,
+        "author": "김진하",
+        "rating": 5,
+        "content": "대회를 신청하고 이 신발을 구매했는데 마음에 들어요! ",
+        "createdAt": "2026-07-24T03:39:31.840Z",
+        "id": 71,
+        "likeCount": 3
+      },
+      {
+        "id": 72,
+        "shoeId": 1,
+        "author": "초보러너민지",
+        "rating": 5,
+        "content": "발이 안쪽으로 무너지는 편인데 이 신발 신고 나서 무릎 아픈 게 확실히 줄었어요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-27T22:19:18.668Z"
+      },
+      {
+        "id": 73,
+        "shoeId": 4,
+        "author": "장거리도전",
+        "rating": 4,
+        "content": "40mm 스택하이트가 처음엔 어색했는데 20km 넘어가니 왜 두꺼운지 알겠더라고요.",
+        "likeCount": 5,
+        "createdAt": "2026-07-27T15:19:18.668Z"
+      },
+      {
+        "id": 74,
+        "shoeId": 5,
+        "author": "인터벌러너",
+        "rating": 4,
+        "content": "빠른 페이스로 치고 나갈 때 반발력이 확실히 다릅니다. 조깅화보단 인터벌용.",
+        "likeCount": 2,
+        "createdAt": "2026-07-27T08:19:18.668Z"
+      },
+      {
+        "id": 75,
+        "shoeId": 6,
+        "author": "레이스데이",
+        "rating": 5,
+        "content": "10K 개인 기록 3분 단축했어요. 카본 플레이트 반발력이 확실히 다릅니다.",
+        "likeCount": 12,
+        "createdAt": "2026-07-27T01:19:18.668Z"
+      },
+      {
+        "id": 76,
+        "shoeId": 6,
+        "author": "첫풀코스",
+        "rating": 4,
+        "content": "가볍긴 한데 발볼이 좁아서 발가락 쪽이 좀 눌려요. 반 사이즈 크게 신으세요.",
+        "likeCount": 6,
+        "createdAt": "2026-07-26T18:19:18.668Z"
+      },
+      {
+        "id": 77,
+        "shoeId": 7,
+        "author": "매일러너",
+        "rating": 5,
+        "content": "매일 신어도 부담 없는 조깅화. 무난하게 오래 신기 좋아요.",
+        "likeCount": 4,
+        "createdAt": "2026-07-26T11:19:18.668Z"
+      },
+      {
+        "id": 78,
+        "shoeId": 7,
+        "author": "발볼넓어요",
+        "rating": 4,
+        "content": "브룩스가 발볼이 넉넉하다더니 정말 편해요. 국내 브랜드보다 낫네요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-26T04:19:18.668Z"
+      },
+      {
+        "id": 79,
+        "shoeId": 8,
+        "author": "뉴발유저",
+        "rating": 5,
+        "content": "쿠션이 정말 푹신해서 장거리 회복주에 딱입니다.",
+        "likeCount": 3,
+        "createdAt": "2026-07-25T21:19:18.668Z"
+      },
+      {
+        "id": 80,
+        "shoeId": 8,
+        "author": "첫러닝화",
+        "rating": 4,
+        "content": "가격 대비 만족스러운데 무게가 좀 나가는 편이에요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-25T14:19:18.668Z"
+      },
+      {
+        "id": 81,
+        "shoeId": 8,
+        "author": "회복주전용",
+        "rating": 5,
+        "content": "빡센 훈련 다음날 회복주용으로 신는데 발이 편해요.",
+        "likeCount": 4,
+        "createdAt": "2026-07-25T07:19:18.668Z"
+      },
+      {
+        "id": 82,
+        "shoeId": 9,
+        "author": "아디다스팬",
+        "rating": 4,
+        "content": "부스트 쿠션 특유의 탱글한 느낌이 좋아요. 일상화로도 손색없습니다.",
+        "likeCount": 5,
+        "createdAt": "2026-07-25T00:19:18.668Z"
+      },
+      {
+        "id": 83,
+        "shoeId": 9,
+        "author": "출퇴근러너",
+        "rating": 4,
+        "content": "회사 다녀와서 가볍게 뛰기 좋은 신발. 디자인도 무난해요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-24T17:19:18.668Z"
+      },
+      {
+        "id": 84,
+        "shoeId": 10,
+        "author": "템포훈련중",
+        "rating": 5,
+        "content": "템포런 훈련용으로 구매했는데 딱 원하던 반응성이에요.",
+        "likeCount": 4,
+        "createdAt": "2026-07-24T10:19:18.668Z"
+      },
+      {
+        "id": 85,
+        "shoeId": 11,
+        "author": "온신발첫구매",
+        "rating": 4,
+        "content": "클라우드테크 쿠션이 특이한데 적응되니 편합니다.",
+        "likeCount": 3,
+        "createdAt": "2026-07-24T03:19:18.668Z"
+      },
+      {
+        "id": 86,
+        "shoeId": 11,
+        "author": "디자인중시",
+        "rating": 5,
+        "content": "성능도 좋지만 일단 예뻐서 삽니다. 인터벌에도 무난해요.",
+        "likeCount": 6,
+        "createdAt": "2026-07-23T20:19:18.668Z"
+      },
+      {
+        "id": 87,
+        "shoeId": 12,
+        "author": "보스턴시리즈",
+        "rating": 5,
+        "content": "보스턴 시리즈 계속 신고 있는데 13세대가 제일 안정적이에요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-23T13:19:18.668Z"
+      },
+      {
+        "id": 88,
+        "shoeId": 13,
+        "author": "장거리안정화",
+        "rating": 4,
+        "content": "안정화인데도 무겁지 않아서 LSD 훈련에 자주 신어요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-23T06:19:18.668Z"
+      },
+      {
+        "id": 89,
+        "shoeId": 14,
+        "author": "슈퍼노바입문",
+        "rating": 4,
+        "content": "장거리용으로 처음 신어봤는데 쿠션감이 부드러워요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-22T23:19:18.668Z"
+      },
+      {
+        "id": 90,
+        "shoeId": 14,
+        "author": "주말러너",
+        "rating": 4,
+        "content": "주말 장거리 러닝용으로 만족스럽습니다.",
+        "likeCount": 3,
+        "createdAt": "2026-07-22T16:19:18.668Z"
+      },
+      {
+        "id": 91,
+        "shoeId": 15,
+        "author": "미즈노웨이브",
+        "rating": 5,
+        "content": "웨이브 플레이트 특유의 안정감이 장거리에 딱이에요.",
+        "likeCount": 4,
+        "createdAt": "2026-07-22T09:19:18.668Z"
+      },
+      {
+        "id": 92,
+        "shoeId": 15,
+        "author": "오래된유저",
+        "rating": 4,
+        "content": "라이더 시리즈만 몇 년째 신는데 29도 무난합니다.",
+        "likeCount": 2,
+        "createdAt": "2026-07-22T02:19:18.668Z"
+      },
+      {
+        "id": 93,
+        "shoeId": 16,
+        "author": "서브3도전",
+        "rating": 5,
+        "content": "마라톤 서브3 페이스메이커로 신었는데 최고였습니다. 가볍고 반발력 최고.",
+        "likeCount": 15,
+        "createdAt": "2026-07-21T19:19:18.668Z"
+      },
+      {
+        "id": 94,
+        "shoeId": 17,
+        "author": "레이스전용화",
+        "rating": 5,
+        "content": "레이스 당일에만 신는 전용화로 씁니다. 확실히 기록이 다르네요.",
+        "likeCount": 5,
+        "createdAt": "2026-07-21T12:19:18.668Z"
+      },
+      {
+        "id": 95,
+        "shoeId": 17,
+        "author": "아디제로팬",
+        "rating": 4,
+        "content": "가볍고 반발력 좋은데 쿠션이 얇아서 장거리엔 안 맞아요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-21T05:19:18.668Z"
+      },
+      {
+        "id": 96,
+        "shoeId": 18,
+        "author": "트레일입문",
+        "rating": 4,
+        "content": "산길 그립력이 확실히 다릅니다. 젖은 바위에서도 안정적이에요.",
+        "likeCount": 3,
+        "createdAt": "2026-07-20T22:19:18.668Z"
+      },
+      {
+        "id": 97,
+        "shoeId": 18,
+        "author": "주말산길러너",
+        "rating": 5,
+        "content": "발볼 좁은 편이라 두꺼운 양말 신으면 딱 맞아요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-20T15:19:18.668Z"
+      },
+      {
+        "id": 98,
+        "shoeId": 19,
+        "author": "호카트레일",
+        "rating": 5,
+        "content": "쿠션이 두꺼워서 긴 트레일 코스에도 발이 편해요.",
+        "likeCount": 4,
+        "createdAt": "2026-07-20T08:19:18.668Z"
+      },
+      {
+        "id": 99,
+        "shoeId": 20,
+        "author": "트라부코첫구매",
+        "rating": 4,
+        "content": "아식스 트레일화 처음 신어보는데 접지력이 좋네요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-20T01:19:18.668Z"
+      },
+      {
+        "id": 100,
+        "shoeId": 20,
+        "author": "주말등산러너",
+        "rating": 5,
+        "content": "가벼운 산길 정도는 이걸로 충분합니다.",
+        "likeCount": 3,
+        "createdAt": "2026-07-19T18:19:18.668Z"
+      },
+      {
+        "id": 101,
+        "shoeId": 20,
+        "author": "트레일러닝시작",
+        "rating": 4,
+        "content": "입문용으로 무난하고 가격도 합리적이에요.",
+        "likeCount": 2,
+        "createdAt": "2026-07-19T11:19:18.668Z"
+      },
+      {
+        "shoeId": 9,
+        "author": "좁은발볼",
+        "rating": 3,
+        "content": "발볼이 좁아서 불편해요. 반 사이즈 크게 신는 걸 추천합니다.",
+        "createdAt": "2026-07-28T07:40:56.598Z",
+        "id": 102
+      },
+      {
+        "shoeId": 7,
+        "author": "러너사랑",
+        "rating": 2,
+        "content": "밑창이 얇아서 아스팔트 요철이 그대로 느껴져요. 쿠션은 좋은데 지면 충격은 좀 있는 편입니다.",
+        "createdAt": "2026-07-28T08:35:36.920Z",
+        "id": 103
+      },
+      {
+        "shoeId": 10,
+        "author": "실용주의자",
+        "rating": 2,
+        "content": "페이스를 올리면 반응은 좋은데, 신다 보니 두 달 만에 뒤꿈치 안쪽이 닳아서 쿠션이 꺼졌어요. 내구성이 걱정됩니다.",
+        "createdAt": "2026-07-28T08:39:28.906Z",
+        "id": 104,
+        "likeCount": 20
+      },
+      {
+        "shoeId": 10,
+        "author": "이상주의자",
+        "rating": 5,
+        "content": "와 이거 진짜 최고예요! 몇 달째 매일 신고 있는데 쿠션 하나도 안 죽고 완전 튼튼해요. 내구성 걱정하시는 분들 있던데 전혀 걱정 안 하셔도 됩니다!",
+        "createdAt": "2026-07-28T08:41:06.821Z",
+        "id": 105,
+        "likeCount": 20
+      }
+    ]
+  }
+}

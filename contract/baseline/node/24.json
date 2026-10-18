@@ -1,0 +1,116 @@
+{
+  "id": "24",
+  "plan": null,
+  "name": "json-server 필드 필터 brand=호카(프런트 미사용)",
+  "contract": false,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?brand=%ED%98%B8%EC%B9%B4",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "2463",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": [
+      {
+        "id": 3,
+        "brand": "호카",
+        "model": "클리프톤 10",
+        "purpose": "조깅·회복주",
+        "stability": "중립화",
+        "midsole": "CMEVA",
+        "weight": 278,
+        "drop": 8,
+        "stackHeight": null,
+        "width": "넓음",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 189000,
+        "image": "/images/clifton-10.png",
+        "images": [
+          "/images/clifton-10.png",
+          "/images/clifton-10-1.png",
+          "/images/clifton-10-2.png"
+        ],
+        "summary": "푹신한 착지를 원하는 분에게",
+        "description": "호카 특유의 두툼한 미드솔로 푹신함을 앞세운 모델입니다. 착지 충격이 부담스러운 분이나 회복주를 자주 뛰는 분에게 잘 맞습니다. 와이드핏이 따로 나와 발볼이 넓어도 무리가 없습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 55,
+        "liked": false
+      },
+      {
+        "id": 4,
+        "brand": "호카",
+        "model": "본디 9",
+        "purpose": "LSD·장거리",
+        "stability": "중립화",
+        "midsole": null,
+        "weight": 297,
+        "drop": 5,
+        "stackHeight": 43,
+        "width": "넓음",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 229000,
+        "image": "/images/bondi-9.png",
+        "images": [
+          "/images/bondi-9.png",
+          "/images/bondi-9-1.png",
+          "/images/bondi-9-2.png"
+        ],
+        "summary": "긴 거리를 자주 뛰는 분에게",
+        "description": "호카 라인업에서도 쿠션이 가장 두꺼운 축에 드는 모델입니다. 긴 거리를 뛸 때 발바닥에 쌓이는 피로를 줄이는 데 초점이 맞춰져 있습니다. 드롭이 5mm로 낮은 편이라 종아리에 부담이 올 수 있어, 처음 신는다면 짧은 거리부터 적응하시는 편이 좋습니다.",
+        "rating": 4.4,
+        "reviewCount": 5,
+        "likeCount": 29,
+        "liked": false
+      },
+      {
+        "id": 19,
+        "brand": "호카",
+        "model": "스피드고트 6",
+        "purpose": "트레일",
+        "stability": "중립화",
+        "midsole": "CMEVA",
+        "weight": 283,
+        "drop": 5,
+        "stackHeight": 40,
+        "width": "보통",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 219000,
+        "image": "/images/speedgoat-6.png",
+        "images": [
+          "/images/speedgoat-6.png",
+          "/images/speedgoat-6-1.png",
+          "/images/speedgoat-6-2.png",
+          "/images/speedgoat-6-3.png",
+          "/images/speedgoat-6-4.png",
+          "/images/speedgoat-6-5.png",
+          "/images/speedgoat-6-6.png"
+        ],
+        "summary": "산에서 아주 긴 거리를 달리는 분에게",
+        "description": "울트라 트레일 러너들에게 오래 사랑받아 온 모델입니다. 스택하이트 40mm로 트레일화 중에서도 쿠션이 두툼해 장시간 달려도 발바닥 피로가 덜합니다. 비브람 메가그립 아웃솔은 젖은 바위에서도 잘 붙고, 드롭이 5mm로 낮아 자연스러운 착지를 돕습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 88,
+        "liked": false
+      }
+    ]
+  }
+}
