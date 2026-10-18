@@ -3,8 +3,10 @@ server:
   port: ${SERVER_PORT:${PORT:3000}}
   # BASE_PATH 는 config/BasePathConfig 가 context-path 로(끝의 / 를 뗀다)
   compression.enabled: true
+  shutdown: graceful                  # SIGTERM 에 처리 중인 요청을 마치고 내린다(롤링 · preStop 5초 뒤)
 
 spring:
+  lifecycle.timeout-per-shutdown-phase: 20s   # terminationGracePeriodSeconds 30 안에서
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://127.0.0.1:3307/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC}
     username: ${SPRING_DATASOURCE_USERNAME:runshoes}
