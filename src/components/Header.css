@@ -40,11 +40,9 @@
   font-weight: 600;
   color: var(--text-strong);
 }
-.header__link--about {
+.header__link--admin {
   border-left: 1px solid #000000;
   padding-left: 20px;
-}
-.header__link--admin {
   font-weight: 600;
   color: var(--text-weak);
 }
