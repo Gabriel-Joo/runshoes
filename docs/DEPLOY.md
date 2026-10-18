@@ -3,17 +3,18 @@
 Vite + React + json-server 프로젝트를 교내 배포판(`aisw-apps.kopoctc.kr`)에 올리는 절차.
 RUNSHOES 배포 과정에서 겪은 시행착오를 정리한 문서로, 다른 프로젝트에도 그대로 적용할 수 있다.
 
-> **참고 — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)이다.**
-> 현재 운영 배포는 쿠버네티스 GitOps로 전환했으며 [INFRA.md](INFRA.md)를 참고.
-> 두 방식 모두 실제로 구성했고, 이 문서는 발전 과정의 기록이자 백업/데모용 배포로 남긴다.
+> **참고 — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)의 기록이다.**
+> 운영 배포는 쿠버네티스 GitOps로 전환했고, 2026-10-18 학교 클러스터에서 자체 클러스터로 옮겼다 — [INFRA.md](INFRA.md) 참고.
+> 웹 터미널은 학교 서비스(교내 계정)라 지금은 쓰지 않는다. 이 문서는 발전 과정과 시행착오의 기록으로 남긴다.
+> `vite.config.ts`의 `BASE_PATH` · `asset()` 헬퍼처럼 여기서 정한 것은 지금 코드에도 그대로 있다.
 >
 > |           | 웹 터미널 (이 문서)                               | 쿠버네티스 (INFRA.md)                 |
 > | --------- | ------------------------------------------------- | ------------------------------------- |
-> | 주소      | `aisw-apps.kopoctc.kr/g/kopo17/project-runshoes/` | `kopo17-runshoes.std.kopoctc.kr`      |
+> | 주소      | `aisw-apps.kopoctc.kr/g/kopo17/project-runshoes/` | `runshoes.ronanlab.dev`               |
 > | 방식      | `git pull` + `node server.cjs` 수동               | GitOps 자동 (push → 빌드 → 배포)      |
 > | base 경로 | `/g/kopo17/project-runshoes/` 필요                | 루트 `/`                              |
-> | 위치      | code-server 홈 디렉터리                           | RKE2 클러스터 `runshoes` 네임스페이스 |
-> | AI 리뷰 요약 | 동작함 (같은 물리 네트워크)                     | 미배포 (vcluster 네트워크 제약, 11장 참고) |
+> | 위치      | code-server 홈 디렉터리                           | 자체 kubeadm 클러스터 `runshoes` 네임스페이스 (전에는 학교 RKE2 vcluster) |
+> | AI 리뷰 요약 | 동작함 (같은 물리 네트워크)                     | 동작함 — 사설망 직접 연결 (학교 vcluster에서는 터널 + Access로 우회, README 11장) |
 
 ---
 
@@ -318,8 +319,8 @@ tail -f server.log                       # 실시간 요청 로그
 
 이 변경은 웹 터미널의 `db.json`에만 쌓이며, 시드가 아니다.
 갱신 시 `git checkout -- db.json`으로 되돌린다.
-(쿠버네티스 배포는 initContainer가 `db.json.seed`를 PVC로 복사하는 구조라
-런타임 변경과 시드가 분리되어 있어 이 문제가 없다 — [INFRA.md](INFRA.md) 참고.)
+(쿠버네티스 배포는 initContainer가 PVC에 db.json이 없을 때만 `db.json.seed`를 복사하는 구조라
+런타임 변경과 시드가 분리되어 있어 이 문제가 없다 — [INFRA.md](INFRA.md) 8장 참고.)
 
 ### 복구
 
@@ -377,7 +378,8 @@ rm -f server.pid server.port
 
 웹 터미널과 Ollama(별도 PC)는 학교의 같은 물리 네트워크에 있어
 사설 IP로 직접 통신이 가능하며, 실제로 리뷰 요약 기능이 정상 동작한다.
-(쿠버네티스 배포에서는 동작하지 않는다 — [INFRA.md](INFRA.md) 11장 참고.)
+(학교 쿠버네티스(vcluster)에서는 이 경로가 막혀 터널 + Access로 우회했고, 자체 클러스터에서는 사설망으로 바로 닿는다 —
+[README](../README.md) 11장, [INFRA.md](INFRA.md) 12장 참고.)
 
 디버깅 중 다음을 확인했다.
 
@@ -386,7 +388,7 @@ rm -f server.pid server.port
   **그 시점에 Ollama가 업데이트·재시작 중이었던 것**이었다. 요청이 계속
   실패하면 먼저 Ollama가 응답 가능한 상태인지(`curl`로 가벼운 GET 요청)
   확인하는 것이 순서다.
-- 현재 `server.cjs`는 안정성을 위해 `fetch` 대신 `curl`을 자식 프로세스로
-  실행(`execFile`)해 Ollama를 호출한다.
+- 당시 `server.cjs`는 안정성을 위해 `fetch` 대신 `curl`을 자식 프로세스로
+  실행(`execFile`)해 Ollama를 호출했다. 지금은 다시 Node 내장 `fetch`를 쓴다(현재 `server.cjs` 참고).
 - 첫 요청은 모델이 메모리에 로드되는 시간(수 초~십수 초)이 포함돼 느릴 수
   있다. 이후 요청은 캐시된 결과를 즉시 반환한다.

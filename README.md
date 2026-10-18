@@ -6,8 +6,7 @@
 React · TypeScript · json-server 기반 러닝화 리뷰 아카이브를
 Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 
-**🔗 Live Demo — https://kopo17-runshoes.std.kopoctc.kr**
-**🌍 외부 접속 — https://runshoes.ronanlab.dev** (Cloudflare Tunnel)
+**🔗 Live Demo — https://runshoes.ronanlab.dev** (자체 kubeadm 클러스터 · Cloudflare Tunnel)
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
@@ -20,13 +19,14 @@ Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 ![Argo CD](https://img.shields.io/badge/Argo%20CD-EF7B4D?logo=argo&logoColor=white)
 ![Harbor](https://img.shields.io/badge/Harbor-60B932?logo=harbor&logoColor=white)
 ![Ollama](https://img.shields.io/badge/Ollama-000?logo=ollama&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel_+_Access-F38020?logo=cloudflare&logoColor=white)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white)
 
 > **문서 안내**
 >
 > - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면)
-> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인
-> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차 (레거시)
+> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인 · 학교 환경에서 옮긴 기록
+> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차 (레거시 기록)
+> - [docs/SPRING_MIGRATION_PLAN.md](docs/SPRING_MIGRATION_PLAN.md): Spring Boot + MySQL 전환 계획 (학교 환경 기준 — 다시 쓸 예정)
 
 ---
 
@@ -53,7 +53,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | 해부도 히어로      | 뒤꿈치 · 밑창 · 측면 클로즈업 슬라이드에 용어 캡션을 붙여 사이트 성격을 첫 화면에서 전달 |
 | 정보 없음의 명시   | 브랜드가 공개하지 않은 스펙은 추측하지 않고 "정보 없음"으로 표기                         |
 | 발볼 · 와이드 정보 | 한국 러너에게 중요하지만 해외 사이트가 다루지 않는 항목을 전면에 노출                    |
-| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리 (터널 연동)             |
+| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리 (GPU 호스트 직접 연결)   |
 
 ### 비주얼 컨셉 — 표본 전시실
 
@@ -176,9 +176,9 @@ git checkout -- db.json
 - [x] **모달 이미지 갤러리** — 다중 이미지 슬라이드 + 썸네일 드래그 스크롤
 - [x] **리뷰 좋아요 + 베스트 리뷰 상단 고정**
 - [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
-- [x] **Kubernetes GitOps 배포** — Jenkins(Kaniko) → Harbor → ArgoCD
+- [x] **Kubernetes GitOps 배포** — Jenkins(BuildKit) → Harbor → ArgoCD (자체 클러스터, 2026-10-18 학교 환경에서 이주)
 - [x] **About 페이지 `/about`** — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지
-- [x] **리뷰 요약 (Ollama)** — LLM으로 리뷰의 긍정·부정 의견을 요약. 터널 연동으로 프로덕션 K8s에서도 동작 (아래 11장 참고)
+- [x] **리뷰 요약 (Ollama)** — LLM으로 리뷰의 긍정·부정 의견을 요약. 프로덕션 K8s에서도 동작 (아래 11장 참고)
 - [x] **웹소켓 챗봇** — 파이썬 사이드카 컨테이너, Ollama 연동 (`/ws/chat`)
 
 ---
@@ -332,24 +332,18 @@ git checkout -- db.json
 
 ## 5. 레포 구성
 
-두 원격 저장소를 함께 쓴다.
-
-| 원격   | 주소                                    | 용도                               |
-| ------ | --------------------------------------- | ---------------------------------- |
-| GitLab | `std-gitlab.kopoctc.kr/kopo17/runshoes` | CI/CD 트리거 (학교 인프라)         |
-| GitHub | `github.com/Gabriel-Joo/runshoes`       | 포트폴리오 보관 (수료 후에도 유지) |
-
-`gitlab` remote의 push URL에 두 주소를 모두 등록해,
-`git push gitlab main` 한 번으로 양쪽에 동시 반영한다.
-(학교 GitLab 서버 미러링은 외부 push가 막혀 있어, 로컬에서 직접 두 곳에 미는 방식을 쓴다.)
+| 저장소 | 주소 | 담는 것 |
+| ------ | ---- | ------- |
+| 앱 레포 | `github.com/Gabriel-Joo/runshoes` (public) | 소스 · Dockerfile 2개 · Jenkinsfile. **main에 push하면 배포된다** |
+| 인프라 레포 | `github.com/Gabriel-Joo/ronanlab-infra` (private) `apps/runshoes/` | 쿠버네티스 매니페스트 · 이미지 태그. 태그는 Jenkins가 커밋한다 |
 
 ```bash
-git remote set-url --add --push gitlab https://std-gitlab.kopoctc.kr/kopo17/runshoes.git
-git remote set-url --add --push gitlab https://github.com/Gabriel-Joo/runshoes.git
-git config alias.pp 'push gitlab main'
+git push origin main     # → Jenkins 빌드 → Harbor → 인프라 레포 태그 커밋 → ArgoCD 자동 Sync
 ```
 
-> GitLab이 원본, GitHub은 거울이다. GitHub에 직접 커밋하지 않는다.
+> 2026-10-18 전에는 학교 GitLab(`std-gitlab.kopoctc.kr/kopo17/runshoes`)이 원본이고 GitHub은 거울이었다.
+> `gitlab` remote의 push URL에 두 주소를 함께 등록해 한 번에 양쪽으로 밀었다(학교 GitLab 미러링이 외부 push를 막아서).
+> 학교 GitLab은 버렸다 — 지금은 GitHub이 원본이다. 로컬 clone에 `gitlab` remote가 남아 있으면 지운다.
 
 ---
 
@@ -359,14 +353,15 @@ runshoes/
 ├─ db.json ← 루트 (src/ 아님)
 ├─ Dockerfile
 ├─ Dockerfile.chatbot ← 챗봇 사이드카 이미지 (python:3.12-alpine, 8766)
-├─ Jenkinsfile ← Jenkins 파이프라인 (kaniko × 2 + gitops 커밋)
+├─ Jenkinsfile ← Jenkins 파이프라인 (BuildKit × 2 + ronanlab-infra 태그 커밋)
 ├─ server.cjs ← express(정적) + json-server(/api) + 리뷰 요약(Ollama) 통합
-├─ chatbot_server.py ← 웹소켓 챗봇 서버 (Ollama · CF Access 인증)
+├─ chatbot_server.py ← 웹소켓 챗봇 서버 (Ollama, `OLLAMA_URL` 환경변수)
 ├─ start_server.sh ← (레거시) 웹 터미널 수동 배포용 시작 스크립트
 ├─ scripts/ ← seed 스크립트 (run-once, 이미 반영 완료)
 ├─ docs/
-│ ├─ INFRA.md ← K8s GitOps CI/CD
+│ ├─ INFRA.md ← K8s GitOps CI/CD · 이주 기록
 │ ├─ DEPLOY.md ← 웹 터미널 배포 (레거시)
+│ ├─ SPRING_MIGRATION_PLAN.md ← Spring Boot + MySQL 전환 계획
 │ ├─ design-prompt.md ← 디자인 요청 및 수정 이력
 │ └─ design-handoff.md ← 디자인 확정 명세
 ├─ public/
@@ -449,36 +444,31 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 ## 8. 배포
 
-로컬 개발 → 웹 터미널(aisw-lab) → **Kubernetes GitOps**로 단계적으로 발전시켰다.
-개발자 ──git push──▶ GitLab ──webhook──▶ Jenkins
-│ Kaniko × 2 (runshoes / runshoes-chatbot)
-▼
-Harbor (std-harbor.kopoctc.kr/kopo17)
-│
-gitops 레포 ◀───┘ 이미지 태그 커밋
-│
-ArgoCD ──sync──▶ Kubernetes (vcluster vc-kopo17)
-│
-Pod = runshoes(3000) + chatbot 사이드카(8766)
+로컬 개발 → 웹 터미널(aisw-lab) → 학교 쿠버네티스(vcluster) → **자체 쿠버네티스 클러스터**로 단계적으로 발전시켰다.
 
-- 클러스터: 학교 RKE2 클러스터 위의 **vcluster(`vc-kopo17`)**
-- Ingress: Traefik. 전역 HTTP→HTTPS 리다이렉트가 걸려 있어
-  `web,websecure` 엔트리포인트와 `tls` 블록을 모두 선언해야 한다.
-  단일 호스트에서 path 기반 라우팅 — `/` → runshoes(3000), `/ws/chat` → chatbot(8766).
-- 챗봇 사이드카: 파이썬 웹소켓 챗봇(`chatbot_server.py`)을 같은 파드의 별도 컨테이너로 배포.
-  빌드 시 kaniko 컨테이너를 분리해 `runshoes-chatbot` 이미지를 따로 만든다
-  (한 컨테이너에서 재사용하면 kaniko 상태가 손상되는 문제가 있었다).
-- Ollama 연동: GPU 서버의 Ollama를 **Cloudflare Tunnel(ollama-tunnel)**로 공개 HTTPS 노출 →
-  `OLLAMA_URL=https://ollama.ronanlab.dev`. 앞단의 **Cloudflare Access**를
-  Service Token(`CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`)으로 통과한다.
-  자격증명은 Kubernetes Secret(`cf-access-credentials`)에서 환경변수로 주입하며,
-  runshoes · chatbot 두 컨테이너가 모두 사용한다.
-- 외부 노출: **runshoes-tunnel**이 학교 인그레스(kopo17-runshoes.std.kopoctc.kr)를
-  학교 밖에서도 접근 가능하게 한다 → https://runshoes.ronanlab.dev.
-  cloudflared는 클러스터 밖 서버에서 구동된다(레포에 매니페스트 없음).
-- 데이터: `db.json`을 PVC에 두고 initContainer로 시드. 파드 재시작에도 유지된다.
+```
+개발자 ──git push──▶ GitHub ──(2분 폴링)──▶ Jenkins
+                                            │ BuildKit × 2 (runshoes / runshoes-chatbot)
+                                            ▼
+                               Harbor (harbor.ronanlab.dev/runshoes)
+                                            │
+             ronanlab-infra apps/runshoes ◀─┘ 이미지 태그 커밋
+                                            │
+                    ArgoCD ──자동 sync──▶ Kubernetes (runshoes 네임스페이스)
+                                            │
+                     Pod = runshoes(3000) + chatbot 사이드카(8766)
+```
 
-자세한 내용은 [docs/INFRA.md](docs/INFRA.md).
+- 클러스터: GPU 호스트 위 VM 4대의 **kubeadm 클러스터**(`m-k8s` + `w1~w3-k8s`). Jenkins · Harbor · ArgoCD도 같은 클러스터에 있다
+- Ingress: ingress-nginx. 단일 호스트에서 path 기반 라우팅 — `/` → runshoes(3000), `/ws/chat` → chatbot(8766)
+- 챗봇 사이드카: 파이썬 웹소켓 챗봇(`chatbot_server.py`)을 같은 파드의 별도 컨테이너로 배포. 이미지(`runshoes-chatbot`)는 앱과 같은 태그로 따로 빌드한다
+- Ollama 연동: Pod가 VM 사설망으로 GPU 호스트의 Ollama에 바로 붙는다 — `OLLAMA_URL=http://192.168.122.1:11434`.
+  runshoes · chatbot 두 컨테이너가 같은 값을 쓴다
+- 외부 노출: 클러스터 공용 **Cloudflare Tunnel**(cloudflared, `cloudflared` 네임스페이스) → https://runshoes.ronanlab.dev
+- 데이터: `db.json`을 PVC에 두고 initContainer로 시드(PVC에 파일이 없을 때만). 파드 재시작에도 유지된다
+- 배포 전략: Pod 1개 · `Recreate` — db.json 단일 파일이라 배포 때 잠깐 끊긴다(12장)
+
+자세한 내용과 학교 환경에서 옮긴 기록은 [docs/INFRA.md](docs/INFRA.md).
 
 ---
 
@@ -489,15 +479,15 @@ Pod = runshoes(3000) + chatbot 사이드카(8766)
 | 항목          | 내용                                                                 |
 | ------------- | -------------------------------------------------------------------- |
 | 기본 요건     | 목록 · 필터 · 정렬 · 찜 · 상세 모달 · 리뷰 CRUD · 등록/관리 · 반응형 |
-| 데이터 확충   | 러닝화 20종 · 리뷰 101개                                             |
+| 데이터 확충   | 러닝화 20종 · 리뷰 105개                                             |
 | 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일                         |
 | 리뷰 좋아요   | 리뷰별 좋아요 + 베스트 리뷰 상단 고정                                |
 | 맞춤 추천     | `/recommend` 5문항 점수제                                            |
-| 배포          | 웹 터미널 → Kubernetes GitOps CI/CD                                  |
+| 배포          | 웹 터미널 → Kubernetes GitOps CI/CD → 자체 클러스터 이주(2026-10-18) |
 | 챗봇          | 파이썬 웹소켓 챗봇 → 사이드카 컨테이너 배포 (`/ws/chat`)             |
-| 인프라        | Cloudflare Tunnel·Access로 Ollama · 사이트 외부 노출 및 인증        |
+| 인프라        | Cloudflare Tunnel로 사이트 외부 노출, Ollama는 사설망 직접 연결     |
 | About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅     |
-| 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작 — 터널 연동) |
+| 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작)        |
 
 ### 예정
 
@@ -567,11 +557,11 @@ Pod = runshoes(3000) + chatbot 사이드카(8766)
 
 ---
 
-## 11. 리뷰 요약 (Ollama · Cloudflare Tunnel)
+## 11. 리뷰 요약 (Ollama)
 
 리뷰가 3개 이상인 신발은 언어 모델이 리뷰를 읽고 좋았던 점과 아쉬운 점을
 나눠 요약한다. **Ollama(gemma4 8B)** 기반이며, GPU 서버의 Ollama를
-Cloudflare Tunnel로 공개 노출해 **쿠버네티스 프로덕션에서도 실시간 동작**한다.
+**쿠버네티스 프로덕션에서도 실시간으로** 부른다.
 
 ### 동작 방식 (현재 · Ollama)
 
@@ -581,7 +571,7 @@ Cloudflare Tunnel로 공개 노출해 **쿠버네티스 프로덕션에서도 �
 - 요약은 서버 메모리에 캐싱하고, 해당 신발의 리뷰 개수(`reviewCount`)가 바뀔 때만 재생성한다.
   같은 개수로는 재호출하지 않으므로, 방문자가 반복해서 확인해도 추가 연산이 발생하지 않는다.
 - Ollama 호출은 Node 내장 `fetch`로 처리한다.
-  `OLLAMA_URL` 환경변수(프로덕션: `https://ollama.ronanlab.dev`)로 대상을 지정한다.
+  `OLLAMA_URL` 환경변수(프로덕션: `http://192.168.122.1:11434`)로 대상을 지정한다. 챗봇(`chatbot_server.py`)도 같은 변수를 읽는다.
 
 ### 해결 이력 — Pod에서 Ollama로 닿지 않던 문제
 
@@ -593,7 +583,7 @@ Cloudflare Tunnel로 공개 노출해 **쿠버네티스 프로덕션에서도 �
 Ollama를 클러스터 안에 띄우는 방안도 검토했으나 컨테이너 리소스 상한(2Gi)에서
 8B 모델 구동이 어려워 기각했다.
 
-**현재 해결책 — Cloudflare Tunnel + Access:**
+**학교 환경에서의 해결책 — Cloudflare Tunnel + Access (2026-10-18까지):**
 
 - **ollama-tunnel** 이 GPU 서버의 Ollama를 공개 HTTPS로 노출한다 →
   `https://ollama.ronanlab.dev`. Pod에서 공개 인터넷으로 나가는 경로(egress)는
@@ -607,6 +597,16 @@ Ollama를 클러스터 안에 띄우는 방안도 검토했으나 컨테이너 �
 > Gemini API 전환은 한때 검토했던 방향이나, 터널 + Access로 클러스터에서
 > 실시간 추론이 가능해져 **전환 보류**. 비용·응답속도 문제가 생기면
 > 그때 대안으로 다시 검토한다.
+
+**지금 — 사설망 직접 연결 (2026-10-18부터):**
+
+자체 클러스터로 옮기면서 이 문제가 구조적으로 사라졌다. 쿠버네티스 노드가 GPU 호스트 위의 VM이고,
+VM들이 호스트와 같은 사설망(libvirt, 192.168.122.0/24)에 있어 Pod가 호스트의 Ollama에 바로 닿는다.
+
+- `OLLAMA_URL=http://192.168.122.1:11434` — 같은 호스트의 Ollama를 Cloudflare로 나갔다 들어오지 않고 바로 부른다
+- 공개 경로가 아니므로 Access Service Token(`CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`)도 필요 없다. 두 서버의 헤더 코드는 남아 있지만 클러스터에서는 값을 주지 않는다
+- 같은 클러스터의 petmint도 같은 길로 Ollama를 부른다
+- `chatbot_server.py`는 `OLLAMA_URL`이 없으면 예전 주소(`https://ollama.ronanlab.dev`)를 쓴다 — 로컬 개발용 기본값
 
 ---
 
@@ -694,7 +694,7 @@ Kubernetes Secret → Pod 환경변수 → Spring 설정(application.yml) → My
 
 로컬 개발에서는 `.env` 대응 프로파일, 클러스터에서는 Secret을 사용한다.
 이 "설정 외부화"는 이미 BASE_PATH · DB_PATH를 환경변수로 분리해 둔
-방식의 연장선이며, 11장의 Gemini API 키 주입과도 동일한 패턴이다.
+방식의 연장선이며, 학교 시절 Ollama 호출에 쓰던 Access Service Token 주입(11장)과도 동일한 패턴이다.
 
 커넥션 풀은 **Spring Boot가 기본으로 HikariCP를 내장**한다.
 요청마다 새로 연결하는 대신 풀에서 빌려 쓰는 방식으로, 앱 Pod를
@@ -737,7 +737,7 @@ DB에 붙지 못한 Pod에는 트래픽이 가지 않게 하기 위함이다.
   RollingUpdate가 스스로 멈추고, 기존 Pod들이 서비스를 계속
   이어간다. 잘못된 버전이 나가도 트래픽이 넘어가지 않는 방어선이다.
 - **명시적 되돌리기(GitOps 방식)** — 이미 배포된 버전을 되돌릴 때는
-  `kubectl rollout undo`가 아니라, **gitops 레포에서 이미지 태그를
+  `kubectl rollout undo`가 아니라, **인프라 레포(ronanlab-infra)에서 이미지 태그를
   이전 값으로 되돌리는 커밋(revert)**을 한다. ArgoCD가 그 변경을
   감지해 자동으로 이전 상태로 복구한다. GitOps에서는 롤백조차
   하나의 git 커밋이며, 배포 이력이 곧 git 이력으로 남는다.
@@ -773,11 +773,17 @@ RollingUpdate가 "무조건 새 버전으로 순차 교체"라면, Canary는
 
 ### 12.9 제약과 현실적 고려
 
-vcluster 리소스 상한(현재 requests 기준 1500m CPU / 4Gi 메모리,
-컨테이너당 최대 2Gi)이 빡빡하다. MySQL Pod가 상시 메모리를
-점유하므로, CI 에이전트 Pod가 뜨는 시점과 겹치면 스케줄링이
-지연될 수 있다. 상시 가동분을 어떻게 확보할지(예: 유휴 네임스페이스
-정리)를 이관과 함께 계산해야 한다.
+자체 클러스터의 노드는 VM 4대(각 메모리 약 3.9GiB)다. Jenkins · Harbor · ArgoCD와
+다른 프로젝트(petmint의 앱 · MySQL)가 같은 노드를 나눠 쓰므로, MySQL Pod가 상시 메모리를
+점유하고 CI 에이전트 Pod(BuildKit, requests 1.5GiB)가 뜨는 시점과 겹치면 스케줄링이
+지연될 수 있다. 상시 가동분을 어떻게 확보할지(VM 메모리 증설 등)를 이관과 함께 계산해야 한다.
+
+> 학교 vcluster 때는 리소스 상한(requests 기준 1500m CPU / 4Gi 메모리, 컨테이너당 최대 2Gi)이
+> 같은 고민의 출발점이었다.
+
+같은 클러스터의 petmint가 이미 MySQL StatefulSet을 운영하고 있다(데이터베이스를 나눠 쓰는 구조로,
+runshoes 자리도 염두에 두고 만들었다). 별도 인스턴스를 띄울지 이 인스턴스를 나눠 쓸지는
+전환 계획서(`docs/SPRING_MIGRATION_PLAN.md`)를 자체 클러스터 기준으로 다시 쓸 때 정한다.
 
 또한 실무에서는 DB를 클러스터 안에 두지 않고 관리형 서비스(RDS 등)를
 쓰는 것이 일반적이다. 다만 학습·포트폴리오 목적에서는 StatefulSet로
