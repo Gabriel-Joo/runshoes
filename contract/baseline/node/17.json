@@ -1,0 +1,38 @@
+{
+  "id": "17",
+  "plan": 1,
+  "name": "review 1 — createdAt 날짜만(YYYY-MM-DD)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/1",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "242",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "id": 1,
+      "shoeId": 1,
+      "author": "달리는곰",
+      "rating": 5,
+      "content": "평발이라 안정화 찾다가 샀는데 5km 뛰어도 발목이 안 꺾이는 느낌입니다. 대신 확실히 무겁긴 하네요!!",
+      "createdAt": "2026-07-18",
+      "likeCount": 2
+    }
+  }
+}

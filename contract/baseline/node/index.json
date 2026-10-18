@@ -1,0 +1,265 @@
+{
+  "recordedAt": "2026-10-18T09:19:20.664Z",
+  "base": "http://192.168.122.240/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "main",
+  "note": "운영 Pod runshoes:781be0832c14, 시드 db.json(sha256 0bccadd4…)에서 시작",
+  "scenarios": [
+    {
+      "id": "01",
+      "name": "shoes 전체",
+      "status": 200
+    },
+    {
+      "id": "02",
+      "name": "reviews 전체",
+      "status": 200
+    },
+    {
+      "id": "03",
+      "name": "terms 전체(id 12 중복 포함)",
+      "status": 200
+    },
+    {
+      "id": "04",
+      "name": "shoe 4 — midsole null 출력",
+      "status": 200
+    },
+    {
+      "id": "05",
+      "name": "없는 shoe → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "06",
+      "name": "없는 컬렉션 → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "07",
+      "name": "비숫자 id → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "08",
+      "name": "reviews?shoeId=3",
+      "status": 200
+    },
+    {
+      "id": "09",
+      "name": "reviews?shoeId=9999 → []",
+      "status": 200
+    },
+    {
+      "id": "10",
+      "name": "reviews?shoeId=3&junk=1 — junk 무시",
+      "status": 200
+    },
+    {
+      "id": "11",
+      "name": "정렬 rating desc — 동점(4.6×6, 4.4×7) id 순",
+      "status": 200
+    },
+    {
+      "id": "12",
+      "name": "정렬 reviewCount desc — 동점(5×16)",
+      "status": 200
+    },
+    {
+      "id": "13",
+      "name": "정렬 likeCount desc — 동점(55×2, 40×2)",
+      "status": 200
+    },
+    {
+      "id": "14",
+      "name": "정렬 rating, _order 생략(asc)",
+      "status": 200
+    },
+    {
+      "id": "15",
+      "name": "정렬 price asc — 동점 6쌍",
+      "status": 200
+    },
+    {
+      "id": "16",
+      "name": "정렬 weight desc",
+      "status": 200
+    },
+    {
+      "id": "17",
+      "name": "review 1 — createdAt 날짜만(YYYY-MM-DD)",
+      "status": 200
+    },
+    {
+      "id": "18",
+      "name": "review 105 — createdAt 형식 확인",
+      "status": 200
+    },
+    {
+      "id": "19",
+      "name": "OPTIONS preflight",
+      "status": 204
+    },
+    {
+      "id": "20",
+      "name": "summary 없는 신발 → 리뷰<3 (Ollama 안 부름)",
+      "status": 200
+    },
+    {
+      "id": "21",
+      "name": "SPA index",
+      "status": 200
+    },
+    {
+      "id": "22",
+      "name": "SPA 폴백 /best",
+      "status": 200
+    },
+    {
+      "id": "23",
+      "name": "SPA 폴백 /about(지운 페이지 — index.html, 앱이 NotFound)",
+      "status": 200
+    },
+    {
+      "id": "24",
+      "name": "json-server 필드 필터 brand=호카(프런트 미사용)",
+      "status": 200
+    },
+    {
+      "id": "25",
+      "name": "json-server _limit(프런트 미사용, X-Total-Count)",
+      "status": 200
+    },
+    {
+      "id": "26",
+      "name": "json-server /api/db(프런트 미사용)",
+      "status": 200
+    },
+    {
+      "id": "30",
+      "name": "POST shoe(ShoeForm 모양) → 201 + Location, id 21",
+      "status": 201
+    },
+    {
+      "id": "31",
+      "name": "summary 새 신발 → 리뷰<3 (Ollama 안 부름)",
+      "status": 200
+    },
+    {
+      "id": "32",
+      "name": "POST review(ReviewSection 모양, likeCount 없음, createdAt ms+Z)",
+      "status": 201
+    },
+    {
+      "id": "33",
+      "name": "GET 새 review — createdAt 그대로 돌아오는지",
+      "status": 200
+    },
+    {
+      "id": "34",
+      "name": "PATCH shoe 1 {liked, likeCount}(ShoeList 좋아요) — 나머지 불변",
+      "status": 200
+    },
+    {
+      "id": "35",
+      "name": "PATCH 새 shoe {midsole:null, price:null} — null 반영",
+      "status": 200
+    },
+    {
+      "id": "36",
+      "name": "PATCH 새 shoe — ShoeForm 수정 본문 전체(빈 칸 null)",
+      "status": 200
+    },
+    {
+      "id": "37",
+      "name": "PATCH review {rating, content}(리뷰 수정)",
+      "status": 200
+    },
+    {
+      "id": "38",
+      "name": "PATCH review 1 {liked, likeCount}(리뷰 공감)",
+      "status": 200
+    },
+    {
+      "id": "39",
+      "name": "PATCH 새 shoe {rating, reviewCount}(Best·Recommend 재계산)",
+      "status": 200
+    },
+    {
+      "id": "40",
+      "name": "PATCH 없는 shoe → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "41",
+      "name": "PATCH 없는 review → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "42",
+      "name": "PUT 새 shoe 전체 치환(프런트 미사용, harness용)",
+      "status": 200
+    },
+    {
+      "id": "43",
+      "name": "POST 없는 컬렉션 → 404",
+      "status": 404
+    },
+    {
+      "id": "44",
+      "name": "DELETE 새 review → 200 + 지운 본문",
+      "status": 200
+    },
+    {
+      "id": "45",
+      "name": "DELETE 없는 review → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "46",
+      "name": "POST review 2건(cascade 준비) — 1",
+      "status": 201
+    },
+    {
+      "id": "47",
+      "name": "POST review 2건(cascade 준비) — 2",
+      "status": 201
+    },
+    {
+      "id": "48",
+      "name": "DELETE 새 shoe → 200 + 본문",
+      "status": 200
+    },
+    {
+      "id": "49",
+      "name": "cascade — 새 shoe 의 reviews 가 남지 않았는지",
+      "status": 200
+    },
+    {
+      "id": "50",
+      "name": "DELETE 없는 shoe → 404 {}",
+      "status": 404
+    },
+    {
+      "id": "51",
+      "name": "POST 다시 → id 가 max+1 인지(지운 21 을 다시 쓰는지)",
+      "status": 201
+    },
+    {
+      "id": "52",
+      "name": "끝 상태 — shoes 전체(shoe 1 likeCount 999 반영)",
+      "status": 200
+    },
+    {
+      "id": "53",
+      "name": "끝 상태 — reviews 전체(review 1 likeCount 77 반영)",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109",
+    "newShoe": 21,
+    "newReview": 106,
+    "newShoe2": 21
+  }
+}
