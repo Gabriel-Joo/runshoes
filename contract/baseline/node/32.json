@@ -1,0 +1,47 @@
+{
+  "id": "32",
+  "plan": 7,
+  "name": "POST review(ReviewSection 모양, likeCount 없음, createdAt ms+Z)",
+  "contract": true,
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "계약러너",
+      "rating": 4,
+      "content": "계약 테스트 리뷰",
+      "createdAt": "2026-10-18T09:30:15.123Z"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "132",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, X-HTTP-Method-Override, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "access-control-expose-headers": "Location",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/106",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "계약러너",
+      "rating": 4,
+      "content": "계약 테스트 리뷰",
+      "createdAt": "2026-10-18T09:30:15.123Z",
+      "id": 106
+    }
+  }
+}

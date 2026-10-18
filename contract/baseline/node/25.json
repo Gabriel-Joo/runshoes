@@ -1,0 +1,51 @@
+{
+  "id": "25",
+  "plan": null,
+  "name": "json-server _limit(프런트 미사용, X-Total-Count)",
+  "contract": false,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews?_limit=2",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "458",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-total-count": "105",
+      "access-control-expose-headers": "X-Total-Count",
+      "x-content-type-options": "nosniff"
+    },
+    "body": [
+      {
+        "id": 1,
+        "shoeId": 1,
+        "author": "달리는곰",
+        "rating": 5,
+        "content": "평발이라 안정화 찾다가 샀는데 5km 뛰어도 발목이 안 꺾이는 느낌입니다. 대신 확실히 무겁긴 하네요!!",
+        "createdAt": "2026-07-18",
+        "likeCount": 2
+      },
+      {
+        "id": 2,
+        "shoeId": 1,
+        "author": "주말러너",
+        "rating": 4,
+        "content": "기본 사이즈는 발볼이 좀 조여서 4E로 교환했습니다. 그 뒤로는 만족하고 있어요.",
+        "createdAt": "2026-07-19",
+        "likeCount": 0
+      }
+    ]
+  }
+}

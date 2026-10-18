@@ -1,0 +1,57 @@
+{
+  "recordedAt": "2026-10-18T09:20:30.738Z",
+  "base": "http://127.0.0.1:3101/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "summary",
+  "note": "로컬 server.cjs(커밋 781be08과 같은 파일) + mock-ollama, 시드 db.json 사본",
+  "scenarios": [
+    {
+      "id": "S1",
+      "name": "mock 호출 수 0으로",
+      "status": 200
+    },
+    {
+      "id": "S2",
+      "name": "summary shoe 1(리뷰≥3) → 정상 요약",
+      "status": 200
+    },
+    {
+      "id": "S3",
+      "name": "summary shoe 1 다시 → 캐시",
+      "status": 200
+    },
+    {
+      "id": "S4",
+      "name": "mock 호출 수 = 1(캐시 히트)",
+      "status": 200
+    },
+    {
+      "id": "S5",
+      "name": "리뷰 추가(개수 변경)",
+      "status": 201
+    },
+    {
+      "id": "S6",
+      "name": "mock 을 500 으로",
+      "status": 200
+    },
+    {
+      "id": "S7",
+      "name": "summary shoe 1 → LLM 실패: summary null + reason",
+      "status": 200
+    },
+    {
+      "id": "S8",
+      "name": "mock 호출 수 = 2(개수가 바뀌어 다시 불렀다)",
+      "status": 200
+    },
+    {
+      "id": "S9",
+      "name": "mock 프롬프트(마지막 호출) — 프롬프트 문구 기준선",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109"
+  }
+}

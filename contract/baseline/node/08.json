@@ -1,0 +1,76 @@
+{
+  "id": "08",
+  "plan": 4,
+  "name": "reviews?shoeId=3",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews?shoeId=3",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "1147",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": [
+      {
+        "id": 5,
+        "shoeId": 3,
+        "author": "한강새벽",
+        "rating": 5,
+        "content": "구름 위를 뛰는 느낌이라는 말이 과장이 아니네요. 회복주용으로 계속 신고 있습니다.",
+        "createdAt": "2026-07-15",
+        "likeCount": 6
+      },
+      {
+        "id": 6,
+        "shoeId": 3,
+        "author": "느리게멀리",
+        "rating": 5,
+        "content": "무릎이 안 좋아서 쿠션 위주로 찾았는데 만족합니다. 와이드로 샀더니 발볼도 편해요.",
+        "createdAt": "2026-07-16",
+        "likeCount": 2
+      },
+      {
+        "id": 7,
+        "shoeId": 3,
+        "author": "초보탈출",
+        "rating": 4,
+        "content": "푹신한 건 좋은데 페이스를 올리면 살짝 무르다는 느낌이 있습니다. 조깅 전용으로 쓰고 있어요.",
+        "createdAt": "2026-07-20",
+        "likeCount": 0
+      },
+      {
+        "id": 16,
+        "shoeId": 3,
+        "author": "발바닥통증",
+        "rating": 5,
+        "content": "족저근막염 때문에 쿠션 찾다가 골랐는데 확실히 편합니다. 무게도 278g으로 가벼운 편이라 좋아요.",
+        "createdAt": "2026-06-18",
+        "likeCount": 0
+      },
+      {
+        "id": 17,
+        "shoeId": 3,
+        "author": "호카입문",
+        "rating": 4,
+        "content": "푹신하긴 한데 생각보다 지면 감각이 없어서 처음엔 어색했습니다. 지금은 적응했어요.",
+        "createdAt": "2026-07-05",
+        "likeCount": 3
+      }
+    ]
+  }
+}

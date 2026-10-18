@@ -1,0 +1,47 @@
+{
+  "id": "47",
+  "plan": 12,
+  "name": "POST review 2건(cascade 준비) — 2",
+  "contract": true,
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "b",
+      "rating": 3,
+      "content": "c2",
+      "createdAt": "2026-10-18T09:32:00.000Z"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "100",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, X-HTTP-Method-Override, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "access-control-expose-headers": "Location",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/107",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "b",
+      "rating": 3,
+      "content": "c2",
+      "createdAt": "2026-10-18T09:32:00.000Z",
+      "id": 107
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "37",
+  "plan": 10,
+  "name": "PATCH review {rating, content}(리뷰 수정)",
+  "contract": true,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/reviews/106",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "rating": 2,
+      "content": "수정한 계약 리뷰"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "132",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "계약러너",
+      "rating": 2,
+      "content": "수정한 계약 리뷰",
+      "createdAt": "2026-10-18T09:30:15.123Z",
+      "id": 106
+    }
+  }
+}

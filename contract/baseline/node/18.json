@@ -1,0 +1,38 @@
+{
+  "id": "18",
+  "plan": 1,
+  "name": "review 105 — createdAt 형식 확인",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/105",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "324",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "shoeId": 10,
+      "author": "이상주의자",
+      "rating": 5,
+      "content": "와 이거 진짜 최고예요! 몇 달째 매일 신고 있는데 쿠션 하나도 안 죽고 완전 튼튼해요. 내구성 걱정하시는 분들 있던데 전혀 걱정 안 하셔도 됩니다!",
+      "createdAt": "2026-07-28T08:41:06.821Z",
+      "id": 105,
+      "likeCount": 20
+    }
+  }
+}

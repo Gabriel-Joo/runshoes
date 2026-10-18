@@ -1,0 +1,32 @@
+{
+  "id": "22",
+  "plan": null,
+  "name": "SPA 폴백 /best",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/best",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "content-length": "904",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "accept-ranges": "bytes",
+      "cache-control": "public, max-age=0",
+      "last-modified": "Sun, 18 Oct 2026 09:14:47 GMT",
+      "etag": "W/\"388-1a14e4acb58\""
+    },
+    "body": {
+      "$sha256": "4173b601de23a5a6846796b6210ffe2057398c383b6d333cd6edb1c27afbe02c",
+      "$length": 904,
+      "$head": "<!doctype html>\n<html lang=\"ko\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-w"
+    }
+  }
+}

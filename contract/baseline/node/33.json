@@ -1,0 +1,37 @@
+{
+  "id": "33",
+  "plan": 7,
+  "name": "GET 새 review — createdAt 그대로 돌아오는지",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/106",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "132",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff"
+    },
+    "body": {
+      "shoeId": 21,
+      "author": "계약러너",
+      "rating": 4,
+      "content": "계약 테스트 리뷰",
+      "createdAt": "2026-10-18T09:30:15.123Z",
+      "id": 106
+    }
+  }
+}

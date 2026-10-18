@@ -1,0 +1,28 @@
+{
+  "id": "31",
+  "plan": 14,
+  "name": "summary 새 신발 → 리뷰<3 (Ollama 안 부름)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes/21/summary",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sun, 18 Oct 2026 09:19:20 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "58",
+      "connection": "keep-alive",
+      "x-powered-by": "Express",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store"
+    },
+    "body": {
+      "summary": null,
+      "reason": "리뷰가 3개 미만입니다"
+    }
+  }
+}
