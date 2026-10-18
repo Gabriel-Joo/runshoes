@@ -15,7 +15,7 @@ import os
 CF_ACCESS_CLIENT_ID = os.environ.get("CF_ACCESS_CLIENT_ID", "")
 CF_ACCESS_CLIENT_SECRET = os.environ.get("CF_ACCESS_CLIENT_SECRET", "")
 
-OLLAMA_URL = "https://ollama.ronanlab.dev"
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://ollama.ronanlab.dev")
 
 SYSTEM_PROMPT = """너는 러닝화 스펙 아카이브 사이트 "RUNSHOES"의 친근한 챗봇 도우미야.
 말투는 반말로, 친구한테 편하게 설명하듯이 답해줘.
