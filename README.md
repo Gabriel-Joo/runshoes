@@ -334,11 +334,11 @@ git checkout -- db.json
 
 | 저장소 | 주소 | 담는 것 |
 | ------ | ---- | ------- |
-| 앱 레포 | `github.com/Gabriel-Joo/runshoes` (public) | 소스 · Dockerfile 2개 · Jenkinsfile. **main에 push하면 배포된다** |
+| 앱 레포 | `github.com/Gabriel-Joo/runshoes` (public) | 소스 · Dockerfile 2개 · Jenkinsfile. main에 push하면 Jenkins가 빌드한다 |
 | 인프라 레포 | `github.com/Gabriel-Joo/ronanlab-infra` (private) `apps/runshoes/` | 쿠버네티스 매니페스트 · 이미지 태그. 태그는 Jenkins가 커밋한다 |
 
 ```bash
-git push origin main     # → Jenkins 빌드 → Harbor → 인프라 레포 태그 커밋 → ArgoCD 자동 Sync
+git push origin main     # → Jenkins 빌드 → Harbor → 인프라 레포 태그 커밋 → ArgoCD Sync(지금은 사람이 누른다)
 ```
 
 > 2026-10-18 전에는 학교 GitLab(`std-gitlab.kopoctc.kr/kopo17/runshoes`)이 원본이고 GitHub은 거울이었다.
@@ -451,7 +451,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
                                             │
              ronanlab-infra apps/runshoes ◀─┘ 이미지 태그 커밋
                                             │
-                    ArgoCD ──자동 sync──▶ Kubernetes (runshoes 네임스페이스)
+                    ArgoCD ────sync────▶ Kubernetes (runshoes 네임스페이스)
                                             │
                      Pod = runshoes(3000) + chatbot 사이드카(8766)
 ```
