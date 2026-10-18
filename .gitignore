@@ -31,3 +31,5 @@ runshoes_env/
 
 .bkit/
 .omc/
+# Spring 백엔드 빌드 산출물
+backend/target/
