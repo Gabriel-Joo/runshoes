@@ -7,3 +7,4 @@ server.port
 server.log
 docs
 *.md
+backend/target

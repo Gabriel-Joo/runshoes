@@ -1,0 +1,37 @@
+# 로컬 개발용 MySQL — Spring 백엔드(backend/)가 붙는다. docs/SPRING_MIGRATION_PLAN.md Phase 1.
+#   docker compose up -d      → 127.0.0.1:3307 (이 호스트의 3306 은 다른 프로젝트 MySQL 이 쓴다)
+#   docker compose down -v    → 데이터까지 지운다(Flyway 가 다음 부팅에 V1·V2 를 다시 적용한다)
+# 설정은 클러스터 계획(Phase 5.2)과 같다 — 버전 고정, utf8mb4, UTC, performance_schema 끔.
+# 비밀번호는 로컬 전용 값이다. 클러스터에서는 Secret runshoes-mysql(사람이 만든다)을 쓴다.
+# 같은 호스트에서 다른 작업(GPU · CPU)이 돌 수 있어 CPU 를 낮게 잡는다(cpu_shares 2 = 남는 시간만 쓴다).
+services:
+  mysql:
+    image: mysql:8.0.46
+    container_name: runshoes-mysql-dev
+    command:
+      - --innodb-buffer-pool-size=256M
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+00:00
+      - --performance-schema=OFF
+    environment:
+      MYSQL_ROOT_PASSWORD: runshoes-root-dev
+      MYSQL_DATABASE: runshoes
+      MYSQL_USER: runshoes
+      MYSQL_PASSWORD: runshoes
+      TZ: UTC
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - runshoes-mysql-dev:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    cpus: 1.0
+    cpu_shares: 2
+    mem_limit: 1g
+
+volumes:
+  runshoes-mysql-dev:
