@@ -24,7 +24,7 @@
   │            ronanlab-infra (GitHub, private)           │
   │            apps/runshoes/kustomization.yaml           │
   │                     │                                 │
-  │                     │ ③ 감지 → 자동 Sync                │
+  │                     │ ③ 감지 → Sync(지금은 사람이)       │
   │                     ▼                                 │
   │                  ArgoCD ──────────────────────────────┤ 이미지 pull (harbor-pull)
   │                     │                                 │
@@ -243,16 +243,14 @@ spec:
     server: https://kubernetes.default.svc
     namespace: runshoes
   syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
     syncOptions:
       - CreateNamespace=false
 ```
 
-- **자동 Sync** — Jenkins 태그 커밋이 사람 손 없이 배포된다(ArgoCD가 git을 3분마다 본다). 이주 검증을 마친 뒤 켰다(2026-10-18)
-- **prune 끔** — git에서 지운 리소스는 클러스터에 남는다. PVC(db.json)를 실수로 지우지 않게
-- **selfHeal 끔** — 클러스터를 손으로 바꾸면 OutOfSync로 표시만 하고 되돌리지 않는다. 다음 git 변경 때 git 쪽으로 맞춘다
+- **Sync는 수동** — Jenkins 태그 커밋은 ArgoCD에 OutOfSync로 보이고, 사람이 Sync를 눌러야 배포된다.
+  2026-10-18 이주 검증 뒤 `automated: {prune: false, selfHeal: false}`로 자동을 켰다가 같은 날 껐다 —
+  Spring·MySQL 전환 중에는 반쯤 된 상태가 배포되지 않게 한다. 다시 켤 때도 prune·selfHeal은 끈다
+- **prune 없음** — git에서 지운 리소스는 클러스터에 남는다. PVC(db.json)를 실수로 지우지 않게
 - **finalizer 없음** — Application을 지워도 앱 · PVC는 남는다
 - **`CreateNamespace=false`** — Namespace는 사람이 만든다(8장)
 - 인프라 레포는 private — ArgoCD는 읽기 전용 deploy key(Secret `argocd/repo-ronanlab-infra`)로 읽는다
@@ -263,13 +261,13 @@ spec:
 1. 개발자가 앱 레포(GitHub main)에 push
 2. Jenkins가 2분 안에 폴링으로 감지 → BuildKit이 두 이미지를 빌드 → Harbor에 `:커밋12` push
 3. Jenkins가 ronanlab-infra clone → `newTag` 두 줄 갱신 커밋 → push
-4. ArgoCD가 3분 안에 변경 감지 → 자동 Sync
+4. ArgoCD가 3분 안에 변경 감지(OutOfSync) → 사람이 Sync
 5. 옛 Pod 종료 → 새 Pod(seed-db → runshoes + chatbot) 기동(Recreate)
 6. 방문자는 Cloudflare → 공용 터널 → ingress-nginx → Pod
 
-개발자가 하는 일은 **1번(코드 push) 하나**뿐이다. 나머지는 자동. push가 곧 배포다.
+개발자가 하는 일은 1번(코드 push)과 4번(Sync)이다. 자동 Sync를 켜면 1번 하나로 끝난다(이주 직후 잠시 그랬다).
 
-**되돌리기**: ronanlab-infra의 태그 커밋을 `git revert` → push → 자동 Sync. db.json은 되돌아가지 않는다(PVC).
+**되돌리기**: ronanlab-infra의 태그 커밋을 `git revert` → push → Sync. db.json은 되돌아가지 않는다(PVC).
 
 **외부 노출**: 공용 터널 설정은 ronanlab-infra `platform/cloudflared/configmap.yaml`. 호스트를 더하면
 Sync → `kubectl -n cloudflared rollout restart deploy/cloudflared`(cloudflared는 기동 때만 설정을 읽는다) → Cloudflare DNS CNAME을
@@ -322,7 +320,8 @@ Sync → `kubectl -n cloudflared rollout restart deploy/cloudflared`(cloudflared
 - 호스트 systemd `cloudflared-runshoes.service`(runshoes-tunnel) — DNS 전환 뒤 요청 0. 서비스를 멈추고 Cloudflare 터널 객체를 지운다
 - `ollama-tunnel`(`ollama.ronanlab.dev`) — 클러스터 안에서는 더 쓰지 않는다. 로컬 개발의 챗봇 기본값(`chatbot_server.py`)과 Spring 전환 계획서가 아직 이 주소를 전제한다
 - 학교 쪽(vcluster의 runshoes, GitLab · std-harbor) — 버린다. 새 Jenkinsfile은 학교 Jenkins에서 실패한다
-- About 페이지(`src/pages/About.tsx`, `src/components/PipelineDiagram.tsx`)는 아직 학교 파이프라인(GitLab · Kaniko · vcluster · Traefik)을 그린다
+- ~~About 페이지가 학교 파이프라인을 그린다~~ — 2026-10-18 페이지를 지웠다(`781be08`). Spring · MySQL 전환 뒤 다시 쓴다
+- ArgoCD `runshoes` 자동 Sync — 이주 검증 뒤 켰다가 같은 날 껐다(Spring 전환 중 반쯤 된 상태가 배포되지 않게). 9장의 `automated` 는 그 사이의 설정이다 — 지금은 수동
 
 ---
 
