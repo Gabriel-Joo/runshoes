@@ -177,7 +177,7 @@ git checkout -- db.json
 - [x] **리뷰 좋아요 + 베스트 리뷰 상단 고정**
 - [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
 - [x] **Kubernetes GitOps 배포** — Jenkins(BuildKit) → Harbor → ArgoCD (자체 클러스터, 2026-10-18 학교 환경에서 이주)
-- [x] **About 페이지 `/about`** — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지
+- [ ] ~~**About 페이지 `/about`**~~ — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지. 옛 인프라(GitLab · Kaniko · vcluster) 설명이라 2026-10-18 지웠다 — Spring · MySQL 전환 뒤 다시 쓴다
 - [x] **리뷰 요약 (Ollama)** — LLM으로 리뷰의 긍정·부정 의견을 요약. 프로덕션 K8s에서도 동작 (아래 11장 참고)
 - [x] **웹소켓 챗봇** — 파이썬 사이드카 컨테이너, Ollama 연동 (`/ws/chat`)
 
@@ -367,7 +367,7 @@ runshoes/
 ├─ public/
 │ └─ images/
 │ ├─ (신발 이미지)
-│ └─ screenshots/ ← About 화면 캡쳐
+│ └─ screenshots/ ← About 화면 캡쳐 (페이지는 지웠다 — 다시 쓸 때 쓴다)
 └─ src/
 ├─ api.ts ← API 주소 상수
 ├─ types/
@@ -388,13 +388,11 @@ runshoes/
 │ ├─ ReviewSummary.tsx ← 리뷰 요약 카드 (Ollama)
 │ ├─ TermTooltip.tsx ← 용어 툴팁
 │ ├─ ConfirmModal.tsx ← 삭제 확인
-│ ├─ ScrollTop.tsx ← 라우트 이동 시 스크롤 초기화
-│ └─ PipelineDiagram.tsx ← About용 CI/CD 파이프라인 SVG 도식
+│ └─ ScrollTop.tsx ← 라우트 이동 시 스크롤 초기화
 ├─ pages/
 │ ├─ ShoeList.tsx ← /
 │ ├─ Recommend.tsx ← /recommend
 │ ├─ Best.tsx ← /best
-│ ├─ About.tsx ← /about
 │ ├─ Admin.tsx ← /admin
 │ ├─ ShoeForm.tsx ← /new, /edit/:id
 │ └─ NotFound.tsx ← \*
@@ -411,7 +409,6 @@ CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)�
 | `/`          | 홈            | 히어로 슬라이드 + 용도 필터 + 정렬 + 카드 그리드 + 상세 모달 |
 | `/recommend` | 맞춤 추천     | 5문항 점수제 설문 → 추천 결과                                |
 | `/best`      | 러너들의 선택 | 종합 점수 1~5위 + 용도별 1위                                 |
-| `/about`     | About         | 프로젝트 소개 - 서비스 설계 · GitOps 구축 과정               |
 | `/admin`     | 등록·관리     | 브랜드 필터 · 검색 · 정렬, 행별 수정·삭제                    |
 | `/new`       | 등록          | 러닝화 등록 폼                                               |
 | `/edit/:id`  | 수정          | 러닝화 수정 폼 + 삭제                                        |
@@ -486,7 +483,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 배포          | 웹 터미널 → Kubernetes GitOps CI/CD → 자체 클러스터 이주(2026-10-18) |
 | 챗봇          | 파이썬 웹소켓 챗봇 → 사이드카 컨테이너 배포 (`/ws/chat`)             |
 | 인프라        | Cloudflare Tunnel로 사이트 외부 노출, Ollama는 사설망 직접 연결     |
-| About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅     |
+| About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅 (2026-10-18 지움 — 옛 인프라 설명, 전환 뒤 다시) |
 | 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작)        |
 
 ### 예정
