@@ -24,6 +24,25 @@ contract/run-spring-local.sh           # DB 를 비우고 Flyway 시드부터 �
 contract/run-spring-local.sh summary   # 요약 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다
 ```
 
+## 이미지 (루트 `Dockerfile`)
+
+Vite 빌드 → Maven 패키지(단위 테스트 포함) → jlink 로 필요한 모듈만 담은 JRE → `alpine:3.24` 위에 jar + `static/`. 사용자 10001(root 아님), `:3000`.
+
+- 크기 252MB(2026-10-18). temurin `21-jre-alpine` 을 그대로 쓰면 421MB — 계획서 게이트(400MB)를 넘어 jlink 로 줄였다
+- jlink 모듈: `java.base,java.compiler,java.desktop,java.instrument,java.logging,java.management,java.naming,java.net.http,java.scripting,java.security.jgss,java.sql,java.xml,jdk.charsets,jdk.crypto.ec,jdk.management,jdk.unsupported,jdk.zipfs`.
+  빠진 모듈은 실행 중 `NoClassDefFoundError` 로 드러난다 — 의존성을 더하면 `IMAGE=… contract/run-spring-local.sh` 로 다시 확인한다
+- 실행 Alpine 은 jdk 이미지(`eclipse-temurin:21-jdk-alpine`)와 같은 버전으로(musl)
+- 빌드는 Jenkins 와 같은 BuildKit rootless 로 로컬에서도 된다. 메모리 상한 3GiB 에서 최대 2.4GiB(Vite · Maven 단계가 동시에 돈다)
+- 기동 4.6초, 유휴 메모리 약 235MiB(limit 1Gi)
+
+```bash
+docker run --rm --cpus=4 --cpu-shares=2 --memory=3g --security-opt seccomp=unconfined --security-opt apparmor=unconfined \
+  -e BUILDKITD_FLAGS=--oci-worker-no-process-sandbox -v "$PWD":/work:ro -v /tmp/out:/out -w /work --entrypoint sh \
+  moby/buildkit:v0.33.1-rootless -c 'nice -n 19 buildctl-daemonless.sh build --frontend dockerfile.v0 --local context=. \
+  --local dockerfile=. --output type=docker,name=runshoes:local,dest=/out/runshoes.tar'
+docker load -i /tmp/out/runshoes.tar && IMAGE=runshoes:local contract/run-spring-local.sh
+```
+
 ## json-server 와 같게 한 것 (녹화로 확인)
 
 - 404 `{}` — 없는 id · 비숫자 id(`abc`, `01`) · 없는 컬렉션 · 그 밖의 `/api` 경로, 어떤 메서드든
