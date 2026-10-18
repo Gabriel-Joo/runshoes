@@ -2,6 +2,7 @@
 # Spring 백엔드를 시드 상태에서 띄워 계약 시나리오를 녹화하고 Node 기준선과 비교한다(로컬, Phase 2~3).
 #   contract/run-spring-local.sh            # 본 시나리오 50건
 #   contract/run-spring-local.sh summary    # 요약 9건 — mock-ollama(:3109)를 같이 띄운다. 진짜 Ollama 는 부르지 않는다
+#   IMAGE=runshoes:phase4 contract/run-spring-local.sh   # jar 대신 만든 이미지로(Phase 4 게이트)
 # 먼저 backend/target/runshoes-0.1.0.jar 와 dist/(yarn build)를 만든다(backend/README.md). MySQL 은 docker compose(:3307), 앱은 :3200.
 # 시나리오가 쓰기를 섞으므로 매번 DB 를 비우고(compose down -v) Flyway 시드부터 시작한다.
 # 같은 호스트의 다른 작업을 밀지 않게 컨테이너 CPU 를 낮게 잡는다(cpu-shares 2, nice 19).
@@ -11,8 +12,10 @@ SET=${1:-main}
 OUT=contract/run/spring${SET/main/}
 [ "$SET" = summary ] && OUT=contract/run/spring-summary
 JAR=backend/target/runshoes-0.1.0.jar
-[ -f "$JAR" ] || { echo "$JAR 가 없다 — 먼저 빌드"; exit 2; }
-[ -f dist/index.html ] || { echo "dist/ 가 없다 — 먼저 yarn build(SPA 시나리오 21~23)"; exit 2; }
+if [ -z "${IMAGE:-}" ]; then
+  [ -f "$JAR" ] || { echo "$JAR 가 없다 — 먼저 빌드"; exit 2; }
+  [ -f dist/index.html ] || { echo "dist/ 가 없다 — 먼저 yarn build(SPA 시나리오 21~23)"; exit 2; }
+fi
 
 cleanup() {
   docker stop runshoes-spring-dev >/dev/null 2>&1 || true
@@ -30,10 +33,16 @@ if [ "$SET" = summary ]; then
   OLLAMA=http://127.0.0.1:3109
 fi
 
-docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" \
-  -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e APP_STATIC=/static \
-  -v "$PWD/backend/target":/app:ro -v "$PWD/dist":/static:ro \
-  maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
+if [ -n "${IMAGE:-}" ]; then
+  # Phase 4 — 만든 이미지 그대로(정적 파일 · 사용자 · ENTRYPOINT 까지). 메모리는 클러스터 limit(1Gi)과 같게
+  docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --memory=1g \
+    -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" "$IMAGE" >/dev/null
+else
+  docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" \
+    -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e APP_STATIC=/static \
+    -v "$PWD/backend/target":/app:ro -v "$PWD/dist":/static:ro \
+    maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
+fi
 for i in $(seq 1 90); do
   curl -sf -o /dev/null http://127.0.0.1:3200/actuator/health/readiness && break
   docker ps -q -f name=runshoes-spring-dev | grep -q . || { echo "Spring 이 죽었다"; exit 1; }

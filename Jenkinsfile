@@ -32,6 +32,7 @@ spec:
         appArmorProfile: { type: Unconfined }
       resources:
         requests: { cpu: 500m, memory: 1536Mi }   # vite build 가 Node 힙 1536Mi 를 쓴다(Dockerfile NODE_OPTIONS)
+        # 2026-10-18 Spring 이미지(Vite + Maven 단계가 동시에 돈다) 로컬 실측 최대 2.4GiB — limit 3Gi 안. 넘으면 OOMKilled(exit 137)
         limits: { memory: 3Gi }
       volumeMounts:
         - { name: buildkitd, mountPath: /home/user/.local/share/buildkit }
