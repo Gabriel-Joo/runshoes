@@ -1,7 +1,7 @@
 # 기본값은 로컬 개발(docker compose 의 MySQL 127.0.0.1:3307). 클러스터는 env 로 덮어쓴다(Phase 5.2).
 server:
   port: ${SERVER_PORT:${PORT:3000}}
-  servlet.context-path: ${BASE_PATH:}
+  # BASE_PATH 는 config/BasePathConfig 가 context-path 로(끝의 / 를 뗀다)
   compression.enabled: true
 
 spring:
@@ -15,6 +15,7 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  web.resources.add-mappings: false   # 정적 파일은 config/SpaConfig 하나만(Boot 기본 /** 매핑과 겹치지 않게)
   jpa:
     hibernate.ddl-auto: validate      # 스키마는 Flyway 가 가진다
     open-in-view: false
@@ -22,6 +23,7 @@ spring:
       hibernate.jdbc.time_zone: UTC
 
 app:
+  static-path: ${APP_STATIC:/opt/app/static}   # Vite dist — config/SpaConfig
   ollama:
     url: ${OLLAMA_URL:http://localhost:11434}
     model: gemma4:e4b

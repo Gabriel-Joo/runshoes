@@ -19,7 +19,9 @@ docker run --rm --network host --cpus=4 --cpu-shares=2 --user $(id -u):$(id -g) 
   maven:3.9-eclipse-temurin-21 nice -n 19 mvn -q -B package
 
 cd .. && docker compose up -d          # MySQL 127.0.0.1:3307 (3306 은 다른 프로젝트)
+yarn build                             # dist/ — SPA 시나리오(21~23)에 쓴다
 contract/run-spring-local.sh           # DB 를 비우고 Flyway 시드부터 → :3200 에 띄워 녹화 → 기준선 diff
+contract/run-spring-local.sh summary   # 요약 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다
 ```
 
 ## json-server 와 같게 한 것 (녹화로 확인)
@@ -35,6 +37,8 @@ contract/run-spring-local.sh           # DB 를 비우고 Flyway 시드부터 �
   OPTIONS 는 204 + `Allow-Methods` + 요청 헤더 반사, `Cache-Control: no-store`
 - reviews: `likeCount` 가 NULL 이면 키를 뺀다. `createdAt` 은 UTC ms 까지(`2026-07-18T00:00:00.000Z` — 시드의 날짜만 값과 같은 순간)
 - terms: 시드의 id 12 두 개를 그대로
+- 요약 `/api/shoes/{id}/summary`: 프롬프트 글자 단위로 같게, 공감 순(stable), 리뷰 3개 미만이면 `reason`, 리뷰 수가 같으면 캐시, 실패면 `reason`. 헤더는 `ACAO *` · `no-store` 만(json-server 앞에서 응답)
+- SPA: `dist` 의 파일, 없으면 index.html(없는 `/assets/*.js` 도). `Cache-Control: public, max-age=0`
 
 ## json-server 와 다른 것 (기준선에 없고 프런트가 쓰지 않는 경우)
 
@@ -48,5 +52,7 @@ contract/run-spring-local.sh           # DB 를 비우고 Flyway 시드부터 �
 | reviews `liked` | 키가 없을 수 있다 | 늘 낸다(없음 = false) |
 | terms 쓰기 | 받는다 | 405 |
 | `_page`(Link) · `_embed` · `_expand` · `/api/db` | 있다 | 없다(404 또는 무시) |
+| BASE_PATH 가 있을 때 | `/api` 를 BASE 아래와 루트 양쪽에서 받는다 | context-path 아래에서만(웹 터미널용 — 클러스터는 BASE_PATH 없음) |
+| `/actuator/health/*` | 없다(SPA index.html) | probes 용 |
 | 상태줄 · `Vary` 표기 | `200 OK`, `Origin, Accept-Encoding` | `200`, `origin,accept-encoding` — 의미는 같다 |
 | 동시 쓰기 | 한 프로세스가 차례로 | JVM 안에서는 잠금. Pod 가 둘이면 id 충돌이 500 으로 드러난다 |
