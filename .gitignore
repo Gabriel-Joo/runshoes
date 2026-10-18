@@ -33,3 +33,4 @@ runshoes_env/
 .omc/
 # Spring 백엔드 빌드 산출물
 backend/target/
+contract/run/
