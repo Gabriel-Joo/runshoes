@@ -6,9 +6,22 @@
   margin: 28px var(--page-gutter) max(100px, var(--fab-clearance));
 }
 
+/* 검색 · 필터 결과가 없을 때 — 그리드 자리에 */
+.shoelist__empty {
+  margin: 28px var(--page-gutter) max(100px, var(--fab-clearance));
+  padding: 80px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: var(--fs-empty);
+  color: var(--text-weak);
+}
+
 @media (max-width: 1199px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
+    margin: 24px var(--page-gutter) max(80px, var(--fab-clearance));
+  }
+  .shoelist__empty {
     margin: 24px var(--page-gutter) max(80px, var(--fab-clearance));
   }
 }
@@ -17,5 +30,9 @@
   .grid {
     grid-template-columns: 1fr;
     margin: 20px var(--page-gutter) max(60px, var(--fab-clearance));
+  }
+  .shoelist__empty {
+    margin: 20px var(--page-gutter) max(60px, var(--fab-clearance));
+    padding: 60px 0;
   }
 }

@@ -1,0 +1,57 @@
+{
+  "id": "Q02",
+  "plan": null,
+  "name": "모델명 — 페가수스",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=%ED%8E%98%EA%B0%80%EC%88%98%EC%8A%A4",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 19:30:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 2,
+        "brand": "나이키",
+        "model": "페가수스 42",
+        "purpose": "조깅·회복주",
+        "stability": "중립화",
+        "midsole": "리액트X",
+        "weight": 300,
+        "drop": 10,
+        "stackHeight": 36,
+        "width": "보통",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 169000,
+        "image": "/images/pegasus-42.png",
+        "images": [
+          "/images/pegasus-42.png",
+          "/images/pegasus-42-1.png",
+          "/images/pegasus-42-2.png"
+        ],
+        "summary": "첫 러닝화를 고르는 분에게",
+        "description": "1982년부터 이어져 온 나이키의 가장 오래된 러닝화 계보입니다. 특출난 강점이 있다기보다 무난하게 다 되는 쪽이라 첫 러닝화로 자주 추천됩니다. 드롭이 10mm로 높은 편이라 뒤꿈치부터 착지하는 분에게 편안합니다. 42에서 앞발과 토박스 공간이 넓어졌고, 와이드 모델도 국내 정식 출시되어 발볼이 넓은 분에게도 선택지가 생겼습니다.",
+        "rating": 4.4,
+        "reviewCount": 5,
+        "likeCount": 69,
+        "liked": true
+      }
+    ]
+  }
+}

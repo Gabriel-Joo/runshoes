@@ -41,7 +41,8 @@ class JsonServerController {
 
 	@GetMapping({"/{name}", "/{name}/"})
 	ResponseEntity<Object> list(@PathVariable String name, @RequestParam MultiValueMap<String, String> query) {
-		ListQuery.Result r = ListQuery.apply(collection(name).all(), query);
+		DocCollection c = collection(name);
+		ListQuery.Result r = ListQuery.apply(c.all(), query, c.searchFields());
 		ResponseEntity.BodyBuilder ok = ResponseEntity.ok();
 		if (r.totalCount() != null) {
 			ok.header("X-Total-Count", String.valueOf(r.totalCount()));

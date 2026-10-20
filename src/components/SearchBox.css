@@ -1,0 +1,69 @@
+/* 크기는 tokens.css 의 --search-* · --fs-search 에 --text-scale 을 곱한다(홈 필터 줄은 1.3, 등록·관리는 1) */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search__icon {
+  position: absolute;
+  left: calc(var(--search-pad-x) * var(--text-scale));
+  width: calc(var(--search-icon) * var(--text-scale));
+  height: calc(var(--search-icon) * var(--text-scale));
+  fill: none;
+  stroke: var(--text-weak);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.search__input {
+  width: 100%;
+  min-width: 0;
+  padding: calc(var(--search-pad-y) * var(--text-scale))
+    calc((var(--search-pad-x) * 2 + var(--search-icon)) * var(--text-scale));
+  border: 1px solid var(--border);
+  border-radius: var(--search-radius);
+  background: var(--surface-white);
+  color: var(--text-strong);
+  font-family: inherit;
+  font-size: calc(var(--fs-search) * var(--text-scale));
+  line-height: 1.5;
+  appearance: none;
+  transition: border-color 0.15s;
+}
+
+.search__input::placeholder {
+  color: var(--text-weak);
+}
+
+.search__input::-webkit-search-cancel-button,
+.search__input::-webkit-search-decoration {
+  appearance: none;
+}
+
+.search__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.search__clear {
+  position: absolute;
+  right: calc(var(--search-pad-x) * var(--text-scale));
+  width: calc(var(--search-icon) * var(--text-scale));
+  height: calc(var(--search-icon) * var(--text-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--border-light);
+  color: var(--text-mid);
+  font-size: calc(var(--fs-search) * var(--text-scale));
+  line-height: 1;
+}
+
+.search__clear:hover {
+  background: var(--border);
+  color: var(--text-strong);
+}

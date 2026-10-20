@@ -66,6 +66,22 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 헤더는 Spring 의 CORS 지원(`@CrossOrigin` · `CorsRegistry`)을 쓰지 않고 필터 하나(`ApiHeadersFilter`)로 만든다 — 204 · Origin 이 없을 때 `*` 같은 모양이 Spring 기본과 다르다.
 목록 쿼리는 SQL 이 아니라 메모리에서 한다(`ListQuery`) — 수십~백여 행이고, JS 문자열 비교 · lodash 정렬 규칙을 SQL 로 흉내 내는 것보다 정확하다. 데이터가 커지면 SQL 로 옮길 자리다.
 
+### 2.1 json-server 에 없던 것 — 검색과 브랜드 목록
+
+홈과 등록·관리의 검색창은 **서버가 거른다** — 프런트가 목록 전체를 받아 거르지 않는다. 기준선은 Node 녹화가 아니라 Spring 녹화(`contract/baseline/spring-search`, Q01~Q24)다.
+
+| 항목 | 동작 | 녹화 |
+|---|---|---|
+| `search` | shoes 의 **brand · model** 에서 찾는다. 띄어쓰기로 나눈 낱말이 **모두** 있어야 한다(AND, 낱말마다 브랜드든 모델이든). 대소문자 무시 · NFC 정규화, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 정규식이 아니라 글자 그대로(`.*` · `(` 도 글자) | Q01~Q13 |
+| 빈 값 | `search=` · 공백만이면 거르지 않는다 | Q09 · Q10 |
+| 다른 조건과 | 필드 필터(`purpose` · `liked` · `brand`) · `_sort`/`_order` · `_start`/`_end`/`_limit`(+ `X-Total-Count` 는 검색 뒤 개수)과 같이 돈다. 순서: `q` → `search` → 필드 필터 → 정렬 → 자르기 | Q14~Q21 |
+| 다른 컬렉션 | 검색 필드가 없어 `search` 를 무시한다(reviews · terms) | Q22 |
+| `GET /api/brands` | 브랜드 이름 배열 — id 순으로 처음 나온 순서. 검색 결과와 상관없이 전부(관리의 브랜드 칩) | Q24 |
+| 전체 개수 | 관리의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`(목록을 받지 않는다) | Q23 |
+
+기존 계약과의 관계 — 깨지는 곳은 없다. `search` 는 예전에 "어느 문서에도 없는 필드"라 무시되던 파라미터였고, 녹화(01~53)와 예전 프런트는 보내지 않는다. `/api/brands` 는 예전에 404 `{}` 였고 녹화에 없다.
+페이지는 아직 없다. 붙일 때는 프런트가 같은 쿼리에 `_start` · `_limit` 을 더하고 `X-Total-Count` 를 읽으면 된다(Q20 · Q21 이 그 모양) — 서버는 그대로다.
+
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
 
 | 경우 | 원래 API(json-server) | RUNSHOES |
@@ -83,5 +99,5 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ## 4. 코드 위치
 
-`backend/src/main/java/com/kopo17/runshoes/` — `api/`(JsonServerController · ShoeCollection · ReviewCollection · TermCollection · ListQuery · Js · Values),
+`backend/src/main/java/com/kopo17/runshoes/` — `api/`(JsonServerController · BrandController · ShoeCollection · ReviewCollection · TermCollection · ListQuery · Js · Values),
 `config/`(ApiHeadersFilter · JacksonConfig · SpaConfig · BasePathConfig), `summary/`(SummaryService). 스키마 `db/migration/V1__schema.sql` 의 주석에도 같은 근거가 있다.

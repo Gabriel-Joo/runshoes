@@ -1,11 +1,13 @@
 import { API } from "../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useDebounced } from "../useDebounced";
 import type { Shoe, Term, Review } from "../types";
 import Hero from "../components/Hero";
 import FilterBar from "../components/FilterBar";
 import SortBar from "../components/SortBar";
 import ShoeCard from "../components/ShoeCard";
 import ShoeModal from "../components/ShoeModal";
+import SearchBox from "../components/SearchBox";
 import "./ShoeList.css";
 
 function ShoeList() {
@@ -13,22 +15,43 @@ function ShoeList() {
   const [purpose, setPurpose] = useState("전체");
   const [sort, setSort] = useState("default");
   const [likedOnly, setLikedOnly] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [reload, setReload] = useState(0);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [terms, setTerms] = useState<Term[]>([]);
 
   const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
-  const getShoes = async () => {
-    const url =
-      sort === "default"
-        ? `${API}/shoes`
-        : `${API}/shoes?_sort=${sort}&_order=desc`;
-    const res = await fetch(url);
-    setShoes(await res.json());
-  };
+  const search = useDebounced(keyword.trim());
+
+  // 거르기 · 정렬은 서버가 한다(용도 · 찜 · 검색 · 정렬). 페이지를 붙일 때는 여기에 _start · _limit 을 더하고 X-Total-Count 를 읽는다
+  const query = useMemo(() => {
+    const p = new URLSearchParams();
+    if (purpose !== "전체") p.set("purpose", purpose);
+    if (likedOnly) p.set("liked", "true");
+    if (search) p.set("search", search);
+    if (sort !== "default") {
+      p.set("_sort", sort);
+      p.set("_order", "desc");
+    }
+    return p.toString();
+  }, [purpose, likedOnly, search, sort]);
 
   useEffect(() => {
-    getShoes();
-  }, [sort]);
+    const ctrl = new AbortController();      // 조건이 바뀌면 앞 요청의 응답은 버린다
+    fetch(`${API}/shoes${query ? `?${query}` : ""}`, { signal: ctrl.signal })
+      .then((res) => res.json())
+      .then((list: Shoe[]) => {
+        setShoes(list);
+        setLoaded(true);
+      })
+      .catch((e) => {
+        if (e.name !== "AbortError") console.error(e);
+      });
+    return () => ctrl.abort();
+  }, [query, reload]);
+
+  const getShoes = () => setReload((n) => n + 1);
 
   const toggleLike = async (shoe: Shoe) => {
     await fetch(`${API}/shoes/${shoe.id}`, {
@@ -41,10 +64,6 @@ function ShoeList() {
     });
     getShoes();
   };
-
-  const visibleShoes = shoes
-    .filter((s) => purpose === "전체" || s.purpose === purpose)
-    .filter((s) => !likedOnly || s.liked);
 
   const getTerms = async () => {
     const res = await fetch(`${API}/terms`);
@@ -80,7 +99,11 @@ function ShoeList() {
     <>
       <Hero />
 
-      <FilterBar selected={purpose} onSelect={setPurpose} />
+      <FilterBar
+        selected={purpose}
+        onSelect={setPurpose}
+        search={<SearchBox value={keyword} onChange={setKeyword} />}
+      />
 
       <SortBar
         sort={sort}
@@ -89,8 +112,11 @@ function ShoeList() {
         onLikedOnlyChange={setLikedOnly}
       />
 
+      {loaded && shoes.length === 0 ? (
+        <p className="shoelist__empty">조건에 맞는 러닝화가 없습니다.</p>
+      ) : (
       <div className="grid">
-        {visibleShoes.map((shoe, i) => (
+        {shoes.map((shoe, i) => (
           <ShoeCard
             key={shoe.id}
             shoe={shoe}
@@ -100,6 +126,7 @@ function ShoeList() {
           />
         ))}
       </div>
+      )}
       {selectedShoe && (
         <ShoeModal
           shoe={selectedShoe}

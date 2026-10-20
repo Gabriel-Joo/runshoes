@@ -1,0 +1,29 @@
+{
+  "id": "Q12",
+  "plan": null,
+  "name": "괄호 하나 — ( → [] (500 아님)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=(",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 19:30:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": []
+  }
+}

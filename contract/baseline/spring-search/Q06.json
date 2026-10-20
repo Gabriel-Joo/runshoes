@@ -1,0 +1,57 @@
+{
+  "id": "Q06",
+  "plan": null,
+  "name": "대소문자 무시 — x 880 → 프레시폼 X 880 v15",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=x%20880",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 19:30:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 8,
+        "brand": "뉴발란스",
+        "model": "프레시폼 X 880 v15",
+        "purpose": "조깅·회복주",
+        "stability": "중립화",
+        "midsole": "Fresh Foam X",
+        "weight": 300,
+        "drop": 6,
+        "stackHeight": 40.5,
+        "width": "보통",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 179000,
+        "image": "/images/880-v15.png",
+        "images": [
+          "/images/880-v15.png",
+          "/images/880-v15-1.png",
+          "/images/880-v15-2.png"
+        ],
+        "summary": "쿠션은 두껍되 드롭은 낮길 원하는 분에게",
+        "description": "뉴발란스의 오래된 데일리 트레이너로, 15세대에서 스택하이트가 40.5mm까지 올라갔습니다. 쿠션은 두툼하지만 드롭이 6mm로 낮은 편이라 종아리와 아킬레스건을 조금 더 쓰게 됩니다. 드롭이 높은 신발에서 넘어온다면 적응 기간을 두는 편이 좋습니다.",
+        "rating": 4.4,
+        "reviewCount": 5,
+        "likeCount": 40,
+        "liked": false
+      }
+    ]
+  }
+}

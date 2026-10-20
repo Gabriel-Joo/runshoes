@@ -60,17 +60,7 @@
 }
 
 .admin__search {
-  width: 260px;
-  padding: 9px 12px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-family: inherit;
-  font-size: 13px;
-}
-
-.admin__search:focus {
-  outline: none;
-  border-color: var(--accent);
+  width: var(--search-width);
 }
 
 .admin__sorts {

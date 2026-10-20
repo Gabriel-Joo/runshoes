@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // 녹화 두 벌을 비교한다 — Node 기준선 vs Spring. 시나리오마다 PASS/FAIL, 하나라도 FAIL 이면 exit 1.
 //   node contract/diff.mjs contract/baseline/node contract/run/spring
-//   node contract/diff.mjs --read-only contract/baseline/node contract/run/prod   (읽기 시나리오 id 30 미만만)
+//   node contract/diff.mjs --read-only contract/baseline/node contract/run/prod   (읽기 시나리오 id 30 미만 · Q 만)
 //
 // 정규화(실질 동등 허용) — docs/SPRING_MIGRATION_PLAN.md Phase 2:
 //   createdAt 은 Date.parse 등가, 숫자는 1e-9, liked 부재 = false, 4 ≡ 4.0(JSON 숫자라 원래 같다)
@@ -52,7 +52,7 @@ function eq(x, y, p, diffs, key) {
   if (x !== y) diffs.push(`${p}: ${JSON.stringify(x)} ≠ ${JSON.stringify(y)}`);
 }
 
-const ids = fs.readdirSync(a).filter((f) => f.endsWith(".json") && f !== "index.json" && (!readOnly || f < "30")).sort();
+const ids = fs.readdirSync(a).filter((f) => f.endsWith(".json") && f !== "index.json" && (!readOnly || f < "30" || f.startsWith("Q"))).sort();
 let fail = 0, pass = 0, info = 0;
 for (const f of ids) {
   const A = JSON.parse(fs.readFileSync(path.join(a, f)));

@@ -26,6 +26,16 @@ class ShoeCollection implements DocCollection {
 	@Override
 	public String name() { return "shoes"; }
 
+	/** 홈 · 등록·관리의 검색창 — 브랜드와 모델명 */
+	@Override
+	public List<String> searchFields() { return List.of("brand", "model"); }
+
+	/** 브랜드 목록(처음 나온 순서 = id 순) — 등록·관리의 브랜드 칩. 검색 결과와 상관없이 전부 */
+	@Transactional(readOnly = true)
+	public List<String> brands() {
+		return shoes.findAll(Sort.by("id")).stream().map(Shoe::getBrand).distinct().toList();
+	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> all() {

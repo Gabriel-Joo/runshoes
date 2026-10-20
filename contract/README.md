@@ -4,12 +4,14 @@ Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 �
 계획: [docs/SPRING_MIGRATION_PLAN.md](../docs/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
-scenarios.mjs     시나리오 — SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, mock-ollama, 9건)
+scenarios.mjs     시나리오 — SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, mock-ollama, 9건) · SEARCH_SCENARIOS(검색, 24건)
 record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태코드 · 헤더 전체 · 본문)과 index.json 을 쓴다
 diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
 mock-ollama.mjs   고정 응답 Ollama(:3109) — 호출 수 · 실패 모드 · 마지막 프롬프트
 baseline/node/          운영 Node 앱 녹화(2026-10-18, 시드 db.json 에서 시작)
 baseline/node-summary/  요약 녹화 — 로컬 server.cjs(같은 커밋) + mock-ollama
+baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Spring(2026-10-21, 시드 직후)이 기준선. 굳히기 전 시드로 따로 계산한 기대값과 24건 모두 맞췄다
+run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — main | summary | search
 ```
 
 ## 녹화 · 비교
@@ -28,9 +30,15 @@ node contract/diff.mjs contract/baseline/node contract/run/spring
 node contract/mock-ollama.mjs 3109 &
 node contract/record.mjs --base http://127.0.0.1:3000 --set summary --mock http://127.0.0.1:3109 --out contract/run/spring-summary
 node contract/diff.mjs contract/baseline/node-summary contract/run/spring-summary
+
+# 검색 — 전부 읽기(시드 상태)
+node contract/record.mjs --base http://127.0.0.1:3000 --set search --out contract/run/spring-search
+node contract/diff.mjs contract/baseline/spring-search contract/run/spring-search
 ```
 
-전환 뒤 운영(MySQL)처럼 쓰기를 되돌리기 어려운 곳에서는 읽기 시나리오(01~26)만 — 양쪽에 `--read-only`:
+로컬에서는 `contract/run-spring-local.sh [main|summary|search]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
+
+전환 뒤 운영(MySQL)처럼 쓰기를 되돌리기 어려운 곳에서는 읽기 시나리오(01~26)만 — 양쪽에 `--read-only`(검색 세트는 전부 읽기라 `--set search` 도 그대로 된다 — 운영 데이터가 시드와 같을 때만 PASS):
 
 ```bash
 node contract/record.mjs --read-only --base http://192.168.122.240 --host runshoes.ronanlab.dev --out contract/run/prod-spring
@@ -57,6 +65,7 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 | Spring — 로컬 jar(2026-10-18) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 |
 | Spring — 이미지 `runshoes:phase4`(2026-10-18) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 |
 | Spring — 운영 `41f037451184`, 읽기 전용(2026-10-21) | PASS 23 · FAIL 0 · INFO 3 | — |
+| Spring — 로컬 jar, 검색 추가 뒤(2026-10-21) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 · 검색 PASS 24 |
 
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
 계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
