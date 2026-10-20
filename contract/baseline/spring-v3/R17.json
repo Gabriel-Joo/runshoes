@@ -1,0 +1,47 @@
+{
+  "id": "R17",
+  "plan": 1,
+  "name": "review 1 — createdAt 날짜만(YYYY-MM-DD)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/1",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 1,
+      "shoeId": 1,
+      "userId": 20,
+      "author": "평발러너",
+      "rating": 5,
+      "content": "평발이라 안정화 찾다가 샀는데 5km 뛰어도 발목이 안 꺾이는 느낌입니다. 대신 확실히 무겁긴 하네요!!",
+      "createdAt": "2026-07-18T00:00:00.000Z",
+      "likeCount": 2,
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

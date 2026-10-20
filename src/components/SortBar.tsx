@@ -12,6 +12,8 @@ interface SortBarProps {
   onSortChange: (sort: string) => void;
   likedOnly: boolean;
   onLikedOnlyChange: (value: boolean) => void;
+  /** 찜은 계정에 묶인다 — 로그인 안 했으면 토글을 보이지 않는다 */
+  showLikedOnly: boolean;
 }
 
 function SortBar({
@@ -19,6 +21,7 @@ function SortBar({
   onSortChange,
   likedOnly,
   onLikedOnlyChange,
+  showLikedOnly,
 }: SortBarProps) {
   return (
     <div className="sortbar">
@@ -34,6 +37,7 @@ function SortBar({
         ))}
       </div>
 
+      {showLikedOnly && (
       <label className="sortbar__toggle">
         <span>찜한 것만 보기</span>
         <button
@@ -46,6 +50,7 @@ function SortBar({
           <span className="sortbar__knob" />
         </button>
       </label>
+      )}
     </div>
   );
 }

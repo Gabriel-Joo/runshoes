@@ -82,6 +82,22 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 기존 계약과의 관계 — 깨지는 곳은 없다. `search` 는 예전에 "어느 문서에도 없는 필드"라 무시되던 파라미터였고, 녹화(01~53)와 예전 프런트는 보내지 않는다. `/api/brands` 는 예전에 404 `{}` 였고 녹화에 없다.
 페이지는 아직 없다. 붙일 때는 프런트가 같은 쿼리에 `_start` · `_limit` 을 더하고 `X-Total-Count` 를 읽으면 된다(Q20 · Q21 이 그 모양) — 서버는 그대로다.
 
+### 2.2 로그인(V3) 뒤 — 권한과 서버가 정하는 값
+
+기준선은 `contract/baseline/spring-v3`(R 읽기 · W 쓰기 · A 인증 98건) — Node 기준선(`baseline/node`)은 V3 전 이력이다. 설계는 [AUTH_DESIGN.md](AUTH_DESIGN.md).
+
+| 항목 | 동작 | 녹화 |
+|---|---|---|
+| 읽기 | 누구나. 신발 `liked` · 리뷰 `liked` 는 **요청한 사람 기준**(비로그인은 false). `?liked=true` 도 그 사람의 찜 | R01~R26 · W03 · W04 · W34b · W52b |
+| 쓰기 401 | 토큰 없이 `/api` 쓰기 → 401 `{}` — 대상이 있는지 보기 전에(없는 신발 PATCH 도 401) | W30a · W32a · W40a |
+| 404 → 403 | 그 뒤 없는 대상은 404, 있으면 권한 — 신발 쓰기는 admin, 리뷰 PATCH 는 작성자, 리뷰 DELETE 는 작성자 또는 admin | W30b · W34a · W37a · W37b · W40b · W44a · W48a |
+| 리뷰 POST | author · userId · createdAt 은 서버(본문 값은 버린다). 한 신발에 첫 리뷰 하나 → 409. 별점 1~5 · 내용 10~1,000자 → 400 | W32 · W32b · W32c |
+| 리뷰 PATCH · PUT | PATCH 는 rating · content 만(다른 키는 버린다). PUT 은 405 — 아무 필드나 덮어쓰는 길을 두지 않는다 | W37 · W42a |
+| 셈하는 값 | 신발 rating · reviewCount 는 리뷰를 쓸 때 서버가 센다(FIRST 만, 소수 한 자리 반올림). likeCount 는 찜이 센다. 본문에 와도(admin 이어도) 버리고, PUT 도 지우지 않는다 | W30 · W36 · W39 · W42 · W47b |
+| 찜 · 공감 | `PUT` · `DELETE /api/shoes/{id}/like` · `/api/reviews/{id}/like` → `{liked, likeCount}`. 멱등. 내 리뷰에는 403 | W34 · W38 · W38a |
+| 응답 키 | 리뷰에 `userId` · `reviewType` · `parentReviewId` · `distanceKm` · `proofImageUrl` · `verified` | R02 · R08 … |
+| 인증 API | `/api/auth/*` · `/api/me` — 오류 본문만 `{error:{code, field, message}}`. `/api/auth` 는 CORS 헤더가 없다 | A01~A26 |
+
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
 
 | 경우 | 원래 API(json-server) | RUNSHOES |
@@ -90,7 +106,7 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 | 타입이 다른 값(숫자 칸에 문자열) | 그대로 저장 | 400 `{}` |
 | 없는 신발의 리뷰 | 받는다 | 400 `{}`(FK) |
 | PUT 에서 빠진 필드 | 키가 사라진다 | null — NOT NULL 칸이면 500 `{}` |
-| POST review 에 createdAt 없음 | 키 없이 저장 | 지금 시각 |
+| POST review 의 createdAt | 받은 값 그대로 | 언제나 서버 시각(V3 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다) |
 | terms 쓰기 | 받는다 | 405 |
 | `_page`(Link) · `_embed` · `_expand` · `/api/db` | 있다 | 없다(무시 또는 404) |
 | BASE_PATH 가 있을 때 | `/api` 를 루트와 BASE 아래 양쪽에서 | context-path 아래에서만 |
@@ -99,5 +115,5 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ## 4. 코드 위치
 
-`backend/src/main/java/com/kopo17/runshoes/` — `api/`(JsonServerController · BrandController · ShoeCollection · ReviewCollection · TermCollection · ListQuery · Js · Values),
+`backend/src/main/java/com/kopo17/runshoes/` — `auth/`(SecurityConfig · AuthController · MeController · AuthService · TokenService), `api/`(JsonServerController · BrandController · LikeController · Viewer · Likes · Ratings · ShoeCollection · ReviewCollection · TermCollection · ListQuery · Js · Values),
 `config/`(ApiHeadersFilter · JacksonConfig · SpaConfig · BasePathConfig), `summary/`(SummaryService). 스키마 `db/migration/V1__schema.sql` 의 주석에도 같은 근거가 있다.

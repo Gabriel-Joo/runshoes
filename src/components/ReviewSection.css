@@ -128,17 +128,42 @@
   gap: 12px;
 }
 
-.review__input {
+/* 작성자는 계정의 닉네임 — 입력 칸이 없다 */
+.review__as {
   flex: 1;
   min-width: 0;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  background: #fff;
-  font-family: inherit;
   font-size: 13px;
+  color: var(--text-mid);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.review__input:focus,
+.review__as strong {
+  color: var(--text-strong);
+}
+
+.review__error {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.review__textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+/* 폼 대신 — 로그인 안내 · "이미 썼어요" */
+.review__gate p {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.review__gatebtn {
+  display: block;
+  text-align: center;
+}
+
 .review__textarea:focus {
   outline: none;
   border-color: var(--accent);
@@ -174,12 +199,18 @@
 
 .review__submit {
   width: 100%;
+  font-family: inherit;
   margin-top: 10px;
   padding: 10px;
   background: var(--accent);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
+}
+
+.review__submit:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .review__item.is-best {
@@ -211,9 +242,15 @@
   color: var(--text-weak);
 }
 
-.review__like:hover {
+.review__like:not(:disabled):hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.review__like:disabled {
+  cursor: default;
+  border-color: var(--border-light);
+  color: var(--text-weak);
 }
 
 .review__like.is-on {

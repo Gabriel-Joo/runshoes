@@ -1,0 +1,40 @@
+{
+  "id": "A01",
+  "plan": null,
+  "name": "가입 이메일 형식 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/signup",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "bad",
+      "password": "<가림>",
+      "nickname": "계약러너"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION",
+        "field": "email",
+        "message": "이메일 형식이 아닙니다."
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.notice {
+  position: fixed;
+  bottom: var(--fab-clearance);        /* 헤더 메뉴를 덮지 않게 아래 가운데 — 떠 있는 버튼 높이 위 */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  max-width: calc(100vw - 2 * var(--page-gutter));
+  pointer-events: none;
+}
+
+.notice__text {
+  padding: 12px 20px;
+  background: var(--bg-dark);
+  color: var(--text-invert);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 100px;
+  box-shadow: 0 6px 20px oklch(0 0 0 / 0.2);
+}

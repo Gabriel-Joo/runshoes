@@ -1,0 +1,32 @@
+{
+  "id": "S7",
+  "plan": 14,
+  "name": "summary shoe 1 → LLM 실패: summary null + reason",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes/1/summary",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:37:01 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "summary": null,
+      "reason": "요약을 불러오지 못했습니다"
+    }
+  }
+}

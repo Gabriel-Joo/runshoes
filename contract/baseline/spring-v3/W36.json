@@ -1,0 +1,79 @@
+{
+  "id": "W36",
+  "plan": null,
+  "name": "PATCH 새 shoe — ShoeForm 수정 본문 전체(빈 칸 null) admin",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/21",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "Contract Runner 1 수정",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": null,
+      "weight": null,
+      "drop": null,
+      "stackHeight": null,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": null,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다."
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 21,
+      "brand": "계약테스트",
+      "model": "Contract Runner 1 수정",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": null,
+      "weight": null,
+      "drop": null,
+      "stackHeight": null,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": null,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "rating": 4,
+      "reviewCount": 1,
+      "likeCount": 0,
+      "liked": false
+    }
+  }
+}

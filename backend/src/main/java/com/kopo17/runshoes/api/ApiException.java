@@ -20,6 +20,23 @@ class ApiException extends RuntimeException {
 		return new ApiException(HttpStatus.BAD_REQUEST, message);
 	}
 
+	static ApiException unauthorized() {
+		return new ApiException(HttpStatus.UNAUTHORIZED, "로그인이 필요하다");
+	}
+
+	static ApiException forbidden(String message) {
+		return new ApiException(HttpStatus.FORBIDDEN, message);
+	}
+
+	/** 한 신발에 첫 리뷰 하나(uk_reviews_user_first_shoe) */
+	static ApiException reviewExists() {
+		return new ApiException(HttpStatus.CONFLICT, "이 신발에는 이미 리뷰를 썼다");
+	}
+
+	static ApiException methodNotAllowed(String message) {
+		return new ApiException(HttpStatus.METHOD_NOT_ALLOWED, message);
+	}
+
 	static ApiException conflict(String message) {
 		return new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, message);   // json-server: Insert failed, duplicate id → 500
 	}

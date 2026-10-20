@@ -1,0 +1,43 @@
+{
+  "id": "A15",
+  "plan": null,
+  "name": "닉네임 변경 — 지금과 같음 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/me/nickname",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{c}}"
+    },
+    "body": {
+      "nickname": "계약러너"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION",
+        "field": "nickname",
+        "message": "지금 닉네임과 같아요."
+      }
+    }
+  }
+}
