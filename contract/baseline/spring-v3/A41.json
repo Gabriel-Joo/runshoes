@@ -1,0 +1,37 @@
+{
+  "id": "A41",
+  "plan": null,
+  "name": "POST /api/activity 모르는 type → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/activity",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{c}}"
+    },
+    "body": {
+      "type": "hack"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 23:23:27 GMT",
+      "connection": "close"
+    },
+    "body": {}
+  }
+}

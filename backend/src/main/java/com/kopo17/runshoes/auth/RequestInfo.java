@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
  * IP: 터널(Cloudflare) 뒤라 remoteAddr 는 cloudflared 다. CF-Connecting-IP → X-Forwarded-For 첫 값 → remoteAddr 순.
  * (CF-Connecting-IP 는 클러스터 안에서 VIP 로 바로 붙으면 꾸밀 수 있다 — 시도 제한 용도로는 받아들인다)
  */
-record RequestInfo(String ip, String userAgent) {
+public record RequestInfo(String ip, String userAgent) {
 
-	static RequestInfo of(HttpServletRequest req) {
+	public static RequestInfo of(HttpServletRequest req) {
 		String ip = req.getHeader("CF-Connecting-IP");
 		if (ip == null || ip.isBlank()) {
 			String xff = req.getHeader("X-Forwarded-For");

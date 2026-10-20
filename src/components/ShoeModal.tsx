@@ -4,6 +4,8 @@ import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
 import ShoeGallery from "./ShoeGallery";
 import ReviewSummary from "./ReviewSummary";
+import { useAuth } from "../auth/useAuth";
+import { apiFetch } from "../auth/session";
 import "./ShoeModal.css";
 
 interface ShoeModalProps {
@@ -31,6 +33,16 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
       document.body.style.paddingRight = "";
     };
   }, []);
+  // 조회 기록 — 로그인했을 때만(같은 신발 30분에 한 번은 서버가 거른다). 실패해도 화면과 상관없다
+  const { status, user } = useAuth();
+  useEffect(() => {
+    if (status !== "user") return;
+    apiFetch("/activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "shoe.view", shoeId: shoe.id }),
+    }).catch(() => {});
+  }, [shoe.id, status, user?.id]);
   const findTerm = (key: string) => terms.find((t) => t.key === key);
   return (
     <div className="modal" onClick={onClose}>

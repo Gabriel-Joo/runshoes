@@ -81,21 +81,22 @@ yarn
 
 docker compose up -d            # MySQL 8   127.0.0.1:3307
 # 백엔드 — backend/README.md (Maven, Java 21). 첫 기동에 Flyway 가 스키마·시드를 넣는다
-#   API  http://localhost:3000
-yarn dev                        # Vite      http://localhost:5173
+#   API  http://localhost:3000 — env JWT_SECRET(32바이트 이상)이 있어야 뜬다. 시드 계정 비밀번호는 SEED_USER_PASSWORD · ADMIN_PASSWORD
+yarn dev                        # Vite      http://localhost:5173 (/api 는 vite 프록시로 :3000)
 python chatbot_server.py        # (선택) 챗봇 ws://localhost:8766
 ```
 
 ### API 주소
 
-`src/api.ts`가 API 주소를 한 곳에서 관리한다. 개발 중에는 `http://localhost:3000`(Spring Boot), 운영에서는 Spring Boot가 React 빌드물과 `/api`를 같은 오리진에서 함께 서비스하므로 별도 설정이 필요 없다.
+`src/api.ts`가 API 주소를 한 곳에서 관리한다. 개발 중에도 운영과 같은 출처의 `/api`를 부르고 Vite가 `:3000`(Spring Boot)으로 넘긴다 — 로그인 refresh 쿠키(`Path=/api/auth`)가 운영과 같게 붙는다.
+운영에서는 Spring Boot가 React 빌드물과 `/api`를 같은 오리진에서 함께 서비스하므로 별도 설정이 필요 없다.
 
 ### 이미지
 
 ```bash
 docker build -t runshoes .      # Vite → Maven → jlink JRE → alpine (252MB)
 docker run -p 8080:3000 -e SPRING_DATASOURCE_URL='jdbc:mysql://<host>:3306/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC' \
-  -e SPRING_DATASOURCE_PASSWORD=... runshoes
+  -e SPRING_DATASOURCE_PASSWORD=... -e JWT_SECRET="$(openssl rand -base64 48)" -e SEED_USER_PASSWORD=... -e ADMIN_PASSWORD=... runshoes
 ```
 
 ### 데이터 초기화
@@ -143,8 +144,8 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 
 - [x] 주제별 상세 정보 표시 — **스펙 + 용어 툴팁**
 - [x] 리뷰 목록 (작성자 · 별점 · 내용) — `GET`
-- [x] 평점·리뷰 작성 폼 → 등록 후 다시 불러오기 — `POST` + re-fetch
-- [x] 리뷰 삭제 — `DELETE`
+- [x] 평점·리뷰 작성 폼 → 등록 후 다시 불러오기 — `POST` + re-fetch. 로그인해야 쓰고, 작성자는 계정 닉네임(입력 칸 없음), 한 신발에 첫 리뷰 하나
+- [x] 리뷰 삭제 — `DELETE`. 내 리뷰 또는 admin
 - [x] 모달 열기 / 닫기 — **배경 클릭 닫기 포함**
 - [x] 등록·관리 화면의 삭제 확인 모달
 
@@ -163,6 +164,17 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 - [x] 목록 → 상세 모달 흐름은 **모든 화면 크기에서 유지**
 - [x] 모달 폭 · 스크롤 처리, 툴팁이 화면 밖으로 나가지 않도록 처리
 - [x] 모바일 햄버거 메뉴
+
+### ⑧ 계정 · 권한 (요건 외)
+
+- [x] 가입 `/signup` · 로그인 `/login` · 회원 정보 `/account`(닉네임 · 비밀번호 변경) — 입력 규칙과 오류 문구는 서버와 같다
+- [x] JWT access token(15분, 메모리) + refresh token(14일, HttpOnly 쿠키, 쓸 때마다 교체 · 재사용 감지)
+- [x] 찜 · 리뷰 "도움이 돼요"가 **계정별** — 다른 계정에서는 보이지 않는다. 숫자는 서버가 센다
+- [x] 권한은 **백엔드가 막는다** — 로그인 없는 쓰기 401, 남의 리뷰 수정 403, 신발 등록 · 수정 · 삭제와 관리 화면은 admin
+- [x] 리뷰를 쓰는 중 로그인이 끝나도 쓰던 내용을 남겨 두고, 다시 로그인하면 같은 신발 모달로 돌아온다
+- [x] 로그인 시도 제한 — 같은 계정 15분 실패 5번 · 같은 IP 20번이면 429(잠긴 동안에는 맞는 비밀번호도), 가입은 같은 IP 1시간 10건. 화면은 남은 시간 동안 버튼을 끈다
+- [x] 활동 로그 — 인증 · 리뷰 · 찜 쓰기 · 신발 조회를 DB 에 남긴다(인증 90일 · 나머지 180일, 매일 정리). 챗봇이 읽을 것
+- 설계와 근거: [docs/AUTH_DESIGN.md](docs/AUTH_DESIGN.md) · API 동작: [API_CONTRACT](docs/API_CONTRACT.md) 2.2
 
 ### 요건 외 추가 구현
 
@@ -185,7 +197,7 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 
 ## 4. 데이터 설계
 
-> 아래는 API가 주고받는 JSON 필드다. 저장은 MySQL 테이블(`backend/src/main/resources/db/migration/V1__schema.sql`, 컬럼은 snake_case).
+> 아래는 API가 주고받는 JSON 필드다. 저장은 MySQL 테이블(`backend/src/main/resources/db/migration/` V1 스키마 · V3 계정, 컬럼은 snake_case).
 > 숫자 스펙이 `DOUBLE`, id가 `max+1`, terms id가 겹치는 등 스키마의 특이한 선택은 [API_CONTRACT](docs/API_CONTRACT.md) 1장.
 
 ### shoes
@@ -208,16 +220,16 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 | `images`        | string[]       | 제품컷 경로 배열 — 모달 슬라이드 + 썸네일                             |
 | `summary`       | string         | 카드용 한 줄 요약 (`○○한 분에게`)                                     |
 | `description`   | string         | 모달용 상세 설명                                                      |
-| `rating`        | number         | 평균 별점 — **정렬용으로 저장**                                       |
-| `reviewCount`   | number         | 리뷰 수 — **정렬용으로 저장**                                         |
-| `likeCount`     | number         | 좋아요 수 — **정렬용으로 저장**                                       |
-| `liked`         | boolean        | 내 찜 여부                                                            |
+| `rating`        | number         | 평균 별점 — **정렬용으로 저장**, 리뷰를 쓸 때 서버가 다시 센다         |
+| `reviewCount`   | number         | 리뷰 수 — **정렬용으로 저장**, 서버가 센다                             |
+| `likeCount`     | number         | 찜 수 — **정렬용으로 저장**, 찜할 때 서버가 ±1                         |
+| `liked`         | boolean        | **요청한 사람이** 찜했는지(계정별, 비로그인은 false)                   |
 
 **설계 판단**
 
 - **`rating` · `reviewCount` · `likeCount`를 계산값이 아니라 저장값으로 둔 이유**
   요건이 `?_sort=&_order=` 서버 정렬을 명시하므로 정렬 기준이 저장된 실제 필드여야 한다.
-  리뷰 `POST` / `PATCH` / `DELETE` 시 해당 신발을 다시 `PATCH`해 동기화한다.
+  리뷰 `POST` / `PATCH` / `DELETE` 때 서버가 같은 트랜잭션에서 다시 센다 — 클라이언트가 보낸 값은 admin 이어도 버린다(누구나 숫자를 바꿀 수 없게).
 
 - **수치 스펙을 nullable로 둔 이유**
   브랜드가 공개하지 않은 스펙이 실제로 존재한다(호카는 미드솔 폼 이름을 밝히지 않는다).
@@ -237,13 +249,26 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 | ----------- | ------ | --------------------------------------------------- |
 | `id`        | number |                                                     |
 | `shoeId`    | number | 신발 id (`<리소스단수형>Id` 관례, FK)               |
-| `author`    | string | 작성자 닉네임                                       |
+| `userId`    | number | 작성자 계정 id                                      |
+| `author`    | string | 작성자 닉네임 — 계정에서(닉네임을 바꾸면 같이 바뀐다) |
 | `rating`    | number | 별점 1~5                                            |
 | `content`   | string | 내용                                                |
 | `likeCount` | number | "도움이 돼요 👍" 수 — 베스트 리뷰 상단 고정에 사용  |
-| `createdAt` | string | 작성일 — **전체 ISO 문자열로 저장**                 |
+| `liked`     | boolean | 요청한 사람이 "도움이 돼요"를 눌렀는지(계정별)     |
+| `createdAt` | string | 작성일 — **전체 ISO 문자열로 저장**, 서버 시각      |
+| `reviewType` · `parentReviewId` · `distanceKm` · `proofImageUrl` · `verified` | | 실사용 후기 자리(첫 리뷰에 덧붙이는 후기 — 아직 화면 없음) |
 
-> 신발별 리뷰는 `GET /api/reviews?shoeId=1`로 조회한다. 신발을 지우면 리뷰도 함께 지워진다(FK `ON DELETE CASCADE`).
+> 신발별 리뷰는 `GET /api/reviews?shoeId=1`로 조회한다. 신발을 지우면 리뷰 · 찜도 함께 지워진다(FK `ON DELETE CASCADE`).
+> 한 사람이 한 신발에 첫 리뷰는 하나다(`UNIQUE(user_id, first_shoe_id)` — 실사용 후기는 이 제한 밖).
+
+### 계정 — API 로 내보내지 않는 테이블
+
+| 테이블 | 내용 |
+| --- | --- |
+| `users` | 이메일(소문자) · BCrypt 비밀번호 · 닉네임(2~12자, 중복 불가) · 역할 USER / ADMIN |
+| `likes` · `review_likes` | 누가 어느 신발을 찜했는지 · 어느 리뷰에 공감했는지 — 응답의 `liked` 를 정한다 |
+| `refresh_tokens` | refresh token 의 SHA-256(원문은 쿠키에만) · 로그인 묶음(family) · 교체 이력 |
+| `activity_logs` | 인증 · 리뷰 · 찜 쓰기 · 조회 이력 — 시도 제한이 세고, 챗봇이 읽는다. 사람은 user_id 로 조인해 읽는다(이메일 원문 · 쓰기의 IP 는 없다) |
 
 > `createdAt`은 날짜만 잘라 저장하면 UTC 기준으로 하루가 밀린다.
 > UTC `DATETIME(3)`으로 저장하고 ms까지 ISO(`…Z`)로 돌려준다. `src/utils/date.ts`의 `formatDate`에서 상대 시간으로 표시한다.
@@ -353,8 +378,10 @@ runshoes/
 │  ├─ api.ts               ← API 주소 상수
 │  ├─ types/index.ts       ← Shoe, Review, Term
 │  ├─ utils/date.ts        ← formatDate (상대 시간 표시)
+│  ├─ auth/                ← session(메모리 토큰 · apiFetch · refresh) · AuthContext · RequireAuth · 입력 규칙 · useShoeLike
 │  ├─ components/
-│  │  ├─ Header.tsx        ← 상단 메뉴 · 햄버거
+│  │  ├─ Header.tsx        ← 상단 메뉴 · 햄버거 · 로그인 / 닉네임 메뉴
+│  │  ├─ Notice.tsx        ← 짧은 안내("○○님, 환영해요")
 │  │  ├─ Hero.tsx          ← 해부도 슬라이드
 │  │  ├─ FilterBar.tsx     ← 용도별 필터(+ 검색창 자리)
 │  │  ├─ SearchBox.tsx     ← 브랜드·모델 검색창(홈 · 관리 공용, 서버 search)
@@ -370,14 +397,14 @@ runshoes/
 │  │  ├─ ConfirmModal.tsx  ← 삭제 확인
 │  │  ├─ ChatBot.tsx       ← 웹소켓 챗봇
 │  │  └─ ScrollTop.tsx     ← 라우트 이동 시 스크롤 초기화
-│  ├─ pages/               ← ShoeList(/) · Recommend · Best · Admin · ShoeForm(/new, /edit/:id) · NotFound
+│  ├─ pages/               ← ShoeList(/) · Recommend · Best · Admin · ShoeForm(/new, /edit/:id) · Login · Signup · Account · NotFound
 │  ├─ App.tsx
 │  └─ main.tsx
 ├─ public/images/          ← 신발 이미지
 ├─ backend/                ← Spring Boot API (backend/README.md)
 │  └─ src/main/
-│     ├─ java/…/runshoes/  ← api/ · domain/ · summary/ · config/
-│     └─ resources/db/migration/  ← Flyway V1(스키마) · V2(시드)
+│     ├─ java/…/runshoes/  ← api/ · auth/ · domain/ · summary/ · config/
+│     └─ resources/db/migration/  ← Flyway V1(스키마) · V2(시드) · V3(계정 · 찜 · 공감 · 토큰 · 활동 로그)
 ├─ chatbot_server.py       ← 웹소켓 챗봇 (Ollama, OLLAMA_URL)
 ├─ Dockerfile              ← 앱 이미지 (Vite → Maven → jlink JRE → alpine)
 ├─ Dockerfile.chatbot      ← 챗봇 사이드카 이미지 (python:3.12-alpine, 8766)
@@ -387,7 +414,7 @@ runshoes/
 ├─ scripts/                ← gen-seed-sql.mjs(db.json → Flyway V2) · verify-seed · 시드 보강 스크립트
 ├─ db.json                 ← 시드 원본(V2 의 소스)
 ├─ server.cjs              ← API 계약 기준선 (contract/) — 운영 이미지에는 없다
-└─ docs/                   ← INFRA · API_CONTRACT · HISTORY · design-* · DEPLOY · SPRING_MIGRATION_PLAN(기록)
+└─ docs/                   ← INFRA · API_CONTRACT · AUTH_DESIGN · AUTH_RATELIMIT_DESIGN(3단계 설계안) · HISTORY · design-* · DEPLOY · SPRING_MIGRATION_PLAN(기록)
 ```
 
 CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)만 `index.css`에 둔다.
@@ -401,9 +428,11 @@ CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)�
 | `/`          | 홈            | 히어로 슬라이드 + 용도 필터 · 검색 + 정렬 + 카드 그리드 + 상세 모달 |
 | `/recommend` | 맞춤 추천     | 5문항 점수제 설문 → 추천 결과                                |
 | `/best`      | 러너들의 선택 | 종합 점수 1~5위 + 용도별 1위                                 |
-| `/admin`     | 등록·관리     | 브랜드 필터 · 검색 · 정렬, 행별 수정·삭제                    |
-| `/new`       | 등록          | 러닝화 등록 폼                                               |
-| `/edit/:id`  | 수정          | 러닝화 수정 폼 + 삭제                                        |
+| `/admin`     | 등록·관리     | 브랜드 필터 · 검색 · 정렬, 행별 수정·삭제 — **admin 만**     |
+| `/new`       | 등록          | 러닝화 등록 폼 — admin 만                                    |
+| `/edit/:id`  | 수정          | 러닝화 수정 폼 + 삭제 — admin 만                             |
+| `/login` · `/signup` | 로그인 · 가입 | 성공하면 `returnTo`(같은 사이트 경로만)로                |
+| `/account`   | 회원 정보     | 이메일(보기만) · 닉네임 · 비밀번호 — 로그인 필요             |
 | `*`          | NotFound      |                                                              |
 
 ### 종합 점수
@@ -466,7 +495,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 항목          | 내용                                                                 |
 | ------------- | -------------------------------------------------------------------- |
 | 기본 요건     | 목록 · 필터 · 정렬 · 찜 · 상세 모달 · 리뷰 CRUD · 등록/관리 · 반응형 |
-| 데이터 확충   | 러닝화 20종 · 리뷰 105개                                             |
+| 데이터 확충   | 러닝화 20종 · 리뷰 104개 · 리뷰 작성자 30명                         |
 | 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일                         |
 | 리뷰 좋아요   | 리뷰별 좋아요 + 베스트 리뷰 상단 고정                                |
 | 맞춤 추천     | `/recommend` 5문항 점수제                                            |
@@ -481,7 +510,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 | 항목                    | 내용                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------ |
-| 활동 로그 · 챗봇 연결   | 인증 · 리뷰 · 찜 · 조회 이력을 DB 에, 챗봇이 로그인 맥락을 읽는다(로그인 3단계 이후)    |
+| 챗봇 연결               | 챗봇이 로그인 맥락(activity_logs — 최근 본 · 쓴 것)을 읽는다                          |
 | About 페이지            | 서비스 설계 의도와 인프라 구축 과정을 정리한 소개 페이지 (다시 쓰는 중)               |
 | 인프라 심화             | Argo Rollouts · 사이드카 로그 · CronJob 통계 스냅샷 · DB 백업 (→ 12장)               |
 | 비교 (레이더 차트)      | 신발 2~3개 스펙을 오각형 레이더 차트로 겹쳐 비교                                     |
@@ -493,7 +522,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 인프라 직무를 목표로, 기능은 로그인까지 완결한 뒤 힘을 인프라 쪽에 싣는다.
 
-1. **로그인** — 계정 · 권한 · 화면까지 했다. 활동 로그 · 챗봇 연결이 남았다(docs/AUTH_DESIGN.md)
+1. **로그인** — 계정 · 권한 · 화면 · 시도 제한 · 활동 로그까지 했다. 챗봇 연결이 남았다(docs/AUTH_DESIGN.md)
 2. **인프라 심화** — Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 · MySQL 백업
 3. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
 
@@ -611,12 +640,11 @@ JPA로 MySQL에 접근하며, 스키마와 시드는 **Flyway**가 버전으로 
 > 함께 사용한다. 따라서 처음부터 웹 전용이 아니라 **두 클라이언트가
 > 공유하는 API**로 스키마와 엔드포인트를 설계한다.
 
-### 12.3 스키마 방향 — 로그인을 미리 고려
+### 12.3 스키마 — 계정과 사용자별 찜 · 공감
 
-현재 리뷰 좋아요는 `likeCount`(숫자) + `liked`(전역 눌림 상태)로,
-로그인이 없어서 생긴 임시 구조다. 로그인을 붙일 때 좋아요를
-**별도 테이블(`review_likes`, 예: `review_id` + `user_id`)로 분리**한다(Flyway V3).
-이렇게 하면 "내가 누른 리뷰만" 정확히 판별할 수 있다.
+찜과 리뷰 공감은 **누가 눌렀는지를 행으로** 남긴다(`likes` · `review_likes`, 사용자 + 대상이 기본 키).
+응답의 `liked`는 그 행으로 정하고, 숫자(`likeCount`)는 정렬용 카운터로 따로 둔다 — 찜할 때 같은 트랜잭션에서 ±1.
+리뷰는 작성자 계정(`user_id`)을 갖고, 한 사람이 한 신발에 첫 리뷰를 하나만 쓴다. 바꾸는 것은 Flyway(V3 — 추가만, 지우는 것은 다음 버전).
 
 ### 12.4 접속 정보 관리와 커넥션 풀
 

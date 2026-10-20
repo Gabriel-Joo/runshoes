@@ -30,30 +30,30 @@ class Likes {
 		return new HashSet<>(jdbc.queryForList("SELECT review_id FROM review_likes WHERE user_id = ?", Long.class, userId));
 	}
 
-	/** 이미 찜했으면 그대로(멱등) */
-	void likeShoe(long userId, long shoeId) {
-		if (jdbc.update("INSERT IGNORE INTO likes (user_id, shoe_id, created_at) VALUES (?, ?, ?)", userId, shoeId, now()) == 1) {
-			jdbc.update("UPDATE shoes SET like_count = like_count + 1 WHERE id = ?", shoeId);
-		}
+	/** 이미 찜했으면 그대로(멱등). 실제로 바뀌었으면 true — 활동 로그는 바뀐 때만 남긴다 */
+	boolean likeShoe(long userId, long shoeId) {
+		if (jdbc.update("INSERT IGNORE INTO likes (user_id, shoe_id, created_at) VALUES (?, ?, ?)", userId, shoeId, now()) != 1) return false;
+		jdbc.update("UPDATE shoes SET like_count = like_count + 1 WHERE id = ?", shoeId);
+		return true;
 	}
 
-	void unlikeShoe(long userId, long shoeId) {
-		if (jdbc.update("DELETE FROM likes WHERE user_id = ? AND shoe_id = ?", userId, shoeId) == 1) {
-			jdbc.update("UPDATE shoes SET like_count = GREATEST(like_count - 1, 0) WHERE id = ?", shoeId);
-		}
+	boolean unlikeShoe(long userId, long shoeId) {
+		if (jdbc.update("DELETE FROM likes WHERE user_id = ? AND shoe_id = ?", userId, shoeId) != 1) return false;
+		jdbc.update("UPDATE shoes SET like_count = GREATEST(like_count - 1, 0) WHERE id = ?", shoeId);
+		return true;
 	}
 
 	/** 공감 수가 NULL(시드 2건 · 새 리뷰)이면 0 에서 센다 */
-	void likeReview(long userId, long reviewId) {
-		if (jdbc.update("INSERT IGNORE INTO review_likes (user_id, review_id, created_at) VALUES (?, ?, ?)", userId, reviewId, now()) == 1) {
-			jdbc.update("UPDATE reviews SET like_count = COALESCE(like_count, 0) + 1 WHERE id = ?", reviewId);
-		}
+	boolean likeReview(long userId, long reviewId) {
+		if (jdbc.update("INSERT IGNORE INTO review_likes (user_id, review_id, created_at) VALUES (?, ?, ?)", userId, reviewId, now()) != 1) return false;
+		jdbc.update("UPDATE reviews SET like_count = COALESCE(like_count, 0) + 1 WHERE id = ?", reviewId);
+		return true;
 	}
 
-	void unlikeReview(long userId, long reviewId) {
-		if (jdbc.update("DELETE FROM review_likes WHERE user_id = ? AND review_id = ?", userId, reviewId) == 1) {
-			jdbc.update("UPDATE reviews SET like_count = GREATEST(COALESCE(like_count, 0) - 1, 0) WHERE id = ?", reviewId);
-		}
+	boolean unlikeReview(long userId, long reviewId) {
+		if (jdbc.update("DELETE FROM review_likes WHERE user_id = ? AND review_id = ?", userId, reviewId) != 1) return false;
+		jdbc.update("UPDATE reviews SET like_count = GREATEST(COALESCE(like_count, 0) - 1, 0) WHERE id = ?", reviewId);
+		return true;
 	}
 
 	boolean likesShoe(long userId, long shoeId) {

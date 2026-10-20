@@ -1,11 +1,14 @@
 package com.kopo17.runshoes.auth;
 
+import com.kopo17.runshoes.activity.ActivityLogger;
+import com.kopo17.runshoes.activity.ActivityLogger.Entry;
 import com.kopo17.runshoes.domain.RefreshToken;
 import com.kopo17.runshoes.domain.RefreshTokenRepository;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.User;
 import com.kopo17.runshoes.domain.UserRepository;
 import java.time.LocalDateTime;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
  * 가입 · 로그인 · refresh(교체 · 재사용 감지) · 로그아웃 · 닉네임 · 비밀번호.
  * refresh 재사용: 이미 바뀐 토큰이 다시 오면 그 family 를 전부 폐기한다(탈취로 본다).
  *   다만 바뀐 지 10초 안이면 탭 둘이 동시에 refresh 한 것으로 보고 family 에 토큰을 하나 더 준다 — 새로고침 두 번에 로그아웃되지 않게.
+ * 시도 제한(RateLimiter)과 활동 로그(ActivityLogger) — 실패 · 429 · 재사용 감지는 따로 커밋(logNow), 성공은 같은 트랜잭션(log).
+ *   인증 이벤트의 target 은 이메일 카운팅 키(EmailKey) — 세는 데만 쓰고, 사람이 읽는 것은 user_id 다.
  */
 @Service
 class AuthService {
@@ -29,16 +34,22 @@ class AuthService {
 	private final ReviewRepository reviews;
 	private final PasswordEncoder encoder;
 	private final TokenService tokens;
+	private final RateLimiter limiter;
+	private final EmailKey emailKey;
+	private final ActivityLogger activity;
 	/** 없는 이메일에도 BCrypt 를 한 번 돌린다 — 응답 시간으로 가입 여부가 드러나지 않게 */
 	private final String dummyHash;
 
 	AuthService(UserRepository users, RefreshTokenRepository refreshTokens, ReviewRepository reviews, PasswordEncoder encoder,
-			TokenService tokens) {
+			TokenService tokens, RateLimiter limiter, EmailKey emailKey, ActivityLogger activity) {
 		this.users = users;
 		this.refreshTokens = refreshTokens;
 		this.reviews = reviews;
 		this.encoder = encoder;
 		this.tokens = tokens;
+		this.limiter = limiter;
+		this.emailKey = emailKey;
+		this.activity = activity;
 		this.dummyHash = encoder.encode("runshoes-dummy-password-0");
 	}
 
@@ -49,6 +60,7 @@ class AuthService {
 		String nickname = AuthRules.nickname(rawNickname);
 		if (users.existsByEmail(email)) throw AuthException.conflict("EMAIL_TAKEN", "email", "이미 가입된 이메일입니다.");
 		if (users.existsByNickname(nickname)) throw AuthException.conflict("NICKNAME_TAKEN", "nickname", "이미 쓰는 닉네임입니다.");
+		limiter.checkSignup(info.ip());                          // 같은 IP 1시간 10건 — 성공한 가입만 센다
 		User u = new User();
 		u.setEmail(email);
 		u.setPasswordHash(encoder.encode(password));
@@ -62,6 +74,7 @@ class AuthService {
 		} catch (DataIntegrityViolationException e) {        // 같은 순간 같은 이메일 · 닉네임 — UNIQUE 가 막는다
 			throw AuthException.conflict("ALREADY_TAKEN", null, "이미 가입된 이메일이나 쓰는 닉네임입니다.");
 		}
+		activity.log(Entry.of("auth.signup", u.getId(), "user", u.getId()));
 		return start(u, info);
 	}
 
@@ -72,10 +85,22 @@ class AuthService {
 			throw AuthException.invalid(null, "이메일과 비밀번호를 입력해 주세요.");
 		}
 		User u = users.findByEmail(email).orElse(null);
+		Long userId = u == null ? null : u.getId();
+		long key = emailKey.of(email);
+		try {
+			limiter.checkLogin(key, info.ip());                   // 비밀번호를 보기 전에 — 잠긴 동안에는 맞아도 429
+		} catch (AuthException e) {
+			activity.logNow(Entry.of("auth.login.blocked", userId, "email", key));
+			throw e;
+		}
 		String hash = u == null || u.getPasswordHash() == null ? dummyHash : u.getPasswordHash();
 		boolean ok = encoder.matches(password, hash) && u != null && u.getPasswordHash() != null;
-		if (!ok) throw AuthException.unauthorized("INVALID_CREDENTIALS", "이메일 또는 비밀번호가 맞지 않습니다.");
+		if (!ok) {
+			activity.logNow(Entry.of("auth.login.failure", userId, "email", key));
+			throw AuthException.unauthorized("INVALID_CREDENTIALS", "이메일 또는 비밀번호가 맞지 않습니다.");
+		}
 		u.setLastLoginAt(Clock.now());
+		activity.log(Entry.of("auth.login.success", userId, "email", key));   // 성공하면 그 계정의 실패는 리셋(RateLimiter)
 		return start(u, info);
 	}
 
@@ -92,6 +117,7 @@ class AuthService {
 				if (rotated) {
 					int n = refreshTokens.revokeFamily(t.getFamilyId(), now);
 					log.warn("refresh 재사용 — user {} family {} 의 토큰 {}개 폐기", t.getUserId(), t.getFamilyId(), n);
+					activity.logNow(Entry.of("auth.refresh.reuse", t.getUserId(), "user", t.getUserId()).meta(Map.of("revoked", n)));
 				}
 				throw expired();
 			}
@@ -110,8 +136,10 @@ class AuthService {
 	@Transactional
 	void logout(String raw) {
 		if (raw == null || raw.isBlank()) return;
-		refreshTokens.findByTokenHash(TokenService.sha256(raw))
-				.ifPresent(t -> refreshTokens.revokeFamily(t.getFamilyId(), Clock.now()));
+		refreshTokens.findByTokenHash(TokenService.sha256(raw)).ifPresent(t -> {
+			refreshTokens.revokeFamily(t.getFamilyId(), Clock.now());
+			activity.log(Entry.of("auth.logout", t.getUserId(), "user", t.getUserId()));
+		});
 	}
 
 	@Transactional(readOnly = true)
@@ -134,6 +162,7 @@ class AuthService {
 		if (!nickname.equalsIgnoreCase(u.getNickname()) && users.existsByNickname(nickname)) {
 			throw AuthException.conflict("NICKNAME_TAKEN", "nickname", "이미 쓰는 닉네임입니다.");
 		}
+		String before = u.getNickname();
 		u.setNickname(nickname);
 		u.setUpdatedAt(Clock.now());
 		try {
@@ -142,14 +171,26 @@ class AuthService {
 			throw AuthException.conflict("NICKNAME_TAKEN", "nickname", "이미 쓰는 닉네임입니다.");
 		}
 		reviews.renameAuthor(u.getId(), nickname);
+		activity.log(Entry.of("user.nickname.change", u.getId(), "user", u.getId()).meta(Map.of("before", before, "after", nickname)));
 		return u;
 	}
 
-	/** 지금 기기(sid = refresh family)를 뺀 다른 로그인은 모두 끊는다 */
+	/**
+	 * 지금 기기(sid = refresh family)를 뺀 다른 로그인은 모두 끊는다.
+	 * "지금 비밀번호" 틀림은 로그인 실패와 같이 센다(그 계정) — 로그인한 채 비밀번호를 추측하는 길을 막는다
+	 */
 	@Transactional
-	void changePassword(long userId, String current, String next, String keepFamily) {
+	void changePassword(long userId, String current, String next, String keepFamily, RequestInfo info) {
 		User u = user(userId);
+		long key = emailKey.of(u.getEmail());
+		try {
+			limiter.checkLogin(key, info.ip());
+		} catch (AuthException e) {
+			activity.logNow(Entry.of("auth.login.blocked", userId, "email", key).meta(Map.of("via", "password")));
+			throw e;
+		}
 		if (current == null || u.getPasswordHash() == null || !encoder.matches(current, u.getPasswordHash())) {
+			activity.logNow(Entry.of("auth.password.failure", userId, "email", key));
 			throw AuthException.invalid("currentPassword", "지금 비밀번호가 맞지 않습니다.");
 		}
 		AuthRules.password(next, "newPassword");
@@ -159,6 +200,7 @@ class AuthService {
 		u.setPasswordHash(encoder.encode(next));
 		u.setUpdatedAt(Clock.now());
 		refreshTokens.revokeOthers(u.getId(), keepFamily == null ? "" : keepFamily, Clock.now());
+		activity.log(Entry.of("auth.password.change", userId, "user", userId));
 	}
 
 	/** 로그인 한 번 = 새 family */

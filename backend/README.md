@@ -7,6 +7,8 @@ domain/   Shoe · Review · Term + 리포지토리(스키마는 Flyway — db/mi
 api/      JsonServerController(/api/{name}[/{id}]) · DocCollection 셋 · ListQuery(json-server 목록 규칙 + search) · BrandController(/api/brands) · Js(JS 비교·문자열화)
           Viewer(요청한 사람 — 404 → 403) · LikeController(/api/shoes|reviews/{id}/like) · Likes(찜 · 공감 행과 카운터) · Ratings(신발 평점 서버 계산)
 auth/     SecurityConfig(JWT HS256 · 쓰기 401) · AuthController(/api/auth) · MeController(/api/me) · AuthService(refresh 교체 · 재사용 감지) · SeedPasswords
+          RateLimiter(로그인 · 가입 429 — activity_logs 를 센다) · EmailKey(카운팅 키)
+activity/ ActivityLogger(activity_logs 한 줄 — 같은 트랜잭션 / 따로 커밋) · ActivityController(POST /api/activity) · ActivityCleanup(매일 정리 · 크기 경고)
 config/   ApiHeadersFilter(CORS · Cache-Control — Node 와 같은 모양) · JacksonConfig(정수 값 숫자는 300 처럼)
 ```
 
@@ -22,8 +24,9 @@ docker run --rm --network host --cpus=4 --cpu-shares=2 --user $(id -u):$(id -g) 
 
 cd .. && docker compose up -d          # MySQL 127.0.0.1:3307 (3306 은 다른 프로젝트)
 yarn build                             # dist/ — SPA 시나리오(21~23)에 쓴다
-contract/run-spring-local.sh           # DB 를 비우고 Flyway 시드부터 → :3200 에 띄워 녹화 → 기준선 diff
-contract/run-spring-local.sh summary   # 요약 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다
+contract/run-spring-local.sh v3          # DB 를 비우고 Flyway 시드부터 → :3200 에 띄워 녹화 → 기준선(spring-v3) diff. JWT · 비밀번호는 매번 임시 값
+contract/run-spring-local.sh v3-summary  # 요약 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다
+contract/run-spring-local.sh v3-search   # 검색
 ```
 
 ## 이미지 (루트 `Dockerfile`)
@@ -42,7 +45,7 @@ docker run --rm --cpus=4 --cpu-shares=2 --memory=3g --security-opt seccomp=uncon
   -e BUILDKITD_FLAGS=--oci-worker-no-process-sandbox -v "$PWD":/work:ro -v /tmp/out:/out -w /work --entrypoint sh \
   moby/buildkit:v0.33.1-rootless -c 'nice -n 19 buildctl-daemonless.sh build --frontend dockerfile.v0 --local context=. \
   --local dockerfile=. --output type=docker,name=runshoes:local,dest=/out/runshoes.tar'
-docker load -i /tmp/out/runshoes.tar && IMAGE=runshoes:local contract/run-spring-local.sh
+docker load -i /tmp/out/runshoes.tar && IMAGE=runshoes:local contract/run-spring-local.sh v3
 ```
 
 ## 운영 설정 (클러스터)
@@ -55,6 +58,7 @@ ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은
 | `SPRING_DATASOURCE_USERNAME` / `_PASSWORD` | `runshoes` / Secret `runshoes-mysql` 의 `MYSQL_PASSWORD` |
 | `TZ` | `UTC` |
 | `OLLAMA_URL` | `http://192.168.122.1:11434` (GPU 호스트, VM 사설망) |
+| `JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD` | Secret `runshoes-auth`(envFrom) — 서명 키(32바이트 이상, 없으면 뜨지 않는다) · V3 계정의 처음 비밀번호(비밀번호가 없는 계정에만, 기동 때 한 번) |
 | `SERVER_PORT` · `APP_STATIC` | 이미지 기본값 `3000` · `/opt/app/static` |
 | `BASE_PATH` | 비움(루트). 주면 그 아래로(context-path) |
 
@@ -65,5 +69,6 @@ ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은
 
 ## API 계약
 
-API 는 녹화한 응답(`contract/baseline/node`)을 바이트 수준까지 재현한다 — id 를 max+1 로 매기고, terms 의 id 12 중복을 그대로 두고, 숫자 스펙이 DOUBLE 인 것 등.
+API 는 json-server 의 모양을 녹화한 응답(`contract/baseline/node`)대로 재현하고, 그 위에 로그인 뒤의 권한 · 사용자별 값이 얹혀 있다(기준선 `contract/baseline/spring-v3`) —
+id 를 max+1 로 매기고, terms 의 id 12 중복을 그대로 두고, 숫자 스펙이 DOUBLE 인 것 등.
 같게 한 것 · 일부러 다르게 둔 것과 그 이유는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).

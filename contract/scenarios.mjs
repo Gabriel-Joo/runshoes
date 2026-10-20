@@ -248,7 +248,25 @@ export const AUTH_SCENARIOS = [
   W("A24", "다른 Origin 의 로그인 → 403", "POST", "/api/auth/login", { headers: { ...json, Origin: "https://evil.example" }, body: { email: "contract@runshoes.test", password: "contract456" }, expect: 403 }),
   W("A25", "/api/auth preflight → 204, CORS 헤더 없음", "OPTIONS", "/api/auth/refresh",
     { headers: { Origin: "https://evil.example", "Access-Control-Request-Method": "POST" }, expect: 204 }),
-  W("A26", "바꾼 비밀번호로 로그인 → 200", "POST", "/api/auth/login", { headers: json, body: { email: "contract@runshoes.test", password: "contract456" }, expect: 200 }),
+  W("A26", "바꾼 비밀번호로 로그인 → 200(성공하면 그 계정의 실패는 처음부터 센다)", "POST", "/api/auth/login", { headers: json, body: { email: "contract@runshoes.test", password: "contract456" }, capture: { c: "body.accessToken" }, expect: 200 }),
+
+  // 시도 제한(3단계, docs/AUTH_RATELIMIT_DESIGN.md) — 같은 계정 15분에 실패 5번이면 맞는 비밀번호도 429. 없는 이메일도 같다.
+  // 녹화기는 한 IP(127.0.0.1)라 IP 기준(20번)은 이 녹화에서 넘지 않는다 — 실패는 모두 13번
+  ...[27, 28, 29, 30, 31].map((n, i) => W(`A${n}`, `계약 계정 틀림 ${i + 1}번째 → 401`, "POST", "/api/auth/login",
+    { headers: json, body: { email: "contract@runshoes.test", password: `wrongpass${i}` }, expect: 401 })),
+  W("A32", "6번째 — 맞는 비밀번호도 429 + Retry-After · retryAfter", "POST", "/api/auth/login",
+    { headers: json, body: { email: "contract@runshoes.test", password: "contract456" }, volatile: ["retryAfter"], expect: 429 }),
+  ...[33, 34, 35, 36, 37].map((n, i) => W(`A${n}`, `없는 이메일 틀림 ${i + 1}번째 → 401`, "POST", "/api/auth/login",
+    { headers: json, body: { email: "nobody-contract@runshoes.test", password: `wrongpass${i}` }, expect: 401 })),
+  W("A38", "없는 이메일 6번째 → 같은 429(가입 여부가 드러나지 않게)", "POST", "/api/auth/login",
+    { headers: json, body: { email: "nobody-contract@runshoes.test", password: "wrongpass9" }, volatile: ["retryAfter"], expect: 429 }),
+
+  // 조회 기록(3단계) — 로그인한 사람만. 남겼는지는 말하지 않는다(언제나 204)
+  W("A39", "POST /api/activity shoe.view → 204", "POST", "/api/activity", { headers: jb("c"), body: { type: "shoe.view", shoeId: 3 }, expect: 204 }),
+  W("A40", "POST /api/activity 비로그인 → 401", "POST", "/api/activity", { headers: json, body: { type: "shoe.view", shoeId: 3 }, expect: 401 }),
+  W("A41", "POST /api/activity 모르는 type → 400", "POST", "/api/activity", { headers: jb("c"), body: { type: "hack" }, expect: 400 }),
+  W("A42", "POST /api/activity 없는 신발 → 404", "POST", "/api/activity", { headers: jb("c"), body: { type: "shoe.view", shoeId: 9999 }, expect: 404 }),
+  W("A43", "POST /api/activity compare.view(2개) → 204", "POST", "/api/activity", { headers: jb("c"), body: { type: "compare.view", shoeIds: [16, 2] }, expect: 204 }),
 ];
 
 // 요약 — V3 에서는 리뷰를 쓰려면 로그인해야 한다(S0). S5 내용은 10자 이상(V3 규칙) — 그래서 S9 프롬프트의 그 한 줄만 Node 기준선과 다르다

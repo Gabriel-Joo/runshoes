@@ -27,14 +27,17 @@ const normHeader = (k, v) => {
 };
 
 const isDateKey = (k) => k === "createdAt";
-// 시나리오의 volatile(예: ["createdAt"]) — 서버가 그때 정하는 값이라 둘 다 날짜인지만 본다(V3 부터 리뷰 시각은 서버가 정한다)
+// 시나리오의 volatile(예: ["createdAt"] · ["retryAfter"]) — 서버가 그때 정하는 값이라 형식만 본다(날짜 · 숫자)
 let volatile = new Set();
 function eq(x, y, p, diffs, key) {
   if (key && isDateKey(key) && typeof x === "string" && typeof y === "string") {
     if (volatile.has(key) ? Number.isNaN(Date.parse(x)) || Number.isNaN(Date.parse(y)) : Date.parse(x) !== Date.parse(y)) diffs.push(`${p}: ${x} ≠ ${y}`);
     return;
   }
-  if (typeof x === "number" && typeof y === "number") { if (Math.abs(x - y) > 1e-9) diffs.push(`${p}: ${x} ≠ ${y}`); return; }
+  if (typeof x === "number" && typeof y === "number") {
+    if (!(key && volatile.has(key)) && Math.abs(x - y) > 1e-9) diffs.push(`${p}: ${x} ≠ ${y}`);   // volatile 숫자(retryAfter)는 둘 다 숫자인지만
+    return;
+  }
   if (Array.isArray(x) || Array.isArray(y)) {
     if (!Array.isArray(x) || !Array.isArray(y)) return diffs.push(`${p}: 배열 아님`);
     if (x.length !== y.length) diffs.push(`${p}: 길이 ${x.length} ≠ ${y.length}`);
