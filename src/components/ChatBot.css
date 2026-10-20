@@ -1,18 +1,18 @@
 .chatbot-container {
   position: fixed;
-  bottom: 90px;
-  right: 30px;
+  bottom: var(--fab-offset);         /* 왼쪽 아래 — 오른쪽 아래 "맨 위로"와 대칭(tokens.css) */
+  left: var(--fab-offset);
   z-index: 1000;
 }
 
 .chatbot-toggle {
-  width: 64px;
-  height: 64px;
+  width: var(--fab-size);
+  height: var(--fab-size);
   border-radius: 50%;
   background: #14807a;
   color: white;
   border: none;
-  font-size: 32px; /* 24px → 32px */
+  font-size: calc(var(--fab-size) * 0.5);
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex; /* 아이콘 중앙 정렬 */
@@ -22,10 +22,10 @@
 
 .chatbot-window {
   position: absolute;
-  bottom: 76px;
-  right: 0;
-  width: 600px;
-  height: 700px;
+  bottom: calc(var(--fab-size) + 12px);
+  left: 0;                                         /* 버튼이 왼쪽 아래 — 창도 왼쪽 기준으로 연다 */
+  width: min(600px, calc(100vw - 2 * var(--fab-offset)));
+  height: min(700px, calc(100vh - var(--fab-size) - 12px - 2 * var(--fab-offset)));
   background: white;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);

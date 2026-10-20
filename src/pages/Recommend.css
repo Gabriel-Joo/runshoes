@@ -1,11 +1,11 @@
 .recommend {
   max-width: 720px;
   margin: 0 auto;
-  padding: 72px 48px 120px;
+  padding: 72px var(--page-gutter) max(120px, var(--fab-clearance));
 }
 
 .recommend--result {
-  max-width: 1100px;
+  max-width: 1280px;   /* 카드 글자 1.5배 — 2·3위 카드가 스펙을 한 줄에 담을 폭(약 320px) */
 }
 
 /* 진행 표시 */
@@ -124,8 +124,8 @@
 .recommend__top {
   margin-top: 40px;
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 40px;
+  grid-template-columns: 420px 1fr;
+  gap: 32px;
   align-items: start;
 }
 
@@ -219,7 +219,7 @@
 /* 반응형 */
 @media (max-width: 1199px) {
   .recommend {
-    padding: 56px 32px 80px;
+    padding: 56px var(--page-gutter) max(80px, var(--fab-clearance));
   }
   .recommend__top {
     grid-template-columns: 1fr;
@@ -232,7 +232,7 @@
 
 @media (max-width: 767px) {
   .recommend {
-    padding: 40px 20px 60px;
+    padding: 40px var(--page-gutter) max(60px, var(--fab-clearance));
   }
   .recommend__question {
     font-size: 21px;
