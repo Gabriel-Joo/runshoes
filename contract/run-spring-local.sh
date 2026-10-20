@@ -2,6 +2,7 @@
 # Spring 백엔드를 시드 상태에서 띄워 계약 시나리오를 녹화하고 Node 기준선과 비교한다(로컬, Phase 2~3).
 #   contract/run-spring-local.sh            # 본 시나리오 50건
 #   contract/run-spring-local.sh summary    # 요약 9건 — mock-ollama(:3109)를 같이 띄운다. 진짜 Ollama 는 부르지 않는다
+#   contract/run-spring-local.sh search     # 검색 24건 — json-server 에 없던 기능이라 기준선은 Spring 녹화(baseline/spring-search)
 #   IMAGE=runshoes:phase4 contract/run-spring-local.sh   # jar 대신 만든 이미지로(Phase 4 게이트)
 # 먼저 backend/target/runshoes-0.1.0.jar 와 dist/(yarn build)를 만든다(backend/README.md). MySQL 은 docker compose(:3307), 앱은 :3200.
 # 시나리오가 쓰기를 섞으므로 매번 DB 를 비우고(compose down -v) Flyway 시드부터 시작한다.
@@ -10,7 +11,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 SET=${1:-main}
 OUT=contract/run/spring${SET/main/}
-[ "$SET" = summary ] && OUT=contract/run/spring-summary
+[ "$SET" != main ] && OUT=contract/run/spring-$SET
 JAR=backend/target/runshoes-0.1.0.jar
 if [ -z "${IMAGE:-}" ]; then
   [ -f "$JAR" ] || { echo "$JAR 가 없다 — 먼저 빌드"; exit 2; }
@@ -53,6 +54,9 @@ rm -rf "$OUT"
 if [ "$SET" = summary ]; then
   node contract/record.mjs --base http://127.0.0.1:3200 --host runshoes.ronanlab.dev --set summary --mock http://127.0.0.1:3109 --out "$OUT" >/dev/null
   node contract/diff.mjs contract/baseline/node-summary "$OUT"
+elif [ "$SET" = search ]; then
+  node contract/record.mjs --base http://127.0.0.1:3200 --host runshoes.ronanlab.dev --set search --out "$OUT" >/dev/null
+  node contract/diff.mjs contract/baseline/spring-search "$OUT"
 else
   node contract/record.mjs --base http://127.0.0.1:3200 --host runshoes.ronanlab.dev --out "$OUT" >/dev/null
   node contract/diff.mjs contract/baseline/node "$OUT"

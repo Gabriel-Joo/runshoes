@@ -81,4 +81,33 @@ class ListQueryTest {
 		ListQuery.apply(shoes, q("_sort", "rating", "_order", "desc"));
 		assertEquals(copy, shoes);
 	}
+
+	private final List<Map<String, Object>> named = List.of(
+			doc("id", 1L, "brand", "아식스", "model", "젤 카야노 32", "purpose", "안정화"),
+			doc("id", 2L, "brand", "나이키", "model", "Pegasus 41", "purpose", "조깅·회복주"),
+			doc("id", 3L, "brand", "나이키", "model", "Vomero 18", "purpose", "장거리"),
+			doc("id", 4L, "brand", "호카", "model", "Clifton 10", "purpose", "조깅·회복주"));
+	private static final List<String> BM = List.of("brand", "model");
+
+	@Test
+	void search_는_브랜드와_모델에서_낱말을_모두_찾는다() {
+		assertEquals(List.of(2L, 3L), ids(ListQuery.apply(named, q("search", "나이키"), BM)));
+		assertEquals(List.of(2L), ids(ListQuery.apply(named, q("search", "나이키 peg"), BM)));
+		assertEquals(List.of(), ids(ListQuery.apply(named, q("search", "나이키 clifton"), BM)));
+		assertEquals(List.of(2L), ids(ListQuery.apply(named, q("search", "PEGASUS"), BM)));
+		assertEquals(List.of(1L), ids(ListQuery.apply(named, q("search", "젤카야노"), BM)));
+		assertEquals(List.of(1L, 2L, 3L, 4L), ids(ListQuery.apply(named, q("search", "   "), BM)));
+		assertEquals(List.of(), ids(ListQuery.apply(named, q("search", "안정화"), BM)));   // purpose 는 안 본다
+	}
+
+	@Test
+	void search_는_필터_정렬_limit_과_같이_돈다() {
+		ListQuery.Result r = ListQuery.apply(named, q("search", "나이키", "purpose", "조깅·회복주"), BM);
+		assertEquals(List.of(2L), ids(r));
+		r = ListQuery.apply(named, q("search", "나이키", "_sort", "model", "_order", "desc", "_limit", "1"), BM);
+		assertEquals(List.of(3L), ids(r));
+		assertEquals(2, r.totalCount());
+		// 검색 필드가 없는 컬렉션은 search 를 무시한다(필드 필터로도 쓰지 않는다)
+		assertEquals(List.of(1L, 2L, 3L, 4L), ids(ListQuery.apply(named, q("search", "나이키"))));
+	}
 }

@@ -116,3 +116,34 @@ export const SUMMARY_SCENARIOS = [
   { id: "S8", plan: 14, name: "mock 호출 수 = 2(개수가 바뀌어 다시 불렀다)", method: "GET", url: "{{mock}}/__calls", contract: false },
   { id: "S9", plan: 14, name: "mock 프롬프트(마지막 호출) — 프롬프트 문구 기준선", method: "GET", url: "{{mock}}/__last", contract: false },
 ];
+
+// 검색(search) — json-server 에 없던 것이라 Node 기준선이 없다. Spring 녹화(contract/baseline/spring-search)가 기준선이다.
+// 전부 읽기(시드 상태). 규칙: shoes 의 brand · model 에서, 띄어쓰기로 나눈 낱말이 모두 있어야(AND), 대소문자 무시, 공백 빼고도 맞춘다.
+// 홈은 purpose · liked · _sort 와, 등록·관리는 brand · _sort 와 같이 보낸다(ShoeList.tsx · Admin.tsx). id 가 Q 로 시작 — 운영 --read-only 에도 든다
+const S = (id, name, path) => ({ id, name, method: "GET", path });
+export const SEARCH_SCENARIOS = [
+  S("Q01", "브랜드 — 나이키", "/api/shoes?search=나이키"),
+  S("Q02", "모델명 — 페가수스", "/api/shoes?search=페가수스"),
+  S("Q03", "낱말 AND, 브랜드+모델 — 아식스 젤", "/api/shoes?search=아식스%20젤"),
+  S("Q04", "낱말 AND, 맞는 신발 없음 — 나이키 클리프톤 → []", "/api/shoes?search=나이키%20클리프톤"),
+  S("Q05", "공백 무시 — 젤카야노 → 젤 카야노 32", "/api/shoes?search=젤카야노"),
+  S("Q06", "대소문자 무시 — x 880 → 프레시폼 X 880 v15", "/api/shoes?search=x%20880"),
+  S("Q07", "+ 는 띄어쓰기(URLSearchParams 모양) — 아식스+젤", "/api/shoes?search=아식스+젤"),
+  S("Q08", "앞뒤 · 여러 칸 공백 — '  나이키   플라이 '", "/api/shoes?search=%20%20나이키%20%20%20플라이%20"),
+  S("Q09", "공백만 → 거르지 않음(전체)", "/api/shoes?search=%20%20"),
+  S("Q10", "빈 값 → 거르지 않음(전체)", "/api/shoes?search="),
+  S("Q11", "정규식 문자는 글자 그대로 — .* → []", "/api/shoes?search=.*"),
+  S("Q12", "괄호 하나 — ( → [] (500 아님)", "/api/shoes?search=("),
+  S("Q13", "용도는 찾지 않는다 — 조깅 → []", "/api/shoes?search=조깅"),
+  S("Q14", "홈 조합 — 조깅·회복주 + 나이키", "/api/shoes?purpose=조깅·회복주&search=나이키"),
+  S("Q15", "홈 조합 — 찜만 + 플라이", "/api/shoes?liked=true&search=플라이"),
+  S("Q16", "홈 조합 — 아디다스 + 평점순", "/api/shoes?search=아디다스&_sort=rating&_order=desc"),
+  S("Q17", "홈 조합 — 조깅·회복주 + 호카 + 찜순", "/api/shoes?purpose=조깅·회복주&search=호카&_sort=likeCount&_order=desc"),
+  S("Q18", "관리 조합 — 브랜드 칩 호카 + 스피드 + 모델명순", "/api/shoes?brand=호카&search=스피드&_sort=model"),
+  S("Q19", "관리 — 아디다스 + 브랜드순", "/api/shoes?search=아디다스&_sort=brand"),
+  S("Q20", "페이지 대비 — 아디다스 + _limit=2 → X-Total-Count 4", "/api/shoes?search=아디다스&_limit=2"),
+  S("Q21", "페이지 대비 — 아디다스 + _start=2&_end=4", "/api/shoes?search=아디다스&_start=2&_end=4"),
+  S("Q22", "다른 컬렉션은 search 무시 — reviews?shoeId=3&search=zzz = shoeId=3", "/api/reviews?shoeId=3&search=zzz"),
+  S("Q23", "관리 — 전체 개수만(_limit=0 → [] + X-Total-Count 20)", "/api/shoes?_limit=0"),
+  S("Q24", "관리 — 브랜드 칩 목록 /api/brands(id 순 첫 등장)", "/api/brands"),
+];

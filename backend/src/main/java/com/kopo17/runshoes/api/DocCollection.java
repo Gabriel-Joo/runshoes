@@ -12,6 +12,11 @@ interface DocCollection {
 
 	String name();
 
+	/** GET 목록의 search 가 볼 필드 — 기본은 없음(search 무시) */
+	default List<String> searchFields() {
+		return List.of();
+	}
+
 	/** id(terms 는 row_no) 순 — json-server 의 삽입 순서 */
 	List<Map<String, Object>> all();
 

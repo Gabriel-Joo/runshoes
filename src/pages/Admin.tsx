@@ -1,9 +1,11 @@
 import { API } from "../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useDebounced } from "../useDebounced";
 import { Link, useNavigate } from "react-router-dom";
 import type { Shoe } from "../types";
 import ShoeImage from "../components/ShoeImage";
 import ConfirmModal from "../components/ConfirmModal";
+import SearchBox from "../components/SearchBox";
 import "./Admin.css";
 
 const SORTS = [
@@ -20,26 +22,47 @@ function Admin() {
   const [keyword, setKeyword] = useState("");
   const [sort, setSort] = useState("id");
   const [target, setTarget] = useState<Shoe | null>(null);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [reload, setReload] = useState(0);
 
-  const getShoes = async () => {
-    const res = await fetch(`${API}/shoes`);
-    setShoes(await res.json());
-  };
+  const search = useDebounced(keyword.trim());
+
+  // 홈과 같은 서버 검색(search = 브랜드 · 모델명, 낱말 AND) — 브랜드 칩 · 정렬도 서버가 한다
+  const query = useMemo(() => {
+    const p = new URLSearchParams();
+    if (brand !== "전체") p.set("brand", brand);
+    if (search) p.set("search", search);
+    p.set("_sort", sort);
+    return p.toString();
+  }, [brand, search, sort]);
 
   useEffect(() => {
-    getShoes();
-  }, []);
+    const ctrl = new AbortController();
+    fetch(`${API}/shoes?${query}`, { signal: ctrl.signal })
+      .then((res) => res.json())
+      .then((list: Shoe[]) => {
+        setShoes(list);
+        setLoaded(true);
+      })
+      .catch((e) => {
+        if (e.name !== "AbortError") console.error(e);
+      });
+    return () => ctrl.abort();
+  }, [query, reload]);
 
-  const brands = ["전체", ...new Set(shoes.map((s) => s.brand))];
+  // 브랜드 칩과 "전체 N개"는 검색 결과와 상관없이 전부 — 목록을 다 받지 않고 브랜드 목록 · 개수만
+  useEffect(() => {
+    fetch(`${API}/brands`)
+      .then((res) => res.json())
+      .then(setBrands);
+    fetch(`${API}/shoes?_limit=0`).then((res) =>
+      setTotal(Number(res.headers.get("X-Total-Count") ?? 0)),
+    );
+  }, [reload]);
 
-  const visibleShoes = shoes
-    .filter((s) => brand === "전체" || s.brand === brand)
-    .filter((s) => s.model.toLowerCase().includes(keyword.trim().toLowerCase()))
-    .sort((a, b) => {
-      if (sort === "id") return a.id - b.id;
-      if (sort === "brand") return a.brand.localeCompare(b.brand);
-      return a.model.localeCompare(b.model);
-    });
+  const getShoes = () => setReload((n) => n + 1);
 
   const removeShoe = async () => {
     if (!target) return;
@@ -71,7 +94,7 @@ function Admin() {
       </div>
 
       <div className="admin__brands">
-        {brands.map((b) => (
+        {["전체", ...brands].map((b) => (
           <button
             key={b}
             className={`admin__brand ${brand === b ? "is-active" : ""}`}
@@ -83,13 +106,9 @@ function Admin() {
       </div>
 
       <div className="admin__tools">
-        <input
-          className="admin__search"
-          type="text"
-          placeholder="모델명 검색"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
+        <div className="admin__search">
+          <SearchBox value={keyword} onChange={setKeyword} />
+        </div>
 
         <div className="admin__sorts">
           {SORTS.map((s) => (
@@ -105,15 +124,15 @@ function Admin() {
       </div>
 
       <p className="admin__count">
-        {visibleShoes.length}개 / 전체 {shoes.length}개
+        {shoes.length}개 / 전체 {total}개
       </p>
 
       <ul className="admin__list">
-        {visibleShoes.length === 0 && (
+        {loaded && shoes.length === 0 && (
           <li className="admin__empty">조건에 맞는 러닝화가 없습니다.</li>
         )}
 
-        {visibleShoes.map((shoe) => (
+        {shoes.map((shoe) => (
           <li className="admin__row" key={shoe.id}>
             <div className="admin__thumb">
               <ShoeImage src={shoe.image} alt={shoe.model} />

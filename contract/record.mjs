@@ -3,7 +3,8 @@
 //
 //   node contract/record.mjs --base http://192.168.122.240 --host runshoes.ronanlab.dev --out contract/baseline/node
 //   node contract/record.mjs --base http://127.0.0.1:3101 --set summary --mock http://127.0.0.1:3109 --out contract/baseline/node-summary
-//   --read-only: 읽기 시나리오(id 30 미만)만 — 되돌리기 어려운 곳(전환 뒤 운영 MySQL)에서
+//   --set search: 검색 시나리오(Q01~, 전부 읽기) — 기준선은 Spring 녹화 contract/baseline/spring-search
+//   --read-only: 읽기 시나리오(id 30 미만 · Q)만 — 되돌리기 어려운 곳(전환 뒤 운영 MySQL)에서
 //
 // --base 로 붙고 Host 헤더만 --host 로 바꾼다 — Cloudflare 를 거치지 않고 ingress 로 바로 간다(Location 등 헤더가 Cloudflare 에 바뀌지 않게).
 // 파일: <out>/<id>.json 하나씩 + <out>/index.json(언제·어디·무엇으로). 비교는 contract/diff.mjs.
@@ -12,7 +13,7 @@ import https from "node:https";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { SCENARIOS, SUMMARY_SCENARIOS } from "./scenarios.mjs";
+import { SCENARIOS, SUMMARY_SCENARIOS, SEARCH_SCENARIOS } from "./scenarios.mjs";
 
 const argv = process.argv.slice(2);
 const readOnly = argv.includes("--read-only");
@@ -22,7 +23,8 @@ const args = Object.fromEntries(
 const base = new URL(args.base ?? "http://127.0.0.1:3000");
 const hostHeader = args.host ?? base.host;
 const out = args.out ?? "contract/baseline/node";
-const set = (args.set === "summary" ? SUMMARY_SCENARIOS : SCENARIOS).filter((sc) => !readOnly || sc.id < "30");
+const SETS = { main: SCENARIOS, summary: SUMMARY_SCENARIOS, search: SEARCH_SCENARIOS };
+const set = SETS[args.set ?? "main"].filter((sc) => !readOnly || sc.id < "30" || sc.id.startsWith("Q"));
 const vars = { mock: args.mock ?? "http://127.0.0.1:3109" };
 
 // {{이름}} → 문자열, {{이름:num}} → 숫자(JSON 본문의 shoeId 처럼 타입이 중요한 곳)
