@@ -48,6 +48,13 @@
 .card__badge--shifted {
   left: calc(8px + calc(42px * var(--text-scale)));   /* 순위 상자(38px × 배율) 오른쪽 */
 }
+/* 카드가 좁아지는 폭에서는 순위 상자 아래로 — 오른쪽 위 찜 알약과 같은 줄에 두면 겹친다(/best 768 · 360) */
+@media (max-width: 1199px) {
+  .card__badge--shifted {
+    left: 8px;
+    top: calc(calc(38px * var(--text-scale)) + 8px);
+  }
+}
 .card__like {
   position: absolute;
   top: 6px;
@@ -55,13 +62,13 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: calc(5px * var(--text-scale));
-  height: calc(32px * var(--text-scale));
-  padding: 0 calc(12px * var(--text-scale));
+  gap: calc(5px * var(--like-scale));
+  height: calc(32px * var(--like-scale));
+  padding: 0 calc(12px * var(--like-scale));
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--border-light);
-  font-size: calc(var(--fs-card-like) * var(--text-scale));
+  font-size: calc(var(--fs-card-like) * var(--like-scale));
   color: var(--text-weak);
   line-height: 1;
   transition:
@@ -78,7 +85,7 @@
 }
 
 .card__like em {
-  font-size: calc(var(--fs-card-like-count) * var(--text-scale));
+  font-size: calc(var(--fs-card-like-count) * var(--like-scale));
   font-style: normal;
   font-weight: 600;
 }
