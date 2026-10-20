@@ -228,24 +228,20 @@
   }
 }
 
-/* 리뷰 접기 — 모바일에서만. 처음 3개(베스트 포함)만 보이고 나머지는 "리뷰 전체보기"로 편다. 데스크톱 · 태블릿은 늘 전부 */
+/* 리뷰 펼치기 — 처음에는 베스트(또는 최신) 하나만, 나머지는 이 버튼으로(ReviewSection) */
 .review__more {
-  display: none;
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-@media (max-width: 767px) {
-  .review__list:not(.is-expanded) .review__item--extra {
-    display: none;
-  }
-  .review__more {
-    display: block;
-    width: 100%;
-    margin-top: 12px;
-    padding: 11px;
-    border: 1px solid var(--border);
-    background: #fff;
-    color: var(--text-mid);
-    font-size: 13px;
-    font-weight: 600;
-  }
+.review__more:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }

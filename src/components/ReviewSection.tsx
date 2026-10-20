@@ -87,25 +87,22 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
     });
     await getReviews();
   };
-  const bestReview = reviews
-    .filter((r) => (r.likeCount ?? 0) > 0)
-    .sort(
-      (a, b) =>
-        (b.likeCount ?? 0) - (a.likeCount ?? 0) ||
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )[0];
+  // 처음에는 하나만 보인다 — "도움이 돼요"가 가장 많은 리뷰, 동점이면 최신. 전부 0이면 최신 리뷰(베스트 표시 없이)
+  const bestReview = [...reviews].sort(
+    (a, b) =>
+      (b.likeCount ?? 0) - (a.likeCount ?? 0) ||
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )[0];
+  const isBest = (bestReview?.likeCount ?? 0) > 0;
 
+  // 나머지는 "리뷰 전체보기"로 편다 — reviews 순서(최신순) 그대로
   const restReviews = reviews.filter((r) => r.id !== bestReview?.id);
-
-  // 모바일에서는 처음 COLLAPSED 개만 보이고 나머지는 "리뷰 전체보기"로 편다(숨기는 것은 CSS 미디어 쿼리 — 데스크톱은 늘 전부)
-  const COLLAPSED = 3;
-  const shownBefore = bestReview ? 1 : 0;
 
   return (
     <section className="review">
       <h3 className="review__title">리뷰 {reviews.length}</h3>
 
-      <ul className={`review__list ${expanded ? "is-expanded" : ""}`}>
+      <ul className="review__list">
         {reviews.length === 0 && (
           <li className="review__empty">아직 등록된 리뷰가 없습니다.</li>
         )}
@@ -114,18 +111,17 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           <ReviewItem
             key={bestReview.id}
             review={bestReview}
-            isBest
+            isBest={isBest}
             onUpdate={updateReview}
             onDeleteRequest={setDeleteTarget}
             onLike={toggleLike}
           />
         )}
 
-        {restReviews.map((review, i) => (
+        {expanded && restReviews.map((review) => (
           <ReviewItem
             key={review.id}
             review={review}
-            extra={shownBefore + i >= COLLAPSED}
             onUpdate={updateReview}
             onDeleteRequest={setDeleteTarget}
             onLike={toggleLike}
@@ -133,7 +129,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
         ))}
       </ul>
 
-      {reviews.length > COLLAPSED && (
+      {restReviews.length > 0 && (
         <button className="review__more" onClick={() => setExpanded((v) => !v)} aria-expanded={expanded}>
           {expanded ? "리뷰 접기" : `리뷰 전체보기 (${reviews.length}개)`}
         </button>

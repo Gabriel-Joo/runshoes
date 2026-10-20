@@ -5,8 +5,6 @@ import { formatDate } from "../utils/date";
 interface ReviewItemProps {
   review: Review;
   isBest?: boolean;
-  /** 모바일에서 리뷰를 접었을 때 숨는 항목(ReviewSection) */
-  extra?: boolean;
   onUpdate: (id: number, rating: number, content: string) => void;
   onDeleteRequest: (review: Review) => void;
   onLike: (review: Review) => void;
@@ -15,7 +13,6 @@ interface ReviewItemProps {
 function ReviewItem({
   review,
   isBest,
-  extra,
   onUpdate,
   onDeleteRequest,
   onLike,
@@ -40,7 +37,7 @@ function ReviewItem({
   };
 
   return (
-    <li className={`review__item ${isBest ? "is-best" : ""} ${extra ? "review__item--extra" : ""}`}>
+    <li className={`review__item ${isBest ? "is-best" : ""}`}>
       {isEditing ? (
         <div className="review__edit">
           <div className="review__head">
