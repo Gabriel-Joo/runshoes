@@ -33,6 +33,18 @@ app:
     cookie-secure: ${AUTH_COOKIE_SECURE:true}     # 로컬 http 에서만 false
     seed-user-password: ${SEED_USER_PASSWORD:}
     admin-password: ${ADMIN_PASSWORD:}
+  # 로그인 시도 제한 · 활동 로그(docs/AUTH_RATELIMIT_DESIGN.md)
+  ratelimit:
+    login-account: 5        # 같은 계정(이메일) 15분에 실패 5번 → 마지막 실패에서 15분
+    login-ip: 20            # 같은 IP 15분에 실패 20번
+    login-window: 15m
+    signup-ip: 10           # 같은 IP 1시간에 가입 10건
+    signup-window: 1h
+  activity:
+    retention-auth: 90d     # auth.* · user.*
+    retention-other: 180d   # review.* · like.* · review_like.* · shoe.* · compare.*
+    cleanup-cron: ${ACTIVITY_CLEANUP_CRON:0 0 4 * * *}   # 매일 04:00(Asia/Seoul)
+    warn-rows: 500000       # 남은 행이 넘으면 정리 job 이 WARN
   static-path: ${APP_STATIC:/opt/app/static}   # Vite dist — config/SpaConfig
   ollama:
     url: ${OLLAMA_URL:http://localhost:11434}

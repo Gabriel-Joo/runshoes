@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Spring 백엔드를 시드 상태에서 띄워 계약 시나리오를 녹화하고 기준선과 비교한다(로컬).
-#   contract/run-spring-local.sh v3          # V3(로그인) 뒤 계약 98건 — 기준선 baseline/spring-v3(읽기 R · 쓰기 W · 인증 A)
+#   contract/run-spring-local.sh v3          # V3(로그인) 뒤 계약 115건 — 기준선 baseline/spring-v3(읽기 R · 쓰기 W · 인증 A)
 #   contract/run-spring-local.sh v3-search   # 검색 24건 — 기준선 baseline/spring-v3-search
 #   contract/run-spring-local.sh v3-summary  # 요약 10건 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다. 기준선 baseline/spring-v3-summary
 #   main · summary · search                 # V3 전 기준선(node · node-summary · spring-search) — 이력. V3 뒤 앱에는 맞지 않는다(작성자 · 쓰기 401)

@@ -54,6 +54,8 @@ ArgoCD는 Git을 **읽어** 클러스터를 맞춘다. Git이 유일한 접점�
 | **Ollama** | GPU 호스트 `192.168.122.1:11434` | 리뷰 요약 · 챗봇. Pod가 VM 사설망으로 바로 부른다 |
 
 Jenkins · Harbor · ArgoCD는 Cloudflare Access 뒤에 있다(로그인해야 열린다). runshoes 공개 주소에는 Access가 없다.
+그래서 GPU 호스트의 `docker pull harbor.ronanlab.dev/...`는 Access 로그인 페이지(302 HTML)를 받아 실패한다 — 노드는 `/etc/hosts`로 내부 VIP(192.168.122.240)에 붙어 상관없다.
+배포 전 이미지 확인은 노드의 containerd로 한다(`apps/runshoes/scripts/check-image-migrations.sh`).
 
 ---
 
@@ -185,6 +187,8 @@ git push -q origin HEAD:main     # 실패하면 최신 main 위에서 다시(3�
 - **ronanlab-infra는 `sh 'git clone'`으로** — Jenkins 폴링은 빌드 중 git 단계로 받은 저장소를 전부 감시한다. git 단계로 받으면 태그 push가 빌드를 다시 부르고, 그 빌드가 또 push하는 루프가 된다
 - **deploy key** — ronanlab-infra 쓰기 전용 SSH 키(`ronanlab-infra-deploy-key`). 토큰과 달리 만료로 배포가 조용히 멈추지 않는다. GitHub 호스트 키는 박아 둔다
 - **push 재시도** — 같은 저장소에 다른 프로젝트 Jenkins도 태그를 push한다. 먼저 push됐으면 최신 main을 받아 다시 바꾼다
+- **태그 커밋은 Jenkins가 직접 main에 올린다** — 앱을 push하면 몇 분 뒤 ronanlab-infra main에 새 태그가 생긴다. 매니페스트 변경(예: Secret envFrom)을
+  이미지보다 먼저 내보내야 하면, 그 매니페스트를 Sync한 뒤에 앱을 push한다. 순서를 바꾸면 main 한 번의 Sync에 둘이 같이 들어간다(10장)
 
 ---
 
@@ -200,7 +204,9 @@ apps/runshoes/
 ├─ app/deployment.yaml        ← runshoes(Spring) + chatbot 컨테이너
 ├─ app/service.yaml           ← 포트 http(80→3000) · chatbot(8766)
 ├─ app/ingress.yaml           ← / → http, /ws/chat → chatbot
-├─ scripts/create-secrets.sh  ← runshoes-mysql · harbor-pull (사람이 돌린다)
+├─ scripts/create-secrets.sh  ← runshoes-mysql · harbor-pull · runshoes-auth (사람이 돌린다)
+├─ scripts/check-image-migrations.sh ← Harbor 이미지 안의 Flyway 파일 sha256(배포 전 확인)
+├─ runbooks/auth-v3.md        ← 스키마를 바꾸는 배포 — 백업 · 지문 확인 · 복구
 └─ README.md
 ```
 
@@ -210,6 +216,7 @@ apps/runshoes/
 - **Ready는 DB까지** — `/actuator/health/readiness`(readinessState + db). startup `/actuator/health`(최대 2분 — Flyway 첫 기동), liveness `/actuator/health/liveness`
 - **종료** — preStop 5초(Ingress가 엔드포인트를 뺄 시간) → SIGTERM → graceful shutdown(최대 20초)
 - **DB 접속** — `SPRING_DATASOURCE_URL=jdbc:mysql://runshoes-mysql:3306/runshoes?…connectionTimeZone=UTC`, 계정 `runshoes`, 비밀번호는 Secret `runshoes-mysql`. `TZ=UTC`
+- **로그인** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`). optional이 아니다 — Secret이 없으면 새 Pod가 `CreateContainerConfigError`로 멈추고 옛 Pod가 계속 돈다(maxUnavailable 0). 앱은 `JWT_SECRET` 없이 뜨지 않는다
 - **챗봇 사이드카** — 같은 Pod의 별도 컨테이너. Ingress가 `/ws/chat`을 8766으로 보낸다(rewrite 없음). WebSocket이 끊기지 않게 Ingress 프록시 제한을 1시간으로
 - **Ollama 직접 연결** — 두 컨테이너 모두 `OLLAMA_URL=http://192.168.122.1:11434`. Pod에서 VM 사설망의 GPU 호스트로 바로 간다
 - **보안** — Spring 컨테이너는 `runAsNonRoot: true`(이미지 사용자 10001). 챗봇 컨테이너는 root
@@ -219,10 +226,11 @@ apps/runshoes/
 
 - MySQL 8.0.46, utf8mb4 · `utf8mb4_unicode_ci` · `default-time-zone=+00:00` · performance_schema 끔 · buffer pool 256M. 200m/512Mi · limit 1Gi
 - 데이터베이스 `runshoes`와 계정은 이미지가 첫 기동에 만든다(`MYSQL_DATABASE` · `MYSQL_USER`). 스키마 · 시드는 앱의 Flyway(V1 스키마, V2 시드)
-- local-path(노드 디스크)라 PV가 노드에 묶인다 — w1 선호(nodeAffinity preferred). PVC는 Retain — StatefulSet을 지워도 남는다. 백업은 `mysqldump`(apps/runshoes/README.md)
+- local-path(노드 디스크)라 PV가 노드에 묶인다 — w1 선호(nodeAffinity preferred). PVC는 Retain — StatefulSet을 지워도 남는다
+- 정기 백업은 없다. 스키마를 바꾸는 배포 전에는 `mysqldump --single-transaction`으로 뜨고, 로컬 MySQL에 다른 이름으로 넣어 지문까지 맞춘 뒤 Sync한다(`runbooks/auth-v3.md`)
 - 프로브는 `mysqladmin ping -h 127.0.0.1`(비밀번호를 인자에 남기지 않는다)
 
-**Namespace · Secret은 사람이 만든다** — `harbor-pull` · `runshoes-mysql`이 거기 있다. ArgoCD가 Namespace를 소유하면 Application 삭제 · prune 한 번에 Secret까지 사라질 수 있다.
+**Namespace · Secret은 사람이 만든다** — `harbor-pull` · `runshoes-mysql` · `runshoes-auth`가 거기 있다. ArgoCD가 Namespace를 소유하면 Application 삭제 · prune 한 번에 Secret까지 사라질 수 있다.
 Ingress — ingress-nginx, 호스트 `runshoes.ronanlab.dev`. TLS는 Cloudflare 엣지에서 끝난다(`ssl-redirect: "false"`).
 
 ---
@@ -270,7 +278,8 @@ spec:
 
 **되돌리기**: ronanlab-infra의 태그 커밋을 `git revert` → push → Sync. DB 스키마는 되돌아가지 않는다 — 스키마 변경은 앞으로만(Flyway 다음 버전), 적용된 마이그레이션 파일은 고치지 않는다.
 
-**DB 구조를 바꾸는 배포**: 마이그레이션(V3…)이 옛 앱과 새 앱 양쪽에서 돌 수 있게 만든다 — 롤링 중 두 버전이 같은 DB를 잠깐 함께 쓴다.
+**DB 구조를 바꾸는 배포**: 마이그레이션은 추가만 한다(지우는 것은 다음 버전) — 롤링 중 옛 앱과 새 앱이 같은 DB를 잠깐 함께 쓰고, 옛 이미지로 되돌려도 뜬다
+(Flyway는 모르는 future 마이그레이션을 넘기고, `ddl-auto: validate`는 늘어난 테이블 · 컬럼을 문제 삼지 않는다). 순서는 Secret · 매니페스트 Sync → 앱 push → 이미지 확인 → 덤프 → 지문 → 이미지 Sync(`runbooks/auth-v3.md`).
 
 **외부 노출**: 공용 터널 설정은 ronanlab-infra `platform/cloudflared/configmap.yaml`. 호스트를 더하면
 Sync → `kubectl -n cloudflared rollout restart deploy/cloudflared`(cloudflared는 기동 때만 설정을 읽는다) → Cloudflare DNS CNAME을

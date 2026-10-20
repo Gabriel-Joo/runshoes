@@ -6,6 +6,7 @@ import { AuthError, safeReturnTo, signup } from "../auth/session";
 import { emailError, nicknameError, passwordError } from "../auth/rules";
 import { useDebounced } from "../useDebounced";
 import Field from "../auth/Field";
+import { useCooldown } from "../auth/useCooldown";
 import "./Auth.css";
 
 type Key = "email" | "password" | "confirm" | "nickname";
@@ -21,9 +22,10 @@ function Signup() {
   const returnTo = safeReturnTo(params.get("returnTo"));
   const [v, setV] = useState({ email: "", password: "", confirm: "", nickname: "" });
   const [touched, setTouched] = useState<Partial<Record<Key, boolean>>>({});
-  const [server, setServer] = useState<{ field?: string; message: string } | null>(null);
+  const [server, setServer] = useState<{ field?: string; message: string; limited?: boolean } | null>(null);
   const [nickCheck, setNickCheck] = useState<{ nickname: string; ok: boolean; message: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const cooldown = useCooldown();
 
   const local: Record<Key, string | null> = {
     email: emailError(v.email),
@@ -66,7 +68,8 @@ function Signup() {
       setNotice(`${u.nickname}님, 환영해요`);
       navigate(returnTo, { replace: true });
     } catch (err) {
-      setServer(err instanceof AuthError ? { field: err.field, message: err.message } : { message: "잠시 뒤 다시 해 주세요." });
+      setServer(err instanceof AuthError ? { field: err.field, message: err.message, limited: err.status === 429 } : { message: "잠시 뒤 다시 해 주세요." });
+      if (err instanceof AuthError && err.status === 429 && err.retryAfter) cooldown.start(err.retryAfter);
       setBusy(false);
     }
   };
@@ -83,8 +86,12 @@ function Signup() {
         <Field id="signup-nickname" label="닉네임" autoComplete="nickname" value={v.nickname} onChange={change("nickname")} onBlur={blur("nickname")}
           error={shown("nickname") ?? (nickResult && !nickResult.ok ? nickResult.message : null)} ok={nickResult?.ok ? nickResult.message : null}
           hint="2~12자, 한글 · 영문 · 숫자. 리뷰에 이 이름이 보여요" />
-        {server && !server.field && <p className="auth__error" role="alert">{server.message}</p>}
-        <button className="auth__submit" type="submit" disabled={busy}>
+        {server && !server.field && (!server.limited || cooldown.active) && (
+          <p className="auth__error" role="alert">
+            {server.limited ? cooldown.message(server.message) : server.message}
+          </p>
+        )}
+        <button className="auth__submit" type="submit" disabled={busy || (Boolean(server?.limited) && cooldown.active)}>
           {busy ? "가입 중…" : "가입하기"}
         </button>
       </form>

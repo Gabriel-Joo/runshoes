@@ -21,11 +21,14 @@ export class AuthError extends Error {
   code: string;
   field?: string;
   status: number;
-  constructor(status: number, code: string, message: string, field?: string) {
+  /** 429 — 몇 초 뒤 다시(서버의 retryAfter) */
+  retryAfter?: number;
+  constructor(status: number, code: string, message: string, field?: string, retryAfter?: number) {
     super(message);
     this.status = status;
     this.code = code;
     this.field = field;
+    this.retryAfter = retryAfter;
   }
 }
 
@@ -62,7 +65,7 @@ async function authCall(path: string, init: RequestInit = {}): Promise<Response>
   if (!res.ok) {
     const body = await res.json().catch(() => null);
     const e = body?.error;
-    throw new AuthError(res.status, e?.code ?? "ERROR", e?.message ?? "잠시 뒤 다시 해 주세요.", e?.field);
+    throw new AuthError(res.status, e?.code ?? "ERROR", e?.message ?? "잠시 뒤 다시 해 주세요.", e?.field, e?.retryAfter);
   }
   return res;
 }
