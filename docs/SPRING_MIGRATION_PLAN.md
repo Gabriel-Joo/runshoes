@@ -1,5 +1,9 @@
 # RUNSHOES — Spring Boot 3 + MySQL 8 전환 계획
 
+> **✅ 2026-10-21 전환 완료 — 이 문서는 계획 기록이다.** 실행 결과와 계획에서 달라진 점은 [HISTORY.md](HISTORY.md) 4장,
+> 실제로 재현한 API 계약과 그 근거는 [API_CONTRACT.md](API_CONTRACT.md), 지금 구성은 [INFRA.md](INFRA.md) · [backend/README.md](../backend/README.md).
+> 아래 본문(특히 0~2장, Phase 1~4)은 작성 당시의 판단 그대로 두었다 — 녹화한 실제 응답과 다른 곳은 API_CONTRACT 가 맞다.
+
 > **작성일: 2026-09-22**
 >
 > **이 계획을 시작하기 전에 먼저 확인할 것:**
@@ -272,13 +276,13 @@ management:
 **게이트**: 구서버(`PORT=3101 DB_PATH=<임시복사본> NODE_ENV=production OLLAMA_URL=http://localhost:3109
 node server.cjs`) 기준 응답 녹화 — 아래 Phase 2의 전체 시나리오 목록이 이 시점에 확정됨.
 
-### Phase 1 — 스키마 + 시드 + 로컬 MySQL (1일)
+### Phase 1 — 스키마 + 시드 + 로컬 MySQL (1일) — ✅ 2026-10-18 (HISTORY 4.2)
 **산출물**: `docker-compose.yml`(루트; mysql:8.0 — utf8mb4, UTC, named volume, healthcheck
 `mysqladmin ping`), `backend/pom.xml` + `V1/V2` + `gen-seed-sql.mjs`.
 **게이트**: `docker compose up -d` → `mvn spring-boot:run`(3개 컨트롤러 없이 Flyway만) 부팅
 로그에서 `Successfully applied 2 migrations`, SQL 검증(0장 검증 표 항목).
 
-### Phase 2 — API 패리티 (2–3일, 핵심)
+### Phase 2 — API 패리티 (2–3일, 핵심) — ✅ 2026-10-18 (HISTORY 4.2)
 **산출물**: 엔티티/리포지토리/컨트롤러/JsonMerger/에러 핸들러/CORS·no-store/Jackson.
 `scripts/contract-diff.mjs` 완성.
 **harness 시나리오**(구/신 동시 구동, 동일 시퀀스 투입, 상태코드+JSON+헤더 비교):
@@ -303,7 +307,7 @@ node server.cjs`) 기준 응답 녹화 — 아래 Phase 2의 전체 시나리오
   `liked` 부재 = `false`, decimal `4` ≡ `4.0`. 그 외는 엄격 diff.
 **게이트**: 시나리오 1–13 전부 green(14는 Phase 3).
 
-### Phase 3 — SPA 서빙 + summary 실연 (1일)
+### Phase 3 — SPA 서빙 + summary 실연 (1일) — ✅ 2026-10-18, 요약은 mock 으로 (HISTORY 4.2)
 **산출물**: SpaForward + BASE_PATH(context-path) + 압축.
 `backend/src/main/resources/static` 없이 `APP_STATIC` 경로 테스트.
 **로컬 e2e 클릭 리스트**(`yarn dev` 5173 → Spring 3000 → compose MySQL; 챗봇은
@@ -321,7 +325,7 @@ node server.cjs`) 기준 응답 녹화 — 아래 Phase 2의 전체 시나리오
 - 챗봇 WS 연결/발화(선택)
 **게이트**: harness 1–14 전부 green + 위 클릭 리스트 통과 + `yarn build` 프론트 무변경 확인.
 
-### Phase 4 — 컨테이너 + Jenkins (1일)
+### Phase 4 — 컨테이너 + Jenkins (1일) — ✅ 2026-10-18, jlink 로 252MB (HISTORY 4.2)
 **산출물**: 루트 `Dockerfile` 교체(멀티스테이지 3단), `.dockerignore` 갱신, Jenkinsfile(옵션 조정).
 **Dockerfile**:
 ```dockerfile
@@ -361,7 +365,7 @@ ENTRYPOINT ["java","-XX:MaxRAMPercentage=65","-jar","app.jar"]
 `docker run -p 3000:3000 --network host`(compose MySQL)로 **harness 전 시나리오 재실행 green**
 (컨테이너 환경 패리티).
 
-### Phase 5 — 매니페스트 + cutover (1–2일) — 자체 클러스터 기준 (2026-10-18 다시 씀)
+### Phase 5 — 매니페스트 + cutover (1–2일) — 자체 클러스터 기준 (2026-10-18 다시 씀) — ✅ 2026-10-21, 끊김 0 (HISTORY 4.3)
 
 > 전 판(학교 vcluster · `nfs-std-1` · gitops 레포에 stringData Secret · ollama 터널)을 바꿨다. 지금 배포의 사실은
 > ronanlab-infra `apps/runshoes/README.md` · docs/INFRA.md 8·9장.
@@ -489,7 +493,7 @@ ronanlab-infra 에서 커밋 B 와 태그 커밋 N 을 revert → push → **Syn
 **전환 뒤 MySQL 에 쓴 데이터는 롤백하면 안 보인다**(Node 는 db.json 을 읽는다) — 전환 직후 관찰 기간을 둔다.
 MySQL StatefulSet · PVC 는 롤백해도 그대로 둔다(prune 없음).
 
-### Phase 6 — 문서화·정리 (반나절)
+### Phase 6 — 문서화·정리 (반나절) — ✅ 2026-10-21 (README · INFRA 는 현재 구조만, 기록은 HISTORY · API_CONTRACT)
 - README 12장 "설계" → "완료"로 갱신(구현·검증 결과, 정정 1 패치 의미론 등),
   `docs/INFRA.md` 6/8/11장 갱신(요약 기능 이제 K8s에서 동작, RollingUpdate,
   MySQL StatefulSet 추가), `DEPLOY.md` 웹터미널 백업 배포 안내(context-path BASE_PATH).
