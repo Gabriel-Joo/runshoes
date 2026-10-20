@@ -1,5 +1,6 @@
 package com.kopo17.runshoes.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,8 +41,8 @@ class MeController {
 	}
 
 	@PutMapping("/password")
-	ResponseEntity<Void> password(@AuthenticationPrincipal Jwt jwt, @RequestBody PasswordBody b) {
-		auth.changePassword(userId(jwt), b.currentPassword(), b.newPassword(), jwt.getClaimAsString("sid"));
+	ResponseEntity<Void> password(@AuthenticationPrincipal Jwt jwt, @RequestBody PasswordBody b, HttpServletRequest req) {
+		auth.changePassword(userId(jwt), b.currentPassword(), b.newPassword(), jwt.getClaimAsString("sid"), RequestInfo.of(req));
 		return ResponseEntity.noContent().build();
 	}
 

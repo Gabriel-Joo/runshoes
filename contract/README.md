@@ -4,7 +4,7 @@ Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 �
 계획: [docs/SPRING_MIGRATION_PLAN.md](../docs/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
-scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 A, 26건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건)
+scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건)
                   V3 전: SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, 9건) — 이력
 record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태코드 · 헤더 전체 · 본문)과 index.json 을 쓴다
 diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
@@ -43,7 +43,7 @@ node contract/diff.mjs contract/baseline/spring-search contract/run/spring-searc
 로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
 V3 세트는 로그인해야 하므로 비밀번호를 env(`SEED_USER_PASSWORD` · `ADMIN_PASSWORD`)로 앱과 record.mjs 에 같이 준다 — 스크립트가 매번 새로 만든다(Secret 과 상관없다).
 기록에는 비밀번호 · JWT · refresh 쿠키 값을 남기지 않는다(`<가림>` · `<jwt>`). 시나리오의 `expect`(상태코드)가 다르면 record.mjs 가 표시하고 exit 1,
-`volatile: ["createdAt"]` 은 서버가 그때 정하는 시각이라 diff 가 날짜 형식만 본다.
+`volatile: ["createdAt"]` · `["retryAfter"]` 은 서버가 그때 정하는 값이라 diff 가 형식(날짜 · 숫자)만 본다.
 
 전환 뒤 운영(MySQL)처럼 쓰기를 되돌리기 어려운 곳에서는 읽기 시나리오(01~26)만 — 양쪽에 `--read-only`(검색 세트는 전부 읽기라 `--set search` 도 그대로 된다 — 운영 데이터가 시드와 같을 때만 PASS):
 
@@ -74,6 +74,9 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 | Spring — 운영 `41f037451184`, 읽기 전용(2026-10-21) | PASS 23 · FAIL 0 · INFO 3 | — |
 | Spring — 로컬 jar, 검색 추가 뒤(2026-10-21) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 · 검색 PASS 24 |
 | Spring — 로컬 jar, 로그인 2단계 뒤(2026-10-21) · 기준선 spring-v3 | v3 PASS 95 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 |
+| Spring — 로컬 jar · 이미지, 로그인 3단계 뒤(2026-10-21) · 기준선 spring-v3(115건) | v3 PASS 112 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 |
+
+3단계 기준선을 굳히기 전: 새 녹화를 **옛 기준선(98건)과 먼저 비교**해 PASS 95 — 3단계가 기존 계약을 바꾸지 않았다. 새 17건(A27~A43)은 기대 상태코드로 확인하고 본문을 읽은 뒤 더했다.
 
 spring-v3 를 굳히기 전 검산: R 26건은 Node 기준선에 의도한 변경(작성자 · #81 · 8번 신발 · 비로그인 liked · 리뷰 새 키)을 입힌 것과 같고(INFO 25 는 #81 로 104),
 W · A 는 단계마다 서버가 센 값(평점 · 찜 수 · 공감 수 · cascade · id max+1 · 쿠키 속성)을 따로 확인했다. 검색은 Q15(비로그인 `liked=true` → `[]`)만 달라졌다 — 의도한 변경.

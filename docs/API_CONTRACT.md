@@ -47,6 +47,8 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ## 2. HTTP 동작 — json-server 와 같게 한 것
 
+아래는 json-server 의 모양 그대로다. 로그인(V3) 뒤에는 그 위에 권한 · 서버가 정하는 값이 얹힌다 — **쓰기는 로그인해야 하고(401 → 404 → 403), PATCH 로 바꿀 수 있는 키 · PUT · 셈하는 값이 달라졌다**(2.2).
+
 | 항목 | 동작 | 녹화 |
 |---|---|---|
 | 404 | 없는 id · 비숫자 id(`abc`, `01`) · 없는 컬렉션 · 그 밖의 `/api` 경로 — 본문 `{}` | 05 · 06 · 07 · 40 · 41 · 43 · 45 · 50 |
@@ -84,7 +86,7 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ### 2.2 로그인(V3) 뒤 — 권한과 서버가 정하는 값
 
-기준선은 `contract/baseline/spring-v3`(R 읽기 · W 쓰기 · A 인증 98건) — Node 기준선(`baseline/node`)은 V3 전 이력이다. 설계는 [AUTH_DESIGN.md](AUTH_DESIGN.md).
+기준선은 `contract/baseline/spring-v3`(R 읽기 · W 쓰기 · A 인증 115건) — Node 기준선(`baseline/node`)은 V3 전 이력이다. 설계는 [AUTH_DESIGN.md](AUTH_DESIGN.md).
 
 | 항목 | 동작 | 녹화 |
 |---|---|---|
@@ -97,6 +99,8 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 | 찜 · 공감 | `PUT` · `DELETE /api/shoes/{id}/like` · `/api/reviews/{id}/like` → `{liked, likeCount}`. 멱등. 내 리뷰에는 403 | W34 · W38 · W38a |
 | 응답 키 | 리뷰에 `userId` · `reviewType` · `parentReviewId` · `distanceKm` · `proofImageUrl` · `verified` | R02 · R08 … |
 | 인증 API | `/api/auth/*` · `/api/me` — 오류 본문만 `{error:{code, field, message}}`. `/api/auth` 는 CORS 헤더가 없다 | A01~A26 |
+| 시도 제한 | 같은 계정 15분 실패 5번이면 **맞는 비밀번호도** 429 + `Retry-After` · `{error:{code:"RATE_LIMITED", message, retryAfter}}`. 없는 이메일도 같은 응답 | A27~A38 |
+| 조회 기록 | `POST /api/activity` — 로그인한 사람만, 언제나 204(남겼는지 말하지 않는다). 모르는 type 400 · 없는 신발 404 · 본문 `{}` | A39~A43 |
 
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
 

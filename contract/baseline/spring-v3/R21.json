@@ -15,7 +15,7 @@
       "access-control-allow-origin": "*",
       "cache-control": "public, max-age=0",
       "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
-      "last-modified": "Tue, 20 Oct 2026 22:23:35 GMT",
+      "last-modified": "Tue, 20 Oct 2026 23:21:04 GMT",
       "accept-ranges": "bytes",
       "x-content-type-options": "nosniff",
       "x-xss-protection": "0",
@@ -23,12 +23,12 @@
       "content-type": "text/html;charset=UTF-8",
       "content-language": "en-US",
       "content-length": "904",
-      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "date": "Tue, 20 Oct 2026 23:23:25 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
     "body": {
-      "$sha256": "5d015b4e2a3710aad99c0237d75b5244e835bb8480c526afcde0eb53eebff8a8",
+      "$sha256": "cf2c8f571589e335c589d845809dabc08ce387584b080599a41feb138d8aa373",
       "$length": 904,
       "$head": "<!doctype html>\n<html lang=\"ko\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-w"
     }

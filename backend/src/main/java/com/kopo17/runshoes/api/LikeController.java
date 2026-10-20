@@ -1,5 +1,7 @@
 package com.kopo17.runshoes.api;
 
+import com.kopo17.runshoes.activity.ActivityLogger;
+import com.kopo17.runshoes.activity.ActivityLogger.Entry;
 import com.kopo17.runshoes.domain.Review;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.ShoeRepository;
@@ -24,18 +26,20 @@ class LikeController {
 	private final ShoeRepository shoes;
 	private final ReviewRepository reviews;
 	private final Likes likes;
+	private final ActivityLogger activity;
 
-	LikeController(ShoeRepository shoes, ReviewRepository reviews, Likes likes) {
+	LikeController(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity) {
 		this.shoes = shoes;
 		this.reviews = reviews;
 		this.likes = likes;
+		this.activity = activity;
 	}
 
 	@PutMapping("/shoes/{id}/like")
 	@Transactional
 	public Map<String, Object> likeShoe(@PathVariable String id) {
 		long userId = Viewer.current().requireUser(), shoeId = shoe(id);
-		likes.likeShoe(userId, shoeId);
+		if (likes.likeShoe(userId, shoeId)) activity.log(Entry.of("like.add", userId, "shoe", shoeId));
 		return state(true, likes.shoeLikeCount(shoeId));
 	}
 
@@ -43,7 +47,7 @@ class LikeController {
 	@Transactional
 	public Map<String, Object> unlikeShoe(@PathVariable String id) {
 		long userId = Viewer.current().requireUser(), shoeId = shoe(id);
-		likes.unlikeShoe(userId, shoeId);
+		if (likes.unlikeShoe(userId, shoeId)) activity.log(Entry.of("like.remove", userId, "shoe", shoeId));
 		return state(false, likes.shoeLikeCount(shoeId));
 	}
 
@@ -54,7 +58,7 @@ class LikeController {
 		long userId = v.requireUser();
 		Review r = review(id);
 		if (v.owns(r.getUserId())) throw ApiException.forbidden("내 리뷰에는 공감하지 않는다");
-		likes.likeReview(userId, r.getId());
+		if (likes.likeReview(userId, r.getId())) activity.log(Entry.of("review_like.add", userId, "review", r.getId()));
 		return state(true, likes.reviewLikeCount(r.getId()));
 	}
 
@@ -63,7 +67,7 @@ class LikeController {
 	public Map<String, Object> unlikeReview(@PathVariable String id) {
 		long userId = Viewer.current().requireUser();
 		Review r = review(id);
-		likes.unlikeReview(userId, r.getId());
+		if (likes.unlikeReview(userId, r.getId())) activity.log(Entry.of("review_like.remove", userId, "review", r.getId()));
 		return state(false, likes.reviewLikeCount(r.getId()));
 	}
 

@@ -30,7 +30,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * (켜 두면 no-cache, no-store, max-age=0 … 으로 덮어 계약 헤더가 바뀐다). OPTIONS 는 ApiHeadersFilter 가 204 로 끝내 여기까지 오지 않는다.
  */
 @Configuration
-@EnableConfigurationProperties(AuthProperties.class)
+@EnableConfigurationProperties({AuthProperties.class, RateLimitProperties.class})
 class SecurityConfig {
 
 	static final String ISSUER = "runshoes";

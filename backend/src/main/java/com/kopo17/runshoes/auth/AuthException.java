@@ -8,12 +8,23 @@ class AuthException extends RuntimeException {
 	final HttpStatus status;
 	final String code;
 	final String field;
+	/** 429 일 때만 — 몇 초 뒤 다시(Retry-After) */
+	final Long retryAfter;
 
 	AuthException(HttpStatus status, String code, String field, String message) {
+		this(status, code, field, message, null);
+	}
+
+	private AuthException(HttpStatus status, String code, String field, String message, Long retryAfter) {
 		super(message);
 		this.status = status;
 		this.code = code;
 		this.field = field;
+		this.retryAfter = retryAfter;
+	}
+
+	static AuthException tooMany(long retryAfterSeconds, String message) {
+		return new AuthException(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", null, message, retryAfterSeconds);
 	}
 
 	static AuthException invalid(String field, String message) {

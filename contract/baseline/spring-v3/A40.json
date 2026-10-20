@@ -1,0 +1,38 @@
+{
+  "id": "A40",
+  "plan": null,
+  "name": "POST /api/activity 비로그인 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "POST",
+    "path": "/api/activity",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "type": "shoe.view",
+      "shoeId": 3
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "www-authenticate": "Bearer",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "content-type": "application/json;charset=UTF-8",
+      "content-length": "2",
+      "date": "Tue, 20 Oct 2026 23:23:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

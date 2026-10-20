@@ -34,7 +34,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "date": "Tue, 20 Oct 2026 23:23:25 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -45,7 +45,7 @@
       "author": "산길10년차",
       "rating": 2,
       "content": "수정한 계약 리뷰입니다",
-      "createdAt": "2026-10-20T22:36:18.916Z",
+      "createdAt": "2026-10-20T23:23:25.514Z",
       "liked": false,
       "reviewType": "FIRST",
       "parentReviewId": null,

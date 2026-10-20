@@ -1,5 +1,7 @@
 package com.kopo17.runshoes.api;
 
+import com.kopo17.runshoes.activity.ActivityLogger;
+import com.kopo17.runshoes.activity.ActivityLogger.Entry;
 import com.kopo17.runshoes.domain.Review;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.ShoeRepository;
@@ -31,13 +33,15 @@ class ReviewCollection implements DocCollection {
 	private final UserRepository users;
 	private final Likes likes;
 	private final Ratings ratings;
+	private final ActivityLogger activity;
 
-	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes, UserRepository users, Likes likes, Ratings ratings) {
+	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes, UserRepository users, Likes likes, Ratings ratings, ActivityLogger activity) {
 		this.reviews = reviews;
 		this.shoes = shoes;
 		this.users = users;
 		this.likes = likes;
 		this.ratings = ratings;
+		this.activity = activity;
 	}
 
 	@Override
@@ -86,6 +90,7 @@ class ReviewCollection implements DocCollection {
 			throw ApiException.reviewExists();
 		}
 		ratings.recompute(shoeId);
+		activity.log(Entry.of("review.create", userId, "review", r.getId()).meta(Map.of("shoeId", shoeId)));
 		return toDoc(r, false);
 	}
 
@@ -98,6 +103,7 @@ class ReviewCollection implements DocCollection {
 			if (body.containsKey("content")) r.setContent(ReviewRules.content(body.get("content")));
 			r = reviews.saveAndFlush(r);
 			ratings.recompute(r.getShoeId());
+			activity.log(Entry.of("review.update", viewer.userId(), "review", r.getId()).meta(Map.of("shoeId", r.getShoeId())));
 			return toDoc(r, likes.likesReview(viewer.userId(), r.getId()));
 		});
 	}
@@ -117,6 +123,9 @@ class ReviewCollection implements DocCollection {
 		reviews.delete(r);
 		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다
 		ratings.recompute(r.getShoeId());
+		// 지운 사람(작성자 또는 admin)이 user_id, 원래 작성자는 meta — 지워진 리뷰는 조인할 수 없다
+		activity.log(Entry.of("review.delete", viewer.userId(), "review", r.getId())
+				.meta(r.getUserId() == null ? Map.of("shoeId", r.getShoeId()) : Map.of("shoeId", r.getShoeId(), "authorId", r.getUserId())));
 		return true;
 	}
 

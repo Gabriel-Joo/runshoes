@@ -16,9 +16,15 @@ class AuthErrorHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(AuthErrorHandler.class);
 
+	/** 429 는 Retry-After 헤더와 본문 retryAfter(초) — 화면이 남은 시간 동안 버튼을 끈다 */
 	@ExceptionHandler(AuthException.class)
 	ResponseEntity<Object> auth(AuthException e) {
-		return body(e.status, e.code, e.field, e.getMessage());
+		if (e.retryAfter == null) return body(e.status, e.code, e.field, e.getMessage());
+		Map<String, Object> err = new LinkedHashMap<>();
+		err.put("code", e.code);
+		err.put("message", e.getMessage());
+		err.put("retryAfter", e.retryAfter);
+		return ResponseEntity.status(e.status).header("Retry-After", String.valueOf(e.retryAfter)).body(Map.of("error", err));
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
