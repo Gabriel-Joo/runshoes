@@ -1,0 +1,127 @@
+/* 로그인 · 가입 · 회원 정보 — 입력 칸은 등록 폼(ShoeForm.css)과 같은 모양 */
+.auth {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 64px 24px 120px;
+}
+
+.auth__title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.auth__lead {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.auth__form {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth__section + .auth__section {
+  margin-top: 44px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.auth__subtitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.auth__field > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.auth__field input {
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-white);
+  font-family: inherit;
+  font-size: 16px;                 /* 16px 아래면 iOS 가 입력할 때 화면을 키운다 */
+  color: var(--text-strong);
+}
+
+.auth__field input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.auth__field input[readonly] {
+  background: transparent;
+  color: var(--text-mid);
+}
+
+.auth__field input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.auth__msg {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-weak);
+}
+
+.auth__msg--error {
+  color: var(--danger);
+}
+
+.auth__msg--ok {
+  color: var(--accent);
+}
+
+.auth__error {
+  padding: 10px 12px;
+  border: 1px solid var(--danger-soft);
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.auth__submit {
+  margin-top: 4px;
+  padding: 13px 20px;
+  background: var(--accent);
+  color: var(--text-invert);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.auth__submit:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.auth__alt {
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.auth__alt a {
+  margin-left: 6px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+@media (max-width: 767px) {
+  .auth {
+    padding: 40px var(--page-gutter) 80px;
+  }
+  .auth__title {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id": "W04",
+  "plan": null,
+  "name": "admin 이 본 리뷰 14 — 공감 liked true(V3 가 옮긴 것)",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/14",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 14,
+      "shoeId": 2,
+      "userId": 26,
+      "author": "런린이일기",
+      "rating": 4,
+      "content": "첫 러닝화로 샀는데 무난합니다. 다만 앞이 조금 좁게 느껴져서 와이드로 다시 살까 고민 중이에요.",
+      "createdAt": "2026-06-21T00:00:00.000Z",
+      "likeCount": 1,
+      "liked": true,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "W30a",
+  "plan": null,
+  "name": "POST shoe 비로그인 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "POST",
+    "path": "/api/shoes",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "Contract Runner 1",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다."
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "www-authenticate": "Bearer",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "content-type": "application/json;charset=UTF-8",
+      "content-length": "2",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

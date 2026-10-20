@@ -1,4 +1,4 @@
-import { API } from "../api";
+import { apiFetch } from "../auth/session";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ConfirmModal from "../components/ConfirmModal";
@@ -38,7 +38,7 @@ function ShoeForm() {
   const [images, setImages] = useState("");
 
   const getShoe = async () => {
-    const res = await fetch(`${API}/shoes/${id}`);
+    const res = await apiFetch(`/shoes/${id}`);
     const shoe = await res.json();
 
     setBrand(shoe.brand);
@@ -93,40 +93,27 @@ function ShoeForm() {
       return;
     }
 
-    if (isEdit) {
-      await fetch(`${API}/shoes/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildBody()),
-      });
-    } else {
-      await fetch(`${API}/shoes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...buildBody(),
-          rating: 0,
-          reviewCount: 0,
-          likeCount: 0,
-          liked: false,
-        }),
-      });
+    // 평점 · 리뷰 수 · 찜 수는 서버가 센다 — 보내지 않는다(보내도 버린다). admin 만(서버 403)
+    const res = await apiFetch(isEdit ? `/shoes/${id}` : "/shoes", {
+      method: isEdit ? "PATCH" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildBody()),
+    });
+    if (!res.ok) {
+      alert(res.status === 403 ? "관리자만 저장할 수 있어요." : res.status === 401 ? "로그인이 끝났어요. 다시 로그인해 주세요." : "저장하지 못했어요. 입력을 확인해 주세요.");
+      return;
     }
 
     navigate("/admin");
   };
 
+  // 리뷰 · 찜은 서버가 같이 지운다(FK ON DELETE CASCADE)
   const remove = async () => {
-    const res = await fetch(`${API}/reviews?shoeId=${id}`);
-    const reviews = await res.json();
-
-    for (const review of reviews) {
-      await fetch(`${API}/reviews/${review.id}`, {
-        method: "DELETE",
-      });
+    const res = await apiFetch(`/shoes/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      alert(res.status === 403 ? "관리자만 지울 수 있어요." : "지우지 못했어요. 잠시 뒤 다시 해 주세요.");
+      return;
     }
-
-    await fetch(`${API}/shoes/${id}`, { method: "DELETE" });
 
     navigate("/admin");
   };

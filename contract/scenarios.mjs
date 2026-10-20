@@ -147,3 +147,113 @@ export const SEARCH_SCENARIOS = [
   S("Q23", "관리 — 전체 개수만(_limit=0 → [] + X-Total-Count 20)", "/api/shoes?_limit=0"),
   S("Q24", "관리 — 브랜드 칩 목록 /api/brands(id 순 첫 등장)", "/api/brands"),
 ];
+
+// ---- V3(로그인) 뒤 계약 — 기준선 contract/baseline/spring-v3(Spring 녹화). docs/AUTH_DESIGN.md
+// Node 기준선(SCENARIOS)은 이력으로 둔다 — 쓰기에 토큰이 필요해져 그대로는 돌지 않는다.
+// R: 위의 읽기 01~26 그대로(비로그인) · W: 쓰기(30~53 의 흐름을 계정으로, 401 · 403 · 405 · 409 를 끼워) · A: 인증
+// expect 는 그 단계의 상태코드 — record.mjs 가 다르면 표시하고 exit 1. volatile: 서버가 그때 정하는 값(createdAt)은 형식만 본다
+// 사용자: runner01(id 1, 산길10년차 — 신발 18 · 19 · 20 에 리뷰) · runner02(id 2, 산악울트라) · admin(id 31). 리뷰 1 은 평발러너, 61 은 runner01
+const bearer = (t) => ({ Authorization: `Bearer {{${t}}}` });
+const jb = (t) => ({ ...json, ...bearer(t) });
+const W = (id, name, method, path, extra = {}) => ({ id, name, method, path, ...extra });
+const login = (id, email, pw, token) => W(id, `로그인 ${email}`, "POST", "/api/auth/login",
+  { headers: json, body: { email, password: pw }, capture: { [token]: "body.accessToken" }, expect: 200 });
+const contractShoe = { ...newShoe, rating: undefined, reviewCount: undefined, likeCount: undefined, liked: undefined };
+
+export const V3_SCENARIOS = [
+  ...SCENARIOS.filter((s) => s.id < "30").map((s) => ({ ...s, id: `R${s.id}` })),
+
+  login("W00", "admin@runshoes.test", "{{adminPassword}}", "admin"),
+  login("W01", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
+  login("W02", "runner02@runshoes.test", "{{seedPassword}}", "u2"),
+  W("W03", "admin 의 찜 — liked=true 가 사용자별(V3 가 옮긴 2 · 6 · 16)", "GET", "/api/shoes?liked=true", { headers: bearer("admin"), expect: 200 }),
+  W("W04", "admin 이 본 리뷰 14 — 공감 liked true(V3 가 옮긴 것)", "GET", "/api/reviews/14", { headers: bearer("admin"), expect: 200 }),
+
+  W("W30a", "POST shoe 비로그인 → 401", "POST", "/api/shoes", { headers: json, body: contractShoe, expect: 401 }),
+  W("W30b", "POST shoe USER → 403", "POST", "/api/shoes", { headers: jb("u1"), body: contractShoe, expect: 403 }),
+  W("W30", "POST shoe admin → 201, 셈하는 값은 0(본문의 것은 버린다)", "POST", "/api/shoes",
+    { headers: jb("admin"), body: { ...newShoe, rating: 5, reviewCount: 9, likeCount: 99, liked: true }, capture: { newShoe: "body.id" }, expect: 201 }),
+  W("W31", "summary 새 신발 → 리뷰<3 (Ollama 안 부름)", "GET", "/api/shoes/{{newShoe}}/summary", { expect: 200 }),
+  W("W32a", "POST review 비로그인 → 401", "POST", "/api/reviews", { headers: json, body: { shoeId: "{{newShoe:num}}", rating: 4, content: "로그인 없이 쓰는 계약 리뷰" }, expect: 401 }),
+  W("W32", "POST review u1 → 201, author · userId · createdAt 은 서버(본문 author · createdAt 은 버린다)", "POST", "/api/reviews",
+    { headers: jb("u1"), body: { shoeId: "{{newShoe:num}}", author: "사칭", rating: 4, content: "계약 테스트 리뷰 — 작성자는 토큰에서", createdAt: "2000-01-01T00:00:00.000Z" },
+      capture: { newReview: "body.id" }, volatile: ["createdAt"], expect: 201 }),
+  W("W32b", "같은 신발 두 번째 첫 리뷰 → 409", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: "{{newShoe:num}}", rating: 5, content: "두 번째 첫 리뷰를 써 본다" }, expect: 409 }),
+  W("W32c", "내용 10자 미만 → 400", "POST", "/api/reviews", { headers: jb("u2"), body: { shoeId: "{{newShoe:num}}", rating: 5, content: "짧다" }, expect: 400 }),
+  W("W33", "GET 새 review", "GET", "/api/reviews/{{newReview}}", { volatile: ["createdAt"], expect: 200 }),
+  W("W34a", "PATCH shoe 1 {liked, likeCount}(예전 찜 모양) USER → 403", "PATCH", "/api/shoes/1", { headers: jb("u1"), body: { liked: true, likeCount: 999 }, expect: 403 }),
+  W("W34", "찜 PUT /api/shoes/1/like u1 → {liked, likeCount +1}", "PUT", "/api/shoes/1/like", { headers: bearer("u1"), expect: 200 }),
+  W("W34b", "u1 이 본 shoe 1 — liked true", "GET", "/api/shoes/1", { headers: bearer("u1"), expect: 200 }),
+  W("W35", "PATCH 새 shoe {midsole:null, price:null} admin — null 반영", "PATCH", "/api/shoes/{{newShoe}}", { headers: jb("admin"), body: { midsole: null, price: null }, expect: 200 }),
+  W("W36", "PATCH 새 shoe — ShoeForm 수정 본문 전체(빈 칸 null) admin", "PATCH", "/api/shoes/{{newShoe}}",
+    { headers: jb("admin"), body: { ...contractShoe, midsole: null, weight: null, drop: null, stackHeight: null, price: null, model: "Contract Runner 1 수정" }, expect: 200 }),
+  W("W37", "PATCH 내 review {rating, content} — 평점 서버가 다시 셈", "PATCH", "/api/reviews/{{newReview}}",
+    { headers: jb("u1"), body: { rating: 2, content: "수정한 계약 리뷰입니다", author: "바꿔치기" }, volatile: ["createdAt"], expect: 200 }),
+  W("W37a", "PATCH 남의 review(u2) → 403", "PATCH", "/api/reviews/{{newReview}}", { headers: jb("u2"), body: { rating: 1 }, expect: 403 }),
+  W("W37b", "PATCH 남의 review(admin) → 403", "PATCH", "/api/reviews/{{newReview}}", { headers: jb("admin"), body: { rating: 1 }, expect: 403 }),
+  W("W38", "공감 PUT /api/reviews/1/like u1 → +1", "PUT", "/api/reviews/1/like", { headers: bearer("u1"), expect: 200 }),
+  W("W38a", "내 리뷰 공감 → 403", "PUT", "/api/reviews/{{newReview}}/like", { headers: bearer("u1"), expect: 403 }),
+  W("W39", "PATCH 새 shoe {rating, reviewCount} admin — 버린다(서버가 센 값 그대로)", "PATCH", "/api/shoes/{{newShoe}}", { headers: jb("admin"), body: { rating: 5, reviewCount: 9 }, expect: 200 }),
+  W("W40", "PATCH 없는 shoe admin → 404", "PATCH", "/api/shoes/9999", { headers: jb("admin"), body: { summary: "x" }, expect: 404 }),
+  W("W40a", "PATCH 없는 shoe 비로그인 → 401(404 보다 먼저)", "PATCH", "/api/shoes/9999", { headers: json, body: { summary: "x" }, expect: 401 }),
+  W("W40b", "PATCH 없는 shoe USER → 404(403 보다 먼저)", "PATCH", "/api/shoes/9999", { headers: jb("u1"), body: { summary: "x" }, expect: 404 }),
+  W("W41", "PATCH 없는 review → 404", "PATCH", "/api/reviews/9999", { headers: jb("u1"), body: { rating: 1 }, expect: 404 }),
+  W("W42", "PUT 새 shoe 전체 치환 admin — 셈하는 값은 그대로", "PUT", "/api/shoes/{{newShoe}}", { headers: jb("admin"), body: { ...newShoe, model: "Contract Runner PUT" }, expect: 200 }),
+  W("W42a", "PUT review → 405(작성자여도)", "PUT", "/api/reviews/{{newReview}}", { headers: jb("u1"), body: { rating: 1, content: "PUT 으로 통째로 바꾸기" }, expect: 405 }),
+  W("W43", "POST 없는 컬렉션 → 404", "POST", "/api/foo", { headers: jb("admin"), body: { a: 1 }, expect: 404 }),
+  W("W44a", "DELETE 남의 review(u2) → 403", "DELETE", "/api/reviews/{{newReview}}", { headers: bearer("u2"), expect: 403 }),
+  W("W44", "DELETE 내 review → 200 {}", "DELETE", "/api/reviews/{{newReview}}", { headers: bearer("u1"), expect: 200 }),
+  W("W45", "DELETE 없는 review → 404", "DELETE", "/api/reviews/9999", { headers: bearer("u1"), expect: 404 }),
+  W("W46", "POST review u1(지운 뒤 다시 첫 리뷰) — cascade 준비 1", "POST", "/api/reviews",
+    { headers: jb("u1"), body: { shoeId: "{{newShoe:num}}", rating: 5, content: "cascade 준비 리뷰 하나" }, volatile: ["createdAt"], expect: 201 }),
+  W("W47", "POST review u2 — cascade 준비 2", "POST", "/api/reviews",
+    { headers: jb("u2"), body: { shoeId: "{{newShoe:num}}", rating: 3, content: "cascade 준비 리뷰 둘" }, volatile: ["createdAt"], expect: 201 }),
+  W("W47b", "새 shoe — 평점 · 리뷰 수를 서버가 셌다((5+3)/2 = 4, 2건)", "GET", "/api/shoes/{{newShoe}}", { expect: 200 }),
+  W("W48a", "DELETE shoe USER → 403", "DELETE", "/api/shoes/{{newShoe}}", { headers: bearer("u1"), expect: 403 }),
+  W("W48", "DELETE 새 shoe admin → 200", "DELETE", "/api/shoes/{{newShoe}}", { headers: bearer("admin"), expect: 200 }),
+  W("W49", "cascade — 새 shoe 의 reviews 가 남지 않았는지", "GET", "/api/reviews?shoeId={{newShoe}}", { expect: 200 }),
+  W("W50", "DELETE 없는 shoe → 404", "DELETE", "/api/shoes/9999", { headers: bearer("admin"), expect: 404 }),
+  W("W51", "POST 다시 → id 가 max+1(지운 21 을 다시 쓴다)", "POST", "/api/shoes", { headers: jb("admin"), body: { ...contractShoe, model: "Contract Runner 2" }, expect: 201 }),
+  W("W52", "끝 상태 — shoes 전체(비로그인: liked 전부 false, shoe 1 likeCount 43)", "GET", "/api/shoes", { expect: 200 }),
+  W("W52b", "끝 상태 — u1 이 본 shoes(shoe 1 liked)", "GET", "/api/shoes", { headers: bearer("u1"), expect: 200 }),
+  W("W53", "끝 상태 — reviews 전체(review 1 likeCount 3)", "GET", "/api/reviews", { expect: 200 }),
+];
+
+// 인증 — 가입 · 로그인 · refresh(교체 · 동시) · 로그아웃 · 회원 정보 · CSRF/CORS. 계약 계정은 이 녹화의 DB 에만 생긴다
+export const AUTH_SCENARIOS = [
+  W("A01", "가입 이메일 형식 → 400", "POST", "/api/auth/signup", { headers: json, body: { email: "bad", password: "abcd1234", nickname: "계약러너" }, expect: 400 }),
+  W("A02", "가입 비밀번호 8자 미만 → 400", "POST", "/api/auth/signup", { headers: json, body: { email: "contract@runshoes.test", password: "abc123", nickname: "계약러너" }, expect: 400 }),
+  W("A03", "가입 예약어 닉네임 → 400", "POST", "/api/auth/signup", { headers: json, body: { email: "contract@runshoes.test", password: "abcd1234", nickname: "관리자" }, expect: 400 }),
+  W("A04", "가입 이미 있는 이메일(대소문자 무시) → 409", "POST", "/api/auth/signup", { headers: json, body: { email: "RUNNER01@runshoes.test", password: "abcd1234", nickname: "계약러너" }, expect: 409 }),
+  W("A05", "가입 이미 있는 닉네임(대소문자 무시) → 409", "POST", "/api/auth/signup", { headers: json, body: { email: "contract@runshoes.test", password: "abcd1234", nickname: "느긋한lsd" }, expect: 409 }),
+  W("A06", "가입 → 201 + 토큰 + refresh 쿠키", "POST", "/api/auth/signup",
+    { headers: json, body: { email: " Contract@RunShoes.test ", password: "contract123", nickname: "계약러너" }, capture: { c: "body.accessToken", cr: "cookie.runshoes_refresh" }, expect: 201 }),
+  W("A07", "로그인 틀린 비밀번호 → 401", "POST", "/api/auth/login", { headers: json, body: { email: "contract@runshoes.test", password: "wrongpass1" }, expect: 401 }),
+  W("A08", "로그인 없는 이메일 → 같은 401", "POST", "/api/auth/login", { headers: json, body: { email: "nobody@runshoes.test", password: "wrongpass1" }, expect: 401 }),
+  W("A09", "로그인 빈 값 → 400", "POST", "/api/auth/login", { headers: json, body: { email: "", password: "" }, expect: 400 }),
+  W("A10", "GET /api/me 토큰 없음 → 401", "GET", "/api/me", { expect: 401 }),
+  W("A11", "GET /api/me", "GET", "/api/me", { headers: bearer("c"), expect: 200 }),
+  W("A12", "닉네임 미리 확인 — 빈 것 200", "GET", "/api/auth/nickname-available?nickname=새닉네임", { expect: 200 }),
+  W("A13", "닉네임 미리 확인 — 쓰는 것 409", "GET", "/api/auth/nickname-available?nickname=산길10년차", { expect: 409 }),
+  W("A14", "닉네임 미리 확인 — 형식 400", "GET", "/api/auth/nickname-available?nickname=ㅁㅁㅁ", { expect: 400 }),
+  W("A15", "닉네임 변경 — 지금과 같음 400", "PATCH", "/api/me/nickname", { headers: jb("c"), body: { nickname: "계약러너" }, expect: 400 }),
+  W("A16", "닉네임 변경 → 200", "PATCH", "/api/me/nickname", { headers: jb("c"), body: { nickname: "계약러너2" }, expect: 200 }),
+  W("A17", "비밀번호 변경 — 지금 것 틀림 400", "PUT", "/api/me/password", { headers: jb("c"), body: { currentPassword: "wrongpass1", newPassword: "contract456" }, expect: 400 }),
+  W("A18", "비밀번호 변경 → 204", "PUT", "/api/me/password", { headers: jb("c"), body: { currentPassword: "contract123", newPassword: "contract456" }, expect: 204 }),
+  W("A19", "refresh 쿠키 없음 → 401", "POST", "/api/auth/refresh", { expect: 401 }),
+  W("A20", "refresh → 새 토큰 · 새 쿠키(교체)", "POST", "/api/auth/refresh", { headers: { Cookie: "runshoes_refresh={{cr}}" }, capture: { cr2: "cookie.runshoes_refresh" }, expect: 200 }),
+  W("A21", "바뀐 쿠키를 10초 안에 다시 — 동시 refresh 로 보고 200", "POST", "/api/auth/refresh", { headers: { Cookie: "runshoes_refresh={{cr}}" }, expect: 200 }),
+  W("A22", "로그아웃 → 204 + 쿠키 지움", "POST", "/api/auth/logout", { headers: { Cookie: "runshoes_refresh={{cr2}}" }, expect: 204 }),
+  W("A23", "로그아웃한 쿠키로 refresh → 401", "POST", "/api/auth/refresh", { headers: { Cookie: "runshoes_refresh={{cr2}}" }, expect: 401 }),
+  W("A24", "다른 Origin 의 로그인 → 403", "POST", "/api/auth/login", { headers: { ...json, Origin: "https://evil.example" }, body: { email: "contract@runshoes.test", password: "contract456" }, expect: 403 }),
+  W("A25", "/api/auth preflight → 204, CORS 헤더 없음", "OPTIONS", "/api/auth/refresh",
+    { headers: { Origin: "https://evil.example", "Access-Control-Request-Method": "POST" }, expect: 204 }),
+  W("A26", "바꾼 비밀번호로 로그인 → 200", "POST", "/api/auth/login", { headers: json, body: { email: "contract@runshoes.test", password: "contract456" }, expect: 200 }),
+];
+
+// 요약 — V3 에서는 리뷰를 쓰려면 로그인해야 한다(S0). S5 내용은 10자 이상(V3 규칙) — 그래서 S9 프롬프트의 그 한 줄만 Node 기준선과 다르다
+export const SUMMARY_V3_SCENARIOS = [
+  login("S0", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
+  ...SUMMARY_SCENARIOS.map((s) => s.id !== "S5" ? s : { ...s, headers: jb("u1"),
+    body: { shoeId: 1, rating: 5, content: "요약 캐시 무효화 리뷰" }, volatile: ["createdAt"], expect: 201 }),
+];

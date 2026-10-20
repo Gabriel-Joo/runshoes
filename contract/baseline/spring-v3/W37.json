@@ -1,0 +1,57 @@
+{
+  "id": "W37",
+  "plan": null,
+  "name": "PATCH 내 review {rating, content} — 평점 서버가 다시 셈",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "PATCH",
+    "path": "/api/reviews/106",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{u1}}"
+    },
+    "body": {
+      "rating": 2,
+      "content": "수정한 계약 리뷰입니다",
+      "author": "바꿔치기"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 106,
+      "shoeId": 21,
+      "userId": 1,
+      "author": "산길10년차",
+      "rating": 2,
+      "content": "수정한 계약 리뷰입니다",
+      "createdAt": "2026-10-20T22:36:18.916Z",
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

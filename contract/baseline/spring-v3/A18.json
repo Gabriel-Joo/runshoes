@@ -1,0 +1,40 @@
+{
+  "id": "A18",
+  "plan": null,
+  "name": "비밀번호 변경 → 204",
+  "contract": true,
+  "expect": 204,
+  "request": {
+    "method": "PUT",
+    "path": "/api/me/password",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{c}}"
+    },
+    "body": {
+      "currentPassword": "<가림>",
+      "newPassword": "<가림>"
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "$sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "$length": 0,
+      "$head": ""
+    }
+  }
+}

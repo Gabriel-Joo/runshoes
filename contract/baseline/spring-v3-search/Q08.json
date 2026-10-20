@@ -1,0 +1,95 @@
+{
+  "id": "Q08",
+  "plan": null,
+  "name": "앞뒤 · 여러 칸 공백 — '  나이키   플라이 '",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=%20%20%EB%82%98%EC%9D%B4%ED%82%A4%20%20%20%ED%94%8C%EB%9D%BC%EC%9D%B4%20",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:39 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 6,
+        "brand": "나이키",
+        "model": "알파플라이 3",
+        "purpose": "레이스",
+        "stability": "중립화",
+        "midsole": "ZoomX",
+        "weight": 218,
+        "drop": 8,
+        "stackHeight": null,
+        "width": "보통",
+        "wideAvailable": false,
+        "carbon": true,
+        "price": 339000,
+        "image": "/images/alphafly-3.png",
+        "images": [
+          "/images/alphafly-3.png",
+          "/images/alphafly-3-1.png",
+          "/images/alphafly-3-2.png",
+          "/images/alphafly-3-3.png",
+          "/images/alphafly-3-4.png",
+          "/images/alphafly-3-5.png"
+        ],
+        "summary": "대회에서 기록을 노리는 분에게",
+        "description": "에어 줌 유닛과 줌X 폼, 카본 플레이트를 결합한 나이키의 최상위 레이싱화입니다. 대회에서 기록을 노릴 때 쓰는 신발이라 일상 훈련용으로는 권장되지 않습니다. 근력이 충분히 갖춰지지 않은 상태에서 신으면 종아리와 아킬레스에 부담이 몰릴 수 있습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 91,
+        "liked": false
+      },
+      {
+        "id": 16,
+        "brand": "나이키",
+        "model": "베이퍼플라이 4",
+        "purpose": "레이스",
+        "stability": "중립화",
+        "midsole": "ZoomX",
+        "weight": 167,
+        "drop": 6,
+        "stackHeight": 35,
+        "width": "좁음",
+        "wideAvailable": false,
+        "carbon": true,
+        "price": 309000,
+        "image": "/images/vaporfly-4.png",
+        "images": [
+          "/images/vaporfly-4.png",
+          "/images/vaporfly-4-1.png",
+          "/images/vaporfly-4-2.png",
+          "/images/vaporfly-4-3.png",
+          "/images/vaporfly-4-4.png",
+          "/images/vaporfly-4-5.png",
+          "/images/vaporfly-4-6.png",
+          "/images/vaporfly-4-7.png"
+        ],
+        "summary": "10K에서 하프까지 기록을 노리는 분에게",
+        "description": "카본화 시대를 연 모델의 네 번째 세대입니다. 167g으로 역대 가장 가볍고, 이전 세대보다 스택하이트를 오히려 낮춰 지면에 더 가깝게 붙는 감각을 택했습니다. 알파플라이보다 가볍고 다루기 쉬워 첫 카본화로도 자주 언급되지만, 발볼이 좁으니 착화를 확인하는 편이 좋습니다.",
+        "rating": 4.8,
+        "reviewCount": 6,
+        "likeCount": 101,
+        "liked": false
+      }
+    ]
+  }
+}

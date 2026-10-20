@@ -1,0 +1,59 @@
+{
+  "id": "W47",
+  "plan": null,
+  "name": "POST review u2 — cascade 준비 2",
+  "contract": true,
+  "expect": 201,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{u2}}"
+    },
+    "body": {
+      "shoeId": "{{newShoe:num}}",
+      "rating": 3,
+      "content": "cascade 준비 리뷰 둘"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/107",
+      "access-control-expose-headers": "Location",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 107,
+      "shoeId": 21,
+      "userId": 2,
+      "author": "산악울트라",
+      "rating": 3,
+      "content": "cascade 준비 리뷰 둘",
+      "createdAt": "2026-10-20T22:36:19.089Z",
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

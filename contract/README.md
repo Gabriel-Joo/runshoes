@@ -4,14 +4,18 @@ Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 �
 계획: [docs/SPRING_MIGRATION_PLAN.md](../docs/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
-scenarios.mjs     시나리오 — SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, mock-ollama, 9건) · SEARCH_SCENARIOS(검색, 24건)
+scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 A, 26건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건)
+                  V3 전: SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, 9건) — 이력
 record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태코드 · 헤더 전체 · 본문)과 index.json 을 쓴다
 diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
 mock-ollama.mjs   고정 응답 Ollama(:3109) — 호출 수 · 실패 모드 · 마지막 프롬프트
 baseline/node/          운영 Node 앱 녹화(2026-10-18, 시드 db.json 에서 시작)
 baseline/node-summary/  요약 녹화 — 로컬 server.cjs(같은 커밋) + mock-ollama
 baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Spring(2026-10-21, 시드 직후)이 기준선. 굳히기 전 시드로 따로 계산한 기대값과 24건 모두 맞췄다
-run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — main | summary | search
+baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/API_CONTRACT.md 2.2)
+baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
+baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다
+run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v3-summary (V3 전: main | summary | search)
 ```
 
 ## 녹화 · 비교
@@ -36,7 +40,10 @@ node contract/record.mjs --base http://127.0.0.1:3000 --set search --out contrac
 node contract/diff.mjs contract/baseline/spring-search contract/run/spring-search
 ```
 
-로컬에서는 `contract/run-spring-local.sh [main|summary|search]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
+로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
+V3 세트는 로그인해야 하므로 비밀번호를 env(`SEED_USER_PASSWORD` · `ADMIN_PASSWORD`)로 앱과 record.mjs 에 같이 준다 — 스크립트가 매번 새로 만든다(Secret 과 상관없다).
+기록에는 비밀번호 · JWT · refresh 쿠키 값을 남기지 않는다(`<가림>` · `<jwt>`). 시나리오의 `expect`(상태코드)가 다르면 record.mjs 가 표시하고 exit 1,
+`volatile: ["createdAt"]` 은 서버가 그때 정하는 시각이라 diff 가 날짜 형식만 본다.
 
 전환 뒤 운영(MySQL)처럼 쓰기를 되돌리기 어려운 곳에서는 읽기 시나리오(01~26)만 — 양쪽에 `--read-only`(검색 세트는 전부 읽기라 `--set search` 도 그대로 된다 — 운영 데이터가 시드와 같을 때만 PASS):
 
@@ -66,6 +73,10 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 | Spring — 이미지 `runshoes:phase4`(2026-10-18) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 |
 | Spring — 운영 `41f037451184`, 읽기 전용(2026-10-21) | PASS 23 · FAIL 0 · INFO 3 | — |
 | Spring — 로컬 jar, 검색 추가 뒤(2026-10-21) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 · 검색 PASS 24 |
+| Spring — 로컬 jar, 로그인 2단계 뒤(2026-10-21) · 기준선 spring-v3 | v3 PASS 95 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 |
+
+spring-v3 를 굳히기 전 검산: R 26건은 Node 기준선에 의도한 변경(작성자 · #81 · 8번 신발 · 비로그인 liked · 리뷰 새 키)을 입힌 것과 같고(INFO 25 는 #81 로 104),
+W · A 는 단계마다 서버가 센 값(평점 · 찜 수 · 공감 수 · cascade · id max+1 · 쿠키 속성)을 따로 확인했다. 검색은 Q15(비로그인 `liked=true` → `[]`)만 달라졌다 — 의도한 변경.
 
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
 계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).

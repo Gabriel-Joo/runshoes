@@ -2,9 +2,7 @@ const isDev = import.meta.env.DEV;
 
 const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 
-export const API = isDev
-  ? "http://localhost:3000"
-  : `${import.meta.env.BASE_URL}api`;
+export const API = isDev ? "/api" : `${import.meta.env.BASE_URL}api`;   // dev 는 vite 프록시(vite.config.ts)
 
 export const asset = (p: string) =>
   p.startsWith("/") ? `${import.meta.env.BASE_URL.replace(/\/$/, "")}${p}` : p;

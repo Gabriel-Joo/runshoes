@@ -1,0 +1,25 @@
+{
+  "id": "S6",
+  "plan": 14,
+  "name": "mock 을 500 으로",
+  "contract": false,
+  "request": {
+    "method": "POST",
+    "path": "/__fail",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "date": "Tue, 20 Oct 2026 22:37:01 GMT",
+      "connection": "keep-alive",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "ok": true
+    }
+  }
+}

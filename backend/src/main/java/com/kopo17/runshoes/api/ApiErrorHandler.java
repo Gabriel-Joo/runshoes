@@ -9,8 +9,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** /api 오류 본문은 언제나 {} — json-server 의 404 · 500 과 같다. 원인은 로그로만 */
-@RestControllerAdvice(assignableTypes = JsonServerController.class)
+/** /api 오류 본문은 언제나 {} — json-server 의 404 · 500 과 같다. 원인은 로그로만. 화면은 상태코드(401 · 403 · 409)로 문구를 고른다 */
+@RestControllerAdvice(assignableTypes = {JsonServerController.class, LikeController.class})
 class ApiErrorHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(ApiErrorHandler.class);

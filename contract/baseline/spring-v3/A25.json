@@ -1,0 +1,30 @@
+{
+  "id": "A25",
+  "plan": null,
+  "name": "/api/auth preflight → 204, CORS 헤더 없음",
+  "contract": true,
+  "expect": 204,
+  "request": {
+    "method": "OPTIONS",
+    "path": "/api/auth/refresh",
+    "headers": {
+      "Origin": "https://evil.example",
+      "Access-Control-Request-Method": "POST"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "cache-control": "no-store",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "$sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "$length": 0,
+      "$head": ""
+    }
+  }
+}

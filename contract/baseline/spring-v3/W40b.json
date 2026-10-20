@@ -1,0 +1,38 @@
+{
+  "id": "W40b",
+  "plan": null,
+  "name": "PATCH 없는 shoe USER → 404(403 보다 먼저)",
+  "contract": true,
+  "expect": 404,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/9999",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{u1}}"
+    },
+    "body": {
+      "summary": "x"
+    }
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "W32",
+  "plan": null,
+  "name": "POST review u1 → 201, author · userId · createdAt 은 서버(본문 author · createdAt 은 버린다)",
+  "contract": true,
+  "expect": 201,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{u1}}"
+    },
+    "body": {
+      "shoeId": "{{newShoe:num}}",
+      "author": "사칭",
+      "rating": 4,
+      "content": "계약 테스트 리뷰 — 작성자는 토큰에서",
+      "createdAt": "2000-01-01T00:00:00.000Z"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/106",
+      "access-control-expose-headers": "Location",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 106,
+      "shoeId": 21,
+      "userId": 1,
+      "author": "산길10년차",
+      "rating": 4,
+      "content": "계약 테스트 리뷰 — 작성자는 토큰에서",
+      "createdAt": "2026-10-20T22:36:18.916Z",
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

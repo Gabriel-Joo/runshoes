@@ -1,0 +1,32 @@
+{
+  "id": "Q04",
+  "plan": null,
+  "name": "낱말 AND, 맞는 신발 없음 — 나이키 클리프톤 → []",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=%EB%82%98%EC%9D%B4%ED%82%A4%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:39 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": []
+  }
+}

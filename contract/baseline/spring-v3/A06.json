@@ -1,0 +1,48 @@
+{
+  "id": "A06",
+  "plan": null,
+  "name": "가입 → 201 + 토큰 + refresh 쿠키",
+  "contract": true,
+  "expect": 201,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/signup",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": " Contract@RunShoes.test ",
+      "password": "<가림>",
+      "nickname": "계약러너"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=<가림>; Path=/api/auth; Max-Age=1209600; Expires=Tue, 03 Nov 2026 22:36:19 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "accessToken": "<jwt>",
+      "tokenType": "Bearer",
+      "expiresIn": 900,
+      "user": {
+        "id": 32,
+        "email": "contract@runshoes.test",
+        "nickname": "계약러너",
+        "role": "USER"
+      }
+    }
+  }
+}

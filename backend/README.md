@@ -5,6 +5,8 @@ RUNSHOES 의 REST API 와 React 빌드물 서빙. **계약의 정답은 `contrac
 ```
 domain/   Shoe · Review · Term + 리포지토리(스키마는 Flyway — db/migration/V1, 시드 V2 는 scripts/gen-seed-sql.mjs 생성물)
 api/      JsonServerController(/api/{name}[/{id}]) · DocCollection 셋 · ListQuery(json-server 목록 규칙 + search) · BrandController(/api/brands) · Js(JS 비교·문자열화)
+          Viewer(요청한 사람 — 404 → 403) · LikeController(/api/shoes|reviews/{id}/like) · Likes(찜 · 공감 행과 카운터) · Ratings(신발 평점 서버 계산)
+auth/     SecurityConfig(JWT HS256 · 쓰기 401) · AuthController(/api/auth) · MeController(/api/me) · AuthService(refresh 교체 · 재사용 감지) · SeedPasswords
 config/   ApiHeadersFilter(CORS · Cache-Control — Node 와 같은 모양) · JacksonConfig(정수 값 숫자는 300 처럼)
 ```
 

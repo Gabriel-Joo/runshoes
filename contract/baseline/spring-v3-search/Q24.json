@@ -1,0 +1,43 @@
+{
+  "id": "Q24",
+  "plan": null,
+  "name": "관리 — 브랜드 칩 목록 /api/brands(id 순 첫 등장)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/brands",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:39 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      "아식스",
+      "나이키",
+      "호카",
+      "브룩스",
+      "뉴발란스",
+      "아디다스",
+      "사우코니",
+      "온",
+      "미즈노",
+      "살로몬"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "Q18",
+  "plan": null,
+  "name": "관리 조합 — 브랜드 칩 호카 + 스피드 + 모델명순",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?brand=%ED%98%B8%EC%B9%B4&search=%EC%8A%A4%ED%94%BC%EB%93%9C&_sort=model",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:39 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 19,
+        "brand": "호카",
+        "model": "스피드고트 6",
+        "purpose": "트레일",
+        "stability": "중립화",
+        "midsole": "CMEVA",
+        "weight": 283,
+        "drop": 5,
+        "stackHeight": 40,
+        "width": "보통",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 219000,
+        "image": "/images/speedgoat-6.png",
+        "images": [
+          "/images/speedgoat-6.png",
+          "/images/speedgoat-6-1.png",
+          "/images/speedgoat-6-2.png",
+          "/images/speedgoat-6-3.png",
+          "/images/speedgoat-6-4.png",
+          "/images/speedgoat-6-5.png",
+          "/images/speedgoat-6-6.png"
+        ],
+        "summary": "산에서 아주 긴 거리를 달리는 분에게",
+        "description": "울트라 트레일 러너들에게 오래 사랑받아 온 모델입니다. 스택하이트 40mm로 트레일화 중에서도 쿠션이 두툼해 장시간 달려도 발바닥 피로가 덜합니다. 비브람 메가그립 아웃솔은 젖은 바위에서도 잘 붙고, 드롭이 5mm로 낮아 자연스러운 착지를 돕습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 88,
+        "liked": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "A05",
+  "plan": null,
+  "name": "가입 이미 있는 닉네임(대소문자 무시) → 409",
+  "contract": true,
+  "expect": 409,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/signup",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "contract@runshoes.test",
+      "password": "<가림>",
+      "nickname": "느긋한lsd"
+    }
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "NICKNAME_TAKEN",
+        "field": "nickname",
+        "message": "이미 쓰는 닉네임입니다."
+      }
+    }
+  }
+}
