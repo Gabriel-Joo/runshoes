@@ -103,7 +103,7 @@
 
 .card__model {
   margin-top: 4px;
-  font-size: calc(var(--fs-card-model) * var(--text-scale));
+  font-size: calc(var(--fs-card-model) * var(--model-scale));
   font-weight: 700;
   line-height: 1.25;                /* 좁은 폭에서 긴 모델명이 두 줄이 될 때 */
 }
