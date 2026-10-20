@@ -3,8 +3,8 @@
 Vite + React + json-server 프로젝트를 교내 배포판(`aisw-apps.kopoctc.kr`)에 올리는 절차.
 RUNSHOES 배포 과정에서 겪은 시행착오를 정리한 문서로, 다른 프로젝트에도 그대로 적용할 수 있다.
 
-> **참고 — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)의 기록이다.**
-> 운영 배포는 쿠버네티스 GitOps로 전환했고, 2026-10-18 학교 클러스터에서 자체 클러스터로 옮겼다 — [INFRA.md](INFRA.md) 참고.
+> **참고 — 이 문서는 초기 배포 방식(웹 터미널 수동 배포)의 기록이다.** 그때 앱은 Express + json-server(`server.cjs`, `db.json`)였다.
+> 지금 앱은 Spring Boot + MySQL이고 자체 쿠버네티스 클러스터에 GitOps로 배포한다 — [INFRA.md](INFRA.md). 그 사이의 과정은 [HISTORY.md](HISTORY.md).
 > 웹 터미널은 학교 서비스(교내 계정)라 지금은 쓰지 않는다. 이 문서는 발전 과정과 시행착오의 기록으로 남긴다.
 > `vite.config.ts`의 `BASE_PATH` · `asset()` 헬퍼처럼 여기서 정한 것은 지금 코드에도 그대로 있다.
 >

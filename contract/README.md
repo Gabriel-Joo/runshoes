@@ -50,6 +50,17 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 - 헤더는 `content-type`(미디어 타입만) · `location`(경로만) · `cache-control` · `access-control-*` · `x-total-count` 만
 - `contract: false`(프런트가 쓰지 않는 json-server 동작)와 HTML 본문 해시는 INFO — FAIL 로 세지 않는다
 
+## 결과
+
+| 대상 | 본 시나리오 | 요약(mock) |
+|---|---|---|
+| Spring — 로컬 jar(2026-10-18) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 |
+| Spring — 이미지 `runshoes:phase4`(2026-10-18) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 |
+| Spring — 운영 `41f037451184`, 읽기 전용(2026-10-21) | PASS 23 · FAIL 0 · INFO 3 | — |
+
+INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
+계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
+
 ## 녹화에서 확인한 것 — 계획서와 다른 점
 
 계획서(2026-09-22, 코드를 읽고 쓴 것)와 실제 응답이 다른 곳. Spring 은 **실제 응답**에 맞춘다.

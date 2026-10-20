@@ -1,6 +1,6 @@
 # backend — RUNSHOES API (Spring Boot 3.5 · Java 21 · MySQL 8)
 
-json-server(`server.cjs` + `db.json`)를 대신한다. **계약의 정답은 `contract/baseline/node`(Node 앱 실제 응답)** — 계획서([docs/SPRING_MIGRATION_PLAN.md](../docs/SPRING_MIGRATION_PLAN.md))와 다르면 녹화를 따른다.
+RUNSHOES 의 REST API 와 React 빌드물 서빙. **계약의 정답은 `contract/baseline/node`(녹화한 응답)** — [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
 
 ```
 domain/   Shoe · Review · Term + 리포지토리(스키마는 Flyway — db/migration/V1, 시드 V2 는 scripts/gen-seed-sql.mjs 생성물)
@@ -43,35 +43,25 @@ docker run --rm --cpus=4 --cpu-shares=2 --memory=3g --security-opt seccomp=uncon
 docker load -i /tmp/out/runshoes.tar && IMAGE=runshoes:local contract/run-spring-local.sh
 ```
 
-## json-server 와 같게 한 것 (녹화로 확인)
+## 운영 설정 (클러스터)
 
-- 404 `{}` — 없는 id · 비숫자 id(`abc`, `01`) · 없는 컬렉션 · 그 밖의 `/api` 경로, 어떤 메서드든
-- 새 id 는 **max + 1**(마지막 것을 지우면 그 id 를 다시 쓴다) — AUTO_INCREMENT 가 아니라 앱이 매긴다. POST body 에 id 가 있으면 그 id(있는 id 면 500)
-- PATCH 는 body 에 있는 키만, null 도 반영. PUT 은 통째로 바꾸고 id 만 남긴다. DELETE 는 200 `{}`
-- POST 201 + `Location: <요청 URL>/<id>` + `Access-Control-Expose-Headers: Location`
-- 목록: 컬렉션에 있는 필드면 필터(`?brand=호카`, 값 여러 개는 OR), 없는 필드는 무시(`junk=1`), `_ne` · `_lte` · `_gte` · `_like` · `q`,
-  `_sort`/`_order`(여러 키, lodash `orderBy` — stable, 오름차순에서 null 뒤), `_start`/`_end`/`_limit` + `X-Total-Count`.
-  비교는 JS 문자열 기준(`rating=4` 는 맞고 `rating=4.0` 은 안 맞는다)
-- 헤더: 모든 경로 `ACAO: *`. `/api` 는 Origin 이 오면 그 값을 돌려주고 `Allow-Credentials: true`, `Cache-Control: no-cache` + `Pragma` + `Expires: -1`.
-  OPTIONS 는 204 + `Allow-Methods` + 요청 헤더 반사, `Cache-Control: no-store`
-- reviews: `likeCount` 가 NULL 이면 키를 뺀다. `createdAt` 은 UTC ms 까지(`2026-07-18T00:00:00.000Z` — 시드의 날짜만 값과 같은 순간)
-- terms: 시드의 id 12 두 개를 그대로
-- 요약 `/api/shoes/{id}/summary`: 프롬프트 글자 단위로 같게, 공감 순(stable), 리뷰 3개 미만이면 `reason`, 리뷰 수가 같으면 캐시, 실패면 `reason`. 헤더는 `ACAO *` · `no-store` 만(json-server 앞에서 응답)
-- SPA: `dist` 의 파일, 없으면 index.html(없는 `/assets/*.js` 도). `Cache-Control: public, max-age=0`
+ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은 application.yml 기본값.
 
-## json-server 와 다른 것 (기준선에 없고 프런트가 쓰지 않는 경우)
+| env | 값 |
+|---|---|
+| `SPRING_DATASOURCE_URL` | `jdbc:mysql://runshoes-mysql:3306/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC` |
+| `SPRING_DATASOURCE_USERNAME` / `_PASSWORD` | `runshoes` / Secret `runshoes-mysql` 의 `MYSQL_PASSWORD` |
+| `TZ` | `UTC` |
+| `OLLAMA_URL` | `http://192.168.122.1:11434` (GPU 호스트, VM 사설망) |
+| `SERVER_PORT` · `APP_STATIC` | 이미지 기본값 `3000` · `/opt/app/static` |
+| `BASE_PATH` | 비움(루트). 주면 그 아래로(context-path) |
 
-| 경우 | json-server | 여기 |
-|---|---|---|
-| 모르는 필드(POST · PATCH) | 그대로 저장 · 응답 | 버린다 |
-| 타입이 다른 값(숫자 칸에 문자열) | 그대로 저장 | 400 `{}` |
-| 없는 신발의 리뷰(POST · PATCH) | 받는다 | 400 `{}` (FK) |
-| PUT 에서 빠진 필드 | 키가 사라진다 | null — NOT NULL 칸이면 500 `{}` |
-| POST review 에 createdAt 없음 | 키 없이 저장 | 지금 시각 |
-| reviews `liked` | 키가 없을 수 있다 | 늘 낸다(없음 = false) |
-| terms 쓰기 | 받는다 | 405 |
-| `_page`(Link) · `_embed` · `_expand` · `/api/db` | 있다 | 없다(404 또는 무시) |
-| BASE_PATH 가 있을 때 | `/api` 를 BASE 아래와 루트 양쪽에서 받는다 | context-path 아래에서만(웹 터미널용 — 클러스터는 BASE_PATH 없음) |
-| `/actuator/health/*` | 없다(SPA index.html) | probes 용 |
-| 상태줄 · `Vary` 표기 | `200 OK`, `Origin, Accept-Encoding` | `200`, `origin,accept-encoding` — 의미는 같다 |
-| 동시 쓰기 | 한 프로세스가 차례로 | JVM 안에서는 잠금. Pod 가 둘이면 id 충돌이 500 으로 드러난다 |
+- 프로브: startup `/actuator/health` · readiness `/actuator/health/readiness`(readinessState + **db**) · liveness `/actuator/health/liveness`
+- 종료: graceful shutdown 20초(`server.shutdown: graceful`) — Deployment preStop 5초 뒤
+- 로그 확인: `kubectl -n runshoes logs deploy/runshoes -c runshoes` — 기동 때 Flyway(`Successfully applied …` 또는 `Schema … is up to date`)
+- 운영에서 계약 확인은 읽기만: `node contract/record.mjs --read-only …`(contract/README.md)
+
+## API 계약
+
+API 는 녹화한 응답(`contract/baseline/node`)을 바이트 수준까지 재현한다 — id 를 max+1 로 매기고, terms 의 id 12 중복을 그대로 두고, 숫자 스펙이 DOUBLE 인 것 등.
+같게 한 것 · 일부러 다르게 둔 것과 그 이유는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).

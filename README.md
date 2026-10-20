@@ -3,8 +3,8 @@
 > **러닝화, 제대로 읽기**
 > 스펙은 빠짐없이, 용어는 설명과 함께
 
-React · TypeScript · json-server 기반 러닝화 리뷰 아카이브를
-Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
+React · TypeScript 프런트와 Spring Boot · MySQL 백엔드로 만든 러닝화 리뷰 아카이브를
+자체 Kubernetes 클러스터에 GitOps CI/CD로 배포한 프로젝트
 
 **🔗 Live Demo — https://runshoes.ronanlab.dev** (자체 kubeadm 클러스터 · Cloudflare Tunnel)
 
@@ -12,7 +12,9 @@ Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-000?logo=vite&logoColor=white)
 ![React Router](https://img.shields.io/badge/React_Router-7-CA4245?logo=reactrouter&logoColor=white)
-![Express](https://img.shields.io/badge/Express-4-000?logo=express&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?logo=springboot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)
 ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?logo=jenkins&logoColor=white)
@@ -23,10 +25,11 @@ Kubernetes 위에 GitOps CI/CD로 배포한 프로젝트
 
 > **문서 안내**
 >
-> - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면)
-> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 GitOps CI/CD 파이프라인 · 학교 환경에서 옮긴 기록
-> - [docs/DEPLOY.md](docs/DEPLOY.md): 웹 터미널(aisw-lab) 배포 절차 (레거시 기록)
-> - [docs/SPRING_MIGRATION_PLAN.md](docs/SPRING_MIGRATION_PLAN.md): Spring Boot + MySQL 전환 계획 (학교 환경 기준 — 다시 쓸 예정)
+> - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면 · 설계)
+> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 · GitOps CI/CD
+> - [docs/API_CONTRACT.md](docs/API_CONTRACT.md): API 계약과 설계 근거 (id 매기기 · 타입 · 헤더가 왜 이런 모양인지)
+> - [docs/HISTORY.md](docs/HISTORY.md): 구축 · 전환 기록 (자체 클러스터 이주, 터널 무중단 전환, 계약 녹화로 검증한 백엔드 전환, 트러블슈팅)
+> - [backend/README.md](backend/README.md) · [contract/README.md](contract/README.md): 백엔드 개발 · 계약 검증
 
 ---
 
@@ -53,7 +56,7 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 | 해부도 히어로      | 뒤꿈치 · 밑창 · 측면 클로즈업 슬라이드에 용어 캡션을 붙여 사이트 성격을 첫 화면에서 전달 |
 | 정보 없음의 명시   | 브랜드가 공개하지 않은 스펙은 추측하지 않고 "정보 없음"으로 표기                         |
 | 발볼 · 와이드 정보 | 한국 러너에게 중요하지만 해외 사이트가 다루지 않는 항목을 전면에 노출                    |
-| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리 (GPU 호스트 직접 연결)   |
+| 리뷰 요약 (Ollama) | 리뷰 3개 이상인 신발은 LLM이 좋았던 점 · 아쉬운 점을 나눠 정리 (Ollama, GPU 서버)        |
 
 ### 비주얼 컨셉 — 표본 전시실
 
@@ -69,40 +72,36 @@ RUNSHOES는 **정보를 덜어내지 않는다.**
 
 ## 2. 빠르게 실행하기
 
-### Docker
-
-```bash
-docker build -t runshoes .
-docker run -p 8080:3000 runshoes
-# http://localhost:8080
-```
-
-### 로컬 개발 — 터미널 2개
+### 로컬 개발
 
 ```bash
 git clone https://github.com/Gabriel-Joo/runshoes.git
 cd runshoes
 yarn
 
-yarn dev       # Vite         http://localhost:5173
-yarn server    # json-server  http://localhost:3000
+docker compose up -d            # MySQL 8   127.0.0.1:3307
+# 백엔드 — backend/README.md (Maven, Java 21). 첫 기동에 Flyway 가 스키마·시드를 넣는다
+#   API  http://localhost:3000
+yarn dev                        # Vite      http://localhost:5173
+python chatbot_server.py        # (선택) 챗봇 ws://localhost:8766
 ```
-
-> json-server는 **0.17.4 고정.**
-> 1.x는 id를 nanoid 문자열로 생성해 `/edit/:id` 라우팅과 맞지 않는다.
-
-> Express는 **4.x 고정.**
-> Express 5는 `req.query`가 읽기 전용이라 json-server의 정렬 파라미터
-> (`?_sort=&_order=`) 처리가 깨진다. SPA 폴백도 Express 4 문법인 `app.get("/*", ...)`을 쓴다.
 
 ### API 주소
 
-`src/api.ts`가 API 주소를 한 곳에서 관리한다. 운영 배포(Kubernetes)에서는 `server.cjs`가 정적 파일과 `/api`를 같은 오리진에서 함께 서비스하므로 별도 설정이 필요 없다.
+`src/api.ts`가 API 주소를 한 곳에서 관리한다. 개발 중에는 `http://localhost:3000`(Spring Boot), 운영에서는 Spring Boot가 React 빌드물과 `/api`를 같은 오리진에서 함께 서비스하므로 별도 설정이 필요 없다.
+
+### 이미지
+
+```bash
+docker build -t runshoes .      # Vite → Maven → jlink JRE → alpine (252MB)
+docker run -p 8080:3000 -e SPRING_DATASOURCE_URL='jdbc:mysql://<host>:3306/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC' \
+  -e SPRING_DATASOURCE_PASSWORD=... runshoes
+```
 
 ### 데이터 초기화
 
 ```bash
-git checkout -- db.json
+docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다시 띄우면 Flyway 가 시드(V2)를 다시 넣는다
 ```
 
 ---
@@ -148,10 +147,10 @@ git checkout -- db.json
 - [x] 모달 열기 / 닫기 — **배경 클릭 닫기 포함**
 - [x] 등록·관리 화면의 삭제 확인 모달
 
-### ⑥ 서버 연결 (json-server)
+### ⑥ 서버 연결
 
-- [x] json-server 로컬 설치 후 `yarn`으로 실행
-- [x] Vite와 터미널 **2개 동시** 실행
+- [x] REST API 서버와 연결 — 과제 요건은 json-server. 같은 API 계약을 **Spring Boot + MySQL**로 구현했다([API_CONTRACT](docs/API_CONTRACT.md))
+- [x] Vite 개발 서버와 API 서버 **동시** 실행
 - [x] 데이터 = 항목(`shoes`) + 리뷰(`reviews`, `shoeId`로 항목별 구분)
 - [x] 쓰기 후 다시 불러오기 (re-fetch)
 - [x] TS `interface`로 모양 정의, `useState<T[]>`
@@ -176,14 +175,17 @@ git checkout -- db.json
 - [x] **모달 이미지 갤러리** — 다중 이미지 슬라이드 + 썸네일 드래그 스크롤
 - [x] **리뷰 좋아요 + 베스트 리뷰 상단 고정**
 - [x] **맞춤 추천 `/recommend`** — 5문항 점수제 (용도 · 발볼 · 안정성 · 쿠션 · 예산)
-- [x] **Kubernetes GitOps 배포** — Jenkins(BuildKit) → Harbor → ArgoCD (자체 클러스터, 2026-10-18 학교 환경에서 이주)
-- [ ] ~~**About 페이지 `/about`**~~ — 서비스 설계 의도와 GitOps 구축 과정을 정리한 소개 페이지. 옛 인프라(GitLab · Kaniko · vcluster) 설명이라 2026-10-18 지웠다 — Spring · MySQL 전환 뒤 다시 쓴다
+- [x] **Spring Boot + MySQL 백엔드** — Flyway 스키마 · 시드, 녹화한 응답으로 API 계약 검증(`contract/`)
+- [x] **Kubernetes GitOps 배포** — Jenkins(BuildKit) → Harbor → ArgoCD, 자체 kubeadm 클러스터 · 무중단 롤링 배포
 - [x] **리뷰 요약 (Ollama)** — LLM으로 리뷰의 긍정·부정 의견을 요약. 프로덕션 K8s에서도 동작 (아래 11장 참고)
 - [x] **웹소켓 챗봇** — 파이썬 사이드카 컨테이너, Ollama 연동 (`/ws/chat`)
 
 ---
 
 ## 4. 데이터 설계
+
+> 아래는 API가 주고받는 JSON 필드다. 저장은 MySQL 테이블(`backend/src/main/resources/db/migration/V1__schema.sql`, 컬럼은 snake_case).
+> 숫자 스펙이 `DOUBLE`, id가 `max+1`, terms id가 겹치는 등 스키마의 특이한 선택은 [API_CONTRACT](docs/API_CONTRACT.md) 1장.
 
 ### shoes
 
@@ -213,7 +215,7 @@ git checkout -- db.json
 **설계 판단**
 
 - **`rating` · `reviewCount` · `likeCount`를 계산값이 아니라 저장값으로 둔 이유**
-  요건이 `?_sort=&_order=` 서버 정렬을 명시하므로 json-server가 인식할 수 있는 실제 필드여야 한다.
+  요건이 `?_sort=&_order=` 서버 정렬을 명시하므로 정렬 기준이 저장된 실제 필드여야 한다.
   리뷰 `POST` / `PATCH` / `DELETE` 시 해당 신발을 다시 `PATCH`해 동기화한다.
 
 - **수치 스펙을 nullable로 둔 이유**
@@ -233,18 +235,17 @@ git checkout -- db.json
 | 필드        | 타입   | 설명                                                |
 | ----------- | ------ | --------------------------------------------------- |
 | `id`        | number |                                                     |
-| `shoeId`    | number | 신발 id — json-server 관계 규칙(`<리소스단수형>Id`) |
+| `shoeId`    | number | 신발 id (`<리소스단수형>Id` 관례, FK)               |
 | `author`    | string | 작성자 닉네임                                       |
 | `rating`    | number | 별점 1~5                                            |
 | `content`   | string | 내용                                                |
 | `likeCount` | number | "도움이 돼요 👍" 수 — 베스트 리뷰 상단 고정에 사용  |
 | `createdAt` | string | 작성일 — **전체 ISO 문자열로 저장**                 |
 
-> `shoeId`로 이름을 맞추면 json-server의 `_embed` / `_expand`를 쓸 수 있다.
-> `GET /shoes/1?_embed=reviews`로 신발과 리뷰를 한 번에 조회 가능.
+> 신발별 리뷰는 `GET /api/reviews?shoeId=1`로 조회한다. 신발을 지우면 리뷰도 함께 지워진다(FK `ON DELETE CASCADE`).
 
 > `createdAt`은 날짜만 잘라 저장하면 UTC 기준으로 하루가 밀린다.
-> 전체 ISO 문자열로 저장하고 `src/utils/date.ts`의 `formatDate`에서 상대 시간으로 표시한다.
+> UTC `DATETIME(3)`으로 저장하고 ms까지 ISO(`…Z`)로 돌려준다. `src/utils/date.ts`의 `formatDate`에서 상대 시간으로 표시한다.
 
 ### terms — 용어 툴팁
 
@@ -334,70 +335,59 @@ git checkout -- db.json
 
 | 저장소 | 주소 | 담는 것 |
 | ------ | ---- | ------- |
-| 앱 레포 | `github.com/Gabriel-Joo/runshoes` (public) | 소스 · Dockerfile 2개 · Jenkinsfile. main에 push하면 Jenkins가 빌드한다 |
+| 앱 레포 | `github.com/Gabriel-Joo/runshoes` (public) | 프런트 · 백엔드 · Dockerfile 2개 · Jenkinsfile · API 계약(`contract/`). main에 push하면 Jenkins가 빌드한다 |
 | 인프라 레포 | `github.com/Gabriel-Joo/ronanlab-infra` (private) `apps/runshoes/` | 쿠버네티스 매니페스트 · 이미지 태그. 태그는 Jenkins가 커밋한다 |
 
 ```bash
-git push origin main     # → Jenkins 빌드 → Harbor → 인프라 레포 태그 커밋 → ArgoCD Sync(지금은 사람이 누른다)
+git push origin main     # → Jenkins 빌드 → Harbor → 인프라 레포 태그 커밋 → ArgoCD Sync
 ```
-
-> 2026-10-18 전에는 학교 GitLab(`std-gitlab.kopoctc.kr/kopo17/runshoes`)이 원본이고 GitHub은 거울이었다.
-> `gitlab` remote의 push URL에 두 주소를 함께 등록해 한 번에 양쪽으로 밀었다(학교 GitLab 미러링이 외부 push를 막아서).
-> 학교 GitLab은 버렸다 — 지금은 GitHub이 원본이다. 로컬 clone에 `gitlab` remote가 남아 있으면 지운다.
 
 ---
 
 ## 6. 폴더 구조
 
+```
 runshoes/
-├─ db.json ← 루트 (src/ 아님)
-├─ Dockerfile
-├─ Dockerfile.chatbot ← 챗봇 사이드카 이미지 (python:3.12-alpine, 8766)
-├─ Jenkinsfile ← Jenkins 파이프라인 (BuildKit × 2 + ronanlab-infra 태그 커밋)
-├─ server.cjs ← express(정적) + json-server(/api) + 리뷰 요약(Ollama) 통합
-├─ chatbot_server.py ← 웹소켓 챗봇 서버 (Ollama, `OLLAMA_URL` 환경변수)
-├─ start_server.sh ← (레거시) 웹 터미널 수동 배포용 시작 스크립트
-├─ scripts/ ← seed 스크립트 (run-once, 이미 반영 완료)
-├─ docs/
-│ ├─ INFRA.md ← K8s GitOps CI/CD · 이주 기록
-│ ├─ DEPLOY.md ← 웹 터미널 배포 (레거시)
-│ ├─ SPRING_MIGRATION_PLAN.md ← Spring Boot + MySQL 전환 계획
-│ ├─ design-prompt.md ← 디자인 요청 및 수정 이력
-│ └─ design-handoff.md ← 디자인 확정 명세
-├─ public/
-│ └─ images/
-│ ├─ (신발 이미지)
-│ └─ screenshots/ ← About 화면 캡쳐 (페이지는 지웠다 — 다시 쓸 때 쓴다)
-└─ src/
-├─ api.ts ← API 주소 상수
-├─ types/
-│ └─ index.ts ← Shoe, Review, Term
-├─ utils/
-│ └─ date.ts ← formatDate (상대 시간 표시)
-├─ components/
-│ ├─ Header.tsx ← 상단 메뉴 · 햄버거
-│ ├─ Hero.tsx ← 해부도 슬라이드
-│ ├─ FilterBar.tsx ← 용도별 필터
-│ ├─ SortBar.tsx ← 정렬 · 찜 토글
-│ ├─ ShoeCard.tsx ← 카드 (랭킹 모드 겸용)
-│ ├─ ShoeImage.tsx ← 이미지 + 플레이스홀더
-│ ├─ ShoeGallery.tsx ← 모달 이미지 슬라이드 + 썸네일
-│ ├─ ShoeModal.tsx ← 상세 모달
-│ ├─ ReviewSection.tsx ← 리뷰 CRUD
-│ ├─ ReviewItem.tsx ← 리뷰 1건 (좋아요 · 인라인 편집)
-│ ├─ ReviewSummary.tsx ← 리뷰 요약 카드 (Ollama)
-│ ├─ TermTooltip.tsx ← 용어 툴팁
-│ ├─ ConfirmModal.tsx ← 삭제 확인
-│ └─ ScrollTop.tsx ← 라우트 이동 시 스크롤 초기화
-├─ pages/
-│ ├─ ShoeList.tsx ← /
-│ ├─ Recommend.tsx ← /recommend
-│ ├─ Best.tsx ← /best
-│ ├─ Admin.tsx ← /admin
-│ ├─ ShoeForm.tsx ← /new, /edit/:id
-│ └─ NotFound.tsx ← \*
-├─ App.tsx
-└─ main.tsx
+├─ src/                    ← React 프런트
+│  ├─ api.ts               ← API 주소 상수
+│  ├─ types/index.ts       ← Shoe, Review, Term
+│  ├─ utils/date.ts        ← formatDate (상대 시간 표시)
+│  ├─ components/
+│  │  ├─ Header.tsx        ← 상단 메뉴 · 햄버거
+│  │  ├─ Hero.tsx          ← 해부도 슬라이드
+│  │  ├─ FilterBar.tsx     ← 용도별 필터
+│  │  ├─ SortBar.tsx       ← 정렬 · 찜 토글
+│  │  ├─ ShoeCard.tsx      ← 카드 (랭킹 모드 겸용)
+│  │  ├─ ShoeImage.tsx     ← 이미지 + 플레이스홀더
+│  │  ├─ ShoeGallery.tsx   ← 모달 이미지 슬라이드 + 썸네일
+│  │  ├─ ShoeModal.tsx     ← 상세 모달
+│  │  ├─ ReviewSection.tsx ← 리뷰 CRUD
+│  │  ├─ ReviewItem.tsx    ← 리뷰 1건 (좋아요 · 인라인 편집)
+│  │  ├─ ReviewSummary.tsx ← 리뷰 요약 카드 (Ollama)
+│  │  ├─ TermTooltip.tsx   ← 용어 툴팁
+│  │  ├─ ConfirmModal.tsx  ← 삭제 확인
+│  │  ├─ ChatBot.tsx       ← 웹소켓 챗봇
+│  │  └─ ScrollTop.tsx     ← 라우트 이동 시 스크롤 초기화
+│  ├─ pages/               ← ShoeList(/) · Recommend · Best · Admin · ShoeForm(/new, /edit/:id) · NotFound
+│  ├─ App.tsx
+│  └─ main.tsx
+├─ public/images/          ← 신발 이미지
+├─ backend/                ← Spring Boot API (backend/README.md)
+│  └─ src/main/
+│     ├─ java/…/runshoes/  ← api/ · domain/ · summary/ · config/
+│     └─ resources/db/migration/  ← Flyway V1(스키마) · V2(시드)
+├─ chatbot_server.py       ← 웹소켓 챗봇 (Ollama, OLLAMA_URL)
+├─ Dockerfile              ← 앱 이미지 (Vite → Maven → jlink JRE → alpine)
+├─ Dockerfile.chatbot      ← 챗봇 사이드카 이미지 (python:3.12-alpine, 8766)
+├─ Jenkinsfile             ← BuildKit × 2 + ronanlab-infra 태그 커밋
+├─ docker-compose.yml      ← 로컬 MySQL
+├─ contract/               ← API 계약 녹화본 · 녹화 · 비교 도구 (contract/README.md)
+├─ scripts/                ← gen-seed-sql.mjs(db.json → Flyway V2) · verify-seed · 시드 보강 스크립트
+├─ db.json                 ← 시드 원본(V2 의 소스)
+├─ server.cjs              ← API 계약 기준선 (contract/) — 운영 이미지에는 없다
+└─ docs/                   ← INFRA · API_CONTRACT · HISTORY · design-* · DEPLOY · SPRING_MIGRATION_PLAN(기록)
+```
+
 CSS는 컴포넌트별 파일로 분리하고, 전역 토큰(색상 · 폰트)만 `index.css`에 둔다.
 
 ---
@@ -441,8 +431,6 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 ## 8. 배포
 
-로컬 개발 → 웹 터미널(aisw-lab) → 학교 쿠버네티스(vcluster) → **자체 쿠버네티스 클러스터**로 단계적으로 발전시켰다.
-
 ```
 개발자 ──git push──▶ GitHub ──(2분 폴링)──▶ Jenkins
                                             │ BuildKit × 2 (runshoes / runshoes-chatbot)
@@ -453,19 +441,19 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
                                             │
                     ArgoCD ────sync────▶ Kubernetes (runshoes 네임스페이스)
                                             │
-                     Pod = runshoes(3000) + chatbot 사이드카(8766)
+                     Pod = runshoes(Spring Boot :3000) + chatbot 사이드카(:8766)
+                     StatefulSet = runshoes-mysql (MySQL 8)
 ```
 
 - 클러스터: GPU 호스트 위 VM 4대의 **kubeadm 클러스터**(`m-k8s` + `w1~w3-k8s`). Jenkins · Harbor · ArgoCD도 같은 클러스터에 있다
+- 앱: Spring Boot 하나가 React 빌드물과 `/api`를 함께 서비스한다. 무상태 — **RollingUpdate(maxUnavailable 0)로 끊김 없이 배포**한다(Ready는 DB 접속까지 본다)
+- 데이터: MySQL StatefulSet(local-path PVC). 스키마 · 시드는 앱이 기동할 때 Flyway로
 - Ingress: ingress-nginx. 단일 호스트에서 path 기반 라우팅 — `/` → runshoes(3000), `/ws/chat` → chatbot(8766)
-- 챗봇 사이드카: 파이썬 웹소켓 챗봇(`chatbot_server.py`)을 같은 파드의 별도 컨테이너로 배포. 이미지(`runshoes-chatbot`)는 앱과 같은 태그로 따로 빌드한다
-- Ollama 연동: Pod가 VM 사설망으로 GPU 호스트의 Ollama에 바로 붙는다 — `OLLAMA_URL=http://192.168.122.1:11434`.
-  runshoes · chatbot 두 컨테이너가 같은 값을 쓴다
+- 챗봇 사이드카: 파이썬 웹소켓 챗봇(`chatbot_server.py`)을 같은 Pod의 별도 컨테이너로 배포. 이미지(`runshoes-chatbot`)는 앱과 같은 태그로 따로 빌드한다
+- Ollama 연동: Pod가 VM 사설망으로 GPU 호스트의 Ollama에 바로 붙는다 — `OLLAMA_URL=http://192.168.122.1:11434`
 - 외부 노출: 클러스터 공용 **Cloudflare Tunnel**(cloudflared, `cloudflared` 네임스페이스) → https://runshoes.ronanlab.dev
-- 데이터: `db.json`을 PVC에 두고 initContainer로 시드(PVC에 파일이 없을 때만). 파드 재시작에도 유지된다
-- 배포 전략: Pod 1개 · `Recreate` — db.json 단일 파일이라 배포 때 잠깐 끊긴다(12장)
 
-자세한 내용과 학교 환경에서 옮긴 기록은 [docs/INFRA.md](docs/INFRA.md).
+자세한 내용은 [docs/INFRA.md](docs/INFRA.md).
 
 ---
 
@@ -480,19 +468,19 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 이미지 다중화 | `image` → `images[]`, 모달 슬라이드 + 썸네일                         |
 | 리뷰 좋아요   | 리뷰별 좋아요 + 베스트 리뷰 상단 고정                                |
 | 맞춤 추천     | `/recommend` 5문항 점수제                                            |
-| 배포          | 웹 터미널 → Kubernetes GitOps CI/CD → 자체 클러스터 이주(2026-10-18) |
+| 백엔드        | Spring Boot + MySQL — Flyway 스키마 · 시드, 녹화한 API 계약으로 검증(`contract/`) |
+| 배포          | 자체 Kubernetes 클러스터 GitOps CI/CD, 무중단 롤링 배포               |
 | 챗봇          | 파이썬 웹소켓 챗봇 → 사이드카 컨테이너 배포 (`/ws/chat`)             |
 | 인프라        | Cloudflare Tunnel로 사이트 외부 노출, Ollama는 사설망 직접 연결     |
-| About 페이지  | 기획 의도 · 추천/랭킹 산식 · 화면 · 파이프라인 도식 · 트러블슈팅 (2026-10-18 지움 — 옛 인프라 설명, 전환 뒤 다시) |
 | 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작)        |
 
 ### 예정
 
 | 항목                    | 내용                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------ |
-| 로그인 · 스프링 백엔드  | json-server 대신 Spring(Java) API 신설, 사용자 계정 도입 (→ 12장)                    |
-| MySQL 이관              | `db.json` → MySQL, 앱 무상태화 후 무중단 배포 · 수평 확장 (→ 12장)                   |
-| 인프라 심화             | probe · RollingUpdate · Argo Rollouts · 사이드카 로그 · CronJob 통계 스냅샷 (→ 12장) |
+| 로그인                  | 사용자 계정 · Spring Security, 리뷰 좋아요를 `review_likes`로 분리 (→ 12.3)          |
+| About 페이지            | 서비스 설계 의도와 인프라 구축 과정을 정리한 소개 페이지 (다시 쓰는 중)               |
+| 인프라 심화             | Argo Rollouts · 사이드카 로그 · CronJob 통계 스냅샷 · DB 백업 (→ 12장)               |
 | 비교 (레이더 차트)      | 신발 2~3개 스펙을 오각형 레이더 차트로 겹쳐 비교                                     |
 | 컬러웨이 선택           | 같은 모델의 다른 색상 전환                                                           |
 | `/glossary`             | 용어사전 페이지 (`terms`의 `description` 활용)                                       |
@@ -502,12 +490,11 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 인프라 직무를 목표로, 기능은 로그인까지 완결한 뒤 힘을 인프라 쪽에 싣는다.
 
-1. **로그인 + 스프링 백엔드** — 사용자 계정 도입, json-server를 Spring API로 대체
-2. **MySQL 이관** — 데이터 계층 교체. **인프라 잠금 해제 지점**으로, 앱 무상태화 · 무중단 배포 · 수평 확장이 모두 여기서 열린다
-3. **인프라 심화** — probe · 무중단 배포 · Argo Rollouts · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷
-4. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
+1. **로그인** — 사용자 계정 도입. 웹 · 앱이 함께 쓰는 Spring API 위에
+2. **인프라 심화** — Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 · MySQL 백업
+3. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
 
-> CKA 자격증 학습 범위(probe · rolling update · CronJob 등)가 4단계와 직접 겹쳐,
+> CKA 자격증 학습 범위(probe · rolling update · CronJob 등)가 이 단계들과 직접 겹쳐,
 > 자격증 공부가 곧 프로젝트 인프라 구현으로 이어지는 선순환 구조다.
 
 ### 확장 로드맵 — 러닝 통합 플랫폼
@@ -560,98 +547,56 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 나눠 요약한다. **Ollama(gemma4 8B)** 기반이며, GPU 서버의 Ollama를
 **쿠버네티스 프로덕션에서도 실시간으로** 부른다.
 
-### 동작 방식 (현재 · Ollama)
+### 동작 방식
 
-- `server.cjs`가 `/api/shoes/:id/summary`에서 해당 신발의 리뷰를 모아 프롬프트로 구성
-- 공감(좋아요) 수가 많은 리뷰일수록 더 비중 있게 반영하도록 프롬프트에 명시
+- `SummaryService`(백엔드)가 `/api/shoes/:id/summary`에서 해당 신발의 리뷰를 모아 프롬프트로 구성
+- 공감(좋아요) 수가 많은 리뷰일수록 더 비중 있게 반영하도록 프롬프트에 명시 — 리뷰는 공감 순으로 넣는다
 - 의견이 서로 반대되는 경우, 한쪽만 고르지 않고 "의견이 갈립니다"처럼 양쪽을 함께 언급하도록 지시
 - 요약은 서버 메모리에 캐싱하고, 해당 신발의 리뷰 개수(`reviewCount`)가 바뀔 때만 재생성한다.
   같은 개수로는 재호출하지 않으므로, 방문자가 반복해서 확인해도 추가 연산이 발생하지 않는다.
-- Ollama 호출은 Node 내장 `fetch`로 처리한다.
-  `OLLAMA_URL` 환경변수(프로덕션: `http://192.168.122.1:11434`)로 대상을 지정한다. 챗봇(`chatbot_server.py`)도 같은 변수를 읽는다.
+- 리뷰가 3개 미만이거나 LLM 호출이 실패하면 `{summary: null, reason}`을 돌려준다(언제나 200 — 화면은 카드를 숨긴다)
+- `OLLAMA_URL` 환경변수(프로덕션: `http://192.168.122.1:11434`)로 대상을 지정한다. 챗봇(`chatbot_server.py`)도 같은 변수를 읽는다.
+  쿠버네티스 노드가 GPU 호스트 위의 VM이고 같은 사설망에 있어 Pod가 Ollama에 바로 닿는다
+- 개발 · 검증은 고정 응답 mock(`contract/mock-ollama.mjs`)으로 — GPU를 쓰지 않는다
 
-### 해결 이력 — Pod에서 Ollama로 닿지 않던 문제
-
-처음에는 Ollama가 별도 PC(사설 IP)에서 구동 중이었다. 로컬 개발 환경과
-웹 터미널은 학교의 같은 물리 네트워크에 있어 직접 통신이 가능했지만,
-쿠버네티스 Pod는 vcluster의 오버레이 네트워크 안에 있어 같은 사설 IP 대역으로도
-경로 자체가 존재하지 않았다(Pod 안에서 직접 확인 — 요청이 항상 타임아웃).
-방화벽 문제가 아니라 vcluster 네트워크 구조 자체의 제약이라,
-Ollama를 클러스터 안에 띄우는 방안도 검토했으나 컨테이너 리소스 상한(2Gi)에서
-8B 모델 구동이 어려워 기각했다.
-
-**학교 환경에서의 해결책 — Cloudflare Tunnel + Access (2026-10-18까지):**
-
-- **ollama-tunnel** 이 GPU 서버의 Ollama를 공개 HTTPS로 노출한다 →
-  `https://ollama.ronanlab.dev`. Pod에서 공개 인터넷으로 나가는 경로(egress)는
-  열려 있으므로 사설망 라우팅 제약을 우회한다.
-- 앞단의 **Cloudflare Access**를 Service Token으로 통과한다.
-  `CF-Access-Client-Id` / `CF-Access-Client-Secret` 헤더를 실어 호출하며,
-  자격증명은 Kubernetes Secret(`cf-access-credentials`) → 환경변수로 주입한다.
-  코드에 비밀값을 두지 않는 12장의 외부화 패턴과 같은 구조다.
-- runshoes · chatbot 두 서버 모두 이 방식으로 Ollama을 호출한다.
-
-> Gemini API 전환은 한때 검토했던 방향이나, 터널 + Access로 클러스터에서
-> 실시간 추론이 가능해져 **전환 보류**. 비용·응답속도 문제가 생기면
-> 그때 대안으로 다시 검토한다.
-
-**지금 — 사설망 직접 연결 (2026-10-18부터):**
-
-자체 클러스터로 옮기면서 이 문제가 구조적으로 사라졌다. 쿠버네티스 노드가 GPU 호스트 위의 VM이고,
-VM들이 호스트와 같은 사설망(libvirt, 192.168.122.0/24)에 있어 Pod가 호스트의 Ollama에 바로 닿는다.
-
-- `OLLAMA_URL=http://192.168.122.1:11434` — 같은 호스트의 Ollama를 Cloudflare로 나갔다 들어오지 않고 바로 부른다
-- 공개 경로가 아니므로 Access Service Token(`CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`)도 필요 없다. 두 서버의 헤더 코드는 남아 있지만 클러스터에서는 값을 주지 않는다
-- 같은 클러스터의 petmint도 같은 길로 Ollama를 부른다
-- `chatbot_server.py`는 `OLLAMA_URL`이 없으면 예전 주소(`https://ollama.ronanlab.dev`)를 쓴다 — 로컬 개발용 기본값
+> 대안: 비용 · 응답속도 문제가 생기면 Gemini 같은 API로 바꿀 수 있다 — `SummaryService`의 호출부만 바꾸면 된다.
 
 ---
 
-## 12. 다음 단계 — 데이터 계층 이관과 무중단 배포 (설계)
+## 12. 데이터 계층과 무중단 배포 — 설계
 
-> 아직 구현 전 단계로, "왜 이 방향으로 가는가"를 정리한 설계 문서다.
-> 현재 배포는 동작하지만, 인프라 관점에서 명확한 한계가 있고
-> 그 한계를 어떻게 풀지가 이 프로젝트의 다음 목표다.
+> "왜 이 구조인가"를 정리한 설계 문서다. API의 세부 모양(id · 타입 · 헤더)이 왜 그런지는 [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
 
-### 12.1 왜 db.json을 버리는가
+### 12.1 왜 파일 저장소가 아니라 MySQL인가
 
-현재 데이터는 `db.json` 파일 하나이고, json-server가 이 파일을
-통째로 읽고 쓰며 REST API를 대신 제공한다. 이 구조에는 두 가지
-근본적인 한계가 있다.
+데이터를 파일 하나(JSON 등)에 두고 서버가 통째로 읽고 쓰는 구조에는 두 가지 근본적인 한계가 있다.
 
-**첫째, 무중단 배포를 할 수 없다.** 지금 Deployment의 배포 전략은
-`Recreate`(기존 Pod를 모두 종료한 뒤 새 Pod를 생성)로 설정돼 있다.
-얼핏 불필요해 보이지만 의도된 선택이다. db.json은 파일 하나를
+**첫째, 무중단 배포를 할 수 없다.** 파일 하나를
 여러 프로세스가 동시에 쓰면 내용이 깨질 수 있어서(single writer 문제),
 구·신 Pod가 잠시라도 함께 떠 있으면 위험하다. 무중단 배포
 (`RollingUpdate`)는 정의상 구·신 Pod가 공존하는 방식이므로,
-현재 데이터 계층으로는 애초에 불가능하다. 즉 배포할 때마다
-서비스가 잠깐 끊긴다.
+파일 저장소로는 배포 전략을 `Recreate`(기존 Pod를 모두 종료한 뒤 새 Pod를 생성)로
+둘 수밖에 없고, 배포할 때마다 서비스가 잠깐 끊긴다.
 
 **둘째, 확장과 로그인을 감당할 수 없다.** Pod를 여러 개로 늘리거나
 (수평 확장), 사용자 계정·인증 같은 관계형 데이터를 다루려면
 파일 기반 저장소로는 한계가 뚜렷하다.
 
 결론적으로 이 프로젝트에서 목표하는 "무중단 배포 · 수평 확장 · 로그인"은
-전부 데이터 계층 교체를 전제로 한다. 데이터 계층이 모든 것의 열쇠다.
+전부 데이터 계층을 전제로 한다. 데이터 계층이 모든 것의 열쇠다.
 
-### 12.2 MySQL 선택과 이관 범위
+### 12.2 MySQL과 Spring Boot
 
-저장소는 **MySQL**로 옮긴다. SQLite가 아니라 MySQL인 이유는,
+저장소는 **MySQL**이다. SQLite가 아니라 MySQL인 이유는,
 SQLite는 결국 파일 기반이라 앞서 말한 single writer 문제가 그대로
 남기 때문이다. 네트워크로 접속하는 DB여야 애플리케이션을
 **무상태(stateless)**로 만들 수 있고, 그래야 앱 Pod를 자유롭게
 여러 개 띄우고 무중단으로 교체할 수 있다. 상태(데이터)는
 DB 한 곳으로 격리하고, 앱은 상태를 갖지 않는 것이 핵심이다.
 
-이관의 실제 무게 중심은 저장소 교체가 아니라 **백엔드를 직접
-구현하는 것**이다. 지금까지는 json-server가 사실상 백엔드 역할을
-대신하며 `/reviews?shoeId=3` 같은 요청을 자동으로 처리해 줬다.
-MySQL로 가면 json-server가 사라지므로, 그 API를 직접 만들어야 한다.
-이때 백엔드는 `server.cjs`(Express)에 얹지 않고, **별도의 Spring(Java)
-애플리케이션**으로 신설한다. Spring Boot가 REST API를 노출하고
-JPA로 MySQL에 접근하는 구조다. 프론트엔드의 `fetch` 호출 코드는
-거의 그대로지만, 그 요청을 받아 SQL로 처리하는 계층이 새로 생긴다.
+백엔드는 **Spring Boot**(Java 21)다. REST API를 노출하고
+JPA로 MySQL에 접근하며, 스키마와 시드는 **Flyway**가 버전으로 관리한다(V1 스키마, V2 시드 — 적용된 버전은 고치지 않고 다음 버전으로).
+같은 애플리케이션이 React 빌드물도 서비스해 프런트와 API가 한 오리진에 있다.
 
 > **왜 Express가 아니라 Spring인가**
 > 채용시장에서 Spring 수요가 크고, 마침 교육 과정에서 Spring을
@@ -663,25 +608,12 @@ JPA로 MySQL에 접근하는 구조다. 프론트엔드의 `fetch` 호출 코드
 > 함께 사용한다. 따라서 처음부터 웹 전용이 아니라 **두 클라이언트가
 > 공유하는 API**로 스키마와 엔드포인트를 설계한다.
 
-이관 단계:
-
-1. **백엔드 신설** — Spring Boot 애플리케이션으로 REST API를 작성하고
-   JPA로 MySQL에 접근. 가장 큰 작업.
-2. **스키마 설계** — 현재 `shoes` · `reviews` · `terms`를 테이블로
-   변환. 향후 `users` 테이블 자리까지 미리 반영.
-3. **데이터 이관 스크립트** — 기존 db.json을 읽어 INSERT하는
-   일회성 스크립트.
-4. **Kubernetes 개편** — MySQL을 StatefulSet + PVC로 올리고,
-   앱 Deployment는 무상태화. 이 시점부터 무중단·확장이 열린다.
-
 ### 12.3 스키마 방향 — 로그인을 미리 고려
 
 현재 리뷰 좋아요는 `likeCount`(숫자) + `liked`(전역 눌림 상태)로,
-로그인이 없어서 생긴 임시 구조다. MySQL 이관 시에는 좋아요를
-**별도 테이블(`review_likes`, 예: `review_id` + `user_id`)로 분리**한다.
-이렇게 하면 로그인 기능이 붙었을 때 "내가 누른 리뷰만" 정확히
-판별할 수 있다. `users` 테이블이 없는 현재는 이 테이블을 비워두되,
-스키마는 미래를 보고 설계해 두 번 이관하는 일을 피한다.
+로그인이 없어서 생긴 임시 구조다. 로그인을 붙일 때 좋아요를
+**별도 테이블(`review_likes`, 예: `review_id` + `user_id`)로 분리**한다(Flyway V3).
+이렇게 하면 "내가 누른 리뷰만" 정확히 판별할 수 있다.
 
 ### 12.4 접속 정보 관리와 커넥션 풀
 
@@ -689,11 +621,10 @@ DB 계정·비밀번호는 코드에 넣지 않고 다음 흐름으로 주입한
 
 Kubernetes Secret → Pod 환경변수 → Spring 설정(application.yml) → MySQL 접속
 
-로컬 개발에서는 `.env` 대응 프로파일, 클러스터에서는 Secret을 사용한다.
-이 "설정 외부화"는 이미 BASE_PATH · DB_PATH를 환경변수로 분리해 둔
-방식의 연장선이며, 학교 시절 Ollama 호출에 쓰던 Access Service Token 주입(11장)과도 동일한 패턴이다.
+로컬 개발에서는 `docker-compose.yml`의 MySQL과 application.yml 기본값, 클러스터에서는 Secret(`runshoes-mysql`)을 사용한다.
+BASE_PATH · OLLAMA_URL도 같은 방식으로 환경변수로 분리한다.
 
-커넥션 풀은 **Spring Boot가 기본으로 HikariCP를 내장**한다.
+커넥션 풀은 **Spring Boot가 기본으로 HikariCP를 내장**한다(풀 5개).
 요청마다 새로 연결하는 대신 풀에서 빌려 쓰는 방식으로, 앱 Pod를
 여러 개 띄웠을 때 각 Pod가 자신의 풀로 DB에 접속한다. 풀이 없으면
 부하가 조금만 몰려도 연결이 고갈되므로 확장의 필수 전제인데,
@@ -701,8 +632,7 @@ Spring에서는 이것이 별도 구성 없이 기본 제공된다.
 
 ### 12.5 무중단 배포 — Probe가 핵심
 
-앱이 무상태가 되면 배포 전략을 `Recreate`에서 **`RollingUpdate`**로
-바꿀 수 있다. 이때 두 파라미터로 "끊김 없는 교체"를 만든다.
+앱이 무상태이므로 배포 전략은 **`RollingUpdate`**다. 두 파라미터로 "끊김 없는 교체"를 만든다.
 
 - `maxUnavailable: 0` — 기존 Pod를 종료하기 전에 반드시 새 Pod를
   먼저 준비시킨다. 즉 가용 Pod 수가 목표치 아래로 내려가지 않는다.
@@ -721,12 +651,12 @@ Spring에서는 이것이 별도 구성 없이 기본 제공된다.
   흘려 순간 에러가 발생한다.
 - **Startup Probe(시작 점검)** — 부팅이 느린 앱을 위해, 앱이 완전히
   뜰 때까지 위 두 Probe를 잠시 유보한다. 시작이 오래 걸린다는 이유로
-  liveness가 조기에 컨테이너를 죽이는 일을 막는다.
+  liveness가 조기에 컨테이너를 죽이는 일을 막는다(Flyway 첫 기동 — 최대 2분).
 
-이를 위해 앱에 `/healthz` 같은 상태 점검 엔드포인트를 추가한다.
-여기서 단순히 "프로세스 살아 있음"에 그치지 않고, **MySQL에
-`SELECT 1`을 실제로 날려 성공해야 준비 완료로 응답**하도록 설계한다.
-DB에 붙지 못한 Pod에는 트래픽이 가지 않게 하기 위함이다.
+상태 점검은 Spring Boot Actuator(`/actuator/health/liveness` · `/readiness`)를 쓴다.
+readiness는 단순히 "프로세스 살아 있음"에 그치지 않고 **DB 연결까지 확인**한다
+(`management.endpoint.health.group.readiness.include: readinessState,db`). DB에 붙지 못한 Pod에는 트래픽이 가지 않는다.
+종료할 때는 preStop 5초로 Ingress가 엔드포인트를 뺄 시간을 주고, graceful shutdown으로 처리 중인 요청을 마친다.
 
 ### 12.6 롤백 — 두 층위
 
@@ -735,9 +665,9 @@ DB에 붙지 못한 Pod에는 트래픽이 가지 않게 하기 위함이다.
   이어간다. 잘못된 버전이 나가도 트래픽이 넘어가지 않는 방어선이다.
 - **명시적 되돌리기(GitOps 방식)** — 이미 배포된 버전을 되돌릴 때는
   `kubectl rollout undo`가 아니라, **인프라 레포(ronanlab-infra)에서 이미지 태그를
-  이전 값으로 되돌리는 커밋(revert)**을 한다. ArgoCD가 그 변경을
-  감지해 자동으로 이전 상태로 복구한다. GitOps에서는 롤백조차
+  이전 값으로 되돌리는 커밋(revert)**을 하고 Sync한다. GitOps에서는 롤백조차
   하나의 git 커밋이며, 배포 이력이 곧 git 이력으로 남는다.
+  단 DB 스키마는 되돌아가지 않으므로, 마이그레이션은 옛 버전 앱과도 함께 돌 수 있게 만든다.
 
 ### 12.7 점진 배포 — Argo Rollouts (심화 목표)
 
@@ -771,16 +701,8 @@ RollingUpdate가 "무조건 새 버전으로 순차 교체"라면, Canary는
 ### 12.9 제약과 현실적 고려
 
 자체 클러스터의 노드는 VM 4대(각 메모리 약 3.9GiB)다. Jenkins · Harbor · ArgoCD와
-다른 프로젝트(petmint의 앱 · MySQL)가 같은 노드를 나눠 쓰므로, MySQL Pod가 상시 메모리를
-점유하고 CI 에이전트 Pod(BuildKit, requests 1.5GiB)가 뜨는 시점과 겹치면 스케줄링이
-지연될 수 있다. 상시 가동분을 어떻게 확보할지(VM 메모리 증설 등)를 이관과 함께 계산해야 한다.
-
-> 학교 vcluster 때는 리소스 상한(requests 기준 1500m CPU / 4Gi 메모리, 컨테이너당 최대 2Gi)이
-> 같은 고민의 출발점이었다.
-
-같은 클러스터의 petmint가 이미 MySQL StatefulSet을 운영하고 있다(데이터베이스를 나눠 쓰는 구조로,
-runshoes 자리도 염두에 두고 만들었다). 별도 인스턴스를 띄울지 이 인스턴스를 나눠 쓸지는
-전환 계획서(`docs/SPRING_MIGRATION_PLAN.md`)를 자체 클러스터 기준으로 다시 쓸 때 정한다.
+다른 프로젝트가 같은 노드를 나눠 쓰므로, MySQL Pod(requests 512Mi)와 앱 Pod(512Mi), 빌드 Pod(BuildKit, requests 1.5GiB · 최대 2.4GiB 사용)가
+겹치는 노드를 피해야 한다. MySQL은 local-path(노드 디스크)라 한 노드에 묶이므로 여유가 가장 큰 노드를 골랐다. 백업은 아직 수동(mysqldump)이다.
 
 또한 실무에서는 DB를 클러스터 안에 두지 않고 관리형 서비스(RDS 등)를
 쓰는 것이 일반적이다. 다만 학습·포트폴리오 목적에서는 StatefulSet로
