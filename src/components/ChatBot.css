@@ -25,7 +25,11 @@
   bottom: calc(var(--fab-size) + 12px);
   left: 0;                                         /* 버튼이 왼쪽 아래 — 창도 왼쪽 기준으로 연다 */
   width: min(600px, calc(100vw - 2 * var(--fab-offset)));
+  /* 휴대폰의 100vh 는 주소창이 숨었을 때의 높이라 주소창이 보이면 창 위가 화면 밖으로 나간다 — 지금 보이는 높이(dvh)로.
+     dvh 를 모르는 브라우저는 위 줄(vh)을 쓴다 */
   height: min(700px, calc(100vh - var(--fab-size) - 12px - 2 * var(--fab-offset)));
+  height: min(700px, calc(100dvh - var(--fab-size) - 12px - 2 * var(--fab-offset)));
+  max-height: calc(100dvh - var(--fab-size) - 12px - 2 * var(--fab-offset));
   background: white;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -68,6 +72,7 @@
   max-width: 85%;
   font-size: 15px;
   line-height: 1.5;
+  overflow-wrap: anywhere;            /* 긴 URL · 단어가 창을 가로로 넘지 않게 */
 }
 
 .chatbot-message--bot {
@@ -95,6 +100,7 @@
 
 .chatbot-input-row input {
   flex: 1;
+  min-width: 0;                       /* 좁은 폭에서 전송 버튼을 밀어내지 않게 */
   border: 1px solid #ddd;
   border-radius: 20px;
   padding: 10px 16px;
