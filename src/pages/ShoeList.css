@@ -3,19 +3,19 @@
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
-  margin: 28px 48px 100px;
+  margin: 28px var(--page-gutter) max(100px, var(--fab-clearance));
 }
 
 @media (max-width: 1199px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    margin: 24px 32px 80px;
+    margin: 24px var(--page-gutter) max(80px, var(--fab-clearance));
   }
 }
 
 @media (max-width: 767px) {
   .grid {
     grid-template-columns: 1fr;
-    margin: 20px 20px 60px;
+    margin: 20px var(--page-gutter) max(60px, var(--fab-clearance));
   }
 }

@@ -2,15 +2,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 32px 48px 0;
+  padding: 32px var(--page-gutter) 0;
 }
 
 .filter__chip {
   flex-shrink: 0;
-  padding: 7px 14px;
+  padding: calc(7px * var(--text-scale)) calc(14px * var(--text-scale));
   border: 1px solid oklch(0.78 0 0);
   border-radius: 100px;
-  font-size: 13px;
+  font-size: calc(var(--fs-filter-chip) * var(--text-scale));
   font-weight: 600;
   color: var(--text-mid);
   background: transparent;
@@ -29,17 +29,17 @@
 
 @media (max-width: 1199px) {
   .filter {
-    padding: 24px 32px 0;
+    padding: 24px var(--page-gutter) 0;
   }
 }
 
 @media (max-width: 767px) {
   .filter {
-    padding: 20px 20px 0;
+    padding: 20px var(--page-gutter) 0;
     gap: 6px;
   }
   .filter__chip {
-    padding: 6px 11px;
-    font-size: 12px;
+    padding: calc(6px * var(--text-scale)) calc(11px * var(--text-scale));
+    font-size: calc(var(--fs-filter-chip-mobile) * var(--text-scale));
   }
 }

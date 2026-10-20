@@ -38,15 +38,15 @@
   top: 8px;
   left: 8px;
   z-index: 1;
-  font-size: 10px;
+  font-size: calc(var(--fs-card-badge) * var(--text-scale));
   font-weight: 600;
-  padding: 3px 8px;
+  padding: calc(3px * var(--text-scale)) calc(8px * var(--text-scale));
   background: #fff;
   border: 1px solid oklch(0.4 0 0);
   color: oklch(0.3 0 0);
 }
 .card__badge--shifted {
-  left: 50px;
+  left: calc(8px + calc(42px * var(--text-scale)));   /* 순위 상자(38px × 배율) 오른쪽 */
 }
 .card__like {
   position: absolute;
@@ -55,13 +55,13 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 32px;
-  padding: 0 12px;
+  gap: calc(5px * var(--text-scale));
+  height: calc(32px * var(--text-scale));
+  padding: 0 calc(12px * var(--text-scale));
   border-radius: 100px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid var(--border-light);
-  font-size: 15px;
+  font-size: calc(var(--fs-card-like) * var(--text-scale));
   color: var(--text-weak);
   line-height: 1;
   transition:
@@ -78,7 +78,7 @@
 }
 
 .card__like em {
-  font-size: 12px;
+  font-size: calc(var(--fs-card-like-count) * var(--text-scale));
   font-style: normal;
   font-weight: 600;
 }
@@ -90,19 +90,20 @@
 
 /* 텍스트 */
 .card__no {
-  font-size: 11px;
+  font-size: calc(var(--fs-card-no) * var(--text-scale));
   color: var(--text-weak);
 }
 
 .card__model {
   margin-top: 4px;
-  font-size: 19px;
+  font-size: calc(var(--fs-card-model) * var(--text-scale));
   font-weight: 700;
+  line-height: 1.25;                /* 좁은 폭에서 긴 모델명이 두 줄이 될 때 */
 }
 
 .card__brand {
   margin-top: 2px;
-  font-size: 12px;
+  font-size: calc(var(--fs-card-brand) * var(--text-scale));
   font-weight: 500;
   color: var(--text-weak);
 }
@@ -111,7 +112,7 @@
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--border-light);
-  font-size: 13px;
+  font-size: calc(var(--fs-card-summary) * var(--text-scale));
   font-weight: 500;
   color: var(--accent);
 }
@@ -122,8 +123,9 @@
   padding-top: 12px;
   border-top: 1px solid var(--border-light);
   display: flex;
-  gap: 16px;
-  font-size: 11px;
+  flex-wrap: wrap;                  /* 아주 좁은 폭의 안전장치 */
+  gap: 4px 16px;
+  font-size: calc(var(--fs-card-specs) * var(--text-scale));
 }
 
 .card__specs div {
@@ -143,31 +145,33 @@
 .card__bottom {
   margin-top: 14px;
   display: flex;
+  flex-wrap: wrap;                  /* 아주 좁은 폭의 안전장치 */
+  gap: 4px 12px;
   align-items: baseline;
   justify-content: space-between;
 }
 
 .card__stability {
-  font-size: 12px;
+  font-size: calc(var(--fs-card-stability) * var(--text-scale));
   font-weight: 600;
   color: var(--text-mid);
 }
 
 .card__rating {
-  font-size: 13px;
+  font-size: calc(var(--fs-card-rating) * var(--text-scale));
   font-weight: 500;
   color: var(--text-mid);
 }
 
 .card__rating strong {
-  font-size: 18px;
+  font-size: calc(var(--fs-card-rating-num) * var(--text-scale));
   font-weight: 700;
   color: var(--accent);
 }
 
 .card__rating em {
   margin-left: 8px;
-  font-size: 11px;
+  font-size: calc(var(--fs-card-reviews) * var(--text-scale));
   font-weight: 400;
   font-style: normal;
   color: var(--text-weak);
@@ -178,25 +182,25 @@
   top: 0;
   left: 0;
   z-index: 2;
-  width: 38px;
-  height: 38px;
+  width: calc(38px * var(--text-scale));
+  height: calc(38px * var(--text-scale));
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--accent);
   color: #fff;
-  font-size: 17px;
+  font-size: calc(var(--fs-card-rank) * var(--text-scale));
   font-weight: 800;
 }
 
 .card__score {
-  font-size: 13px;
+  font-size: calc(var(--fs-card-score) * var(--text-scale));
   font-weight: 500;
   color: var(--text-mid);
 }
 
 .card__score strong {
-  font-size: 16px;
+  font-size: calc(var(--fs-card-score-num) * var(--text-scale));
   font-weight: 700;
   color: var(--text-strong);
 }

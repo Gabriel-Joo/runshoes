@@ -1,0 +1,68 @@
+/*
+ * 크기 토큰 — 글자 크기는 "기준값 × --text-scale" 로 쓴다: font-size: calc(var(--fs-card-model) * var(--text-scale));
+ * --text-scale 은 기본 1. 카드 · 필터 · 정렬 영역은 페이지 CSS 가 1.5 로 올린다(ShoeList · Best · Recommend).
+ * 헤더 · 히어로 · 페이지 제목은 배율을 받지 않는다.
+ * 배율은 그 영역의 요소에 직접 선언한다 — 토큰(:root)에 var() 를 섞으면 :root 에서 값이 굳어 하위에서 바꿀 수 없다.
+ */
+:root {
+  --text-scale: 1;
+
+  /* 필터 · 정렬 (홈) */
+  --fs-filter-chip: 13px;
+  --fs-filter-chip-mobile: 12px;
+  --fs-sort: 14px;
+  --fs-sort-toggle: 13px;
+
+  /* 신발 카드 */
+  --fs-card-no: 11px;
+  --fs-card-model: 19px;
+  --fs-card-brand: 12px;
+  --fs-card-summary: 13px;
+  --fs-card-specs: 11px;
+  --fs-card-stability: 12px;
+  --fs-card-rating: 13px;
+  --fs-card-rating-num: 18px;
+  --fs-card-reviews: 11px;
+  --fs-card-like: 15px;
+  --fs-card-like-count: 12px;
+  --fs-card-badge: 10px;
+  --fs-card-rank: 17px;
+  --fs-card-score: 13px;
+  --fs-card-score-num: 16px;
+
+  /*
+   * 떠 있는 버튼 — 오른쪽 아래 "맨 위로", 왼쪽 아래 챗봇. 같은 크기 · 같은 거리(대칭)
+   * 콘텐츠 좌우 여백(--page-gutter)이 버튼 범위(offset + size) + 8px 이상이라, 데스크톱 · 태블릿에서는
+   * 스크롤해도 버튼이 칩 · 정렬 · 카드 글자 위를 지나가지 않는다. 모바일은 여백이 좁아 지나간다.
+   * --fab-clearance: 페이지 맨 끝 콘텐츠가 버튼에 가리지 않게 남기는 아래 여백의 최소값
+   */
+  --fab-size: 48px;
+  --fab-offset: 16px;
+  --page-gutter: 72px;
+  --fab-clearance: calc(var(--fab-offset) + var(--fab-size) + 16px);
+}
+
+@media (max-width: 1199px) {
+  :root {
+    --fab-size: 44px;
+    --fab-offset: 12px;
+    --page-gutter: 64px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --page-gutter: 20px;
+  }
+}
+
+/* 1.5배 영역 — 페이지 CSS 가 아니라 여기 한 곳에서 정한다 */
+.filter,
+.sortbar,
+.grid,
+.best__grid,
+.best__purposes,
+.recommend__topitem,
+.recommend__restitem {
+  --text-scale: 1.5;
+}
