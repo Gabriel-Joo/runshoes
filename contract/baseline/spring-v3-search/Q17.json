@@ -1,0 +1,60 @@
+{
+  "id": "Q17",
+  "plan": null,
+  "name": "홈 조합 — 조깅·회복주 + 호카 + 찜순",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&search=%ED%98%B8%EC%B9%B4&_sort=likeCount&_order=desc",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:39 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 3,
+        "brand": "호카",
+        "model": "클리프톤 10",
+        "purpose": "조깅·회복주",
+        "stability": "중립화",
+        "midsole": "CMEVA",
+        "weight": 278,
+        "drop": 8,
+        "stackHeight": null,
+        "width": "넓음",
+        "wideAvailable": true,
+        "carbon": false,
+        "price": 189000,
+        "image": "/images/clifton-10.png",
+        "images": [
+          "/images/clifton-10.png",
+          "/images/clifton-10-1.png",
+          "/images/clifton-10-2.png"
+        ],
+        "summary": "푹신한 착지를 원하는 분에게",
+        "description": "호카 특유의 두툼한 미드솔로 푹신함을 앞세운 모델입니다. 착지 충격이 부담스러운 분이나 회복주를 자주 뛰는 분에게 잘 맞습니다. 와이드핏이 따로 나와 발볼이 넓어도 무리가 없습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 55,
+        "liked": false
+      }
+    ]
+  }
+}

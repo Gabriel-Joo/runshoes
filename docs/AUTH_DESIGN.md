@@ -16,7 +16,8 @@
 - **로그아웃**: family 폐기 + 쿠키 삭제. **비밀번호 변경**: 지금 기기(`sid`)를 뺀 그 사용자의 family 전부 폐기.
 - **CSRF**: API 는 Bearer 헤더로만 인증해 대상이 아니다. 쿠키가 붙는 `/api/auth` 만 — SameSite=Strict, POST 는 Origin 이 Host 와 같아야 하고(`Sec-Fetch-Site: cross-site` 거절), CORS 헤더를 주지 않는다.
   (다른 `/api` 는 json-server 계약대로 Origin 을 돌려주고 credentials 를 허용한다 — 쿠키가 없으니 상관없다)
-- **XSS**: 토큰을 localStorage 에 두지 않는다. React 이스케이프 · `dangerouslySetInnerHTML` 없음. CSP 는 프런트 단계에서.
+- **XSS**: 토큰을 localStorage 에 두지 않는다. React 이스케이프 · `dangerouslySetInnerHTML` 없음. CSP 는 화면 검증을 끝낸 뒤 따로 올린다(화면이 안 뜰 때 원인을 가르기 어렵다).
+- 검증의 시계 오차 허용은 Spring 기본 60초 — 15분 토큰이 만료 뒤 최대 1분 더 통한다.
 - **Spring Security**: 세션 · 폼 로그인 · CSRF 토큰 없음. Security 의 Cache-Control 은 끈다 — 계약 헤더는 `ApiHeadersFilter` 가 Security 보다 먼저.
 - 시도 제한(Redis 없이 `activity_logs` 로): 로그인 실패 같은 이메일 · IP 15분 5회 → 429, 가입 같은 IP 1시간 10건.
 - 챗봇(같은 Pod 의 사이드카): 연결 뒤 첫 프레임 `{type:"auth", token}`, 챗봇이 `GET 127.0.0.1:3000/api/me` 로 확인한다. URL 쿼리에 토큰을 넣지 않는다.
@@ -33,6 +34,7 @@ V3 는 계정의 비밀번호 해시를 NULL 로 넣고, 앱이 기동할 때 �
 | 모든 GET(신발 · 리뷰 · 용어 · 브랜드 · 요약) | 누구나. `liked` 는 요청한 사람 기준(비로그인은 false) |
 | `POST /api/reviews` | 로그인. author · user_id 는 토큰에서. 한 신발에 첫 리뷰 하나(409) |
 | `PATCH` · `DELETE /api/reviews/{id}` | 작성자. PATCH 는 rating · content 만. DELETE 는 admin 도 |
+| `PUT /api/reviews/{id}` | 405 — admin 에게도 열지 않는다(아무 필드나 덮어쓰는 길) |
 | `PUT` · `DELETE /api/shoes/{id}/like`, `/api/reviews/{id}/like` | 로그인. 멱등, 숫자는 서버가 센다. 내 리뷰에는 공감 불가 |
 | 신발 쓰기(POST · PATCH · PUT · DELETE) | ADMIN |
 | `POST /api/activity` | 로그인. `shoe.view` · `compare.view` 만 |

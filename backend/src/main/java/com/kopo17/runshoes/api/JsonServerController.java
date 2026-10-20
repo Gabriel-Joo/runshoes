@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 /**
  * json-server 0.17.4 의 REST 라우터(/api/{name}, /api/{name}/{id})를 그대로 — 계약은 contract/baseline/node.
  * 없는 컬렉션 · 없는 id · 비숫자 id · 그 밖의 /api 경로는 전부 404 {}. 응답 헤더(CORS · Cache-Control)는 ApiHeadersFilter.
+ * 쓰기는 로그인해야 한다(401 — SecurityConfig, 경로를 보기 전에). 그 뒤 404 → 403 은 컬렉션이 본다(Viewer).
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +43,7 @@ class JsonServerController {
 	@GetMapping({"/{name}", "/{name}/"})
 	ResponseEntity<Object> list(@PathVariable String name, @RequestParam MultiValueMap<String, String> query) {
 		DocCollection c = collection(name);
-		ListQuery.Result r = ListQuery.apply(c.all(), query, c.searchFields());
+		ListQuery.Result r = ListQuery.apply(c.all(Viewer.current()), query, c.searchFields());
 		ResponseEntity.BodyBuilder ok = ResponseEntity.ok();
 		if (r.totalCount() != null) {
 			ok.header("X-Total-Count", String.valueOf(r.totalCount()));
@@ -53,14 +54,15 @@ class JsonServerController {
 
 	@GetMapping("/{name}/{id}")
 	Object show(@PathVariable String name, @PathVariable String id) {
-		return collection(name).get(id(id)).orElseThrow(ApiException::notFound);
+		return collection(name).get(id(id), Viewer.current()).orElseThrow(ApiException::notFound);
 	}
 
 	@PostMapping({"/{name}", "/{name}/"})
 	ResponseEntity<Object> create(@PathVariable String name, @RequestBody(required = false) Map<String, Object> body,
 			HttpServletRequest req) {
 		DocCollection c = collection(name);
-		Map<String, Object> doc = locked(() -> c.create(body == null ? Map.of() : body));
+		Viewer v = Viewer.current();
+		Map<String, Object> doc = locked(() -> c.create(body == null ? Map.of() : body, v));
 		// json-server: Location = 요청 전체 URL + "/" + id, 그리고 Expose-Headers 에 Location
 		URI location = ServletUriComponentsBuilder.fromRequestUri(req).path("/{id}").buildAndExpand(doc.get("id")).toUri();
 		return ResponseEntity.created(location).header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Location").body(doc);
@@ -70,14 +72,16 @@ class JsonServerController {
 	Object patch(@PathVariable String name, @PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
 		DocCollection c = collection(name);
 		long n = id(id);
-		return locked(() -> c.patch(n, body == null ? Map.of() : body)).orElseThrow(ApiException::notFound);
+		Viewer v = Viewer.current();
+		return locked(() -> c.patch(n, body == null ? Map.of() : body, v)).orElseThrow(ApiException::notFound);
 	}
 
 	@PutMapping("/{name}/{id}")
 	Object replace(@PathVariable String name, @PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
 		DocCollection c = collection(name);
 		long n = id(id);
-		return locked(() -> c.replace(n, body == null ? Map.of() : body)).orElseThrow(ApiException::notFound);
+		Viewer v = Viewer.current();
+		return locked(() -> c.replace(n, body == null ? Map.of() : body, v)).orElseThrow(ApiException::notFound);
 	}
 
 	/** json-server 는 지운 문서가 아니라 {} 를 돌려준다(기준선 44 · 48) */
@@ -85,7 +89,8 @@ class JsonServerController {
 	Object delete(@PathVariable String name, @PathVariable String id) {
 		DocCollection c = collection(name);
 		long n = id(id);
-		if (!locked(() -> c.delete(n))) throw ApiException.notFound();
+		Viewer v = Viewer.current();
+		if (!locked(() -> c.delete(n, v))) throw ApiException.notFound();
 		return Map.of();
 	}
 
@@ -102,7 +107,7 @@ class JsonServerController {
 	}
 
 	/** json-server getById 는 String(doc.id) === id — "abc" · "01" · "1.0" 은 없는 id 다 */
-	private static long id(String raw) {
+	static long id(String raw) {
 		try {
 			long n = Long.parseLong(raw);
 			if (Long.toString(n).equals(raw)) return n;

@@ -1,0 +1,44 @@
+{
+  "id": "A17",
+  "plan": null,
+  "name": "비밀번호 변경 — 지금 것 틀림 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PUT",
+    "path": "/api/me/password",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{c}}"
+    },
+    "body": {
+      "currentPassword": "<가림>",
+      "newPassword": "<가림>"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION",
+        "field": "currentPassword",
+        "message": "지금 비밀번호가 맞지 않습니다."
+      }
+    }
+  }
+}

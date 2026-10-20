@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Shoe, Term } from "../types";
 import { API } from "../api";
+import { useAuth } from "../auth/useAuth";
+import { apiFetch } from "../auth/session";
+import { useShoeLike } from "../auth/useShoeLike";
 import ShoeCard from "../components/ShoeCard";
 import ShoeModal from "../components/ShoeModal";
 import "./Recommend.css";
@@ -157,11 +160,10 @@ function Recommend() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const { status, user } = useAuth();
 
-  const getShoes = async () => {
-    const res = await fetch(`${API}/shoes`);
-    setShoes(await res.json());
-  };
+  const [reload, setReload] = useState(0);
+  const getShoes = () => setReload((n) => n + 1);
 
   const getTerms = async () => {
     const res = await fetch(`${API}/terms`);
@@ -169,9 +171,17 @@ function Recommend() {
   };
 
   useEffect(() => {
-    getShoes();
     getTerms();
   }, []);
+
+  // 첫 refresh 뒤 · 로그인 · 로그아웃 · 찜 · 리뷰 뒤에 다시(liked 가 그 사람 기준이다)
+  useEffect(() => {
+    if (status === "loading") return;
+    apiFetch("/shoes")
+      .then((res) => res.json())
+      .then(setShoes)
+      .catch((e) => console.error(e));
+  }, [status, user?.id, reload]);
 
   const select = (key: string, value: string) => {
     setAnswers({ ...answers, [key]: value });
@@ -354,43 +364,10 @@ function Recommend() {
 
   const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
 
-  const toggleLike = async (shoe: Shoe) => {
-    await fetch(`${API}/shoes/${shoe.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        liked: !shoe.liked,
-        likeCount: shoe.liked ? shoe.likeCount - 1 : shoe.likeCount + 1,
-      }),
-    });
-    getShoes();
-  };
+  const toggleLike = useShoeLike(() => getShoes());
 
-  const handleReviewChange = async () => {
-    const res = await fetch(`${API}/reviews?shoeId=${selectedId}`);
-    const list = await res.json();
-
-    const reviewCount = list.length;
-    const rating =
-      reviewCount === 0
-        ? 0
-        : Math.round(
-            (list.reduce(
-              (sum: number, r: { rating: number }) => sum + r.rating,
-              0,
-            ) /
-              reviewCount) *
-              10,
-          ) / 10;
-
-    await fetch(`${API}/shoes/${selectedId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, reviewCount }),
-    });
-
-    getShoes();
-  };
+  // 평점 · 리뷰 수는 서버가 리뷰를 쓸 때 다시 센다 — 목록만 다시 받는다
+  const handleReviewChange = () => getShoes();
 
   // 질문 화면
   if (!done) {

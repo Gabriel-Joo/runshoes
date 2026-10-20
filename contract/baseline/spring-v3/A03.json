@@ -1,0 +1,40 @@
+{
+  "id": "A03",
+  "plan": null,
+  "name": "가입 예약어 닉네임 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/signup",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "contract@runshoes.test",
+      "password": "<가림>",
+      "nickname": "관리자"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION",
+        "field": "nickname",
+        "message": "쓸 수 없는 닉네임입니다."
+      }
+    }
+  }
+}

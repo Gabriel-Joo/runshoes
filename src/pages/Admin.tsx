@@ -1,6 +1,7 @@
 import { API } from "../api";
 import { useState, useEffect, useMemo } from "react";
 import { useDebounced } from "../useDebounced";
+import { apiFetch } from "../auth/session";
 import { Link, useNavigate } from "react-router-dom";
 import type { Shoe } from "../types";
 import ShoeImage from "../components/ShoeImage";
@@ -40,7 +41,7 @@ function Admin() {
 
   useEffect(() => {
     const ctrl = new AbortController();
-    fetch(`${API}/shoes?${query}`, { signal: ctrl.signal })
+    apiFetch(`/shoes?${query}`, { signal: ctrl.signal })
       .then((res) => res.json())
       .then((list: Shoe[]) => {
         setShoes(list);
@@ -64,22 +65,11 @@ function Admin() {
 
   const getShoes = () => setReload((n) => n + 1);
 
+  // 리뷰 · 찜은 서버가 같이 지운다(FK ON DELETE CASCADE) — 하나씩 지우지 않는다. admin 만(서버 403)
   const removeShoe = async () => {
     if (!target) return;
-
-    const res = await fetch(`${API}/reviews?shoeId=${target.id}`);
-    const reviews = await res.json();
-
-    for (const review of reviews) {
-      await fetch(`${API}/reviews/${review.id}`, {
-        method: "DELETE",
-      });
-    }
-
-    await fetch(`${API}/shoes/${target.id}`, {
-      method: "DELETE",
-    });
-
+    const res = await apiFetch(`/shoes/${target.id}`, { method: "DELETE" });
+    if (!res.ok) alert(res.status === 403 ? "관리자만 지울 수 있어요." : "지우지 못했어요. 잠시 뒤 다시 해 주세요.");
     setTarget(null);
     getShoes();
   };

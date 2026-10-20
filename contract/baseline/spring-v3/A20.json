@@ -1,0 +1,44 @@
+{
+  "id": "A20",
+  "plan": null,
+  "name": "refresh → 새 토큰 · 새 쿠키(교체)",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/refresh",
+    "headers": {
+      "Cookie": "runshoes_refresh={{cr}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=<가림>; Path=/api/auth; Max-Age=1209600; Expires=Tue, 03 Nov 2026 22:36:19 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "accessToken": "<jwt>",
+      "tokenType": "Bearer",
+      "expiresIn": 900,
+      "user": {
+        "id": 32,
+        "email": "contract@runshoes.test",
+        "nickname": "계약러너2",
+        "role": "USER"
+      }
+    }
+  }
+}

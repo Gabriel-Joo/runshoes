@@ -1,0 +1,133 @@
+{
+  "recordedAt": "2026-10-20T22:36:39.542Z",
+  "base": "http://127.0.0.1:3200/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "search",
+  "readOnly": false,
+  "note": "",
+  "scenarios": [
+    {
+      "id": "Q01",
+      "name": "브랜드 — 나이키",
+      "status": 200
+    },
+    {
+      "id": "Q02",
+      "name": "모델명 — 페가수스",
+      "status": 200
+    },
+    {
+      "id": "Q03",
+      "name": "낱말 AND, 브랜드+모델 — 아식스 젤",
+      "status": 200
+    },
+    {
+      "id": "Q04",
+      "name": "낱말 AND, 맞는 신발 없음 — 나이키 클리프톤 → []",
+      "status": 200
+    },
+    {
+      "id": "Q05",
+      "name": "공백 무시 — 젤카야노 → 젤 카야노 32",
+      "status": 200
+    },
+    {
+      "id": "Q06",
+      "name": "대소문자 무시 — x 880 → 프레시폼 X 880 v15",
+      "status": 200
+    },
+    {
+      "id": "Q07",
+      "name": "+ 는 띄어쓰기(URLSearchParams 모양) — 아식스+젤",
+      "status": 200
+    },
+    {
+      "id": "Q08",
+      "name": "앞뒤 · 여러 칸 공백 — '  나이키   플라이 '",
+      "status": 200
+    },
+    {
+      "id": "Q09",
+      "name": "공백만 → 거르지 않음(전체)",
+      "status": 200
+    },
+    {
+      "id": "Q10",
+      "name": "빈 값 → 거르지 않음(전체)",
+      "status": 200
+    },
+    {
+      "id": "Q11",
+      "name": "정규식 문자는 글자 그대로 — .* → []",
+      "status": 200
+    },
+    {
+      "id": "Q12",
+      "name": "괄호 하나 — ( → [] (500 아님)",
+      "status": 200
+    },
+    {
+      "id": "Q13",
+      "name": "용도는 찾지 않는다 — 조깅 → []",
+      "status": 200
+    },
+    {
+      "id": "Q14",
+      "name": "홈 조합 — 조깅·회복주 + 나이키",
+      "status": 200
+    },
+    {
+      "id": "Q15",
+      "name": "홈 조합 — 찜만 + 플라이",
+      "status": 200
+    },
+    {
+      "id": "Q16",
+      "name": "홈 조합 — 아디다스 + 평점순",
+      "status": 200
+    },
+    {
+      "id": "Q17",
+      "name": "홈 조합 — 조깅·회복주 + 호카 + 찜순",
+      "status": 200
+    },
+    {
+      "id": "Q18",
+      "name": "관리 조합 — 브랜드 칩 호카 + 스피드 + 모델명순",
+      "status": 200
+    },
+    {
+      "id": "Q19",
+      "name": "관리 — 아디다스 + 브랜드순",
+      "status": 200
+    },
+    {
+      "id": "Q20",
+      "name": "페이지 대비 — 아디다스 + _limit=2 → X-Total-Count 4",
+      "status": 200
+    },
+    {
+      "id": "Q21",
+      "name": "페이지 대비 — 아디다스 + _start=2&_end=4",
+      "status": 200
+    },
+    {
+      "id": "Q22",
+      "name": "다른 컬렉션은 search 무시 — reviews?shoeId=3&search=zzz = shoeId=3",
+      "status": 200
+    },
+    {
+      "id": "Q23",
+      "name": "관리 — 전체 개수만(_limit=0 → [] + X-Total-Count 20)",
+      "status": 200
+    },
+    {
+      "id": "Q24",
+      "name": "관리 — 브랜드 칩 목록 /api/brands(id 순 첫 등장)",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109"
+  }
+}

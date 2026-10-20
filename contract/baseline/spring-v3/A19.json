@@ -1,0 +1,37 @@
+{
+  "id": "A19",
+  "plan": null,
+  "name": "refresh 쿠키 없음 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/refresh",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=; Path=/api/auth; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "SESSION_EXPIRED",
+        "message": "로그인이 끝났어요. 다시 로그인해 주세요."
+      }
+    }
+  }
+}

@@ -27,9 +27,11 @@ const normHeader = (k, v) => {
 };
 
 const isDateKey = (k) => k === "createdAt";
+// 시나리오의 volatile(예: ["createdAt"]) — 서버가 그때 정하는 값이라 둘 다 날짜인지만 본다(V3 부터 리뷰 시각은 서버가 정한다)
+let volatile = new Set();
 function eq(x, y, p, diffs, key) {
   if (key && isDateKey(key) && typeof x === "string" && typeof y === "string") {
-    if (Date.parse(x) !== Date.parse(y)) diffs.push(`${p}: ${x} ≠ ${y}`);
+    if (volatile.has(key) ? Number.isNaN(Date.parse(x)) || Number.isNaN(Date.parse(y)) : Date.parse(x) !== Date.parse(y)) diffs.push(`${p}: ${x} ≠ ${y}`);
     return;
   }
   if (typeof x === "number" && typeof y === "number") { if (Math.abs(x - y) > 1e-9) diffs.push(`${p}: ${x} ≠ ${y}`); return; }
@@ -52,13 +54,14 @@ function eq(x, y, p, diffs, key) {
   if (x !== y) diffs.push(`${p}: ${JSON.stringify(x)} ≠ ${JSON.stringify(y)}`);
 }
 
-const ids = fs.readdirSync(a).filter((f) => f.endsWith(".json") && f !== "index.json" && (!readOnly || f < "30" || f.startsWith("Q"))).sort();
+const ids = fs.readdirSync(a).filter((f) => f.endsWith(".json") && f !== "index.json" && (!readOnly || f < "30" || /^[QR]/.test(f))).sort();
 let fail = 0, pass = 0, info = 0;
 for (const f of ids) {
   const A = JSON.parse(fs.readFileSync(path.join(a, f)));
   const bf = path.join(b, f);
   if (!fs.existsSync(bf)) { console.log(`MISS ${A.id} ${A.name}`); fail++; continue; }
   const B = JSON.parse(fs.readFileSync(bf));
+  volatile = new Set(A.volatile ?? []);
   const diffs = [];
   if (A.response.status !== B.response.status) diffs.push(`status ${A.response.status} ≠ ${B.response.status}`);
   for (const h of HEADERS) {

@@ -3,24 +3,41 @@ package com.kopo17.runshoes.api;
 import com.kopo17.runshoes.domain.Review;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.ShoeRepository;
+import com.kopo17.runshoes.domain.User;
+import com.kopo17.runshoes.domain.UserRepository;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-/** /api/reviews */
+/**
+ * /api/reviews — 쓰기는 로그인한 사람만(401 은 SecurityConfig).
+ * POST: 작성자 · 닉네임 · 시각은 서버가 정한다(본문의 author · createdAt · likeCount · liked · id 는 버린다 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다).
+ *       한 신발에 첫 리뷰 하나(409). 별점 1~5 · 내용 10~1,000자(400)
+ * PATCH: 작성자만(403), rating · content 만 — 다른 키는 버린다. DELETE: 작성자 또는 admin. PUT: 405(아무 필드나 덮어쓰는 길을 열지 않는다)
+ * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings).
+ */
 @Component
 class ReviewCollection implements DocCollection {
 
 	private final ReviewRepository reviews;
 	private final ShoeRepository shoes;
+	private final UserRepository users;
+	private final Likes likes;
+	private final Ratings ratings;
 
-	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes) {
+	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes, UserRepository users, Likes likes, Ratings ratings) {
 		this.reviews = reviews;
 		this.shoes = shoes;
+		this.users = users;
+		this.likes = likes;
+		this.ratings = ratings;
 	}
 
 	@Override
@@ -28,96 +45,101 @@ class ReviewCollection implements DocCollection {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Map<String, Object>> all() {
-		return reviews.findAll(Sort.by("id")).stream().map(ReviewCollection::toDoc).toList();
+	public List<Map<String, Object>> all(Viewer viewer) {
+		Set<Long> liked = likes.reviewsLikedBy(viewer.userId());
+		return reviews.findAll(Sort.by("id")).stream().map(r -> toDoc(r, liked.contains(r.getId()))).toList();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Map<String, Object>> get(long id) {
-		return reviews.findById(id).map(ReviewCollection::toDoc);
+	public Optional<Map<String, Object>> get(long id, Viewer viewer) {
+		Set<Long> liked = likes.reviewsLikedBy(viewer.userId());
+		return reviews.findById(id).map(r -> toDoc(r, liked.contains(r.getId())));
 	}
 
 	@Override
 	@Transactional
-	public Map<String, Object> create(Map<String, Object> body) {
+	public Map<String, Object> create(Map<String, Object> body, Viewer viewer) {
+		long userId = viewer.requireUser();
+		User author = users.findById(userId).orElseThrow(ApiException::unauthorized);
+		Long shoeId = Values.id("shoeId", body.get("shoeId"));
+		if (shoeId == null || !shoes.existsById(shoeId)) throw ApiException.badRequest("shoeId " + shoeId + " 인 신발이 없다");
+		int rating = ReviewRules.rating(body.get("rating"));
+		String content = ReviewRules.content(body.get("content"));
+		if (reviews.existsByUserIdAndShoeIdAndReviewType(userId, shoeId, Review.FIRST)) throw ApiException.reviewExists();
+
 		Review r = new Review();
+		Long max = reviews.maxId();
+		r.setId(max == null ? 1 : max + 1);
+		r.setShoeId(shoeId);
+		r.setUserId(userId);
+		r.setAuthor(author.getNickname());
+		r.setRating(rating);
+		r.setContent(content);
+		r.setCreatedAt(Values.nowUtc().truncatedTo(ChronoUnit.MILLIS));
 		r.setLiked(false);
-		apply(r, body);
-		if (r.getCreatedAt() == null) r.setCreatedAt(Values.nowUtc());   // json-server 는 키 없이 저장 — 컬럼이 NOT NULL 이라 지금 시각
-		checkShoe(r.getShoeId());
-		Long id = Values.id("id", body.get("id"));
-		if (id == null || id == 0) {
-			Long max = reviews.maxId();
-			id = max == null ? 1 : max + 1;
-		} else if (reviews.existsById(id)) throw ApiException.conflict("duplicate id " + id);
-		r.setId(id);
-		return toDoc(reviews.saveAndFlush(r));
+		r.setReviewType(Review.FIRST);
+		r.setVerified(false);
+		try {
+			r = reviews.saveAndFlush(r);
+		} catch (DataIntegrityViolationException e) {           // 같은 순간 두 번 — UNIQUE 가 막는다
+			throw ApiException.reviewExists();
+		}
+		ratings.recompute(shoeId);
+		return toDoc(r, false);
 	}
 
 	@Override
 	@Transactional
-	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body) {
+	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body, Viewer viewer) {
 		return reviews.findById(id).map(r -> {
-			apply(r, body);
-			checkShoe(r.getShoeId());
-			return toDoc(reviews.saveAndFlush(r));
+			if (!viewer.owns(r.getUserId())) throw ApiException.forbidden("작성자만 고친다");
+			if (body.containsKey("rating")) r.setRating(ReviewRules.rating(body.get("rating")));
+			if (body.containsKey("content")) r.setContent(ReviewRules.content(body.get("content")));
+			r = reviews.saveAndFlush(r);
+			ratings.recompute(r.getShoeId());
+			return toDoc(r, likes.likesReview(viewer.userId(), r.getId()));
 		});
 	}
 
 	@Override
-	@Transactional
-	public Optional<Map<String, Object>> replace(long id, Map<String, Object> body) {
-		return reviews.findById(id).map(old -> {
-			Review r = new Review();
-			r.setId(old.getId());
-			r.setLiked(false);
-			apply(r, body);
-			if (r.getCreatedAt() == null) r.setCreatedAt(old.getCreatedAt());
-			checkShoe(r.getShoeId());
-			return toDoc(reviews.saveAndFlush(r));
-		});
+	public Optional<Map<String, Object>> replace(long id, Map<String, Object> body, Viewer viewer) {
+		throw ApiException.methodNotAllowed("리뷰는 PUT 으로 바꾸지 않는다 — PATCH(rating · content)");
 	}
 
 	@Override
 	@Transactional
-	public boolean delete(long id) {
-		if (!reviews.existsById(id)) return false;
-		reviews.deleteById(id);
+	public boolean delete(long id, Viewer viewer) {
+		Optional<Review> found = reviews.findById(id);
+		if (found.isEmpty()) return false;
+		Review r = found.get();
+		if (!viewer.owns(r.getUserId()) && !viewer.admin()) throw ApiException.forbidden("작성자 또는 admin 만 지운다");
+		reviews.delete(r);
+		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다
+		ratings.recompute(r.getShoeId());
 		return true;
 	}
 
-	/** json-server 는 없는 신발의 리뷰도 받지만 여기는 FK 가 있다 — 400 으로 돌려보낸다 */
-	private void checkShoe(Long shoeId) {
-		if (shoeId == null || !shoes.existsById(shoeId)) throw ApiException.badRequest("shoeId " + shoeId + " 인 신발이 없다");
-	}
-
-	/** 키 순서는 기준선과 같게. likeCount 가 NULL 이면 키를 뺀다(시드 2건 · 새 리뷰). liked 는 늘 낸다(없음 = false 와 같다) */
-	static Map<String, Object> toDoc(Review r) {
+	/**
+	 * 키 순서는 기준선과 같게, V3 의 키는 뒤에. likeCount 가 NULL 이면 키를 뺀다(시드 2건 · 새 리뷰).
+	 * liked 는 요청한 사람이 공감했는지(review_likes) — 로그인하지 않았으면 false
+	 */
+	static Map<String, Object> toDoc(Review r, boolean liked) {
 		Map<String, Object> d = new LinkedHashMap<>();
 		d.put("id", r.getId());
 		d.put("shoeId", r.getShoeId());
+		d.put("userId", r.getUserId());
 		d.put("author", r.getAuthor());
 		d.put("rating", r.getRating());
 		d.put("content", r.getContent());
 		d.put("createdAt", Values.formatCreatedAt(r.getCreatedAt()));
 		if (r.getLikeCount() != null) d.put("likeCount", r.getLikeCount());
-		d.put("liked", Boolean.TRUE.equals(r.getLiked()));
+		d.put("liked", liked);
+		d.put("reviewType", r.getReviewType());
+		d.put("parentReviewId", r.getParentReviewId());
+		d.put("distanceKm", r.getDistanceKm());
+		d.put("proofImageUrl", r.getProofImageUrl());
+		d.put("verified", Boolean.TRUE.equals(r.getVerified()));
 		return d;
-	}
-
-	static void apply(Review r, Map<String, Object> body) {
-		body.forEach((k, v) -> {
-			switch (k) {
-				case "shoeId" -> r.setShoeId(Values.id(k, v));
-				case "author" -> r.setAuthor(Values.str(k, v));
-				case "rating" -> r.setRating(Values.integer(k, v));
-				case "content" -> r.setContent(Values.str(k, v));
-				case "createdAt" -> r.setCreatedAt(Values.createdAt(v));
-				case "likeCount" -> r.setLikeCount(Values.integer(k, v));
-				case "liked" -> r.setLiked(Boolean.TRUE.equals(Values.bool(k, v)));
-				default -> { }
-			}
-		});
 	}
 }

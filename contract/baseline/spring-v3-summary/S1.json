@@ -1,0 +1,25 @@
+{
+  "id": "S1",
+  "plan": 14,
+  "name": "mock 호출 수 0으로",
+  "contract": false,
+  "request": {
+    "method": "POST",
+    "path": "/__reset",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "date": "Tue, 20 Oct 2026 22:37:00 GMT",
+      "connection": "keep-alive",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "ok": true
+    }
+  }
+}

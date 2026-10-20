@@ -1,0 +1,35 @@
+{
+  "id": "A22",
+  "plan": null,
+  "name": "로그아웃 → 204 + 쿠키 지움",
+  "contract": true,
+  "expect": 204,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/logout",
+    "headers": {
+      "Cookie": "runshoes_refresh={{cr2}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=; Path=/api/auth; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "$sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "$length": 0,
+      "$head": ""
+    }
+  }
+}

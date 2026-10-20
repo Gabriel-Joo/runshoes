@@ -1,11 +1,20 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { Review } from "../types";
 import { formatDate } from "../utils/date";
+import { contentError } from "./reviewRules";
 
 interface ReviewItemProps {
   review: Review;
   isBest?: boolean;
-  onUpdate: (id: number, rating: number, content: string) => void;
+  /** 수정 — 작성자만. 지우기 — 작성자 또는 admin(서버가 403 으로 다시 막는다) */
+  canEdit: boolean;
+  canDelete: boolean;
+  /** 공감: login = 로그인 안 함(누르면 로그인으로), mine = 내 리뷰(못 누른다), ok */
+  likeState: "login" | "mine" | "ok";
+  loginTo: string;
+  /** 성공하면 null, 실패하면 화면 문구 */
+  onUpdate: (id: number, rating: number, content: string) => Promise<string | null>;
   onDeleteRequest: (review: Review) => void;
   onLike: (review: Review) => void;
 }
@@ -13,6 +22,10 @@ interface ReviewItemProps {
 function ReviewItem({
   review,
   isBest,
+  canEdit,
+  canDelete,
+  likeState,
+  loginTo,
   onUpdate,
   onDeleteRequest,
   onLike,
@@ -20,6 +33,7 @@ function ReviewItem({
   const [isEditing, setIsEditing] = useState(false);
   const [editRating, setEditRating] = useState(review.rating);
   const [editContent, setEditContent] = useState(review.content);
+  const [editError, setEditError] = useState<string | null>(null);
 
   const startEdit = () => {
     setEditRating(review.rating);
@@ -27,17 +41,16 @@ function ReviewItem({
     setIsEditing(true);
   };
 
-  const saveEdit = () => {
-    if (!editContent.trim()) {
-      alert("내용을 입력해 주세요.");
-      return;
-    }
-    onUpdate(review.id, editRating, editContent);
-    setIsEditing(false);
+  const saveEdit = async () => {
+    const err = contentError(editContent) ?? (await onUpdate(review.id, editRating, editContent));
+    setEditError(err);
+    if (!err) setIsEditing(false);
   };
 
+  const likeLabel = `👍 도움이 돼요 ${review.likeCount ?? 0}`;
+
   return (
-    <li className={`review__item ${isBest ? "is-best" : ""}`}>
+    <li id={`review-${review.id}`} className={`review__item ${isBest ? "is-best" : ""}`}>
       {isEditing ? (
         <div className="review__edit">
           <div className="review__head">
@@ -59,14 +72,27 @@ function ReviewItem({
           <textarea
             className="review__textarea"
             value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
+            onChange={(e) => {
+              setEditContent(e.target.value);
+              setEditError(null);
+            }}
             rows={3}
+            maxLength={1000}
+            aria-invalid={Boolean(editError)}
           />
+          {editError && (
+            <p className="review__error" role="alert">
+              {editError}
+            </p>
+          )}
 
           <div className="review__actions">
             <button
               className="review__cancel"
-              onClick={() => setIsEditing(false)}
+              onClick={() => {
+                setIsEditing(false);
+                setEditError(null);
+              }}
             >
               취소
             </button>
@@ -84,29 +110,41 @@ function ReviewItem({
               {"★".repeat(review.rating)}
               <em>{"★".repeat(5 - review.rating)}</em>
             </span>
-            <div className="review__tools">
-              <button className="review__tool" onClick={startEdit}>
-                수정
-              </button>
-              <button
-                className="review__tool review__tool--delete"
-                onClick={() => onDeleteRequest(review)}
-              >
-                삭제
-              </button>
-            </div>
+            {(canEdit || canDelete) && (
+              <div className="review__tools">
+                {canEdit && (
+                  <button className="review__tool" onClick={startEdit}>
+                    수정
+                  </button>
+                )}
+                {canDelete && (
+                  <button className="review__tool review__tool--delete" onClick={() => onDeleteRequest(review)}>
+                    삭제
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <p className="review__content">{review.content}</p>
 
           <div className="review__bottom">
             <span className="review__date">{formatDate(review.createdAt)}</span>
-            <button
-              className={`review__like ${review.liked ? "is-on" : ""}`}
-              onClick={() => onLike(review)}
-            >
-              👍 도움이 돼요 {review.likeCount ?? 0}
-            </button>
+            {likeState === "login" ? (
+              <Link className="review__like" to={loginTo}>
+                {likeLabel}
+              </Link>
+            ) : (
+              <button
+                className={`review__like ${review.liked ? "is-on" : ""}`}
+                onClick={() => onLike(review)}
+                disabled={likeState === "mine"}
+                title={likeState === "mine" ? "내 리뷰에는 누를 수 없어요" : undefined}
+                aria-pressed={Boolean(review.liked)}
+              >
+                {likeLabel}
+              </button>
+            )}
           </div>
         </>
       )}

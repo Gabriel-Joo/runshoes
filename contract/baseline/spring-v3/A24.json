@@ -1,0 +1,40 @@
+{
+  "id": "A24",
+  "plan": null,
+  "name": "다른 Origin 의 로그인 → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json",
+      "Origin": "https://evil.example"
+    },
+    "body": {
+      "email": "contract@runshoes.test",
+      "password": "<가림>"
+    }
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "CROSS_ORIGIN",
+        "message": "다른 사이트에서 온 요청은 받지 않아요."
+      }
+    }
+  }
+}

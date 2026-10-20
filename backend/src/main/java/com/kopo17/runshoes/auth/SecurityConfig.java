@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,8 +45,13 @@ class SecurityConfig {
 				.requestCache(r -> r.disable())
 				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.headers(h -> h.cacheControl(c -> c.disable()))
+				// 읽기는 누구나, /api 쓰기는 로그인 — 대상이 있는지 보기 전에 401. 그 뒤 404 → 403 은 컬렉션(api/Viewer)
 				.authorizeHttpRequests(a -> a
+						.requestMatchers("/api/auth/**").permitAll()
 						.requestMatchers("/api/me", "/api/me/**").authenticated()
+						.requestMatchers(HttpMethod.GET, "/**").permitAll()
+						.requestMatchers(HttpMethod.HEAD, "/**").permitAll()
+						.requestMatchers("/api/**").authenticated()
 						.anyRequest().permitAll())
 				.oauth2ResourceServer(o -> o.authenticationEntryPoint(entry)
 						.jwt(j -> j.jwtAuthenticationConverter(roleConverter())))

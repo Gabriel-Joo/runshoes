@@ -29,26 +29,26 @@ class TermCollection implements DocCollection {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Map<String, Object>> all() {
+	public List<Map<String, Object>> all(Viewer viewer) {
 		return terms.findAll(Sort.by("rowNo")).stream().map(TermCollection::toDoc).toList();
 	}
 
 	@Override
-	public Optional<Map<String, Object>> get(long id) {
-		return all().stream().filter(t -> Long.valueOf(id).equals(t.get("id"))).findFirst();
+	public Optional<Map<String, Object>> get(long id, Viewer viewer) {
+		return all(viewer).stream().filter(t -> Long.valueOf(id).equals(t.get("id"))).findFirst();
 	}
 
 	@Override
-	public Map<String, Object> create(Map<String, Object> body) { throw readOnly(); }
+	public Map<String, Object> create(Map<String, Object> body, Viewer viewer) { throw readOnly(); }
 
 	@Override
-	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body) { throw readOnly(); }
+	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body, Viewer viewer) { throw readOnly(); }
 
 	@Override
-	public Optional<Map<String, Object>> replace(long id, Map<String, Object> body) { throw readOnly(); }
+	public Optional<Map<String, Object>> replace(long id, Map<String, Object> body, Viewer viewer) { throw readOnly(); }
 
 	@Override
-	public boolean delete(long id) { throw readOnly(); }
+	public boolean delete(long id, Viewer viewer) { throw readOnly(); }
 
 	private static ApiException readOnly() {
 		return new ApiException(HttpStatus.METHOD_NOT_ALLOWED, "terms 는 읽기 전용");

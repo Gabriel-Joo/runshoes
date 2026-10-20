@@ -1,0 +1,37 @@
+{
+  "id": "W40a",
+  "plan": null,
+  "name": "PATCH 없는 shoe 비로그인 → 401(404 보다 먼저)",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/9999",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "summary": "x"
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "www-authenticate": "Bearer",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "content-type": "application/json;charset=UTF-8",
+      "content-length": "2",
+      "date": "Tue, 20 Oct 2026 22:36:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

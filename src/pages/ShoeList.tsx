@@ -1,7 +1,11 @@
 import { API } from "../api";
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useDebounced } from "../useDebounced";
-import type { Shoe, Term, Review } from "../types";
+import { useAuth } from "../auth/useAuth";
+import { apiFetch } from "../auth/session";
+import { useShoeLike } from "../auth/useShoeLike";
+import type { Shoe, Term } from "../types";
 import Hero from "../components/Hero";
 import FilterBar from "../components/FilterBar";
 import SortBar from "../components/SortBar";
@@ -18,8 +22,18 @@ function ShoeList() {
   const [keyword, setKeyword] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [terms, setTerms] = useState<Term[]>([]);
+  const { status, user } = useAuth();
+  // 상세 모달은 ?shoe={id} — 로그인하고 돌아오면(returnTo) 같은 신발이 다시 열린다
+  const [params, setParams] = useSearchParams();
+  const selectedId = Number(params.get("shoe")) || null;
+  const setSelectedId = (id: number | null) =>
+    setParams((p) => {
+      if (id) p.set("shoe", String(id));
+      else p.delete("shoe");
+      return p;
+    }, { replace: true });
+  const likedOnlyOn = likedOnly && status === "user";   // 로그아웃하면 찜 거르기도 꺼진다
 
   const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
   const search = useDebounced(keyword.trim());
@@ -28,18 +42,19 @@ function ShoeList() {
   const query = useMemo(() => {
     const p = new URLSearchParams();
     if (purpose !== "전체") p.set("purpose", purpose);
-    if (likedOnly) p.set("liked", "true");
+    if (likedOnlyOn) p.set("liked", "true");
     if (search) p.set("search", search);
     if (sort !== "default") {
       p.set("_sort", sort);
       p.set("_order", "desc");
     }
     return p.toString();
-  }, [purpose, likedOnly, search, sort]);
+  }, [purpose, likedOnlyOn, search, sort]);
 
   useEffect(() => {
+    if (status === "loading") return;          // 첫 refresh 뒤에 — liked 가 그 사람 기준이다
     const ctrl = new AbortController();      // 조건이 바뀌면 앞 요청의 응답은 버린다
-    fetch(`${API}/shoes${query ? `?${query}` : ""}`, { signal: ctrl.signal })
+    apiFetch(`/shoes${query ? `?${query}` : ""}`, { signal: ctrl.signal })
       .then((res) => res.json())
       .then((list: Shoe[]) => {
         setShoes(list);
@@ -49,21 +64,10 @@ function ShoeList() {
         if (e.name !== "AbortError") console.error(e);
       });
     return () => ctrl.abort();
-  }, [query, reload]);
+  }, [query, reload, status, user?.id]);
 
   const getShoes = () => setReload((n) => n + 1);
-
-  const toggleLike = async (shoe: Shoe) => {
-    await fetch(`${API}/shoes/${shoe.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        liked: !shoe.liked,
-        likeCount: shoe.liked ? shoe.likeCount - 1 : shoe.likeCount + 1,
-      }),
-    });
-    getShoes();
-  };
+  const toggleLike = useShoeLike(getShoes);
 
   const getTerms = async () => {
     const res = await fetch(`${API}/terms`);
@@ -74,26 +78,8 @@ function ShoeList() {
     getTerms();
   }, []);
 
-  const handleReviewChange = async () => {
-    const res = await fetch(`${API}/reviews?shoeId=${selectedShoe!.id}`);
-    const list: Review[] = await res.json();
-
-    const reviewCount = list.length;
-    const rating =
-      reviewCount === 0
-        ? 0
-        : Math.round(
-            (list.reduce((sum, r) => sum + r.rating, 0) / reviewCount) * 10,
-          ) / 10;
-
-    await fetch(`${API}/shoes/${selectedId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating, reviewCount }),
-    });
-
-    getShoes();
-  };
+  // 평점 · 리뷰 수는 서버가 리뷰를 쓸 때 다시 센다 — 목록만 다시 받는다
+  const handleReviewChange = getShoes;
 
   return (
     <>
@@ -108,8 +94,9 @@ function ShoeList() {
       <SortBar
         sort={sort}
         onSortChange={setSort}
-        likedOnly={likedOnly}
+        likedOnly={likedOnlyOn}
         onLikedOnlyChange={setLikedOnly}
+        showLikedOnly={status === "user"}
       />
 
       {loaded && shoes.length === 0 ? (

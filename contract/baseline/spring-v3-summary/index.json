@@ -1,0 +1,63 @@
+{
+  "recordedAt": "2026-10-20T22:37:00.630Z",
+  "base": "http://127.0.0.1:3200/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "summary-v3",
+  "readOnly": false,
+  "note": "",
+  "scenarios": [
+    {
+      "id": "S0",
+      "name": "로그인 runner01@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "S1",
+      "name": "mock 호출 수 0으로",
+      "status": 200
+    },
+    {
+      "id": "S2",
+      "name": "summary shoe 1(리뷰≥3) → 정상 요약",
+      "status": 200
+    },
+    {
+      "id": "S3",
+      "name": "summary shoe 1 다시 → 캐시",
+      "status": 200
+    },
+    {
+      "id": "S4",
+      "name": "mock 호출 수 = 1(캐시 히트)",
+      "status": 200
+    },
+    {
+      "id": "S5",
+      "name": "리뷰 추가(개수 변경)",
+      "status": 201
+    },
+    {
+      "id": "S6",
+      "name": "mock 을 500 으로",
+      "status": 200
+    },
+    {
+      "id": "S7",
+      "name": "summary shoe 1 → LLM 실패: summary null + reason",
+      "status": 200
+    },
+    {
+      "id": "S8",
+      "name": "mock 호출 수 = 2(개수가 바뀌어 다시 불렀다)",
+      "status": 200
+    },
+    {
+      "id": "S9",
+      "name": "mock 프롬프트(마지막 호출) — 프롬프트 문구 기준선",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109"
+  }
+}

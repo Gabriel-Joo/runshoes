@@ -1,0 +1,47 @@
+{
+  "id": "R18",
+  "plan": 1,
+  "name": "review 105 — createdAt 형식 확인",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/105",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 22:36:18 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 105,
+      "shoeId": 10,
+      "userId": 26,
+      "author": "런린이일기",
+      "rating": 5,
+      "content": "와 이거 진짜 최고예요! 몇 달째 매일 신고 있는데 쿠션 하나도 안 죽고 완전 튼튼해요. 내구성 걱정하시는 분들 있던데 전혀 걱정 안 하셔도 됩니다!",
+      "createdAt": "2026-07-28T08:41:06.821Z",
+      "likeCount": 20,
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

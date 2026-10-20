@@ -9,6 +9,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	@Query("select max(r.id) from Review r")
 	Long maxId();
 
+	/** 한 신발에 첫 리뷰 하나 — uk_reviews_user_first_shoe 가 정답이고, 이건 409 를 먼저 알려 주려고 */
+	boolean existsByUserIdAndShoeIdAndReviewType(Long userId, Long shoeId, String reviewType);
+
 	/** shoe 를 지울 때 먼저 — FK ON DELETE CASCADE 와 이중으로(json-server getRemovable) */
 	@Modifying
 	@Query("delete from Review r where r.shoeId = :shoeId")
