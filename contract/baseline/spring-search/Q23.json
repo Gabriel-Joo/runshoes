@@ -1,0 +1,31 @@
+{
+  "id": "Q23",
+  "plan": null,
+  "name": "관리 — 전체 개수만(_limit=0 → [] + X-Total-Count 20)",
+  "contract": true,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?_limit=0",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-total-count": "20",
+      "access-control-expose-headers": "X-Total-Count",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 19:30:19 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": []
+  }
+}
