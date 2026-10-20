@@ -15,6 +15,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const [author, setAuthor] = useState("");
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
+  const [expanded, setExpanded] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
 
   const getReviews = async () => {
@@ -96,11 +97,15 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
 
   const restReviews = reviews.filter((r) => r.id !== bestReview?.id);
 
+  // 모바일에서는 처음 COLLAPSED 개만 보이고 나머지는 "리뷰 전체보기"로 편다(숨기는 것은 CSS 미디어 쿼리 — 데스크톱은 늘 전부)
+  const COLLAPSED = 3;
+  const shownBefore = bestReview ? 1 : 0;
+
   return (
     <section className="review">
       <h3 className="review__title">리뷰 {reviews.length}</h3>
 
-      <ul className="review__list">
+      <ul className={`review__list ${expanded ? "is-expanded" : ""}`}>
         {reviews.length === 0 && (
           <li className="review__empty">아직 등록된 리뷰가 없습니다.</li>
         )}
@@ -116,16 +121,23 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           />
         )}
 
-        {restReviews.map((review) => (
+        {restReviews.map((review, i) => (
           <ReviewItem
             key={review.id}
             review={review}
+            extra={shownBefore + i >= COLLAPSED}
             onUpdate={updateReview}
             onDeleteRequest={setDeleteTarget}
             onLike={toggleLike}
           />
         ))}
       </ul>
+
+      {reviews.length > COLLAPSED && (
+        <button className="review__more" onClick={() => setExpanded((v) => !v)} aria-expanded={expanded}>
+          {expanded ? "리뷰 접기" : `리뷰 전체보기 (${reviews.length}개)`}
+        </button>
+      )}
 
       {/* 작성 폼은 기존 그대로 */}
       <div className="review__form">
