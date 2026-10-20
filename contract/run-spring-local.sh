@@ -29,6 +29,8 @@ docker compose up -d >/dev/null 2>&1
 until [ "$(docker inspect -f '{{.State.Health.Status}}' runshoes-mysql-dev)" = healthy ]; do sleep 1; done
 
 OLLAMA=http://127.0.0.1:9            # 본 시나리오는 Ollama 를 부르지 않는다 — 부르면 바로 실패하게 닫힌 포트
+# 로그인(V3~) — 녹화마다 새로 만든 임시 값. Secret runshoes-auth 와 상관없다
+JWT_SECRET=${JWT_SECRET:-$(openssl rand -base64 48)}
 if [ "$SET" = summary ]; then
   node contract/mock-ollama.mjs 3109 >/dev/null 2>&1 & MOCK_PID=$!
   OLLAMA=http://127.0.0.1:3109
@@ -37,10 +39,10 @@ fi
 if [ -n "${IMAGE:-}" ]; then
   # Phase 4 — 만든 이미지 그대로(정적 파일 · 사용자 · ENTRYPOINT 까지). 메모리는 클러스터 limit(1Gi)과 같게
   docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --memory=1g \
-    -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" "$IMAGE" >/dev/null
+    -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e JWT_SECRET="$JWT_SECRET" "$IMAGE" >/dev/null
 else
   docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" \
-    -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e APP_STATIC=/static \
+    -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e JWT_SECRET="$JWT_SECRET" -e APP_STATIC=/static \
     -v "$PWD/backend/target":/app:ro -v "$PWD/dist":/static:ro \
     maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
 fi
