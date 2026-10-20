@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * - GET /api/shoes/{id}/summary 는 server.cjs 가 json-server 앞에서 직접 응답한다 — ACAO * 와 no-store 만(기준선 20).
  *   다른 메서드는 json-server 로 가서 404 — 다른 /api 와 같다
  * - /api 밖(SPA · 정적 파일)의 GET: Cache-Control: public, max-age=0 (express.static · sendFile 기본값, 기준선 21~23)
+ * - /api/auth/** : 위 어느 것도 아니다 — CORS 헤더 없이 no-store 만(refresh 쿠키를 다른 출처가 쓰지 못하게, json-server 계약 밖)
  * Spring 의 CORS 처리(@CrossOrigin · CorsRegistry)는 쓰지 않는다 — 헤더 모양(204, Origin 이 없을 때 *)이 달라진다.
  */
 @Component
@@ -33,6 +34,17 @@ public class ApiHeadersFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws ServletException, IOException {
 		String path = req.getRequestURI().substring(req.getContextPath().length());
+		// /api/auth — refresh 쿠키가 붙는 곳. 다른 출처에 열지 않는다(ACAO 없음 · credentials 없음, preflight 는 204 만) — docs/AUTH_DESIGN.md
+		if (path.startsWith("/api/auth/")) {
+			res.setHeader("Cache-Control", "no-store");
+			if ("OPTIONS".equals(req.getMethod())) {
+				res.setStatus(HttpServletResponse.SC_NO_CONTENT);
+				res.setContentLength(0);
+				return;
+			}
+			chain.doFilter(req, res);
+			return;
+		}
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		boolean read = "GET".equals(req.getMethod()) || "HEAD".equals(req.getMethod());
 		if (!path.startsWith("/api/")) {

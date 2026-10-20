@@ -13,4 +13,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	@Modifying
 	@Query("delete from Review r where r.shoeId = :shoeId")
 	void deleteByShoeId(Long shoeId);
+
+	/** 닉네임을 바꾸면 그 사람 리뷰의 author(닉네임 스냅샷)도 — 같은 트랜잭션에서 */
+	@Modifying
+	@Query(value = "update reviews set author = :nickname where user_id = :userId", nativeQuery = true)
+	int renameAuthor(Long userId, String nickname);
 }

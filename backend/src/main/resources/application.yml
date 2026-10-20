@@ -25,6 +25,14 @@ spring:
       hibernate.jdbc.time_zone: UTC
 
 app:
+  # 로그인(docs/AUTH_DESIGN.md) — 값은 Secret runshoes-auth 에서 env 로. 기본값이 없다: JWT_SECRET 이 없으면 뜨지 않는다
+  auth:
+    jwt-secret: ${JWT_SECRET:}
+    access-ttl: 15m
+    refresh-ttl: 14d
+    cookie-secure: ${AUTH_COOKIE_SECURE:true}     # 로컬 http 에서만 false
+    seed-user-password: ${SEED_USER_PASSWORD:}
+    admin-password: ${ADMIN_PASSWORD:}
   static-path: ${APP_STATIC:/opt/app/static}   # Vite dist — config/SpaConfig
   ollama:
     url: ${OLLAMA_URL:http://localhost:11434}
