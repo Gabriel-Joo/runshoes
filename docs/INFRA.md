@@ -20,7 +20,7 @@ RUNSHOES(React + Spring Boot + MySQL)를 자체 쿠버네티스 클러스터에 
   │            ronanlab-infra (GitHub, private)           │
   │            apps/runshoes/kustomization.yaml           │
   │                     │                                 │
-  │                     │ ③ 감지 → Sync(사람)               │
+  │                     │ ③ 감지 → 자동 Sync               │
   │                     ▼                                 │
   │                  ArgoCD ──────────────────────────────┤ 이미지 pull (harbor-pull)
   │                     │
@@ -259,8 +259,8 @@ spec:
       - CreateNamespace=false
 ```
 
-- **Sync는 수동** — Jenkins 태그 커밋은 ArgoCD에 OutOfSync로 보이고, 사람이 Sync를 눌러야 배포된다. 이미지와 매니페스트 변경을 한 번의 Sync로 같이 내보낼 수 있다.
-  자동으로 켤 때는 `automated: {prune: false, selfHeal: false}`
+- **Sync는 자동(`automated: {prune: false, selfHeal: false}`)** — Jenkins 태그 커밋이 3분 안에 배포된다. selfHeal을 끈 것은 복구 중 손으로 바꾼 것(예: replicas 0)을 되돌리지 않게.
+  스키마를 바꾸는 배포(백업 → 지문 → 이미지 Sync를 이어야 하는 것)는 자동 Sync를 잠시 끄고 런북대로 사람이 Sync한다(ronanlab-infra `apps/runshoes/runbooks/auth-v3.md`)
 - **prune 없음** — git에서 지운 리소스는 클러스터에 남는다. PVC(DB 데이터)를 실수로 지우지 않게
 - **finalizer 없음** — Application을 지워도 앱 · MySQL · PVC는 남는다
 - **`CreateNamespace=false`** — Namespace는 사람이 만든다(8장)
@@ -272,7 +272,7 @@ spec:
 1. 개발자가 앱 레포(GitHub main)에 push
 2. Jenkins가 2분 안에 폴링으로 감지 → BuildKit이 두 이미지를 빌드 → Harbor에 `:커밋12` push
 3. Jenkins가 ronanlab-infra clone → `newTag` 두 줄 갱신 커밋 → push
-4. ArgoCD가 3분 안에 변경 감지(OutOfSync) → 사람이 Sync
+4. ArgoCD가 3분 안에 변경을 감지해 자동 Sync(스키마를 바꾸는 배포만 자동을 끄고 사람이)
 5. 새 Pod 기동 → Flyway(새 마이그레이션이 있으면) → Ready → 옛 Pod 종료(RollingUpdate)
 6. 방문자는 Cloudflare → 공용 터널 → ingress-nginx → Pod
 
