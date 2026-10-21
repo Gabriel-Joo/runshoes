@@ -214,6 +214,7 @@ vcluster는 자체 오버레이 네트워크를 쓰기 때문에, Pod 입장에�
 - 공개 `/api/terms` 를 1초마다 90회 — **실패 0**. 01:39:00~02 동안 Node 와 Spring 이 번갈아 응답(롤링 겹침), 그 뒤 Spring
 - 운영 계약(읽기 시나리오 26): PASS 23 · FAIL 0 · INFO 3. 공개 주소 · WebSocket · 다른 호스트 정상
 - 되돌리기 길: Deployment 커밋과 태그 커밋을 revert → Sync 하면 Node 이미지와 PVC 의 db.json 으로 돌아간다(관찰 기간 동안 PVC 를 남긴다)
+  — 2026-10-21 에 이 길을 닫았다. DB 가 V3(계정 · 리뷰 재배분, 6장)가 되어 Node 배포는 지금 데이터와 맞지 않고, PVC 에는 시드와 같은 db.json 하나뿐이었다(sha256 `0bccadd4…`) — PVC 를 지웠다
 
 ---
 
