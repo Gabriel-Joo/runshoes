@@ -161,7 +161,7 @@ class ShoeCollection implements DocCollection {
 
 	private static final java.util.Set<String> GENDERS = java.util.Set.of("men", "women", "unisex");
 	// 정가 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
-	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트");
+	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29)
 	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("정가");
 
 	private static String oneOf(String field, Object v, java.util.Set<String> allowed) {

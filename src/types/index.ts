@@ -17,7 +17,7 @@ export interface Shoe {
 
   price: number | null;
   // 정가 메타(V5) — 출처 · 읽은 날(YYYY-MM-DD) · 늘 "정가". 출처 기록이 없으면 null(화면은 가격만)
-  priceSource?: "공식몰" | "ABC마트" | null;
+  priceSource?: "공식몰" | "ABC마트" | "다나와" | null;
   priceCheckedAt?: string | null;
   priceKind?: "정가" | null;
   image: string;
