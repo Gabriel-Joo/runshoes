@@ -57,6 +57,15 @@ final class Values {
 		throw ApiException.badRequest(field + " 은 문자열 배열이어야 한다");
 	}
 
+	/** "YYYY-MM-DD" → 날짜(가격 조회일 · V5). 다른 모양은 400 */
+	static LocalDate date(String field, Object v) {
+		if (v == null) return null;
+		if (v instanceof String s && s.matches("\\d{4}-\\d{2}-\\d{2}")) {
+			try { return LocalDate.parse(s); } catch (DateTimeParseException e) { /* 아래 400 */ }
+		}
+		throw ApiException.badRequest(field + " 은 YYYY-MM-DD 날짜여야 한다");
+	}
+
 	/** "YYYY-MM-DD"(시드) → 그날 UTC 자정, ISO(오프셋 · Z) → UTC, 오프셋 없는 ISO → UTC 로 읽는다 */
 	static LocalDateTime createdAt(Object v) {
 		if (v == null) return null;

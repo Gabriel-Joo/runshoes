@@ -102,6 +102,27 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 | 시도 제한 | 같은 계정 15분 실패 5번이면 **맞는 비밀번호도** 429 + `Retry-After` · `{error:{code:"RATE_LIMITED", message, retryAfter}}`. 없는 이메일도 같은 응답 | A27~A38 |
 | 조회 기록 | `POST /api/activity` — 로그인한 사람만, 언제나 204(남겼는지 말하지 않는다). 모르는 type 400 · 없는 신발 404 · 본문 `{}` | A39~A43 |
 
+### 2.3 신발 세대 구조(V4) — 로컬 검증만, 운영 미반영(2026-10-24)
+
+기준선은 `contract/baseline/spring-v4`(V 21건 — 새 기능만). 옛 기준선(spring-v3 115건 · v3-search 24 · v3-summary 10)은 **다시 녹화하지 않았다**: diff 가 `--allow-added=<V4 키>`로 "응답에 V4 키가 더해졌을 뿐"인지만 본다(`contract/run-spring-local.sh`). 그래야 무엇이 바뀌었는지 추적이 남는다.
+
+| 항목 | 동작 | 녹화 |
+|---|---|---|
+| 응답 키 | 신발 끝에 `lineKey` · `generation` · `isCurrent` · `gender` · `weightSize`(공시 무게의 기준 사이즈) · `specSize` · `measuredWeight` · `measuredWeightSize` · `measuredStackHeight` · `measuredDrop` · `measuredSource` · `measuredCount`. 옛 키의 순서 · 값은 그대로 | V01 |
+| 목록 | 기본은 **전체 노출**(필터 없음). `?isCurrent=true` · `?isCurrent=false` · `?lineKey=<brand>:<line>`(상세의 이전 · 다음 세대)는 json-server 식 필드 필터로 된다 | V02~V06 · V23 |
+| 쓰기 | admin 이 위 키를 POST · PATCH · PUT 으로 보낸다. 타입이 틀리면 400(generation 정수 · isCurrent 불린), gender 는 `men` · `women` · `unisex` 만 | V10 · V13~V15 · V20 |
+| 세대 중복 | 같은 `lineKey` · `generation` · `gender` 가 다른 행에 있으면 **409**(id 중복의 json-server 호환 500 과 다르다 — 새 동작). 셋 중 하나라도 null 이면 보지 않는다. 자기 행과 같은 값은 겹침이 아니다 | V11 · V12 · V21 · V22 |
+| PUT | 본문에 없는 V4 키는 null(PUT 의미 그대로). 관리 화면은 PATCH 만 써서 지워지지 않는다 | V24 |
+
+### 2.4 가격 메타(V5) — 로컬만, 운영 미반영(2026-10-28)
+
+`price` 는 정가만이다(할인가 · 최저가는 받지 않는다). 기준선은 아직 녹화하지 않았다(계약 녹화는 DB 를 비우므로 적재한 로컬 DB 에서는 돌리지 않았다 — 다음 녹화 때 `--allow-added` 에 아래 세 키를 더한다).
+
+| 항목 | 동작 |
+|---|---|
+| 응답 키 | 신발 끝(V4 키 뒤)에 `priceSource`(`공식몰` · `ABC마트`, 읽은 곳 기록이 없으면 null) · `priceCheckedAt`(`YYYY-MM-DD`, 읽은 날) · `priceKind`(`정가`) |
+| 쓰기 | admin 이 POST · PATCH · PUT 으로 보낸다. 다른 출처 · 종류 문자열이나 날짜 모양이 아니면 400 |
+
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
 
 | 경우 | 원래 API(json-server) | RUNSHOES |

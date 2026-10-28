@@ -10,4 +10,7 @@ public interface ShoeRepository extends JpaRepository<Shoe, Long> {
 	Long maxId();
 
 	long countByIdIn(java.util.Collection<Long> ids);
+
+	/** 한 라인 · 세대 · 성별은 한 행(V4 uk_shoes_line_generation_gender) — 쓰기 전에 겹치는 행을 찾아 409 로 돌려준다 */
+	java.util.List<Shoe> findByLineKeyAndGenerationAndGender(String lineKey, Integer generation, String gender);
 }

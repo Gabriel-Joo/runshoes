@@ -1,5 +1,6 @@
 import type { Shoe } from "../types";
 import ShoeImage from "./ShoeImage";
+import { text, withUnit } from "../utils/display";
 import "./ShoeCard.css";
 
 interface ShoeCardProps {
@@ -58,15 +59,15 @@ function ShoeCard({
       <dl className="card__specs">
         <div>
           <dt>중량</dt>
-          <dd>{shoe.weight === null ? "—" : `${shoe.weight}g`}</dd>
+          <dd>{withUnit(shoe.weight, "g")}</dd>
         </div>
         <div>
           <dt>드롭</dt>
-          <dd>{shoe.drop === null ? "—" : `${shoe.drop}mm`}</dd>
+          <dd>{withUnit(shoe.drop, "mm")}</dd>
         </div>
         <div>
           <dt>발볼</dt>
-          <dd>{shoe.width}</dd>
+          <dd>{text(shoe.width)}</dd>
         </div>
       </dl>
 

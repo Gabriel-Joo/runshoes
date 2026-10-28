@@ -26,11 +26,19 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
+  background: #fff;                 /* 아래 회색 띠를 없앤다 — StockX 이미지가 흰 바탕이라 영역과 이어진다 */
+  /* StockX 사진은 신발이 가로의 98%(trim)까지 찬다 — 예전 사진(정사각형에 76%)과 같은 크기로 좌우 11%씩 띄운다.
+     URL 파라미터(w · h · trim)로 맞추면 사진마다 결과가 달라져 CSS 로 한다 */
+  padding: 0 11%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s;
+}
+.card__image .shoeimage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;              /* cover 는 가로형 이미지(700×500)의 앞코 · 뒤축을 자른다 */
 }
 
 .card__badge {

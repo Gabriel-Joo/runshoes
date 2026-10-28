@@ -62,6 +62,7 @@ class ShoeCollection implements DocCollection {
 	public Map<String, Object> create(Map<String, Object> body, Viewer viewer) {
 		viewer.requireAdmin();
 		Shoe s = new Shoe();
+		requireUniqueGeneration(target(null, body), null);
 		apply(s, body);
 		s.setRating(0.0);                                      // 리뷰 · 찜이 생기면 서버가 센다
 		s.setReviewCount(0);
@@ -81,6 +82,7 @@ class ShoeCollection implements DocCollection {
 	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body, Viewer viewer) {
 		return shoes.findById(id).map(s -> {
 			viewer.requireAdmin();
+			requireUniqueGeneration(target(s, body), s.getId());   // 바꾸기 전에 — 바꾼 엔티티는 조회 전에 먼저 flush 돼 DB UNIQUE 가 500 으로 터진다
 			apply(s, body);
 			return toDoc(shoes.saveAndFlush(s), likes.likesShoe(viewer.userId(), s.getId()));
 		});
@@ -93,6 +95,7 @@ class ShoeCollection implements DocCollection {
 			viewer.requireAdmin();
 			Shoe s = new Shoe();
 			s.setId(old.getId());
+			requireUniqueGeneration(target(null, body), old.getId());   // PUT 은 본문에 없는 칸이 null
 			apply(s, body);
 			s.setRating(old.getRating());                     // 셈하는 값은 그대로 — PUT 이 지우지 않는다
 			s.setReviewCount(old.getReviewCount());
@@ -136,7 +139,54 @@ class ShoeCollection implements DocCollection {
 		d.put("reviewCount", s.getReviewCount());
 		d.put("likeCount", s.getLikeCount());
 		d.put("liked", liked);
+		// V4 — 세대 구조 · 공시값 기준 사이즈 · 실측값. 옛 키 뒤에 붙인다(옛 키의 순서 · 값은 그대로 — 계약 spring-v3 는 이 키들을 "추가"로만 본다)
+		d.put("lineKey", s.getLineKey());
+		d.put("generation", s.getGeneration());
+		d.put("isCurrent", s.getIsCurrent());
+		d.put("gender", s.getGender());
+		d.put("weightSize", s.getWeightSize());
+		d.put("specSize", s.getSpecSize());
+		d.put("measuredWeight", s.getMeasuredWeight());
+		d.put("measuredWeightSize", s.getMeasuredWeightSize());
+		d.put("measuredStackHeight", s.getMeasuredStackHeight());
+		d.put("measuredDrop", s.getMeasuredDrop());
+		d.put("measuredSource", s.getMeasuredSource());
+		d.put("measuredCount", s.getMeasuredCount());
+		// V5 — 가격 메타. 같은 방식으로 맨 뒤에 붙인다(계약 spring-v4 는 "추가"로만 본다)
+		d.put("priceSource", s.getPriceSource());
+		d.put("priceCheckedAt", s.getPriceCheckedAt() == null ? null : s.getPriceCheckedAt().toString());
+		d.put("priceKind", s.getPriceKind());
 		return d;
+	}
+
+	private static final java.util.Set<String> GENDERS = java.util.Set.of("men", "women", "unisex");
+	// 정가 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
+	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트");
+	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("정가");
+
+	private static String oneOf(String field, Object v, java.util.Set<String> allowed) {
+		String x = Values.str(field, v);
+		if (x != null && !allowed.contains(x)) throw ApiException.badRequest(field + " 은 " + String.join(" · ", allowed.stream().sorted().toList()) + " 중 하나여야 한다");
+		return x;
+	}
+
+	/** 쓰고 난 뒤의 lineKey · generation · gender — base(PATCH 의 지금 행) 위에 본문을 얹는다. 엔티티를 건드리지 않는 사본 */
+	private static Shoe target(Shoe base, Map<String, Object> body) {
+		Shoe t = new Shoe();
+		if (base != null) { t.setLineKey(base.getLineKey()); t.setGeneration(base.getGeneration()); t.setGender(base.getGender()); }
+		Map<String, Object> keys = new LinkedHashMap<>();
+		for (String k : List.of("lineKey", "generation", "gender")) if (body.containsKey(k)) keys.put(k, body.get(k));
+		apply(t, keys);
+		return t;
+	}
+
+	/** 한 라인 · 세대 · 성별은 한 행 — DB UNIQUE(uk_shoes_line_generation_gender)가 500 으로 터지기 전에 409. 셋 중 하나라도 없으면 보지 않는다(NULL 은 겹치지 않는다) */
+	private void requireUniqueGeneration(Shoe s, Long selfId) {
+		if (s.getGender() != null && !GENDERS.contains(s.getGender())) throw ApiException.badRequest("gender 는 men · women · unisex 중 하나여야 한다");
+		if (s.getLineKey() == null || s.getGeneration() == null || s.getGender() == null) return;
+		boolean taken = shoes.findByLineKeyAndGenerationAndGender(s.getLineKey(), s.getGeneration(), s.getGender()).stream()
+				.anyMatch(o -> !o.getId().equals(selfId));
+		if (taken) throw ApiException.duplicateGeneration("duplicate generation " + s.getLineKey() + " " + s.getGeneration() + " " + s.getGender());
 	}
 
 	/** body 에 있는 키만 — null 도 그대로 넣는다(수정 폼이 빈 칸을 null 로 보낸다). id · 셈하는 값(rating · reviewCount · likeCount · liked) · 모르는 키는 무시 */
@@ -159,6 +209,21 @@ class ShoeCollection implements DocCollection {
 				case "images" -> s.setImages(Values.strings(k, v));
 				case "summary" -> s.setSummary(Values.str(k, v));
 				case "description" -> s.setDescription(Values.str(k, v));
+				case "lineKey" -> s.setLineKey(Values.str(k, v));
+				case "generation" -> s.setGeneration(Values.integer(k, v));
+				case "isCurrent" -> s.setIsCurrent(Values.bool(k, v));
+				case "gender" -> s.setGender(Values.str(k, v));
+				case "weightSize" -> s.setWeightSize(Values.str(k, v));
+				case "specSize" -> s.setSpecSize(Values.str(k, v));
+				case "measuredWeight" -> s.setMeasuredWeight(Values.dbl(k, v));
+				case "measuredWeightSize" -> s.setMeasuredWeightSize(Values.str(k, v));
+				case "measuredStackHeight" -> s.setMeasuredStackHeight(Values.dbl(k, v));
+				case "measuredDrop" -> s.setMeasuredDrop(Values.dbl(k, v));
+				case "measuredSource" -> s.setMeasuredSource(Values.str(k, v));
+				case "measuredCount" -> s.setMeasuredCount(Values.integer(k, v));
+				case "priceSource" -> s.setPriceSource(oneOf(k, v, PRICE_SOURCES));
+				case "priceCheckedAt" -> s.setPriceCheckedAt(Values.date(k, v));
+				case "priceKind" -> s.setPriceKind(oneOf(k, v, PRICE_KINDS));
 				default -> { }
 			}
 		});
