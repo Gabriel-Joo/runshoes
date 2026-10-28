@@ -27,6 +27,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): heel 36 / forefoot 30, drop 6 · Heel 36, drop 6 | Both db and current say 37, which comes from Running Warehouse's own measurement. The official figure is 36. | 이전 판단: use_source 36 https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020117854",
+    "via": "abcmart",
+    "by": "user",
+    "note": "ABC마트 상품 페이지 정가(메인 표시가) 2026-10-29 · ABC 남성 목록 5개 — 189,000 이 4개(JS4939 · KH5603 · KH5606 · KH9563), 179,000 이 1개(JS4945). StockX sku JS4941 과 같은 코드는 없다. 사용자(2026-10-29) \"가장 많은 목록의 값\""
    }
   },
   "nike:vaporfly#4": {
@@ -58,6 +66,14 @@
     "value": 6,
     "source": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
     "note": "사용자(2026-10-23) 확정: 6. RSG 8 은 쓰지 않는다"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 309000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020125488",
+    "via": "abcmart",
+    "by": "claude",
+    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 HF6414 = StockX sku HF6414-800(일치). 공용 IR7596 329,000 은 다른 상품코드라 쓰지 않는다"
    }
   },
   "salomon:speedcross#6": {
@@ -103,6 +119,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 32/22 → 10 mm drop · 10mm drop | Every source says 10."
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 살로몬 없음 · 살로몬 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "asics:gel-kayano#32": {
@@ -118,6 +142,14 @@
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정 B: A 값. 300 vs 298",
     "weight_basis": "US_M9"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-21",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(카야노 32 럭스는 다른 판) · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "nike:pegasus#42": {
@@ -139,6 +171,14 @@
     "source": "https://believeintherun.com/shoe-reviews/nike-pegasus-42-review/",
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정 B: A 값. 36 vs 37 vs 38"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020128235",
+    "via": "abcmart",
+    "by": "claude",
+    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 IB1873 = StockX sku IB1873-101(일치). 남성 목록 18개 모두 169,000"
    }
   },
   "nike:alphafly#3": {
@@ -157,6 +197,14 @@
     "by": "claude",
     "weight_basis": "US_M10",
     "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 218g men's UK 9 (=US10) · search summary: 218 g/7.7 oz (Men's US 10) | Nike AU page summary labels 218 g as 'men's size 9' (likely UK 9). BlackToe 218 g M10. DoR 198 g M9 not used. | 이전: use_source 218"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-21",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 나이키 공식몰은 접근하지 않는다(사용자 규칙). 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "newbalance:rebel#5": {
@@ -319,6 +367,14 @@
     "value": 34.5,
     "source": "manual",
     "note": "사용자 decide.csv(2026-10-21): A — manual"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "nike:pegasus-premium#1": {
@@ -431,6 +487,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색 · 사용자 승인(2026-10-23): drop 8 mm (heel 37 / forefoot 29); US page 1.45 in / 1.14 in · 37 mm / 29 mm | 이전 판단: use_source 36 manual"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020131502",
+    "via": "abcmart",
+    "by": "claude",
+    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-29 · 스타일 LA3962 · KI5185 — StockX sku JP8680 과 다르다(모델명 · 남성 · 러닝화 분류 일치). ABC 남성 목록 2개 모두 169,000"
    }
   },
   "adidas:ultraboost#5": {
@@ -461,6 +525,14 @@
     "value": 39,
     "source": "manual",
     "note": "사용자 decide.csv(2026-10-21): A — manual"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "hoka:clifton#10": {
@@ -487,6 +559,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 42mm heel, 34mm forefoot for men's US 10 (search summary) · 42 mm / 34 mm, 8 mm | Running Warehouse says 43/35 and BITR 43 (current value); REI says 41/33. The brand page says 42 at M10."
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-21",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "hoka:bondi#9": {
@@ -518,6 +598,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-29, 문구 미드솔 7행): \"now made from supercritical EVA foam\" (both pages fetched). The treeline spec table just says EVA; it is the same material, so not a conflict."
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-21",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "hoka:speedgoat#6": {
@@ -533,6 +621,14 @@
     "by": "claude",
     "note": "Claude 웹 검색 · 사용자 승인(2026-10-23): men's 9.5: 278g; stack 40mm/35mm (search summary) · 9.80 oz (= 278 g) · 9.8 oz (M) | 이전 판단: use_source 283 manual",
     "weight_basis": "US_M9.5"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "newbalance:supercomp-pacer#1": {
@@ -572,6 +668,14 @@
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정 B: A 값. 295 vs 300",
     "weight_basis": "US_M9"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 온 없음 · 온 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "on:cloudboom-max#1": {
@@ -610,6 +714,14 @@
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정 B: A 값. 201 vs 200",
     "weight_basis": "US_M9"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "brooks:ghost#17": {
@@ -627,6 +739,14 @@
     "source": "https://believeintherun.com/shoe-reviews/brooks-ghost-17-review/",
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정 B: DB(다나와) 값을 버리고 BITR"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020117778",
+    "via": "abcmart",
+    "by": "claude",
+    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 1104421D414 — 모델 · 폭 코드 110442-1D 가 StockX sku 110442-1D-090 과 같다(색상 코드만 다름). ABC 남성 목록 1개"
    }
   },
   "newbalance:880#15": {
@@ -648,6 +768,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 40.5 heel / 34.5 forefoot · 40.5/34.5, 6 mm | Conflict: REI and Running Lab list 32/26 (same pattern as 1080v14 on REI, likely a different NB figure); The Run House 35/27 8mm (likely v14). current 40 (RSG)  | 이전 판단: use_source 40 https://www.runningshoesguru.com/reviews/road/new-balance-fr"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020130064",
+    "via": "abcmart",
+    "by": "user",
+    "note": "ABC마트 상품 페이지 정가(메인 표시가) 2026-10-29 · ABC 남성 목록 3개 — 189,000 이 2개(M880K15 · M88072T), 199,000 이 1개(M880GB15). StockX sku M880G15 와 같은 코드는 없다. 사용자(2026-10-29) \"가장 많은 목록의 값\""
    }
   },
   "puma:magmax-nitro#1": {
@@ -724,6 +852,14 @@
     "source": "https://findmyfootwear.com/asics-gel-nimbus-27-vs-asics-gel-cumulus-27-stacked-vs-sprightly/",
     "via": "web",
     "note": "사용자(2026-10-23): 아식스 공식값 43.5/35.5. 이전 판단(BITR 44)을 취소한다 — 0.5 차이지만 공식값이 우선"
+   },
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-23",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
    }
   },
   "on:cloudboom-strike#1": {
@@ -2182,6 +2318,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「FF BLAST™ PLUS Foam ... FF BLAST™ MAX Foam」(opened)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 40,
+    "source": "https://www.asics.co.kr/p/AKR_112630101-101",
+    "via": "manual",
+    "by": "user",
+    "note": "사용자(2026-10-29) 아식스 공식몰 상세 이미지의 \"Heel Height 남성 40mm, Forefoot Height 남성 32mm\" — 이미지라 수집기가 못 읽었다. 출처 MAN. 드롭 8mm(이미 있는 값)와 맞다"
    }
   },
   "asics:gel-slowcush#1": {
@@ -4490,6 +4634,14 @@
     "source": "https://usa.mizuno.com/running-wave-rider-29-2e-mens",
     "via": "web",
     "note": "사용자(2026-10-24): 미즈노 미국 공식몰 Wave Rider 29 Wide 2E(Style #411537) · Fleet Feet Regular D / Wide 2E · WearTesters \"2E 버전을 쉽게 구할 수 있다\" — true"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "https://abcmart.a-rt.com/product?prdtNo=1020122652",
+    "via": "abcmart",
+    "by": "claude",
+    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 J1GC250582 — StockX sku J1GC256201 과 다르다(모델명 · 남성 · 러닝화 분류 일치, ABC 남성 목록 1개)"
    }
   },
   "hoka:bondi#8": {
@@ -6150,6 +6302,16 @@
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-29, 문구 미드솔 7행): Specs: \"Hyperboost Pro foam\" (fetched) · \"calling Hyperboost Pro in the Hyperboost Edge\" (fetched). RTR and adidas.com returned 403 and were not rechecked."
    }
+  },
+  "asics:novablast#5": {
+   "price_krw": {
+    "action": "keep_db",
+    "price_source": "다나와",
+    "price_checked_at": "2026-07-21",
+    "price_kind": null,
+    "by": "user",
+    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(노바블라스트 5 TR 은 다른 판) · 아식스 국내몰 검색은 6 만. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+   }
   }
  },
  "existing_price": {
@@ -6266,6 +6428,22 @@
    "reason": "no_clean_image",
    "was": "자리표시 이미지",
    "note": "남성은 자리표시 하나 · Trail 은 다른 판 · 나머지는 여성(2026-10-28)"
+  },
+  "brooks:glycerin-max#2": {
+   "image": "https://images.stockx.com/images/Brooks-Glycerin-Max-2-White-Blue-Spellbound.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776200474",
+   "sku": "110479-1D-186",
+   "title": "Brooks Glycerin Max 2 White Blue Spellbound",
+   "note": "사용자(2026-10-29) 화면에서 \"이미지 준비중\" → 대표 색상(110479-1D-131) 이미지가 StockX 에서 404. 같은 남성 모델 다른 색상(캐시된 KicksDB 결과, 이미지 200 · Claude 가 사진 확인)",
+   "was": "404 이미지"
   }
+ },
+ "seed_only_price_meta": {
+  "10": {
+   "price_source": "다나와",
+   "price_checked_at": "2026-07-23",
+   "price_kind": null,
+   "note": "ABC 목록은 엔돌핀 스피드 5 만 · 사우코니 국내몰 검색도 5 만. 날짜는 db.json 커밋 날짜"
+  },
+  "_doc": "카탈로그 밖 시드(엔돌핀 스피드 4, id 10)의 가격 출처 — 적재기가 PATCH 한다(2026-10-29 사용자)"
  }
 }

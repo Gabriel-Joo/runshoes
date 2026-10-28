@@ -106,6 +106,14 @@ for (const [id, d] of Object.entries(DEC.seed_only_images ?? {})) {
   if (JSON.stringify(cur.images ?? []) !== JSON.stringify([d.image])) changes.images = { from: cur.images ?? [], to: [d.image] };
   if (Object.keys(changes).length) plan.patch.push({ catalog_key: `seed#${id}`, id: cur.id, changes });
 }
+// 카탈로그 밖의 시드 신발의 가격 출처 — decisions.json seed_only_price_meta(값은 그대로, 출처 · 날짜만)
+for (const [id, m] of Object.entries(DEC.seed_only_price_meta ?? {})) {
+  const cur = live.find((s) => String(s.id) === id); if (!cur || (ONLY && !ONLY.includes(`seed#${id}`))) continue;
+  const want = { priceSource: m.price_source ?? null, priceCheckedAt: m.price_checked_at ?? null, priceKind: m.price_kind ?? null };
+  const changes = {};
+  for (const [k, v] of Object.entries(want)) if (!same(cur[k], v)) changes[k] = { from: cur[k] ?? null, to: v };
+  if (Object.keys(changes).length) plan.patch.push({ catalog_key: `seed#${id}`, id: cur.id, changes });
+}
 // 카탈로그 밖의 시드 신발의 문구 — copy.json seed_choice + seed_id
 for (const [key, c] of Object.entries(COPY)) {
   if (!c.seed_choice || CATALOG_KEYS.has(key)) continue;   // 카탈로그 안의 시드는 위 행 비교가 맡는다(--limit 밖이어도)

@@ -120,7 +120,7 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 | 항목 | 동작 |
 |---|---|
-| 응답 키 | 신발 끝(V4 키 뒤)에 `priceSource`(`공식몰` · `ABC마트`, 읽은 곳 기록이 없으면 null) · `priceCheckedAt`(`YYYY-MM-DD`, 읽은 날) · `priceKind`(`정가`) |
+| 응답 키 | 신발 끝(V4 키 뒤)에 `priceSource`(`공식몰` · `ABC마트` · `다나와`, 읽은 곳 기록이 없으면 null — `다나와`는 시드 가격 중 ABC · 공식몰에 없는 것, 2026-10-29) · `priceCheckedAt`(`YYYY-MM-DD`, 읽은 날) · `priceKind`(`정가`) |
 | 쓰기 | admin 이 POST · PATCH · PUT 으로 보낸다. 다른 출처 · 종류 문자열이나 날짜 모양이 아니면 400 |
 
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
