@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Spring 백엔드를 시드 상태에서 띄워 계약 시나리오를 녹화하고 기준선과 비교한다(로컬).
 #   contract/run-spring-local.sh v3          # V3(로그인) 뒤 계약 115건 — 기준선 baseline/spring-v3(읽기 R · 쓰기 W · 인증 A)
+#   contract/run-spring-local.sh v4          # V4(세대 구조) 새 기능 — 기준선 baseline/spring-v4. v3 · v3-search 는 V4 키를 --allow-added 로 "추가"만 허용해 옛 기준선과 비교
 #   contract/run-spring-local.sh v3-search   # 검색 24건 — 기준선 baseline/spring-v3-search
 #   contract/run-spring-local.sh v3-summary  # 요약 10건 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다. 기준선 baseline/spring-v3-summary
 #   main · summary · search                 # V3 전 기준선(node · node-summary · spring-search) — 이력. V3 뒤 앱에는 맞지 않는다(작성자 · 쓰기 401)
@@ -63,9 +64,14 @@ case "$SET" in
   v3)         REC=v3;         BASE=spring-v3 ;;
   v3-search)  REC=search;     BASE=spring-v3-search ;;
   v3-summary) REC=summary-v3; BASE=spring-v3-summary ;;
+  v4)         REC=v4;         BASE=spring-v4 ;;
   *) echo "모르는 세트: $SET"; exit 2 ;;
 esac
 rm -rf "$OUT"
 node contract/record.mjs --base http://127.0.0.1:3200 --host runshoes.ronanlab.dev --set "$REC" --mock http://127.0.0.1:3109 --out "$OUT" | grep -E "≠ 기대|기대와 다른" || true
 if [ ! -d "contract/baseline/$BASE" ]; then echo "기준선 contract/baseline/$BASE 가 없다 — 녹화만 했다: $OUT"; exit 0; fi
-node contract/diff.mjs "contract/baseline/$BASE" "$OUT"
+# V4 키 — 옛 기준선(spring-v3 · v3-search · v3-summary)은 다시 녹화하지 않고, 응답에 더해진 이 키들만 허용한다(2026-10-24)
+V4_KEYS=lineKey,generation,isCurrent,gender,weightSize,specSize,measuredWeight,measuredWeightSize,measuredStackHeight,measuredDrop,measuredSource,measuredCount
+# V5 키 — 정가의 출처 · 확인 날짜 · 종류(2026-10-28). 시드에서는 셋 다 null
+V5_KEYS=priceSource,priceCheckedAt,priceKind
+node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS" "contract/baseline/$BASE" "$OUT"

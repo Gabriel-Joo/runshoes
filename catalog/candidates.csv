@@ -1,0 +1,410 @@
+line_key,generation,is_current,brand,brand_slug,line_en,model,purpose,stability,carbon,confidence,phase,existing_id,stockx_query,note
+asics:gel-nimbus,28,true,아식스,asics,Gel-Nimbus 28,젤 님버스 28,LSD·장거리,중립화,no,high,2,,ASICS Gel-Nimbus 28,
+asics:gel-nimbus,27,false,아식스,asics,Gel-Nimbus 27,젤 님버스 27,LSD·장거리,중립화,no,,2,13,ASICS Gel-Nimbus 27,직전 세대 — 존재 확인 필요
+asics:gel-cumulus,28,true,아식스,asics,Gel-Cumulus 28,젤 큐뮬러스 28,조깅·회복주,중립화,no,high,2,,ASICS Gel-Cumulus 28,
+asics:gel-cumulus,27,false,아식스,asics,Gel-Cumulus 27,젤 큐뮬러스 27,조깅·회복주,중립화,no,,2,,ASICS Gel-Cumulus 27,직전 세대 — 존재 확인 필요
+asics:novablast,6,true,아식스,asics,Novablast 6,노바블라스트 6,조깅·회복주,중립화,no,high,2,,ASICS Novablast 6,
+asics:novablast,5,false,아식스,asics,Novablast 5,노바블라스트 5,조깅·회복주,중립화,no,,2,5,ASICS Novablast 5,직전 세대 — 존재 확인 필요
+asics:superblast,3,true,아식스,asics,Superblast 3,슈퍼블라스트 3,LSD·장거리,중립화,no,high,2,,ASICS Superblast 3,
+asics:superblast,2,false,아식스,asics,Superblast 2,슈퍼블라스트 2,LSD·장거리,중립화,no,,2,,ASICS Superblast 2,직전 세대 — 존재 확인 필요
+asics:megablast,1,true,아식스,asics,Megablast,메가블라스트,LSD·장거리,중립화,no,medium,2,,ASICS Megablast,
+asics:gel-kayano,33,true,아식스,asics,Gel-Kayano 33,젤 카야노 33,LSD·장거리,안정화,no,high,2,,ASICS Gel-Kayano 33,
+asics:gel-kayano,32,false,아식스,asics,Gel-Kayano 32,젤 카야노 32,LSD·장거리,안정화,no,,2,1,ASICS Gel-Kayano 32,직전 세대 — 존재 확인 필요
+asics:gt-2000,15,true,아식스,asics,GT-2000 15,GT-2000 15,조깅·회복주,안정화,no,high,2,,ASICS GT-2000 15,
+asics:gt-2000,14,false,아식스,asics,GT-2000 14,GT-2000 14,조깅·회복주,안정화,no,,2,,ASICS GT-2000 14,직전 세대 — 존재 확인 필요
+asics:gt-1000,15,true,아식스,asics,GT-1000 15,GT-1000 15,조깅·회복주,안정화,no,high,2,,ASICS GT-1000 15,
+asics:gt-1000,14,false,아식스,asics,GT-1000 14,GT-1000 14,조깅·회복주,안정화,no,,2,,ASICS GT-1000 14,직전 세대 — 존재 확인 필요
+asics:gt-4000,4,true,아식스,asics,GT-4000 4,GT-4000 4,조깅·회복주,안정화,no,medium,2,,ASICS GT-4000 4,
+asics:gt-4000,3,false,아식스,asics,GT-4000 3,GT-4000 3,조깅·회복주,안정화,no,,2,,ASICS GT-4000 3,직전 세대 — 존재 확인 필요
+asics:glideride-max,2,true,아식스,asics,GlideRide Max 2,글라이드라이드 맥스 2,LSD·장거리,중립화,no,high,2,,ASICS GlideRide Max 2,
+asics:glideride-max,1,false,아식스,asics,GlideRide Max 1,글라이드라이드 맥스 1,LSD·장거리,중립화,no,,2,,ASICS GlideRide Max 1,직전 세대 — 존재 확인 필요
+asics:magic-speed,5,true,아식스,asics,Magic Speed 5,매직 스피드 5,템포·인터벌,중립화,yes,high,2,,ASICS Magic Speed 5,
+asics:magic-speed,4,false,아식스,asics,Magic Speed 4,매직 스피드 4,템포·인터벌,중립화,yes,,2,,ASICS Magic Speed 4,직전 세대 — 존재 확인 필요
+asics:metaspeed-sky-tokyo,1,true,아식스,asics,Metaspeed Sky Tokyo,메타스피드 스카이 도쿄,레이스,중립화,yes,high,2,,ASICS Metaspeed Sky Tokyo,
+asics:metaspeed-edge-tokyo,1,true,아식스,asics,Metaspeed Edge Tokyo,메타스피드 엣지 도쿄,레이스,중립화,yes,high,2,,ASICS Metaspeed Edge Tokyo,
+asics:metaspeed-ray,1,true,아식스,asics,Metaspeed Ray,메타스피드 레이,레이스,중립화,yes,medium,2,,ASICS Metaspeed Ray,
+asics:sonicblast,2,true,아식스,asics,Sonicblast 2,소닉블라스트 2,템포·인터벌,중립화,no,medium,2,,ASICS Sonicblast 2,
+asics:sonicblast,1,false,아식스,asics,Sonicblast 1,소닉블라스트 1,템포·인터벌,중립화,no,,2,,ASICS Sonicblast 1,직전 세대 — 존재 확인 필요
+asics:gel-slowcush,1,true,아식스,asics,Gel-Slowcush,젤 슬로우쿠시,조깅·회복주,중립화,no,medium,2,,ASICS Gel-Slowcush,
+asics:hyper-speed,6,true,아식스,asics,Hyper Speed 6,하이퍼 스피드 6,템포·인터벌,중립화,no,medium,2,,ASICS Hyper Speed 6,입문
+asics:hyper-speed,5,false,아식스,asics,Hyper Speed 5,하이퍼 스피드 5,템포·인터벌,중립화,no,,2,,ASICS Hyper Speed 5,직전 세대 — 존재 확인 필요
+asics:dynablast,6,true,아식스,asics,Dynablast 6,다이나블라스트 6,조깅·회복주,중립화,no,medium,2,,ASICS Dynablast 6,입문
+asics:dynablast,5,false,아식스,asics,Dynablast 5,다이나블라스트 5,조깅·회복주,중립화,no,,2,,ASICS Dynablast 5,직전 세대 — 존재 확인 필요
+asics:versablast,4,true,아식스,asics,Versablast 4,버사블라스트 4,조깅·회복주,중립화,no,medium,2,,ASICS Versablast 4,입문
+asics:versablast,3,false,아식스,asics,Versablast 3,버사블라스트 3,조깅·회복주,중립화,no,,2,,ASICS Versablast 3,직전 세대 — 존재 확인 필요
+asics:gel-pulse,17,true,아식스,asics,Gel-Pulse 17,젤 펄스 17,조깅·회복주,중립화,no,high,2,,ASICS Gel-Pulse 17,입문
+asics:gel-pulse,16,false,아식스,asics,Gel-Pulse 16,젤 펄스 16,조깅·회복주,중립화,no,,2,,ASICS Gel-Pulse 16,직전 세대 — 존재 확인 필요
+asics:gel-excite,11,true,아식스,asics,Gel-Excite 11,젤 익사이트 11,조깅·회복주,중립화,no,high,2,,ASICS Gel-Excite 11,입문
+asics:gel-excite,10,false,아식스,asics,Gel-Excite 10,젤 익사이트 10,조깅·회복주,중립화,no,,2,,ASICS Gel-Excite 10,직전 세대 — 존재 확인 필요
+asics:gel-contend,10,true,아식스,asics,Gel-Contend 10,젤 콘텐드 10,조깅·회복주,중립화,no,medium,2,,ASICS Gel-Contend 10,입문
+asics:gel-contend,9,false,아식스,asics,Gel-Contend 9,젤 콘텐드 9,조깅·회복주,중립화,no,,2,,ASICS Gel-Contend 9,직전 세대 — 존재 확인 필요
+asics:jolt,5,true,아식스,asics,Jolt 5,졸트 5,조깅·회복주,중립화,no,medium,2,,ASICS Jolt 5,입문
+asics:jolt,4,false,아식스,asics,Jolt 4,졸트 4,조깅·회복주,중립화,no,,2,,ASICS Jolt 4,직전 세대 — 존재 확인 필요
+asics:patriot,14,true,아식스,asics,Patriot 14,패트리어트 14,조깅·회복주,중립화,no,medium,2,,ASICS Patriot 14,입문
+asics:patriot,13,false,아식스,asics,Patriot 13,패트리어트 13,조깅·회복주,중립화,no,,2,,ASICS Patriot 13,직전 세대 — 존재 확인 필요
+asics:noosa-tri,16,true,아식스,asics,Noosa Tri 16,누사 트라이 16,템포·인터벌,중립화,no,high,2,,ASICS Noosa Tri 16,
+asics:noosa-tri,15,false,아식스,asics,Noosa Tri 15,누사 트라이 15,템포·인터벌,중립화,no,,2,,ASICS Noosa Tri 15,직전 세대 — 존재 확인 필요
+asics:gel-trabuco,14,true,아식스,asics,Gel-Trabuco 14,젤 트라부코 14,트레일,중립화,no,high,2,,ASICS Gel-Trabuco 14,
+asics:gel-trabuco,13,false,아식스,asics,Gel-Trabuco 13,젤 트라부코 13,트레일,중립화,no,,2,20,ASICS Gel-Trabuco 13,직전 세대 — 존재 확인 필요
+asics:trabuco-max,5,true,아식스,asics,Trabuco Max 5,트라부코 맥스 5,트레일,중립화,no,high,2,,ASICS Trabuco Max 5,
+asics:trabuco-max,4,false,아식스,asics,Trabuco Max 4,트라부코 맥스 4,트레일,중립화,no,,2,,ASICS Trabuco Max 4,직전 세대 — 존재 확인 필요
+asics:trabuco-terra,3,true,아식스,asics,Trabuco Terra 3,트라부코 테라 3,트레일,중립화,no,medium,2,,ASICS Trabuco Terra 3,
+asics:trabuco-terra,2,false,아식스,asics,Trabuco Terra 2,트라부코 테라 2,트레일,중립화,no,,2,,ASICS Trabuco Terra 2,직전 세대 — 존재 확인 필요
+asics:fuji-lite,7,true,아식스,asics,Fuji Lite 7,후지 라이트 7,트레일,중립화,no,medium,2,,ASICS Fuji Lite 7,
+asics:fuji-lite,6,false,아식스,asics,Fuji Lite 6,후지 라이트 6,트레일,중립화,no,,2,,ASICS Fuji Lite 6,직전 세대 — 존재 확인 필요
+asics:metafuji-trail,2,true,아식스,asics,Metafuji Trail 2,메타후지 트레일 2,트레일,중립화,yes,medium,2,,ASICS Metafuji Trail 2,
+asics:metafuji-trail,1,false,아식스,asics,Metafuji Trail 1,메타후지 트레일 1,트레일,중립화,yes,,2,,ASICS Metafuji Trail 1,직전 세대 — 존재 확인 필요
+nike:pegasus,42,true,나이키,nike,Pegasus 42,페가수스 42,조깅·회복주,중립화,no,high,2,2,Nike Air Zoom Pegasus 42,
+nike:pegasus,41,false,나이키,nike,Pegasus 41,페가수스 41,조깅·회복주,중립화,no,,2,,Nike Air Zoom Pegasus 41,직전 세대 — 존재 확인 필요
+nike:pegasus-plus,2,true,나이키,nike,Pegasus Plus 2,페가수스 플러스 2,템포·인터벌,중립화,no,high,2,,Nike Pegasus Plus 2,
+nike:pegasus-plus,1,false,나이키,nike,Pegasus Plus 1,페가수스 플러스 1,템포·인터벌,중립화,no,,2,,Nike Pegasus Plus 1,직전 세대 — 존재 확인 필요
+nike:pegasus-premium,1,true,나이키,nike,Pegasus Premium,페가수스 프리미엄,LSD·장거리,중립화,no,high,2,,Nike Pegasus Premium,
+nike:vomero,18,true,나이키,nike,Vomero 18,보메로 18,LSD·장거리,중립화,no,medium,2,,Nike Vomero 18,
+nike:vomero,17,false,나이키,nike,Vomero 17,보메로 17,LSD·장거리,중립화,no,,2,,Nike Vomero 17,직전 세대 — 존재 확인 필요
+nike:vomero-plus,1,true,나이키,nike,Vomero Plus,보메로 플러스,LSD·장거리,중립화,no,high,2,,Nike Vomero Plus,
+nike:vomero-premium,1,true,나이키,nike,Vomero Premium,보메로 프리미엄,LSD·장거리,중립화,no,high,2,,Nike Vomero Premium,
+nike:structure,26,true,나이키,nike,Structure 26,스트럭처 26,조깅·회복주,안정화,no,medium,2,,Nike Structure 26,
+nike:structure,25,false,나이키,nike,Structure 25,스트럭처 25,조깅·회복주,안정화,no,,2,,Nike Structure 25,직전 세대 — 존재 확인 필요
+nike:structure-plus,1,true,나이키,nike,Structure Plus,스트럭처 플러스,LSD·장거리,안정화,no,high,2,,Nike Structure Plus,
+nike:vaporfly,4,true,나이키,nike,Vaporfly 4,베이퍼플라이 4,레이스,중립화,yes,high,2,16,Nike ZoomX Vaporfly Next% 4,
+nike:vaporfly,3,false,나이키,nike,Vaporfly 3,베이퍼플라이 3,레이스,중립화,yes,,2,,Nike ZoomX Vaporfly Next% 3,직전 세대 — 존재 확인 필요
+nike:alphafly,4,true,나이키,nike,Alphafly 4,알파플라이 4,레이스,중립화,yes,high,2,,Nike Air Zoom Alphafly Next% 4,
+nike:alphafly,3,false,나이키,nike,Alphafly 3,알파플라이 3,레이스,중립화,yes,,2,6,Nike Air Zoom Alphafly Next% 3,직전 세대 — 존재 확인 필요
+nike:streakfly,2,true,나이키,nike,Streakfly 2,스트릭플라이 2,레이스,중립화,yes,medium,2,,Nike Streakfly 2,
+nike:streakfly,1,false,나이키,nike,Streakfly 1,스트릭플라이 1,레이스,중립화,yes,,2,,Nike Streakfly 1,직전 세대 — 존재 확인 필요
+nike:zoom-fly,6,true,나이키,nike,Zoom Fly 6,줌 플라이 6,템포·인터벌,중립화,yes,high,2,,Nike Zoom Fly 6,
+nike:zoom-fly,5,false,나이키,nike,Zoom Fly 5,줌 플라이 5,템포·인터벌,중립화,yes,,2,,Nike Zoom Fly 5,직전 세대 — 존재 확인 필요
+nike:infinityrn,4,true,나이키,nike,InfinityRN 4,인피니티런 4,조깅·회복주,중립화,no,low,2,,Nike Infinity Run 4,
+nike:infinityrn,3,false,나이키,nike,InfinityRN 3,인피니티런 3,조깅·회복주,중립화,no,,2,,Nike Infinity Run 3,직전 세대 — 존재 확인 필요
+nike:rival-fly,4,true,나이키,nike,Air Zoom Rival Fly 4,에어 줌 라이벌 플라이 4,템포·인터벌,중립화,no,low,2,,Nike Air Zoom Rival Fly 4,
+nike:rival-fly,3,false,나이키,nike,Air Zoom Rival Fly 3,에어 줌 라이벌 플라이 3,템포·인터벌,중립화,no,,2,,Nike Air Zoom Rival Fly 3,직전 세대 — 존재 확인 필요
+nike:winflo,12,true,나이키,nike,Winflo 12,윈플로 12,조깅·회복주,중립화,no,medium,2,,Nike Winflo 12,입문
+nike:winflo,11,false,나이키,nike,Winflo 11,윈플로 11,조깅·회복주,중립화,no,,2,,Nike Winflo 11,직전 세대 — 존재 확인 필요
+nike:revolution,8,true,나이키,nike,Revolution 8,레볼루션 8,조깅·회복주,중립화,no,low,2,,Nike Revolution 8,입문
+nike:revolution,7,false,나이키,nike,Revolution 7,레볼루션 7,조깅·회복주,중립화,no,,2,,Nike Revolution 7,직전 세대 — 존재 확인 필요
+nike:downshifter,13,false,나이키,nike,Downshifter 13,다운시프터 13,조깅·회복주,중립화,no,low,2,,Nike Downshifter 13,입문 · 다음 세대가 들어와 현행 아님(2026-10-28)
+nike:downshifter,12,false,나이키,nike,Downshifter 12,다운시프터 12,조깅·회복주,중립화,no,,2,,Nike Downshifter 12,직전 세대 — 존재 확인 필요
+nike:quest,6,true,나이키,nike,Quest 6,퀘스트 6,조깅·회복주,중립화,no,low,2,,Nike Quest 6,입문
+nike:quest,5,false,나이키,nike,Quest 5,퀘스트 5,조깅·회복주,중립화,no,,2,,Nike Quest 5,직전 세대 — 존재 확인 필요
+nike:interact-run,2,true,나이키,nike,Interact Run 2,인터랙트 런 2,조깅·회복주,중립화,no,low,2,,Nike Interact Run 2,입문
+nike:interact-run,1,false,나이키,nike,Interact Run 1,인터랙트 런 1,조깅·회복주,중립화,no,,2,,Nike Interact Run 1,직전 세대 — 존재 확인 필요
+nike:journey-run,2,true,나이키,nike,Journey Run 2,저니 런 2,조깅·회복주,중립화,no,low,2,,Nike Journey Run 2,입문
+nike:journey-run,1,false,나이키,nike,Journey Run 1,저니 런 1,조깅·회복주,중립화,no,,2,,Nike Journey Run 1,직전 세대 — 존재 확인 필요
+nike:acg-pegasus-trail,1,true,나이키,nike,ACG Pegasus Trail,ACG 페가수스 트레일,트레일,중립화,no,high,2,,Nike ACG Pegasus Trail,
+nike:acg-zegama,1,true,나이키,nike,ACG Zegama,ACG 제가마,트레일,중립화,no,medium,2,,Nike ACG Zegama,
+adidas:adizero-adios-pro,5,true,아디다스,adidas,Adizero Adios Pro 5,아디제로 아디오스 프로 5,레이스,중립화,yes,high,2,,adidas Adizero Adios Pro 5,
+adidas:adizero-adios-pro,4,false,아디다스,adidas,Adizero Adios Pro 4,아디제로 아디오스 프로 4,레이스,중립화,yes,,2,17,adidas Adizero Adios Pro 4,직전 세대 — 존재 확인 필요
+adidas:adizero-adios-pro-evo,3,true,아디다스,adidas,Adizero Adios Pro Evo 3,아디제로 아디오스 프로 에보 3,레이스,중립화,yes,medium,2,,adidas Adizero Adios Pro Evo 3,
+adidas:adizero-adios-pro-evo,2,false,아디다스,adidas,Adizero Adios Pro Evo 2,아디제로 아디오스 프로 에보 2,레이스,중립화,yes,,2,,adidas Adizero Adios Pro Evo 2,직전 세대 — 존재 확인 필요
+adidas:adizero-takumi-sen,11,true,아디다스,adidas,Adizero Takumi Sen 11,아디제로 타쿠미 센 11,레이스,중립화,yes,medium,2,,adidas Adizero Takumi Sen 11,
+adidas:adizero-takumi-sen,10,false,아디다스,adidas,Adizero Takumi Sen 10,아디제로 타쿠미 센 10,레이스,중립화,yes,,2,,adidas Adizero Takumi Sen 10,직전 세대 — 존재 확인 필요
+adidas:adizero-adios,9,true,아디다스,adidas,Adizero Adios 9,아디제로 아디오스 9,템포·인터벌,중립화,no,medium,2,,adidas Adizero Adios 9,
+adidas:adizero-adios,8,false,아디다스,adidas,Adizero Adios 8,아디제로 아디오스 8,템포·인터벌,중립화,no,,2,,adidas Adizero Adios 8,직전 세대 — 존재 확인 필요
+adidas:adizero-boston,13,true,아디다스,adidas,Adizero Boston 13,아디제로 보스턴 13,템포·인터벌,중립화,yes,high,2,12,adidas Adizero Boston 13,
+adidas:adizero-boston,12,false,아디다스,adidas,Adizero Boston 12,아디제로 보스턴 12,템포·인터벌,중립화,yes,,2,,adidas Adizero Boston 12,직전 세대 — 존재 확인 필요
+adidas:adizero-prime-x-strung,3,true,아디다스,adidas,Adizero Prime X 3 Strung,아디제로 프라임 X 3 스트렁,레이스,중립화,yes,high,2,,adidas Adizero Prime X 3 Strung,
+adidas:adizero-prime-x-strung,2,false,아디다스,adidas,Adizero Prime X 2 Strung,아디제로 프라임 X 2 스트렁,레이스,중립화,yes,,2,,adidas Adizero Prime X 2 Strung,직전 세대 — 존재 확인 필요
+adidas:adizero-evo-sl,1,true,아디다스,adidas,Adizero Evo SL,아디제로 에보 SL,템포·인터벌,중립화,no,medium,2,,adidas Adizero Evo SL,
+adidas:adizero-sl,2,true,아디다스,adidas,Adizero SL 2,아디제로 SL 2,조깅·회복주,중립화,no,low,2,,adidas Adizero SL 2,
+adidas:adizero-sl,1,false,아디다스,adidas,Adizero SL 1,아디제로 SL 1,조깅·회복주,중립화,no,,2,,adidas Adizero SL 1,직전 세대 — 존재 확인 필요
+adidas:supernova-rise,3,true,아디다스,adidas,Supernova Rise 3,슈퍼노바 라이즈 3,조깅·회복주,중립화,no,high,2,14,adidas Supernova Rise 3,
+adidas:supernova-rise,2,false,아디다스,adidas,Supernova Rise 2,슈퍼노바 라이즈 2,조깅·회복주,중립화,no,,2,,adidas Supernova Rise 2,직전 세대 — 존재 확인 필요
+adidas:supernova-prima,2,true,아디다스,adidas,Supernova Prima 2,슈퍼노바 프리마 2,LSD·장거리,중립화,no,high,2,,adidas Supernova Prima 2,
+adidas:supernova-prima,1,false,아디다스,adidas,Supernova Prima 1,슈퍼노바 프리마 1,LSD·장거리,중립화,no,,2,,adidas Supernova Prima 1,직전 세대 — 존재 확인 필요
+adidas:supernova-solution,3,true,아디다스,adidas,Supernova Solution 3,슈퍼노바 솔루션 3,조깅·회복주,안정화,no,high,2,,adidas Supernova Solution 3,
+adidas:supernova-solution,2,false,아디다스,adidas,Supernova Solution 2,슈퍼노바 솔루션 2,조깅·회복주,안정화,no,,2,,adidas Supernova Solution 2,직전 세대 — 존재 확인 필요
+adidas:supernova-stride,2,true,아디다스,adidas,Supernova Stride 2,슈퍼노바 스트라이드 2,조깅·회복주,중립화,no,low,2,,adidas Supernova Stride 2,입문
+adidas:supernova-stride,1,false,아디다스,adidas,Supernova Stride 1,슈퍼노바 스트라이드 1,조깅·회복주,중립화,no,,2,,adidas Supernova Stride 1,직전 세대 — 존재 확인 필요
+adidas:supernova-ease,1,false,아디다스,adidas,Supernova Ease,슈퍼노바 이즈,조깅·회복주,중립화,no,low,2,,adidas Supernova Ease,입문 · 다음 세대가 들어와 현행 아님(2026-10-28)
+adidas:hyperboost-edge,1,true,아디다스,adidas,Hyperboost Edge,하이퍼부스트 엣지,LSD·장거리,중립화,no,medium,2,,adidas Hyperboost Edge,
+adidas:adistar-byd,2,true,아디다스,adidas,Adistar BYD 2,아디스타 BYD 2,LSD·장거리,중립화,no,medium,2,,adidas Adistar BYD 2,
+adidas:adistar-byd,1,false,아디다스,adidas,Adistar BYD 1,아디스타 BYD 1,LSD·장거리,중립화,no,,2,,adidas Adistar BYD 1,직전 세대 — 존재 확인 필요
+adidas:adistar,4,true,아디다스,adidas,Adistar 4,아디스타 4,LSD·장거리,중립화,no,low,2,,adidas Adistar 4,
+adidas:adistar,3,false,아디다스,adidas,Adistar 3,아디스타 3,LSD·장거리,중립화,no,,2,,adidas Adistar 3,직전 세대 — 존재 확인 필요
+adidas:ultraboost,5,true,아디다스,adidas,Ultraboost 5,울트라부스트 5,조깅·회복주,중립화,no,low,2,9,adidas Ultra Boost 5,
+adidas:ultraboost,4,false,아디다스,adidas,Ultraboost 4,울트라부스트 4,조깅·회복주,중립화,no,,2,,adidas Ultra Boost 4,직전 세대 — 존재 확인 필요
+adidas:duramo-sl,2,true,아디다스,adidas,Duramo SL 2,듀라모 SL 2,조깅·회복주,중립화,no,low,2,,adidas Duramo SL 2,입문
+adidas:duramo-sl,1,false,아디다스,adidas,Duramo SL 1,듀라모 SL 1,조깅·회복주,중립화,no,,2,,adidas Duramo SL 1,직전 세대 — 존재 확인 필요
+adidas:duramo-speed,2,true,아디다스,adidas,Duramo Speed 2,듀라모 스피드 2,템포·인터벌,중립화,no,low,2,,adidas Duramo Speed 2,입문
+adidas:duramo-speed,1,false,아디다스,adidas,Duramo Speed 1,듀라모 스피드 1,템포·인터벌,중립화,no,,2,,adidas Duramo Speed 1,직전 세대 — 존재 확인 필요
+adidas:galaxy,7,true,아디다스,adidas,Galaxy 7,갤럭시 7,조깅·회복주,중립화,no,low,2,,adidas Galaxy 7,입문
+adidas:galaxy,6,false,아디다스,adidas,Galaxy 6,갤럭시 6,조깅·회복주,중립화,no,,2,,adidas Galaxy 6,직전 세대 — 존재 확인 필요
+adidas:runfalcon,5,true,아디다스,adidas,Runfalcon 5,런팔콘 5,조깅·회복주,중립화,no,low,2,,adidas Runfalcon 5,입문
+adidas:runfalcon,4,false,아디다스,adidas,Runfalcon 4,런팔콘 4,조깅·회복주,중립화,no,,2,,adidas Runfalcon 4,직전 세대 — 존재 확인 필요
+adidas:terrex-agravic-speed-ultra,2,true,아디다스,adidas,Terrex Agravic Speed Ultra 2,테렉스 아그라빅 스피드 울트라 2,트레일,중립화,no,high,2,,adidas Terrex Agravic Speed Ultra 2,
+adidas:terrex-agravic-speed-ultra,1,false,아디다스,adidas,Terrex Agravic Speed Ultra 1,테렉스 아그라빅 스피드 울트라 1,트레일,중립화,no,,2,,adidas Terrex Agravic Speed Ultra 1,직전 세대 — 존재 확인 필요
+adidas:terrex-agravic-speed,2,true,아디다스,adidas,Terrex Agravic Speed 2,테렉스 아그라빅 스피드 2,트레일,중립화,no,high,2,,adidas Terrex Agravic Speed 2,
+adidas:terrex-agravic-speed,1,false,아디다스,adidas,Terrex Agravic Speed 1,테렉스 아그라빅 스피드 1,트레일,중립화,no,,2,,adidas Terrex Agravic Speed 1,직전 세대 — 존재 확인 필요
+adidas:terrex-agravic,4,true,아디다스,adidas,Terrex Agravic 4,테렉스 아그라빅 4,트레일,중립화,no,high,2,,adidas Terrex Agravic 4,
+adidas:terrex-agravic,3,false,아디다스,adidas,Terrex Agravic 3,테렉스 아그라빅 3,트레일,중립화,no,,2,,adidas Terrex Agravic 3,직전 세대 — 존재 확인 필요
+adidas:terrex-agravic-tt,1,true,아디다스,adidas,Terrex Agravic TT,테렉스 아그라빅 TT,트레일,중립화,no,high,2,,adidas Terrex Agravic TT,
+hoka:clifton,11,true,호카,hoka,Clifton 11,클리프톤 11,조깅·회복주,중립화,no,medium,2,,Hoka One One Clifton 11,
+hoka:clifton,10,false,호카,hoka,Clifton 10,클리프톤 10,조깅·회복주,중립화,no,,2,3,Hoka One One Clifton 10,직전 세대 — 존재 확인 필요
+hoka:clifton-pro,1,true,호카,hoka,Clifton PRO,클리프톤 프로,조깅·회복주,중립화,미확인,low,2,,Hoka One One Clifton PRO,
+hoka:bondi,9,true,호카,hoka,Bondi 9,본디 9,LSD·장거리,중립화,no,high,2,4,Hoka One One Bondi 9,
+hoka:bondi,8,false,호카,hoka,Bondi 8,본디 8,LSD·장거리,중립화,no,,2,,Hoka One One Bondi 8,직전 세대 — 존재 확인 필요
+hoka:mach,7,true,호카,hoka,Mach 7,마하 7,템포·인터벌,중립화,no,high,2,,Hoka One One Mach 7,
+hoka:mach,6,false,호카,hoka,Mach 6,마하 6,템포·인터벌,중립화,no,,2,,Hoka One One Mach 6,직전 세대 — 존재 확인 필요
+hoka:mach-x,3,true,호카,hoka,Mach X 3,마하 X 3,템포·인터벌,중립화,미확인,medium,2,,Hoka One One Mach X 3,
+hoka:mach-x,2,false,호카,hoka,Mach X 2,마하 X 2,템포·인터벌,중립화,미확인,,2,,Hoka One One Mach X 2,직전 세대 — 존재 확인 필요
+hoka:rincon,4,true,호카,hoka,Rincon 4,린콘 4,조깅·회복주,중립화,no,medium,2,,Hoka One One Rincon 4,입문
+hoka:rincon,3,false,호카,hoka,Rincon 3,린콘 3,조깅·회복주,중립화,no,,2,,Hoka One One Rincon 3,직전 세대 — 존재 확인 필요
+hoka:skyward-x,2,true,호카,hoka,Skyward X 2,스카이워드 X 2,LSD·장거리,중립화,yes,medium,2,,Hoka One One Skyward X 2,
+hoka:skyward-x,1,false,호카,hoka,Skyward X 1,스카이워드 X 1,LSD·장거리,중립화,yes,,2,,Hoka One One Skyward X 1,직전 세대 — 존재 확인 필요
+hoka:skyflow,1,true,호카,hoka,Skyflow,스카이플로우,조깅·회복주,중립화,no,low,2,,Hoka One One Skyflow,
+hoka:arahi,9,true,호카,hoka,Arahi 9,아라히 9,조깅·회복주,안정화,no,high,2,,Hoka One One Arahi 9,
+hoka:arahi,8,false,호카,hoka,Arahi 8,아라히 8,조깅·회복주,안정화,no,,2,,Hoka One One Arahi 8,직전 세대 — 존재 확인 필요
+hoka:gaviota,6,true,호카,hoka,Gaviota 6,가비오타 6,LSD·장거리,안정화,no,high,2,,Hoka One One Gaviota 6,
+hoka:gaviota,5,false,호카,hoka,Gaviota 5,가비오타 5,LSD·장거리,안정화,no,,2,,Hoka One One Gaviota 5,직전 세대 — 존재 확인 필요
+hoka:rocket-x,3,true,호카,hoka,Rocket X 3,로켓 X 3,레이스,중립화,yes,high,2,,Hoka One One Rocket X 3,
+hoka:rocket-x,2,false,호카,hoka,Rocket X 2,로켓 X 2,레이스,중립화,yes,,2,,Hoka One One Rocket X 2,직전 세대 — 존재 확인 필요
+hoka:cielo-x1,3,true,호카,hoka,Cielo X1 3.0,시엘로 X1 3.0,레이스,중립화,yes,high,2,,Hoka One One Cielo X1 3.0,
+hoka:cielo-x1,2,false,호카,hoka,Cielo X1 2.0,시엘로 X1 2.0,레이스,중립화,yes,,2,,Hoka One One Cielo X1 2.0,직전 세대 — 존재 확인 필요
+hoka:kawana,2,true,호카,hoka,Kawana 2,카와나 2,조깅·회복주,중립화,no,low,2,,Hoka One One Kawana 2,입문
+hoka:kawana,1,false,호카,hoka,Kawana 1,카와나 1,조깅·회복주,중립화,no,,2,,Hoka One One Kawana 1,직전 세대 — 존재 확인 필요
+hoka:challenger,8,true,호카,hoka,Challenger 8,챌린저 8,트레일,중립화,no,high,2,,Hoka One One Challenger 8,
+hoka:challenger,7,false,호카,hoka,Challenger 7,챌린저 7,트레일,중립화,no,,2,,Hoka One One Challenger 7,직전 세대 — 존재 확인 필요
+hoka:speedgoat,7,true,호카,hoka,Speedgoat 7,스피드고트 7,트레일,중립화,no,high,2,,Hoka One One Speedgoat 7,
+hoka:speedgoat,6,false,호카,hoka,Speedgoat 6,스피드고트 6,트레일,중립화,no,,2,19,Hoka One One Speedgoat 6,직전 세대 — 존재 확인 필요
+hoka:tecton-x,4,true,호카,hoka,Tecton X 4,텍톤 X 4,트레일,중립화,yes,high,2,,Hoka One One Tecton X 4,
+hoka:tecton-x,3,false,호카,hoka,Tecton X 3,텍톤 X 3,트레일,중립화,yes,,2,,Hoka One One Tecton X 3,직전 세대 — 존재 확인 필요
+hoka:mafate,5,true,호카,hoka,Mafate 5,마파테 5,트레일,중립화,no,medium,2,,Hoka One One Mafate 5,
+hoka:mafate,4,false,호카,hoka,Mafate 4,마파테 4,트레일,중립화,no,,2,,Hoka One One Mafate 4,직전 세대 — 존재 확인 필요
+hoka:torrent,5,true,호카,hoka,Torrent 5,토렌트 5,트레일,중립화,no,medium,2,,Hoka One One Torrent 5,
+hoka:torrent,4,false,호카,hoka,Torrent 4,토렌트 4,트레일,중립화,no,,2,,Hoka One One Torrent 4,직전 세대 — 존재 확인 필요
+hoka:zinal,3,true,호카,hoka,Zinal 3,지날 3,트레일,중립화,no,medium,2,,Hoka One One Zinal 3,
+hoka:zinal,2,false,호카,hoka,Zinal 2,지날 2,트레일,중립화,no,,2,,Hoka One One Zinal 2,직전 세대 — 존재 확인 필요
+newbalance:supercomp-elite,6,true,뉴발란스,newbalance,SuperComp Elite v6,슈퍼컴프 엘리트 v6,레이스,중립화,yes,high,1,,New Balance SuperComp Elite v6,
+newbalance:supercomp-elite,5,false,뉴발란스,newbalance,SuperComp Elite v5,슈퍼컴프 엘리트 v5,레이스,중립화,yes,,1,,New Balance SuperComp Elite v5,직전 세대 — 존재 확인 필요
+newbalance:supercomp-pacer,2,true,뉴발란스,newbalance,FuelCell SuperComp Pacer v2,퓨얼셀 슈퍼컴프 페이서 v2,레이스,중립화,yes,medium,1,,New Balance FuelCell SuperComp Pacer v2,
+newbalance:supercomp-pacer,1,false,뉴발란스,newbalance,FuelCell SuperComp Pacer v1,퓨얼셀 슈퍼컴프 페이서 v1,레이스,중립화,yes,,1,,New Balance FuelCell SuperComp Pacer v1,직전 세대 — 존재 확인 필요
+newbalance:supercomp-trainer,3,true,뉴발란스,newbalance,FuelCell SuperComp Trainer v3,퓨얼셀 슈퍼컴프 트레이너 v3,LSD·장거리,중립화,yes,medium,1,,New Balance FuelCell SuperComp Trainer v3,
+newbalance:supercomp-trainer,2,false,뉴발란스,newbalance,FuelCell SuperComp Trainer v2,퓨얼셀 슈퍼컴프 트레이너 v2,LSD·장거리,중립화,yes,,1,,New Balance FuelCell SuperComp Trainer v2,직전 세대 — 존재 확인 필요
+newbalance:supercomp-rebel,1,true,뉴발란스,newbalance,SuperComp Rebel v1,슈퍼컴프 레벨 v1,템포·인터벌,중립화,yes,high,1,,New Balance SuperComp Rebel v1,
+newbalance:rebel,5,true,뉴발란스,newbalance,FuelCell Rebel v5,퓨얼셀 레벨 v5,템포·인터벌,중립화,no,high,1,,New Balance FuelCell Rebel v5,
+newbalance:rebel,4,false,뉴발란스,newbalance,FuelCell Rebel v4,퓨얼셀 레벨 v4,템포·인터벌,중립화,no,,1,,New Balance FuelCell Rebel v4,직전 세대 — 존재 확인 필요
+newbalance:propel,5,true,뉴발란스,newbalance,FuelCell Propel v5,퓨얼셀 프로펠 v5,조깅·회복주,중립화,no,medium,1,,New Balance FuelCell Propel v5,
+newbalance:propel,4,false,뉴발란스,newbalance,FuelCell Propel v4,퓨얼셀 프로펠 v4,조깅·회복주,중립화,no,,1,,New Balance FuelCell Propel v4,직전 세대 — 존재 확인 필요
+newbalance:1080,15,true,뉴발란스,newbalance,1080 v15,1080 v15,LSD·장거리,중립화,no,high,1,,New Balance 1080v15,
+newbalance:1080,14,false,뉴발란스,newbalance,1080 v14,1080 v14,LSD·장거리,중립화,no,,1,,New Balance 1080v14,직전 세대 — 존재 확인 필요
+newbalance:more,6,true,뉴발란스,newbalance,Fresh Foam X More v6,프레시폼 X 모어 v6,LSD·장거리,중립화,no,high,1,,New Balance Fresh Foam X More v6,
+newbalance:more,5,false,뉴발란스,newbalance,Fresh Foam X More v5,프레시폼 X 모어 v5,LSD·장거리,중립화,no,,1,,New Balance Fresh Foam X More v5,직전 세대 — 존재 확인 필요
+newbalance:880,15,true,뉴발란스,newbalance,Fresh Foam X 880 v15,프레시폼 X 880 v15,조깅·회복주,중립화,no,high,1,8,New Balance 880v15,
+newbalance:880,14,false,뉴발란스,newbalance,Fresh Foam X 880 v14,프레시폼 X 880 v14,조깅·회복주,중립화,no,,1,,New Balance 880v14,직전 세대 — 존재 확인 필요
+newbalance:ellipse,1,true,뉴발란스,newbalance,Ellipse v1,엘립스 v1,조깅·회복주,중립화,no,high,1,,New Balance Ellipse v1,
+newbalance:balos,1,true,뉴발란스,newbalance,Fresh Foam X Balos,프레시폼 X 발로스,LSD·장거리,중립화,no,low,1,,New Balance Fresh Foam X Balos,
+newbalance:arishi,4,true,뉴발란스,newbalance,Fresh Foam Arishi v4,프레시폼 아리시 v4,조깅·회복주,중립화,no,medium,1,,New Balance Fresh Foam Arishi v4,입문
+newbalance:arishi,3,false,뉴발란스,newbalance,Fresh Foam Arishi v3,프레시폼 아리시 v3,조깅·회복주,중립화,no,,1,,New Balance Fresh Foam Arishi v3,직전 세대 — 존재 확인 필요
+newbalance:680,9,true,뉴발란스,newbalance,Fresh Foam 680 v9,프레시폼 680 v9,조깅·회복주,중립화,no,high,1,,New Balance Fresh Foam 680 v9,입문
+newbalance:680,8,false,뉴발란스,newbalance,Fresh Foam 680 v8,프레시폼 680 v8,조깅·회복주,중립화,no,,1,,New Balance Fresh Foam 680 v8,직전 세대 — 존재 확인 필요
+newbalance:evoz,4,true,뉴발란스,newbalance,Fresh Foam X Evoz v4,프레시폼 X 에보즈 v4,조깅·회복주,중립화,no,medium,1,,New Balance Fresh Foam X Evoz v4,입문
+newbalance:evoz,3,false,뉴발란스,newbalance,Fresh Foam X Evoz v3,프레시폼 X 에보즈 v3,조깅·회복주,중립화,no,,1,,New Balance Fresh Foam X Evoz v3,직전 세대 — 존재 확인 필요
+newbalance:860,15,true,뉴발란스,newbalance,Fresh Foam X 860 v15,프레시폼 X 860 v15,조깅·회복주,안정화,no,high,1,,New Balance 860v15,
+newbalance:860,14,false,뉴발란스,newbalance,Fresh Foam X 860 v14,프레시폼 X 860 v14,조깅·회복주,안정화,no,,1,,New Balance 860v14,직전 세대 — 존재 확인 필요
+newbalance:vongo,6,true,뉴발란스,newbalance,Fresh Foam X Vongo v6,프레시폼 X 봉고 v6,LSD·장거리,안정화,no,medium,1,,New Balance Fresh Foam X Vongo v6,
+newbalance:vongo,5,false,뉴발란스,newbalance,Fresh Foam X Vongo v5,프레시폼 X 봉고 v5,LSD·장거리,안정화,no,,1,,New Balance Fresh Foam X Vongo v5,직전 세대 — 존재 확인 필요
+newbalance:1540,4,true,뉴발란스,newbalance,Fresh Foam X 1540 v4,프레시폼 X 1540 v4,조깅·회복주,안정화,no,low,1,,New Balance Fresh Foam X 1540 v4,
+newbalance:1540,3,false,뉴발란스,newbalance,Fresh Foam X 1540 v3,프레시폼 X 1540 v3,조깅·회복주,안정화,no,,1,,New Balance Fresh Foam X 1540 v3,직전 세대 — 존재 확인 필요
+newbalance:evoz-st,1,true,뉴발란스,newbalance,Fresh Foam X Evoz ST,프레시폼 X 에보즈 ST,조깅·회복주,안정화,no,low,1,,New Balance Fresh Foam X Evoz ST,
+newbalance:hierro,9,true,뉴발란스,newbalance,Fresh Foam X Hierro v9,프레시폼 X 히에로 v9,트레일,중립화,no,high,1,,New Balance Fresh Foam X Hierro v9,
+newbalance:hierro,8,false,뉴발란스,newbalance,Fresh Foam X Hierro v8,프레시폼 X 히에로 v8,트레일,중립화,no,,1,,New Balance Fresh Foam X Hierro v8,직전 세대 — 존재 확인 필요
+newbalance:more-trail,3,true,뉴발란스,newbalance,Fresh Foam X More Trail v3,프레시폼 X 모어 트레일 v3,트레일,중립화,no,medium,1,,New Balance Fresh Foam X More Trail v3,
+newbalance:more-trail,2,false,뉴발란스,newbalance,Fresh Foam X More Trail v2,프레시폼 X 모어 트레일 v2,트레일,중립화,no,,1,,New Balance Fresh Foam X More Trail v2,직전 세대 — 존재 확인 필요
+newbalance:supercomp-trail,2,true,뉴발란스,newbalance,FuelCell SuperComp Trail v2,퓨얼셀 슈퍼컴프 트레일 v2,트레일,중립화,yes,high,1,,New Balance FuelCell SuperComp Trail v2,
+newbalance:supercomp-trail,1,false,뉴발란스,newbalance,FuelCell SuperComp Trail v1,퓨얼셀 슈퍼컴프 트레일 v1,트레일,중립화,yes,,1,,New Balance FuelCell SuperComp Trail v1,직전 세대 — 존재 확인 필요
+saucony:endorphin-elite,3,true,사우코니,saucony,Endorphin Elite 3,엔돌핀 엘리트 3,레이스,중립화,yes,high,1,,Saucony Endorphin Elite 3,
+saucony:endorphin-elite,2,false,사우코니,saucony,Endorphin Elite 2,엔돌핀 엘리트 2,레이스,중립화,yes,,1,,Saucony Endorphin Elite 2,직전 세대 — 존재 확인 필요
+saucony:endorphin-pro,5,true,사우코니,saucony,Endorphin Pro 5,엔돌핀 프로 5,레이스,중립화,yes,high,1,,Saucony Endorphin Pro 5,
+saucony:endorphin-pro,4,false,사우코니,saucony,Endorphin Pro 4,엔돌핀 프로 4,레이스,중립화,yes,,1,,Saucony Endorphin Pro 4,직전 세대 — 존재 확인 필요
+saucony:endorphin-speed,6,true,사우코니,saucony,Endorphin Speed 6,엔돌핀 스피드 6,템포·인터벌,중립화,no,high,1,,Saucony Endorphin Speed 6,
+saucony:endorphin-speed,5,false,사우코니,saucony,Endorphin Speed 5,엔돌핀 스피드 5,템포·인터벌,중립화,no,,1,,Saucony Endorphin Speed 5,직전 세대 — 존재 확인 필요
+saucony:endorphin-azura,1,true,사우코니,saucony,Endorphin Azura,엔돌핀 아주라,템포·인터벌,중립화,no,high,1,,Saucony Endorphin Azura,
+saucony:kinvara,16,true,사우코니,saucony,Kinvara 16,킨바라 16,템포·인터벌,중립화,no,high,1,,Saucony Kinvara 16,
+saucony:kinvara,15,false,사우코니,saucony,Kinvara 15,킨바라 15,템포·인터벌,중립화,no,,1,,Saucony Kinvara 15,직전 세대 — 존재 확인 필요
+saucony:tempus,2,true,사우코니,saucony,Tempus 2,템퍼스 2,템포·인터벌,안정화,no,high,1,,Saucony Tempus 2,
+saucony:tempus,1,false,사우코니,saucony,Tempus 1,템퍼스 1,템포·인터벌,안정화,no,,1,,Saucony Tempus 1,직전 세대 — 존재 확인 필요
+saucony:endorphin-trainer,1,true,사우코니,saucony,Endorphin Trainer,엔돌핀 트레이너,LSD·장거리,중립화,미확인,medium,1,,Saucony Endorphin Trainer,
+saucony:triumph,24,true,사우코니,saucony,Triumph 24,트라이엄프 24,LSD·장거리,중립화,no,high,1,,Saucony Triumph 24,
+saucony:triumph,23,false,사우코니,saucony,Triumph 23,트라이엄프 23,LSD·장거리,중립화,no,,1,,Saucony Triumph 23,직전 세대 — 존재 확인 필요
+saucony:paramount-max,1,true,사우코니,saucony,Paramount Max,파라마운트 맥스,LSD·장거리,중립화,no,high,1,,Saucony Paramount Max,
+saucony:hurricane,26,true,사우코니,saucony,Hurricane 26,허리케인 26,LSD·장거리,안정화,no,high,1,,Saucony Hurricane 26,
+saucony:hurricane,25,false,사우코니,saucony,Hurricane 25,허리케인 25,LSD·장거리,안정화,no,,1,,Saucony Hurricane 25,직전 세대 — 존재 확인 필요
+saucony:ride,19,true,사우코니,saucony,Ride 19,라이드 19,조깅·회복주,중립화,no,high,1,,Saucony Ride 19,
+saucony:ride,18,false,사우코니,saucony,Ride 18,라이드 18,조깅·회복주,중립화,no,,1,,Saucony Ride 18,직전 세대 — 존재 확인 필요
+saucony:guide,19,true,사우코니,saucony,Guide 19,가이드 19,조깅·회복주,안정화,no,high,1,,Saucony Guide 19,
+saucony:guide,18,false,사우코니,saucony,Guide 18,가이드 18,조깅·회복주,안정화,no,,1,,Saucony Guide 18,직전 세대 — 존재 확인 필요
+saucony:omni,23,true,사우코니,saucony,Omni 23,옴니 23,조깅·회복주,안정화,no,medium,1,,Saucony Omni 23,
+saucony:omni,22,false,사우코니,saucony,Omni 22,옴니 22,조깅·회복주,안정화,no,,1,,Saucony Omni 22,직전 세대 — 존재 확인 필요
+saucony:axon,1,true,사우코니,saucony,Axon,액슨,조깅·회복주,중립화,no,low,1,,Saucony Axon,입문
+saucony:peregrine,16,true,사우코니,saucony,Peregrine 16,페레그린 16,트레일,중립화,no,high,1,,Saucony Peregrine 16,
+saucony:peregrine,15,false,사우코니,saucony,Peregrine 15,페레그린 15,트레일,중립화,no,,1,,Saucony Peregrine 15,직전 세대 — 존재 확인 필요
+saucony:xodus-ultra,4,true,사우코니,saucony,Xodus Ultra 4,엑소더스 울트라 4,트레일,중립화,no,high,1,,Saucony Xodus Ultra 4,
+saucony:xodus-ultra,3,false,사우코니,saucony,Xodus Ultra 3,엑소더스 울트라 3,트레일,중립화,no,,1,,Saucony Xodus Ultra 3,직전 세대 — 존재 확인 필요
+saucony:guide-tr,1,true,사우코니,saucony,Guide TR,가이드 TR,트레일,안정화,no,high,1,,Saucony Guide TR,
+brooks:hyperion-elite,6,true,브룩스,brooks,Hyperion Elite 6,하이페리온 엘리트 6,레이스,중립화,yes,high,1,,Brooks Hyperion Elite 6,
+brooks:hyperion-elite,5,false,브룩스,brooks,Hyperion Elite 5,하이페리온 엘리트 5,레이스,중립화,yes,,1,,Brooks Hyperion Elite 5,직전 세대 — 존재 확인 필요
+brooks:hyperion-max,4,true,브룩스,brooks,Hyperion Max 4,하이페리온 맥스 4,템포·인터벌,중립화,no,high,1,,Brooks Hyperion Max 4,
+brooks:hyperion-max,3,false,브룩스,brooks,Hyperion Max 3,하이페리온 맥스 3,템포·인터벌,중립화,no,,1,,Brooks Hyperion Max 3,직전 세대 — 존재 확인 필요
+brooks:hyperion,3,true,브룩스,brooks,Hyperion 3,하이페리온 3,템포·인터벌,중립화,no,medium,1,,Brooks Hyperion 3,
+brooks:hyperion,2,false,브룩스,brooks,Hyperion 2,하이페리온 2,템포·인터벌,중립화,no,,1,,Brooks Hyperion 2,직전 세대 — 존재 확인 필요
+brooks:launch,12,true,브룩스,brooks,Launch 12,론치 12,템포·인터벌,중립화,no,medium,1,,Brooks Launch 12,
+brooks:launch,11,false,브룩스,brooks,Launch 11,론치 11,템포·인터벌,중립화,no,,1,,Brooks Launch 11,직전 세대 — 존재 확인 필요
+brooks:glycerin,23,true,브룩스,brooks,Glycerin 23,글리세린 23,LSD·장거리,중립화,no,high,1,,Brooks Glycerin 23,
+brooks:glycerin,22,false,브룩스,brooks,Glycerin 22,글리세린 22,LSD·장거리,중립화,no,,1,,Brooks Glycerin 22,직전 세대 — 존재 확인 필요
+brooks:glycerin-gts,23,true,브룩스,brooks,Glycerin GTS 23,글리세린 GTS 23,LSD·장거리,안정화,no,high,1,,Brooks Glycerin GTS 23,
+brooks:glycerin-gts,22,false,브룩스,brooks,Glycerin GTS 22,글리세린 GTS 22,LSD·장거리,안정화,no,,1,,Brooks Glycerin GTS 22,직전 세대 — 존재 확인 필요
+brooks:glycerin-max,2,true,브룩스,brooks,Glycerin Max 2,글리세린 맥스 2,LSD·장거리,중립화,no,medium,1,,Brooks Glycerin Max 2,
+brooks:glycerin-max,1,false,브룩스,brooks,Glycerin Max 1,글리세린 맥스 1,LSD·장거리,중립화,no,,1,,Brooks Glycerin Max 1,직전 세대 — 존재 확인 필요
+brooks:glycerin-flex,1,true,브룩스,brooks,Glycerin Flex,글리세린 플렉스,LSD·장거리,중립화,no,low,1,,Brooks Glycerin Flex,
+brooks:ghost,18,true,브룩스,brooks,Ghost 18,고스트 18,조깅·회복주,중립화,no,high,1,,Brooks Ghost 18,
+brooks:ghost,17,false,브룩스,brooks,Ghost 17,고스트 17,조깅·회복주,중립화,no,,1,7,Brooks Ghost 17,직전 세대 — 존재 확인 필요
+brooks:ghost-max,4,true,브룩스,brooks,Ghost Max 4,고스트 맥스 4,조깅·회복주,중립화,no,high,1,,Brooks Ghost Max 4,
+brooks:ghost-max,3,false,브룩스,brooks,Ghost Max 3,고스트 맥스 3,조깅·회복주,중립화,no,,1,,Brooks Ghost Max 3,직전 세대 — 존재 확인 필요
+brooks:ghost-amp,1,true,브룩스,brooks,Ghost AMP,고스트 AMP,조깅·회복주,중립화,no,high,1,,Brooks Ghost AMP,
+brooks:revel,9,true,브룩스,brooks,Revel 9,레벨 9,조깅·회복주,중립화,no,medium,1,,Brooks Revel 9,입문
+brooks:revel,8,false,브룩스,brooks,Revel 8,레벨 8,조깅·회복주,중립화,no,,1,,Brooks Revel 8,직전 세대 — 존재 확인 필요
+brooks:adrenaline-gts,25,true,브룩스,brooks,Adrenaline GTS 25,아드레날린 GTS 25,조깅·회복주,안정화,no,medium,1,,Brooks Adrenaline GTS 25,26 출시 11-01
+brooks:adrenaline-gts,24,false,브룩스,brooks,Adrenaline GTS 24,아드레날린 GTS 24,조깅·회복주,안정화,no,,1,,Brooks Adrenaline GTS 24,직전 세대 — 존재 확인 필요
+brooks:beast-gts,26,true,브룩스,brooks,Beast GTS 26,비스트 GTS 26,조깅·회복주,안정화,no,medium,1,,Brooks Beast GTS 26,
+brooks:beast-gts,24,false,브룩스,brooks,Beast GTS 24,비스트 GTS 24,조깅·회복주,안정화,no,,1,,Brooks Beast GTS 24,직전 세대 — 존재 확인 필요
+brooks:cascadia,20,true,브룩스,brooks,Cascadia 20,캐스캐디아 20,트레일,중립화,no,high,1,,Brooks Cascadia 20,
+brooks:cascadia,19,false,브룩스,brooks,Cascadia 19,캐스캐디아 19,트레일,중립화,no,,1,,Brooks Cascadia 19,직전 세대 — 존재 확인 필요
+brooks:cascadia-elite,1,true,브룩스,brooks,Cascadia Elite,캐스캐디아 엘리트,트레일,중립화,yes,high,1,,Brooks Cascadia Elite,
+brooks:ghost-trail,1,true,브룩스,brooks,Ghost Trail,고스트 트레일,트레일,중립화,no,high,1,,Brooks Ghost Trail,
+brooks:catamount,4,true,브룩스,brooks,Catamount 4,캐터마운트 4,트레일,중립화,no,medium,1,,Brooks Catamount 4,
+brooks:catamount,3,false,브룩스,brooks,Catamount 3,캐터마운트 3,트레일,중립화,no,,1,,Brooks Catamount 3,직전 세대 — 존재 확인 필요
+on:cloudboom-strike,2,true,온,on,Cloudboom Strike 2,클라우드붐 스트라이크 2,레이스,중립화,yes,high,2,,On Running Cloudboom Strike 2,
+on:cloudboom-strike,1,false,온,on,Cloudboom Strike 1,클라우드붐 스트라이크 1,레이스,중립화,yes,,2,,On Running Cloudboom Strike 1,직전 세대 — 존재 확인 필요
+on:cloudboom-volt,1,true,온,on,Cloudboom Volt,클라우드붐 볼트,레이스,중립화,yes,high,2,,On Running Cloudboom Volt,
+on:cloudboom-echo,3,true,온,on,Cloudboom Echo 3,클라우드붐 에코 3,레이스,중립화,yes,medium,2,,On Running Cloudboom Echo 3,
+on:cloudboom-echo,2,false,온,on,Cloudboom Echo 2,클라우드붐 에코 2,레이스,중립화,yes,,2,,On Running Cloudboom Echo 2,직전 세대 — 존재 확인 필요
+on:cloudflow,5,true,온,on,Cloudflow 5,클라우드플로우 5,템포·인터벌,중립화,no,high,2,,On Running Cloudflow 5,
+on:cloudflow,4,false,온,on,Cloudflow 4,클라우드플로우 4,템포·인터벌,중립화,no,,2,,On Running Cloudflow 4,직전 세대 — 존재 확인 필요
+on:cloudmonster,3,true,온,on,Cloudmonster 3,클라우드몬스터 3,LSD·장거리,중립화,no,high,2,,On Running Cloudmonster 3,
+on:cloudmonster,2,false,온,on,Cloudmonster 2,클라우드몬스터 2,LSD·장거리,중립화,no,,2,11,On Running Cloudmonster 2,직전 세대 — 존재 확인 필요
+on:cloudmonster-hyper,3,true,온,on,Cloudmonster 3 Hyper,클라우드몬스터 3 하이퍼,LSD·장거리,중립화,no,high,2,,On Running Cloudmonster 3 Hyper,
+on:cloudmonster-hyper,2,false,온,on,Cloudmonster 2 Hyper,클라우드몬스터 2 하이퍼,LSD·장거리,중립화,no,,2,,On Running Cloudmonster 2 Hyper,직전 세대 — 존재 확인 필요
+on:cloudboom-max,1,true,온,on,Cloudboom Max,클라우드붐 맥스,LSD·장거리,중립화,미확인,medium,2,,On Running Cloudboom Max,
+on:cloudsurfer-max,1,true,온,on,Cloudsurfer Max,클라우드서퍼 맥스,LSD·장거리,중립화,no,medium,2,,On Running Cloudsurfer Max,
+on:cloudstratus,3,true,온,on,Cloudstratus 3,클라우드스트라투스 3,LSD·장거리,중립화,no,medium,2,,On Running Cloudstratus 3,
+on:cloudstratus,2,false,온,on,Cloudstratus 2,클라우드스트라투스 2,LSD·장거리,중립화,no,,2,,On Running Cloudstratus 2,직전 세대 — 존재 확인 필요
+on:cloudeclipse,1,true,온,on,Cloudeclipse,클라우드이클립스,LSD·장거리,중립화,no,medium,2,,On Running Cloudeclipse,
+on:cloudsurfer,3,true,온,on,Cloudsurfer 3,클라우드서퍼 3,조깅·회복주,중립화,no,high,2,,On Running Cloudsurfer 3,
+on:cloudsurfer,2,false,온,on,Cloudsurfer 2,클라우드서퍼 2,조깅·회복주,중립화,no,,2,,On Running Cloudsurfer 2,직전 세대 — 존재 확인 필요
+on:cloudsurfer-next,1,true,온,on,Cloudsurfer Next,클라우드서퍼 넥스트,조깅·회복주,중립화,no,medium,2,,On Running Cloudsurfer Next,입문
+on:cloudrunner,3,true,온,on,Cloudrunner 3,클라우드러너 3,조깅·회복주,안정화,no,high,2,,On Running Cloudrunner 3,
+on:cloudrunner,2,false,온,on,Cloudrunner 2,클라우드러너 2,조깅·회복주,안정화,no,,2,,On Running Cloudrunner 2,직전 세대 — 존재 확인 필요
+on:cloudflyer,5,true,온,on,Cloudflyer 5,클라우드플라이어 5,조깅·회복주,안정화,no,medium,2,,On Running Cloudflyer 5,
+on:cloudflyer,4,false,온,on,Cloudflyer 4,클라우드플라이어 4,조깅·회복주,안정화,no,,2,,On Running Cloudflyer 4,직전 세대 — 존재 확인 필요
+on:cloudswift,4,true,온,on,Cloudswift 4,클라우드스위프트 4,조깅·회복주,중립화,no,medium,2,,On Running Cloudswift 4,
+on:cloudswift,3,false,온,on,Cloudswift 3,클라우드스위프트 3,조깅·회복주,중립화,no,,2,,On Running Cloudswift 3,직전 세대 — 존재 확인 필요
+on:cloudgo,1,true,온,on,Cloudgo,클라우드고,조깅·회복주,중립화,no,low,2,,On Running Cloudgo,입문
+on:cloudultra-pro,1,true,온,on,Cloudultra Pro,클라우드울트라 프로,트레일,중립화,no,high,2,,On Running Cloudultra Pro,
+on:cloudultra,3,true,온,on,Cloudultra 3,클라우드울트라 3,트레일,중립화,no,medium,2,,On Running Cloudultra 3,
+on:cloudultra,2,false,온,on,Cloudultra 2,클라우드울트라 2,트레일,중립화,no,,2,,On Running Cloudultra 2,직전 세대 — 존재 확인 필요
+on:cloudsurfer-trail,2,true,온,on,Cloudsurfer Trail 2,클라우드서퍼 트레일 2,트레일,중립화,no,high,2,,On Running Cloudsurfer Trail 2,
+on:cloudsurfer-trail,1,false,온,on,Cloudsurfer Trail 1,클라우드서퍼 트레일 1,트레일,중립화,no,,2,,On Running Cloudsurfer Trail 1,직전 세대 — 존재 확인 필요
+on:cloudvista,2,true,온,on,Cloudvista 2,클라우드비스타 2,트레일,중립화,no,medium,2,,On Running Cloudvista 2,
+on:cloudvista,1,false,온,on,Cloudvista 1,클라우드비스타 1,트레일,중립화,no,,2,,On Running Cloudvista 1,직전 세대 — 존재 확인 필요
+mizuno:hyperwarp-elite,1,true,미즈노,mizuno,Hyperwarp Elite,하이퍼워프 엘리트,레이스,중립화,yes,high,1,,Mizuno Hyperwarp Elite,
+mizuno:hyperwarp-pure,1,true,미즈노,mizuno,Hyperwarp Pure,하이퍼워프 퓨어,레이스,중립화,미확인,high,1,,Mizuno Hyperwarp Pure,
+mizuno:wave-rebellion-pro,3,true,미즈노,mizuno,Wave Rebellion Pro 3,웨이브 레벨리온 프로 3,레이스,중립화,no,high,1,,Mizuno Wave Rebellion Pro 3,
+mizuno:wave-rebellion-pro,2,false,미즈노,mizuno,Wave Rebellion Pro 2,웨이브 레벨리온 프로 2,레이스,중립화,no,,1,,Mizuno Wave Rebellion Pro 2,직전 세대 — 존재 확인 필요
+mizuno:hyperwarp-pro,1,true,미즈노,mizuno,Hyperwarp Pro,하이퍼워프 프로,템포·인터벌,중립화,yes,high,1,,Mizuno Hyperwarp Pro,
+mizuno:wave-rebellion-flash,3,true,미즈노,mizuno,Wave Rebellion Flash 3,웨이브 레벨리온 플래시 3,템포·인터벌,중립화,no,high,1,,Mizuno Wave Rebellion Flash 3,
+mizuno:wave-rebellion-flash,2,false,미즈노,mizuno,Wave Rebellion Flash 2,웨이브 레벨리온 플래시 2,템포·인터벌,중립화,no,,1,,Mizuno Wave Rebellion Flash 2,직전 세대 — 존재 확인 필요
+mizuno:neo-vista,3,true,미즈노,mizuno,Neo Vista 3,네오 비스타 3,LSD·장거리,중립화,no,high,1,,Mizuno Neo Vista 3,
+mizuno:neo-vista,2,false,미즈노,mizuno,Neo Vista 2,네오 비스타 2,LSD·장거리,중립화,no,,1,,Mizuno Neo Vista 2,직전 세대 — 존재 확인 필요
+mizuno:wave-sky,9,true,미즈노,mizuno,Wave Sky 9,웨이브 스카이 9,LSD·장거리,중립화,no,high,1,,Mizuno Wave Sky 9,
+mizuno:wave-sky,8,false,미즈노,mizuno,Wave Sky 8,웨이브 스카이 8,LSD·장거리,중립화,no,,1,,Mizuno Wave Sky 8,직전 세대 — 존재 확인 필요
+mizuno:wave-horizon,9,true,미즈노,mizuno,Wave Horizon 9,웨이브 호라이즌 9,LSD·장거리,안정화,no,high,1,,Mizuno Wave Horizon 9,
+mizuno:wave-horizon,8,false,미즈노,mizuno,Wave Horizon 8,웨이브 호라이즌 8,LSD·장거리,안정화,no,,1,,Mizuno Wave Horizon 8,직전 세대 — 존재 확인 필요
+mizuno:sky-prime,1,true,미즈노,mizuno,Sky Prime,스카이 프라임,LSD·장거리,중립화,no,low,1,,Mizuno Sky Prime,
+mizuno:wave-rider,30,true,미즈노,mizuno,Wave Rider 30,웨이브 라이더 30,조깅·회복주,중립화,no,high,1,,Mizuno Wave Rider 30,
+mizuno:wave-rider,29,false,미즈노,mizuno,Wave Rider 29,웨이브 라이더 29,조깅·회복주,중립화,no,,1,15,Mizuno Wave Rider 29,직전 세대 — 존재 확인 필요
+mizuno:wave-inspire,22,true,미즈노,mizuno,Wave Inspire 22,웨이브 인스파이어 22,조깅·회복주,안정화,no,high,1,,Mizuno Wave Inspire 22,
+mizuno:wave-inspire,21,false,미즈노,mizuno,Wave Inspire 21,웨이브 인스파이어 21,조깅·회복주,안정화,no,,1,,Mizuno Wave Inspire 21,직전 세대 — 존재 확인 필요
+mizuno:neo-zen,2,true,미즈노,mizuno,Neo Zen 2,네오 젠 2,조깅·회복주,중립화,no,high,1,,Mizuno Neo Zen 2,
+mizuno:neo-zen,1,false,미즈노,mizuno,Neo Zen 1,네오 젠 1,조깅·회복주,중립화,no,,1,,Mizuno Neo Zen 1,직전 세대 — 존재 확인 필요
+mizuno:neo-accera,1,true,미즈노,mizuno,Neo Accera,네오 아체라,트레일,중립화,no,high,1,,Mizuno Neo Accera,
+salomon:aero-glide,4,true,살로몬,salomon,Aero Glide 4,에어로 글라이드 4,조깅·회복주,중립화,no,high,1,,Salomon Aero Glide 4,
+salomon:aero-glide,3,false,살로몬,salomon,Aero Glide 3,에어로 글라이드 3,조깅·회복주,중립화,no,,1,,Salomon Aero Glide 3,직전 세대 — 존재 확인 필요
+salomon:aero-blaze,4,true,살로몬,salomon,Aero Blaze 4,에어로 블레이즈 4,템포·인터벌,중립화,no,medium,1,,Salomon Aero Blaze 4,
+salomon:aero-blaze,3,false,살로몬,salomon,Aero Blaze 3,에어로 블레이즈 3,템포·인터벌,중립화,no,,1,,Salomon Aero Blaze 3,직전 세대 — 존재 확인 필요
+salomon:slab-phantasm,3,true,살로몬,salomon,S/LAB Phantasm 3,S/LAB 판타즘 3,레이스,중립화,yes,high,1,,Salomon S/LAB Phantasm 3,
+salomon:slab-phantasm,2,false,살로몬,salomon,S/LAB Phantasm 2,S/LAB 판타즘 2,레이스,중립화,yes,,1,,Salomon S/LAB Phantasm 2,직전 세대 — 존재 확인 필요
+salomon:slab-spectur,1,true,살로몬,salomon,S/LAB Spectur,S/LAB 스펙터,레이스,중립화,미확인,medium,1,,Salomon S/LAB Spectur,
+salomon:speedcross,6,true,살로몬,salomon,Speedcross 6,스피드크로스 6,트레일,중립화,no,high,1,18,Salomon Speedcross 6,
+salomon:speedcross,5,false,살로몬,salomon,Speedcross 5,스피드크로스 5,트레일,중립화,no,,1,,Salomon Speedcross 5,직전 세대 — 존재 확인 필요
+salomon:ultra-glide,4,true,살로몬,salomon,Ultra Glide 4,울트라 글라이드 4,트레일,중립화,no,high,1,,Salomon Ultra Glide 4,
+salomon:ultra-glide,3,false,살로몬,salomon,Ultra Glide 3,울트라 글라이드 3,트레일,중립화,no,,1,,Salomon Ultra Glide 3,직전 세대 — 존재 확인 필요
+salomon:genesis,2,true,살로몬,salomon,Genesis 2,제네시스 2,트레일,중립화,no,medium,1,,Salomon Genesis 2,
+salomon:genesis,1,false,살로몬,salomon,Genesis 1,제네시스 1,트레일,중립화,no,,1,,Salomon Genesis 1,직전 세대 — 존재 확인 필요
+salomon:xa-pro-3d,9,true,살로몬,salomon,XA Pro 3D V9,XA 프로 3D V9,트레일,중립화,no,high,1,,Salomon XA Pro 3D V9,
+salomon:xa-pro-3d,8,false,살로몬,salomon,XA Pro 3D V8,XA 프로 3D V8,트레일,중립화,no,,1,,Salomon XA Pro 3D V8,직전 세대 — 존재 확인 필요
+salomon:slab-pulsar,4,true,살로몬,salomon,S/LAB Pulsar 4,S/LAB 펄사 4,트레일,중립화,no,high,1,,Salomon S/LAB Pulsar 4,
+salomon:slab-pulsar,3,false,살로몬,salomon,S/LAB Pulsar 3,S/LAB 펄사 3,트레일,중립화,no,,1,,Salomon S/LAB Pulsar 3,직전 세대 — 존재 확인 필요
+puma:deviate-nitro,4,true,푸마,puma,Deviate Nitro 4,디비에이트 니트로 4,템포·인터벌,중립화,yes,high,1,,Puma Deviate Nitro 4,
+puma:deviate-nitro,3,false,푸마,puma,Deviate Nitro 3,디비에이트 니트로 3,템포·인터벌,중립화,yes,,1,,Puma Deviate Nitro 3,직전 세대 — 존재 확인 필요
+puma:deviate-nitro-elite,4,true,푸마,puma,Deviate Nitro Elite 4,디비에이트 니트로 엘리트 4,레이스,중립화,yes,high,1,,Puma Deviate Nitro Elite 4,
+puma:deviate-nitro-elite,3,false,푸마,puma,Deviate Nitro Elite 3,디비에이트 니트로 엘리트 3,레이스,중립화,yes,,1,,Puma Deviate Nitro Elite 3,직전 세대 — 존재 확인 필요
+puma:fast-r-nitro-elite,3,true,푸마,puma,Fast-R Nitro Elite 3,패스트 R 니트로 엘리트 3,레이스,중립화,yes,high,1,,Puma Fast-R Nitro Elite 3,
+puma:fast-r-nitro-elite,2,false,푸마,puma,Fast-R Nitro Elite 2,패스트 R 니트로 엘리트 2,레이스,중립화,yes,,1,,Puma Fast-R Nitro Elite 2,직전 세대 — 존재 확인 필요
+puma:fast-fwd-nitro-elite,2,true,푸마,puma,Fast-FWD Nitro Elite 2,패스트 FWD 니트로 엘리트 2,레이스,중립화,yes,medium,1,,Puma Fast-FWD Nitro Elite 2,
+puma:fast-fwd-nitro-elite,1,false,푸마,puma,Fast-FWD Nitro Elite 1,패스트 FWD 니트로 엘리트 1,레이스,중립화,yes,,1,,Puma Fast-FWD Nitro Elite 1,직전 세대 — 존재 확인 필요
+puma:deviate-pure-nitro,1,true,푸마,puma,Deviate Pure Nitro,디비에이트 퓨어 니트로,템포·인터벌,중립화,no,high,1,,Puma Deviate Pure Nitro,
+puma:velocity-nitro,4,false,푸마,puma,Velocity Nitro 4,벨로시티 니트로 4,조깅·회복주,중립화,no,high,1,,Puma Velocity Nitro 4,다음 세대가 들어와 현행 아님(2026-10-28)
+puma:velocity-nitro,3,false,푸마,puma,Velocity Nitro 3,벨로시티 니트로 3,조깅·회복주,중립화,no,,1,,Puma Velocity Nitro 3,직전 세대 — 존재 확인 필요
+puma:magnify-nitro,3,true,푸마,puma,Magnify Nitro 3,매그니파이 니트로 3,LSD·장거리,중립화,no,medium,1,,Puma Magnify Nitro 3,
+puma:magnify-nitro,2,false,푸마,puma,Magnify Nitro 2,매그니파이 니트로 2,LSD·장거리,중립화,no,,1,,Puma Magnify Nitro 2,직전 세대 — 존재 확인 필요
+puma:magmax-nitro,2,true,푸마,puma,MagMax Nitro 2,맥맥스 니트로 2,조깅·회복주,중립화,no,high,1,,Puma MagMax Nitro 2,
+puma:magmax-nitro,1,false,푸마,puma,MagMax Nitro 1,맥맥스 니트로 1,조깅·회복주,중립화,no,,1,,Puma MagMax Nitro 1,직전 세대 — 존재 확인 필요
+puma:foreverrun-nitro,2,true,푸마,puma,ForeverRun Nitro 2,포에버런 니트로 2,조깅·회복주,안정화,no,medium,1,,Puma ForeverRun Nitro 2,
+puma:foreverrun-nitro,1,false,푸마,puma,ForeverRun Nitro 1,포에버런 니트로 1,조깅·회복주,안정화,no,,1,,Puma ForeverRun Nitro 1,직전 세대 — 존재 확인 필요
+puma:electrify-nitro,4,true,푸마,puma,Electrify Nitro 4,일렉트리파이 니트로 4,조깅·회복주,중립화,no,low,1,,Puma Electrify Nitro 4,입문
+puma:electrify-nitro,3,false,푸마,puma,Electrify Nitro 3,일렉트리파이 니트로 3,조깅·회복주,중립화,no,,1,,Puma Electrify Nitro 3,직전 세대 — 존재 확인 필요
+puma:voyage-nitro,4,true,푸마,puma,Voyage Nitro 4,보야지 니트로 4,트레일,중립화,no,high,1,,Puma Voyage Nitro 4,
+puma:voyage-nitro,3,false,푸마,puma,Voyage Nitro 3,보야지 니트로 3,트레일,중립화,no,,1,,Puma Voyage Nitro 3,직전 세대 — 존재 확인 필요
+puma:fast-trac-nitro,4,true,푸마,puma,Fast-Trac Nitro 4,패스트 트랙 니트로 4,트레일,중립화,no,medium,1,,Puma Fast-Trac Nitro 4,
+puma:fast-trac-nitro,3,false,푸마,puma,Fast-Trac Nitro 3,패스트 트랙 니트로 3,트레일,중립화,no,,1,,Puma Fast-Trac Nitro 3,직전 세대 — 존재 확인 필요
+puma:liberate-nitro,2,true,푸마,puma,Liberate Nitro 2,리버레이트 니트로 2,템포·인터벌,중립화,no,low,1,,Puma Liberate Nitro 2,
+puma:liberate-nitro,1,false,푸마,puma,Liberate Nitro 1,리버레이트 니트로 1,템포·인터벌,중립화,no,,1,,Puma Liberate Nitro 1,직전 세대 — 존재 확인 필요
+puma:run-xx-nitro,2,true,푸마,puma,Run XX Nitro 2,런 XX 니트로 2,조깅·회복주,안정화,no,low,1,,Puma Run XX Nitro 2,
+puma:run-xx-nitro,1,false,푸마,puma,Run XX Nitro 1,런 XX 니트로 1,조깅·회복주,안정화,no,,1,,Puma Run XX Nitro 1,직전 세대 — 존재 확인 필요
+altra:paradigm,8,true,알트라,altra,Paradigm 8,패러다임 8,조깅·회복주,안정화,no,medium,1,,Altra Paradigm 8,
+altra:paradigm,7,false,알트라,altra,Paradigm 7,패러다임 7,조깅·회복주,안정화,no,,1,,Altra Paradigm 7,직전 세대 — 존재 확인 필요
+altra:provision,8,true,알트라,altra,Provision 8,프로비전 8,조깅·회복주,안정화,no,medium,1,,Altra Provision 8,
+altra:provision,7,false,알트라,altra,Provision 7,프로비전 7,조깅·회복주,안정화,no,,1,,Altra Provision 7,직전 세대 — 존재 확인 필요
+altra:via-olympus,2,true,알트라,altra,VIA Olympus 2,VIA 올림푸스 2,LSD·장거리,중립화,no,medium,1,,Altra VIA Olympus 2,
+altra:via-olympus,1,false,알트라,altra,VIA Olympus 1,VIA 올림푸스 1,LSD·장거리,중립화,no,,1,,Altra VIA Olympus 1,직전 세대 — 존재 확인 필요
+altra:experience-flow,3,true,알트라,altra,Experience Flow 3,익스피리언스 플로우 3,조깅·회복주,중립화,no,high,1,,Altra Experience Flow 3,
+altra:experience-flow,2,false,알트라,altra,Experience Flow 2,익스피리언스 플로우 2,조깅·회복주,중립화,no,,1,,Altra Experience Flow 2,직전 세대 — 존재 확인 필요
+altra:vanish-carbon,3,true,알트라,altra,Vanish Carbon 3,배니시 카본 3,레이스,중립화,yes,medium,1,,Altra Vanish Carbon 3,
+altra:vanish-carbon,2,false,알트라,altra,Vanish Carbon 2,배니시 카본 2,레이스,중립화,yes,,1,,Altra Vanish Carbon 2,직전 세대 — 존재 확인 필요
+altra:lone-peak,9,true,알트라,altra,Lone Peak 9+,론 피크 9+,트레일,중립화,no,medium,1,,Altra Lone Peak 9+,
+altra:lone-peak,8,false,알트라,altra,Lone Peak 8,론 피크 8,트레일,중립화,no,,1,,Altra Lone Peak 8,직전 세대 — 존재 확인 필요
+altra:experience-wild,3,true,알트라,altra,Experience Wild 3,익스피리언스 와일드 3,트레일,중립화,no,high,1,,Altra Experience Wild 3,
+altra:experience-wild,2,false,알트라,altra,Experience Wild 2,익스피리언스 와일드 2,트레일,중립화,no,,1,,Altra Experience Wild 2,직전 세대 — 존재 확인 필요
+underarmour:velociti-elite,3,true,언더아머,underarmour,Velociti Elite 3,벨로시티 엘리트 3,레이스,중립화,yes,high,2,,Under Armour Velociti Elite 3,
+underarmour:velociti-elite,2,false,언더아머,underarmour,Velociti Elite 2,벨로시티 엘리트 2,레이스,중립화,yes,,2,,Under Armour Velociti Elite 2,직전 세대 — 존재 확인 필요
+underarmour:infinite-elite,2,true,언더아머,underarmour,Infinite Elite 2,인피니트 엘리트 2,LSD·장거리,중립화,no,high,2,,Under Armour Infinite Elite 2,
+underarmour:infinite-elite,1,false,언더아머,underarmour,Infinite Elite 1,인피니트 엘리트 1,LSD·장거리,중립화,no,,2,,Under Armour Infinite Elite 1,직전 세대 — 존재 확인 필요
+merrell:agility-peak,6,true,머렐,merrell,Agility Peak 6,애질리티 피크 6,트레일,중립화,no,high,1,,Merrell Agility Peak 6,
+merrell:agility-peak,5,false,머렐,merrell,Agility Peak 5,애질리티 피크 5,트레일,중립화,no,,1,,Merrell Agility Peak 5,직전 세대 — 존재 확인 필요
+nike:downshifter,14,true,나이키,nike,Downshifter 14,다운시프터 14,조깅·회복주,중립화,no,medium,2,,Nike Downshifter 14,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+nike:run-defy,1,true,나이키,nike,Run Defy,런 디파이,조깅·회복주,중립화,no,medium,2,,Nike Run Defy,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+nike:run-swift,3,true,나이키,nike,Run Swift 3,런 스위프트 3,조깅·회복주,중립화,no,medium,2,,Nike Run Swift 3,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+adidas:response-runner,2,true,아디다스,adidas,Response Runner 2,리스폰스 러너 2,조깅·회복주,중립화,no,medium,2,,adidas Response Runner 2,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+adidas:supernova-ease,2,true,아디다스,adidas,Supernova Ease 2,슈퍼노바 이즈 2,조깅·회복주,중립화,no,medium,2,,adidas Supernova Ease 2,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+adidas:ultrarun,5,true,아디다스,adidas,Ultrarun 5,울트라런 5,조깅·회복주,중립화,no,medium,2,,adidas Ultrarun 5,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+newbalance:ac-runner,1,true,뉴발란스,newbalance,AC Runner v1,AC 러너 v1,조깅·회복주,중립화,no,medium,1,,New Balance AC Runner v1,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+newbalance:460,4,true,뉴발란스,newbalance,460 v4,460 v4,조깅·회복주,중립화,no,medium,1,,New Balance 460 v4,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+newbalance:520,9,true,뉴발란스,newbalance,520 v9,520 v9,조깅·회복주,중립화,no,medium,1,,New Balance 520 v9,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+saucony:tide,2,true,사우코니,saucony,Tide 2,타이드 2,조깅·회복주,중립화,no,medium,1,,Saucony Tide 2,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+underarmour:velociti-distance,1,true,언더아머,underarmour,Velociti Distance,벨로시티 디스턴스,LSD·장거리,중립화,no,medium,2,,Under Armour Velociti Distance,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+underarmour:velociti-pace,1,true,언더아머,underarmour,Velociti Pace,벨로시티 페이스,조깅·회복주,중립화,no,medium,2,,Under Armour Velociti Pace,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+puma:velocity-nitro,5,true,푸마,puma,Velocity Nitro 5,벨로시티 니트로 5,조깅·회복주,중립화,no,medium,1,,Puma Velocity Nitro 5,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+puma:skyrocket-lite,2,true,푸마,puma,Skyrocket Lite 2,스카이로켓 라이트 2,조깅·회복주,중립화,no,medium,1,,Puma Skyrocket Lite 2,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+puma:pounce-lite,1,true,푸마,puma,Pounce Lite,파운스 라이트,조깅·회복주,중립화,no,medium,1,,Puma Pounce Lite,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+puma:flexfocus-lite-modern,1,true,푸마,puma,Flexfocus Lite Modern,플렉스포커스 라이트 모던,조깅·회복주,중립화,no,medium,1,,Puma Flexfocus Lite Modern,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"
+merrell:promorph,1,true,머렐,merrell,ProMorph,프로모프,트레일,중립화,no,medium,1,,Merrell ProMorph,"ABC마트 러닝 카테고리(현행만, 2026-10-28)"

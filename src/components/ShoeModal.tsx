@@ -4,6 +4,7 @@ import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
 import ShoeGallery from "./ShoeGallery";
 import ReviewSummary from "./ReviewSummary";
+import { text, withUnit, yesNo } from "../utils/display";
 import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
 import "./ShoeModal.css";
@@ -58,21 +59,21 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
         </button>
         <div className="modal__top">
           <div className="modal__visual">
-            <ShoeGallery
-              image={shoe.image}
-              images={shoe.images}
-              alt={shoe.model}
-            />
+            <ShoeGallery image={shoe.image} alt={shoe.model} />
           </div>
 
           <div className="modal__info">
-            <p className="modal__no">
-              NO.{String(shoe.id).padStart(2, "0")} · {shoe.purpose}
-            </p>
-            <h2 className="modal__model">{shoe.model}</h2>
-            <p className="modal__brand">{shoe.brand}</p>
+            {/* 구역: 머리(번호 · 모델 · 브랜드) 회색 그라데이션 → 본문(스펙 ~ 평점 · 가격) 흰색 → 리뷰 회색 그라데이션 */}
+            <div className="modal__head">
+              <p className="modal__no">
+                NO.{String(shoe.id).padStart(2, "0")} · {shoe.purpose}
+              </p>
+              <h2 className="modal__model">{shoe.model}</h2>
+              <p className="modal__brand">{shoe.brand}</p>
+            </div>
 
-            <p className="modal__summary">{shoe.summary}</p>
+            <div className="modal__body">
+            {shoe.summary && <p className="modal__summary">{shoe.summary}</p>}
 
             <dl className="modal__specs">
               <div>
@@ -84,9 +85,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>
-                  {shoe.weight === null ? "정보 없음" : `${shoe.weight}g`}
-                </dd>
+                <dd>{withUnit(shoe.weight, "g")}</dd>
               </div>
               <div>
                 <dt>
@@ -97,7 +96,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.drop === null ? "정보 없음" : `${shoe.drop}mm`}</dd>
+                <dd>{withUnit(shoe.drop, "mm")}</dd>
               </div>
               <div>
                 <dt>
@@ -108,11 +107,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>
-                  {shoe.stackHeight === null
-                    ? "정보 없음"
-                    : `${shoe.stackHeight}mm`}
-                </dd>
+                <dd>{withUnit(shoe.stackHeight, "mm")}</dd>
               </div>
               <div>
                 <dt>
@@ -123,10 +118,11 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>
-                  {shoe.width}
-                  {shoe.wideAvailable && " · 와이드 있음"}
-                </dd>
+                <dd>{text(shoe.width)}</dd>
+              </div>
+              <div>
+                <dt>와이드 모델</dt>
+                <dd>{yesNo(shoe.wideAvailable)}</dd>
               </div>
               <div>
                 <dt>
@@ -139,7 +135,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.stability}</dd>
+                <dd>{text(shoe.stability)}</dd>
               </div>
               <div>
                 <dt>
@@ -150,7 +146,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.midsole ?? "정보 없음"}</dd>
+                <dd>{text(shoe.midsole)}</dd>
               </div>
               <div>
                 <dt>
@@ -161,10 +157,10 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                     onToggle={setOpenTerm}
                   />
                 </dt>
-                <dd>{shoe.carbon ? "있음" : "없음"}</dd>
+                <dd>{yesNo(shoe.carbon)}</dd>
               </div>
             </dl>
-            <p className="modal__desc">{shoe.description}</p>
+            {shoe.description && <p className="modal__desc">{shoe.description}</p>}
             <div className="modal__bottom">
               <span className="modal__rating">
                 평점 <strong>{shoe.rating.toFixed(1)}</strong>점
@@ -173,12 +169,20 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 {shoe.price === null
                   ? "가격 정보 없음"
                   : `${shoe.price.toLocaleString()}원`}
+                {shoe.price !== null && shoe.priceSource && shoe.priceCheckedAt && (
+                  <small className="modal__price-basis">
+                    {shoe.priceSource} {shoe.priceCheckedAt.replace(/-/g, "/")} 기준
+                  </small>
+                )}
               </span>
+            </div>
             </div>
           </div>
         </div>
-        <ReviewSummary key={reviewVersion} shoeId={shoe.id} />
-        <ReviewSection shoeId={shoe.id} onReviewChange={handleReviewChange} />
+        <div className="modal__reviews">
+          <ReviewSummary key={reviewVersion} shoeId={shoe.id} />
+          <ReviewSection shoeId={shoe.id} onReviewChange={handleReviewChange} />
+        </div>
       </div>
     </div>
   );

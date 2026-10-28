@@ -12,7 +12,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 const readOnly = process.argv.includes("--read-only");
-const [a, b] = process.argv.slice(2).filter((v) => v !== "--read-only");
+// --allow-added=k1,k2 — 기준선에 없고 비교본에만 있는 키 중 이 이름들은 "추가"로 본다(FAIL 아님, 따로 센다).
+//   기준선을 다시 녹화하지 않고 응답에 칸을 더한 것만 확인할 때(spring-v3 + V4 칸 lineKey · generation … — 2026-10-24)
+const allowArg = process.argv.find((v) => v.startsWith("--allow-added="));
+const allowAdded = new Set(allowArg ? allowArg.slice("--allow-added=".length).split(",").filter(Boolean) : []);
+let addedSeen = 0;
+const [a, b] = process.argv.slice(2).filter((v) => v !== "--read-only" && !v.startsWith("--allow-added="));
 if (!a || !b) { console.error("usage: diff.mjs <기준선 디렉터리> <비교 디렉터리>"); process.exit(2); }
 
 const HEADERS = ["content-type", "location", "cache-control", "access-control-allow-origin", "access-control-expose-headers",
@@ -48,7 +53,7 @@ function eq(x, y, p, diffs, key) {
     for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) {
       let xv = x[k], yv = y[k];
       if (k === "liked") { xv = xv ?? false; yv = yv ?? false; }
-      if (!(k in x) && k !== "liked") { diffs.push(`${p}.${k}: 기준선에 없음(${JSON.stringify(yv)})`); continue; }
+      if (!(k in x) && k !== "liked") { if (allowAdded.has(k)) { addedSeen++; continue; } diffs.push(`${p}.${k}: 기준선에 없음(${JSON.stringify(yv)})`); continue; }
       if (!(k in y) && k !== "liked") { diffs.push(`${p}.${k}: 비교본에 없음(기준선 ${JSON.stringify(xv)})`); continue; }
       eq(xv, yv, `${p}.${k}`, diffs, k);
     }
@@ -82,5 +87,5 @@ for (const f of ids) {
   for (const d of diffs.slice(0, 8)) console.log(`     ${d}`);
   if (diffs.length > 8) console.log(`     … ${diffs.length - 8}건 더`);
 }
-console.log(`\nPASS ${pass} · FAIL ${fail} · INFO ${info}`);
+console.log(`\nPASS ${pass} · FAIL ${fail} · INFO ${info}${allowAdded.size ? ` · 허용한 추가 키 ${addedSeen}곳(${[...allowAdded].join(", ")})` : ""}`);
 process.exit(fail ? 1 : 0);

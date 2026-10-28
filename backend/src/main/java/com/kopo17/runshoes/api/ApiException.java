@@ -33,6 +33,11 @@ class ApiException extends RuntimeException {
 		return new ApiException(HttpStatus.CONFLICT, "이 신발에는 이미 리뷰를 썼다");
 	}
 
+	/** 한 라인 · 세대 · 성별은 한 행(V4 uk_shoes_line_generation_gender) — 새 동작이라 json-server 호환(500)이 아니라 409 */
+	static ApiException duplicateGeneration(String message) {
+		return new ApiException(HttpStatus.CONFLICT, message);
+	}
+
 	static ApiException methodNotAllowed(String message) {
 		return new ApiException(HttpStatus.METHOD_NOT_ALLOWED, message);
 	}

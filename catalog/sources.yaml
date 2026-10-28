@@ -1,0 +1,104 @@
+# 수집처 목록 — 공식몰 스펙 수집기가 읽는다. 여기 mode: fetch 인 도메인만 자동으로 받는다.
+# 확인: 2026-10-21, robots.txt 와 이용약관 원문(원문은 로컬 캐시, 공개하지 않는다). 설계: docs/CATALOG_PIPELINE.md 2.3.
+# mode
+#   fetch    — robots 허용 · 약관에 자동 수집 금지 없음(복제 제한은 저작권 정보 · 영리 목적) → 사실 값만, 5초에 1회 이하
+#   blocked  — 약관(또는 robots)이 자동 수집을 명시적으로 금지 → 자동으로 받지 않는다
+#   unknown  — 약관 원문을 읽지 못함(JS 대기열 · 봇 차단). 우회하지 않는다 → 사람이 브라우저로 약관을 읽고 정할 때까지 받지 않는다
+# 판정은 사용자 결정 전 초안이다(2026-10-21 보고).
+checked_at: 2026-10-21
+defaults:
+  min_interval_sec: 5
+  concurrency: 1
+  user_agent: "RUNSHOES-catalog/0.1 (+non-commercial portfolio; contact in README)"
+  stop_on: [403, 418, 429, captcha, login]
+
+domains:
+  - brand: nike
+    host: www.nike.com          # /kr
+    mode: blocked
+    terms: https://agreementservice.svs.nike.com/kr/ko_kr/rest/agreement?agreementType=termsOfUse&country=KR&language=ko&requestType=redirect&uxId=com.nike.commerce.nikedotcom.web
+    terms_version: "2026-06"
+    reason: '5조 "데이터 마이닝, 로봇, 스크래핑 또는 유사한 데이터 수집 방법을 사용하지 마십시오." · "자동화 기술을 사용하여 플랫폼과 상호 작용하지 마십시오."'
+  - brand: asics
+    host: www.asics.co.kr
+    mode: fetch                 # 2026-10-24 사용자 결정(unknown → fetch)
+    terms: https://asics.co.kr/service/agreement
+    robots: product /p/ · category /c/ allowed · 검색 · 필터 · API 금지
+    caution: '약관 원문(2026-10-23 · 10-24 확인)에 수집 금지 조항 없음 · 제29조 ② 지재권 정보를 "영리목적으로 이용하거나 제3자에게 이용하게" 금지 — 일반 지재권 조항이라 사실 값은 해당 없음(docs 2.2.1) · 제7조 ② 4호 자동화 수단은 구매'
+  - brand: adidas
+    host: www.adidas.co.kr
+    mode: unknown
+    robots: product /{slug}/{sku}.html allowed (search · sz 파라미터 금지)
+    reason: /help/* 가 봇 방어(WAF)로 403
+  - brand: hoka
+    host: www.hoka.com          # 한국 공식 온라인몰 없음
+    mode: unknown
+    reason: DataDome 봇 차단으로 약관 본문을 못 읽음
+  - brand: newbalance
+    host: www.nbkorea.com
+    mode: fetch
+    terms: https://www.nbkorea.com/support/terms.action?tabCode=AT
+    terms_version: "2025-06-02"
+    caution: '제18조 1. 2) "얻은 정보를 회사의 사전 승낙 없이 복제 또는 유통" 금지(회원 의무) · 상품정보에 콘텐츠산업진흥법 표시 — 사실 값 몇 개만'
+  - brand: saucony
+    host: saucony.co.kr
+    mode: fetch
+    terms: https://saucony.co.kr/member/agreement.html
+    terms_version: "2025-09-26"
+    caution: 제23조 ② 지재권 정보의 영리 목적 복제 금지
+  - brand: brooks
+    host: www.brooksrunning.co.kr
+    mode: fetch
+    terms: https://www.brooksrunning.co.kr/member/agreement.html
+    terms_version: "2025-04-18"
+    caution: 제10조의2 로봇 · 크롤러 금지는 계정 · 주문 행위 · 제22조 ② 영리 목적 복제 금지 · 콘텐츠산업진흥법 표시
+  - brand: on
+    host: www.on.com            # /ko-kr
+    mode: unknown
+    reason: 약관 본문이 JS 렌더링 — 검색 요약상 동의 없는 복제 · 딥링크 금지가 있다고 함
+  - brand: mizuno
+    host: kor.mizuno.com
+    mode: fetch
+    terms: https://kor.mizuno.com/member/agreement.html
+    caution: 제22조 2. 지재권 정보는 비영리 이용도 금지(사실 값은 지재권 정보가 아니라고 본다) · 제8조 크롤러 조항은 구매
+  - brand: salomon
+    host: salomon.co.kr
+    mode: fetch
+    terms: https://salomon.co.kr/pages/terms-of-service
+    terms_version: "2026-10-14"
+    caution: 제24조 ② 영리 목적 복제 금지 · 자동화 조항은 구매 · robots 주석에 "without scripted workarounds"
+  - brand: puma
+    host: kr.puma.com
+    mode: fetch
+    terms: https://kr.puma.com/kr/ko/terms-of-use/TERMS_OF_USE.html
+    terms_version: "2024-07-05"
+    caution: '제24조 ⑤ "개인적이고 비상업적인 용도" 외 복제 금지 — 공개 게시가 개인 용도인지 다툼 여지'
+  - brand: altra
+    host: altra.co.kr           # 국내 유통사(사운드스포츠)
+    mode: fetch
+    terms: https://altra.co.kr/member/agreement.html
+    terms_version: "2026-07-06"
+    caution: 제20조 8. 콘텐츠 무단 사용 · 복제 금지
+  - brand: altra
+    host: www.altrarunning.com
+    mode: blocked
+    terms_version: "2026-08-25"
+    reason: 'robots Disallow /products/ · 약관 "use automated means, including spiders, scrapers, robots, crawlers, data mining tools … to download data" 금지'
+  - brand: underarmour
+    host: www.underarmour.co.kr
+    mode: unknown
+    reason: 비브라우저 요청에 418 · 약관 원문을 못 읽음
+  - brand: merrell
+    host: www.merrellkorea.co.kr
+    mode: fetch
+    terms: https://www.merrellkorea.co.kr/member/agreement.html
+    terms_version: "2023-02-28"
+    caution: 제23조 ② 영리 목적 복제 금지
+  - brand: lining
+    host: en.lining.com
+    mode: blocked
+    reason: 'SECTION 12 "spider, crawl, or scrape" 금지'
+  - brand: xtep
+    host: www.xtep.com
+    mode: blocked
+    reason: '法律声明 "通过机器人、蜘蛛等程序或设备…擅自获取" 금지'

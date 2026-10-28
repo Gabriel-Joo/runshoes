@@ -1,0 +1,54 @@
+# 매체 · 보도자료 수집처 — 2단계(공식몰에서 못 받는 라인)와 1단계의 드롭 · 스택 보충. 확인 2026-10-21(robots + 약관).
+# mode 는 sources.yaml 과 같다. fetch 만 catalog/local/fetch.mjs 가 받는다. 사실 수치만 쓰고 필드마다 출처 URL 을 남긴다.
+checked_at: 2026-10-21
+domains:
+  - host: roadtrailrun.blogspot.com
+    mode: unknown
+    reason: 'Google 약관상 robots 를 지키면 허용이지만 blogspot 주소의 글은 404 — 실제 글은 www.roadtrailrun.com(Cloudflare 403)에만 있다'
+  - host: believeintherun.com
+    mode: fetch
+    caution: '라이선스 "private, personal and non-commercial use" · 복제 · 편집물 금지 → 수치(사실)만, 문장 · 표는 옮기지 않는다'
+  - host: www.solereview.com
+    mode: excluded
+    caution: '"not to copy, publish … any part of this website" → 수치만'
+    note: '2026-10-23 사용자: 소스에서 뺀다(반 켤레 실측 · 스택 실측으로 보여 공시값이 아니다). 받지 않고, 이미 모은 값은 쓰지 않는다(build.mjs EXCLUDED)'
+  - host: www.runningshoesguru.com
+    mode: fetch
+  - host: www.roadtrailrun.com
+    mode: blocked
+    reason: Cloudflare 챌린지(403) — 우회하지 않는다
+  - {host: www.gearpatrol.com, mode: blocked, reason: '§4 automated means … extract data 금지'}
+  - {host: www.t3.com, mode: blocked, reason: 'Future plc "NO TEXT OR DATA MINING, OR WEB SCRAPING"'}
+  - {host: www.tomsguide.com, mode: blocked, reason: 'Future plc 같은 약관'}
+  - {host: www.rtings.com, mode: blocked, reason: '3.2 · 3.3 systematic download · screen scraping 금지'}
+  - {host: www.outdoorgearlab.com, mode: blocked, reason: 'data 를 개인용 밖에 저장 금지(보수적으로 뺀다)'}
+  - {host: www.irunfar.com, mode: blocked, reason: '3.3 scrape · harvest 금지'}
+  - {host: marathonhandbook.com, mode: blocked, reason: 'automated scripts 금지'}
+  - {host: www.fleetfeet.com, mode: blocked, reason: '9. spider · crawl · scrape 금지'}
+  - {host: www.fit2run.com, mode: fetch, reason: '2026-10-24 사용자 승인 — 소매점이지만 브랜드 스펙(무게 · 드롭)을 싣는다. robots 상품 경로 허용, 약관에 수집 금지 없음(저작권 조항만 — 사실 값은 해당 없음, docs 2.2.1). 사이트맵 상품 주소만 읽고 수치만 쓴다. 사이즈 표기 없음 → 무게는 사이즈 불명'}
+  - {host: www.marathonsports.com, mode: blocked, reason: '약관 "spider, crawl, or scrape" 금지(2026-10-24)'}
+  - {host: therunningchannel.com, mode: blocked, reason: 'robots 가 ClaudeBot · anthropic-ai 등을 막고 Content-Signal ai-train=no(2026-10-24)'}
+  - {host: www.i-run.com, mode: excluded, reason: '자체 실측 무게("Weight observed at i-Run") — 실측이라 쓰지 않는다(2026-10-24)'}
+  - {host: about.nike.com, mode: blocked, reason: 'Nike 플랫폼 약관 — data mining · robots · scraping 금지'}
+  - {host: www.prnewswire.com, mode: blocked, reason: 'robot · spider · data mine 금지'}
+  - {host: www.globenewswire.com, mode: blocked, reason: 'bots 금지 · robots.txt 403'}
+  - {host: www.runningwarehouse.com, mode: blocked, reason: 'data mining · robots · crawling (automatic or manual) 금지'}
+  - {host: runrepeat.com, mode: unknown, reason: '정식 약관 미확인 · 데이터는 유료 상업 라이선스 — 쓰지 않는다'}
+  - {host: www.runnersworld.com, mode: unknown, reason: 'Hearst 약관 403'}
+  - {host: www.businesswire.com, mode: unknown, reason: '접속 불가 · 403'}
+  - {host: weartesters.com, mode: fetch, reason: '2026-10-24 사용자 승인 — robots 는 wp-admin 만 막고 약관 페이지가 없다(금지 조항 없음). 사이트맵 리뷰 주소만(local/work/weartesters-index.txt), 리뷰 본문("How does the Author Run?" · "Disclosure" 앞)의 토박스 문장만 쓴다'}
+  - {host: news.adidas.com, mode: unknown, reason: '약관 못 읽음'}
+  - {host: corp.asics.com, mode: unknown, reason: '약관 URL 확인 실패'}
+  - {host: www.doctorsofrunning.com, mode: blocked, reason: 'robots 가 anthropic-ai · Claude-Web 등을 이름으로 막고 약관(2025-03-28)이 automated access 금지 — 제외 확정(사용자)'}
+  - host: www.newswire.co.kr
+    mode: fetch
+    reason: '2026-10-21 확인 — robots 허용(/rss · /login · /member · /company 만 금지) · 약관(2026-03-18)에 자동 접근 금지 없음. 보도자료 전문 재게시는 하지 않고 사실 수치만'
+  - {host: corp.asics.com, mode: fetch, reason: '2026-10-21 사용자 승인 — 보도자료에서 수치만(본문 · 사진은 쓰지 않는다), 출처 URL 기록. 약관은 복제 · 재사용을 막는다'}
+  - {host: www.saucony.com, mode: fetch, reason: '2026-10-21 사용자 승인 — 뉴스룸에서 수치만. 약관 §2 개인 · 비상업 열람 한정'}
+  - {host: newbalance.newsmarket.com, mode: blocked, reason: 'AWS WAF 챌린지 — 약관 확인 불가, 우회하지 않음'}
+  - {host: www.brooksrunning.com, mode: blocked, reason: 'robots 부터 403'}
+
+  - {host: mediahub.puma.com, mode: fetch, reason: '2026-10-21 사용자 승인 — robots Allow, 약관에 자동 접근 · 재사용 금지 없음. 보도자료 Tech Specs 의 숫자만, 사이트맵 주소만'}
+  - {host: www.amersports.com, mode: fetch, reason: '2026-10-21 사용자 승인 — 약관 "use of press releases … permitted in public communications by mentioning the source" → 출처 표기를 지킨다(화면에 출처 표시)'}
+  - {host: press.on-running.com, mode: blocked, reason: '2026-10-21 약관 미확인 — 사용자가 확인할 때까지 접근하지 않는다'}
+  - {host: ir.deckers.com, mode: blocked, reason: 'Deckers 약관 — data mining · robots 금지, AI 활용 금지(사용자 제외 확정)'}
