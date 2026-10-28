@@ -255,6 +255,9 @@ for (const c of cands) {
     row.weight_basis = decBasis.get(id) ?? (basisM9.has(id) ? 'US_M9' : s?._weightBasis ? s._weightBasis : !/^https?:\/\//.test(ws) ? 'unknown' : 'US_M9');
   }
   if (row.price !== null) { const m = priceMeta(src.price, s?.note); row.price_source = m.source; row.price_checked_at = m.checked_at; row.price_kind = m.kind; }
+  // 시드 가격 중 ABC · 공식몰에 없는 것 — 사용자가 다나와에서 넣은 값(2026-10-29 사용자: 값은 두고 출처를 "다나와"로). 날짜는 db.json 에 들어간 커밋 날짜
+  const dp = DEC.rows[id]?.price_krw;
+  if (row.price !== null && dp?.action === 'keep_db' && dp.price_source) { row.price_source = dp.price_source; row.price_checked_at = dp.price_checked_at ?? null; row.price_kind = dp.price_kind ?? null; }
   if (row.width === null) missing.width = 'not_found';
   if (row.wideAvailable === null) missing.wideAvailable = s?.missing?.wide_available ?? 'not_found';
   if (row.carbon === null) { missing.carbon = s?.missing?.carbon ?? 'not_found'; }
