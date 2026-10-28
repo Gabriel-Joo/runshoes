@@ -275,3 +275,33 @@ export const SUMMARY_V3_SCENARIOS = [
   ...SUMMARY_SCENARIOS.map((s) => s.id !== "S5" ? s : { ...s, headers: jb("u1"),
     body: { shoeId: 1, rating: 5, content: "요약 캐시 무효화 리뷰" }, volatile: ["createdAt"], expect: 201 }),
 ];
+
+// V4(세대 구조 · 공시값 기준 사이즈 · 실측값, 2026-10-24) — 새 기능만 담는다. 기존 115건(V3 · AUTH)은 기준선 spring-v3 그대로 두고
+// diff --allow-added 로 "응답에 V4 키가 더해졌을 뿐"인지만 본다(다시 녹화하지 않는다 — 무엇이 바뀌었는지 추적이 남게).
+// 시드(V4 가 기존 20켤레에 line_key · generation · is_current · gender 를 채운 상태)에서 시작한다. 목록 기본은 전체 노출(isCurrent 필터는 고를 때만)
+const v4Shoe = { ...contractShoe, model: "Contract Runner V4", lineKey: "contract:runner", generation: 1, isCurrent: true, gender: "men",
+  weightSize: "M9", specSize: null, measuredWeight: 262, measuredWeightSize: "M10", measuredStackHeight: null, measuredDrop: null,
+  measuredSource: "https://example.test/review", measuredCount: 1 };
+export const V4_SCENARIOS = [
+  login("V00", "admin@runshoes.test", "{{adminPassword}}", "admin"),
+  W("V01", "GET shoe 1 — V4 키(lineKey · generation · isCurrent · gender …)가 붙는다", "GET", "/api/shoes/1", { expect: 200 }),
+  W("V02", "목록 기본 = 전체 노출(필터 없음) — 20켤레 그대로", "GET", "/api/shoes", { expect: 200 }),
+  W("V03", "?isCurrent=true — 현행만", "GET", "/api/shoes?isCurrent=true", { expect: 200 }),
+  W("V04", "?isCurrent=false — 지난 세대만", "GET", "/api/shoes?isCurrent=false", { expect: 200 }),
+  W("V05", "?lineKey=asics:gel-kayano — 같은 라인(상세의 이전 · 다음 세대)", "GET", "/api/shoes?lineKey=asics:gel-kayano", { expect: 200 }),
+  W("V06", "?lineKey=없는 라인 → 빈 배열", "GET", "/api/shoes?lineKey=nobrand:noline", { expect: 200 }),
+  W("V10", "POST V4 칸 포함 admin → 201", "POST", "/api/shoes", { headers: jb("admin"), body: v4Shoe, capture: { v4a: "body.id" }, expect: 201 }),
+  W("V11", "POST 같은 lineKey · generation · gender → 409", "POST", "/api/shoes", { headers: jb("admin"), body: { ...v4Shoe, model: "중복 세대" }, expect: 409 }),
+  W("V12", "POST 같은 라인 · 세대, 성별 women → 201(남녀는 별도 행)", "POST", "/api/shoes", { headers: jb("admin"), body: { ...v4Shoe, model: "Contract Runner V4 W", gender: "women" }, capture: { v4b: "body.id" }, expect: 201 }),
+  W("V13", "POST gender 형식 틀림(male) → 400", "POST", "/api/shoes", { headers: jb("admin"), body: { ...v4Shoe, gender: "male", generation: 7 }, expect: 400 }),
+  W("V14", "POST generation 정수 아님(1.5) → 400", "POST", "/api/shoes", { headers: jb("admin"), body: { ...v4Shoe, generation: 1.5 }, expect: 400 }),
+  W("V15", "POST isCurrent 문자열 → 400", "POST", "/api/shoes", { headers: jb("admin"), body: { ...v4Shoe, generation: 8, isCurrent: "yes" }, expect: 400 }),
+  W("V20", "PATCH 새 세대로(generation 2 · isCurrent false) admin → 200", "PATCH", "/api/shoes/{{v4a}}", { headers: jb("admin"), body: { generation: 2, isCurrent: false }, expect: 200 }),
+  W("V21", "PATCH women 행을 men · 2세대로 → 409(V20 과 겹친다)", "PATCH", "/api/shoes/{{v4b}}", { headers: jb("admin"), body: { gender: "men", generation: 2 }, expect: 409 }),
+  W("V22", "PATCH 자기 자신과 같은 값 → 200(자기 행은 겹침이 아니다)", "PATCH", "/api/shoes/{{v4a}}", { headers: jb("admin"), body: { lineKey: "contract:runner", generation: 2, gender: "men" }, expect: 200 }),
+  W("V23", "?lineKey=contract:runner — 두 행", "GET", "/api/shoes?lineKey=contract:runner", { expect: 200 }),
+  W("V24", "PUT 전체 치환 — 본문에 없는 V4 칸은 null(PUT 의미 그대로)", "PUT", "/api/shoes/{{v4b}}", { headers: jb("admin"), body: { ...contractShoe, model: "Contract Runner PUT V4" }, expect: 200 }),
+  W("V30", "DELETE 새 shoe a", "DELETE", "/api/shoes/{{v4a}}", { headers: bearer("admin"), expect: 200 }),
+  W("V31", "DELETE 새 shoe b", "DELETE", "/api/shoes/{{v4b}}", { headers: bearer("admin"), expect: 200 }),
+  W("V32", "끝 상태 — 시드 20켤레(V4 키 포함)", "GET", "/api/shoes", { expect: 200 }),
+];

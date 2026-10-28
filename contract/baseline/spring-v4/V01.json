@@ -1,0 +1,72 @@
+{
+  "id": "V01",
+  "plan": null,
+  "name": "GET shoe 1 — V4 키(lineKey · generation · isCurrent · gender …)가 붙는다",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes/1",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Fri, 23 Oct 2026 16:59:24 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 1,
+      "brand": "아식스",
+      "model": "젤 카야노 32",
+      "purpose": "조깅·회복주",
+      "stability": "안정화",
+      "midsole": "FF Blast Plus",
+      "weight": 300,
+      "drop": 8,
+      "stackHeight": 40,
+      "width": "보통",
+      "wideAvailable": true,
+      "carbon": false,
+      "price": 199000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png",
+        "/images/gel-kayano-32-1.png",
+        "/images/gel-kayano-32-2.png",
+        "/images/gel-kayano-32-3.png"
+      ],
+      "summary": "발이 안쪽으로 무너지는 분에게",
+      "description": "발이 안쪽으로 무너지는 것을 잡아주는 아식스의 대표 안정화입니다. 과내전이 있는 러너를 위해 만들어진 신발이라 발목이 흔들리는 느낌이 적습니다. 대신 그만큼 구조가 들어가 있어 무게는 무거운 편입니다. 4E 와이드 모델이 따로 나와 발볼이 넓어도 선택지가 있습니다.",
+      "rating": 4.6,
+      "reviewCount": 5,
+      "likeCount": 42,
+      "liked": false,
+      "lineKey": "asics:gel-kayano",
+      "generation": 32,
+      "isCurrent": false,
+      "gender": "men",
+      "weightSize": null,
+      "specSize": null,
+      "measuredWeight": null,
+      "measuredWeightSize": null,
+      "measuredStackHeight": null,
+      "measuredDrop": null,
+      "measuredSource": null,
+      "measuredCount": null
+    }
+  }
+}

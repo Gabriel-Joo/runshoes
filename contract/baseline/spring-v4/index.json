@@ -1,0 +1,120 @@
+{
+  "recordedAt": "2026-10-23T16:59:24.422Z",
+  "base": "http://127.0.0.1:3200/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "v4",
+  "readOnly": false,
+  "note": "",
+  "scenarios": [
+    {
+      "id": "V00",
+      "name": "로그인 admin@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "V01",
+      "name": "GET shoe 1 — V4 키(lineKey · generation · isCurrent · gender …)가 붙는다",
+      "status": 200
+    },
+    {
+      "id": "V02",
+      "name": "목록 기본 = 전체 노출(필터 없음) — 20켤레 그대로",
+      "status": 200
+    },
+    {
+      "id": "V03",
+      "name": "?isCurrent=true — 현행만",
+      "status": 200
+    },
+    {
+      "id": "V04",
+      "name": "?isCurrent=false — 지난 세대만",
+      "status": 200
+    },
+    {
+      "id": "V05",
+      "name": "?lineKey=asics:gel-kayano — 같은 라인(상세의 이전 · 다음 세대)",
+      "status": 200
+    },
+    {
+      "id": "V06",
+      "name": "?lineKey=없는 라인 → 빈 배열",
+      "status": 200
+    },
+    {
+      "id": "V10",
+      "name": "POST V4 칸 포함 admin → 201",
+      "status": 201
+    },
+    {
+      "id": "V11",
+      "name": "POST 같은 lineKey · generation · gender → 409",
+      "status": 409
+    },
+    {
+      "id": "V12",
+      "name": "POST 같은 라인 · 세대, 성별 women → 201(남녀는 별도 행)",
+      "status": 201
+    },
+    {
+      "id": "V13",
+      "name": "POST gender 형식 틀림(male) → 400",
+      "status": 400
+    },
+    {
+      "id": "V14",
+      "name": "POST generation 정수 아님(1.5) → 400",
+      "status": 400
+    },
+    {
+      "id": "V15",
+      "name": "POST isCurrent 문자열 → 400",
+      "status": 400
+    },
+    {
+      "id": "V20",
+      "name": "PATCH 새 세대로(generation 2 · isCurrent false) admin → 200",
+      "status": 200
+    },
+    {
+      "id": "V21",
+      "name": "PATCH women 행을 men · 2세대로 → 409(V20 과 겹친다)",
+      "status": 409
+    },
+    {
+      "id": "V22",
+      "name": "PATCH 자기 자신과 같은 값 → 200(자기 행은 겹침이 아니다)",
+      "status": 200
+    },
+    {
+      "id": "V23",
+      "name": "?lineKey=contract:runner — 두 행",
+      "status": 200
+    },
+    {
+      "id": "V24",
+      "name": "PUT 전체 치환 — 본문에 없는 V4 칸은 null(PUT 의미 그대로)",
+      "status": 200
+    },
+    {
+      "id": "V30",
+      "name": "DELETE 새 shoe a",
+      "status": 200
+    },
+    {
+      "id": "V31",
+      "name": "DELETE 새 shoe b",
+      "status": 200
+    },
+    {
+      "id": "V32",
+      "name": "끝 상태 — 시드 20켤레(V4 키 포함)",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109",
+    "v4a": 21,
+    "v4b": 22
+  }
+}

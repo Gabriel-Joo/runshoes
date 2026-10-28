@@ -14,6 +14,7 @@ baseline/node-summary/  요약 녹화 — 로컬 server.cjs(같은 커밋) + moc
 baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Spring(2026-10-21, 시드 직후)이 기준선. 굳히기 전 시드로 따로 계산한 기대값과 24건 모두 맞췄다
 baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/API_CONTRACT.md 2.2)
 baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
+baseline/spring-v4/         V4(세대 구조) 새 기능만 21건 — 옛 기준선은 다시 녹화하지 않고 diff --allow-added 로 V4 키 추가만 허용(2026-10-24). V5 키(priceSource · priceCheckedAt · priceKind)도 같은 방식(2026-10-29)
 baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다
 run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v3-summary (V3 전: main | summary | search)
 ```
@@ -75,6 +76,8 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 | Spring — 로컬 jar, 검색 추가 뒤(2026-10-21) | PASS 47 · FAIL 0 · INFO 3 | PASS 4 · FAIL 0 · INFO 5 · 검색 PASS 24 |
 | Spring — 로컬 jar, 로그인 2단계 뒤(2026-10-21) · 기준선 spring-v3 | v3 PASS 95 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 |
 | Spring — 로컬 jar · 이미지, 로그인 3단계 뒤(2026-10-21) · 기준선 spring-v3(115건) | v3 PASS 112 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 |
+| Spring — 로컬 jar, V4 세대 구조 뒤(2026-10-24, 미커밋) · 옛 기준선 + `--allow-added`(V4 키) | v3 PASS 112 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 · **v4 PASS 21**(기준선 spring-v4) |
+| Spring — 로컬 jar, V5 정가 메타 뒤(2026-10-29, 미커밋) · 옛 기준선 + `--allow-added`(V4 키 + `priceSource` · `priceCheckedAt` · `priceKind`) | v3 PASS 112 · FAIL 0 · INFO 3 | v3-summary PASS 5 · INFO 5 · v3-search PASS 24 · **v4 PASS 21** |
 
 3단계 기준선을 굳히기 전: 새 녹화를 **옛 기준선(98건)과 먼저 비교**해 PASS 95 — 3단계가 기존 계약을 바꾸지 않았다. 새 17건(A27~A43)은 기대 상태코드로 확인하고 본문을 읽은 뒤 더했다.
 

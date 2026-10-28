@@ -227,24 +227,26 @@ function Recommend() {
         score += 20;
         reasons.push({ hit: true, text: "와이드 모델이 따로 있어요" });
       } else {
-        reasons.push({
-          hit: false,
-          text: "발볼은 보통이고 와이드 모델은 없어요",
-        });
+        // 모르는 값을 "보통" · "없어요"로 말하지 않는다(null = 정보 없음)
+        const w = shoe.width === null ? "발볼 정보가 없고" : `발볼은 ${shoe.width}이고`;
+        const wide = shoe.wideAvailable === false ? "와이드 모델은 없어요" : "와이드 정보는 없어요";
+        reasons.push({ hit: false, text: `${w} ${wide}` });
       }
     } else if (answers.width === "보통") {
       if (shoe.width === "보통") {
         score += 20;
         reasons.push({ hit: true, text: "발볼이 보통으로 나왔어요" });
       } else {
-        reasons.push({ hit: false, text: `발볼은 ${shoe.width}로 나왔어요` });
+        reasons.push({ hit: false, text: shoe.width === null ? "발볼 정보가 없어요" : `발볼은 ${shoe.width}로 나왔어요` });
       }
     } else {
       reasons.push({
         hit: false,
-        text: shoe.wideAvailable
-          ? `발볼은 ${shoe.width}, 와이드 모델도 있어요`
-          : `발볼은 ${shoe.width}로 나왔어요`,
+        text: shoe.width === null
+          ? shoe.wideAvailable ? "발볼 정보는 없지만 와이드 모델이 있어요" : "발볼 정보가 없어요"
+          : shoe.wideAvailable
+            ? `발볼은 ${shoe.width}, 와이드 모델도 있어요`
+            : `발볼은 ${shoe.width}로 나왔어요`,
       });
     }
 

@@ -10,11 +10,16 @@ export interface Shoe {
   weight: number | null;
   drop: number | null;
   stackHeight: number | null;
-  width: string;
-  wideAvailable: boolean;
-  carbon: boolean;
+  // 근거가 없으면 null — 화면은 "정보 없음"(칸을 숨기지 않는다). 기본값('보통' · false)으로 메우지 않는다
+  width: string | null;
+  wideAvailable: boolean | null;
+  carbon: boolean | null;
 
   price: number | null;
+  // 정가 메타(V5) — 출처 · 읽은 날(YYYY-MM-DD) · 늘 "정가". 출처 기록이 없으면 null(화면은 가격만)
+  priceSource?: "공식몰" | "ABC마트" | null;
+  priceCheckedAt?: string | null;
+  priceKind?: "정가" | null;
   image: string;
   images?: string[];
   summary: string;

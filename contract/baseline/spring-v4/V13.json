@@ -1,0 +1,66 @@
+{
+  "id": "V13",
+  "plan": null,
+  "name": "POST gender 형식 틀림(male) → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/shoes",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "Contract Runner V4",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "lineKey": "contract:runner",
+      "generation": 7,
+      "isCurrent": true,
+      "gender": "male",
+      "weightSize": "M9",
+      "specSize": null,
+      "measuredWeight": 262,
+      "measuredWeightSize": "M10",
+      "measuredStackHeight": null,
+      "measuredDrop": null,
+      "measuredSource": "https://example.test/review",
+      "measuredCount": 1
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Fri, 23 Oct 2026 16:59:24 GMT",
+      "connection": "close"
+    },
+    "body": {}
+  }
+}

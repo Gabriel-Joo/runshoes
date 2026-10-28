@@ -1,0 +1,39 @@
+{
+  "id": "V21",
+  "plan": null,
+  "name": "PATCH women 행을 men · 2세대로 → 409(V20 과 겹친다)",
+  "contract": true,
+  "expect": 409,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/22",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "gender": "men",
+      "generation": 2
+    }
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Fri, 23 Oct 2026 16:59:24 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

@@ -17,7 +17,7 @@ import https from "node:https";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { SCENARIOS, SUMMARY_SCENARIOS, SEARCH_SCENARIOS, V3_SCENARIOS, AUTH_SCENARIOS, SUMMARY_V3_SCENARIOS } from "./scenarios.mjs";
+import { SCENARIOS, SUMMARY_SCENARIOS, SEARCH_SCENARIOS, V3_SCENARIOS, AUTH_SCENARIOS, SUMMARY_V3_SCENARIOS, V4_SCENARIOS } from "./scenarios.mjs";
 
 const argv = process.argv.slice(2);
 const readOnly = argv.includes("--read-only");
@@ -27,7 +27,7 @@ const args = Object.fromEntries(
 const base = new URL(args.base ?? "http://127.0.0.1:3000");
 const hostHeader = args.host ?? base.host;
 const out = args.out ?? "contract/baseline/node";
-const SETS = { main: SCENARIOS, summary: SUMMARY_SCENARIOS, search: SEARCH_SCENARIOS, v3: [...V3_SCENARIOS, ...AUTH_SCENARIOS], "summary-v3": SUMMARY_V3_SCENARIOS };
+const SETS = { main: SCENARIOS, summary: SUMMARY_SCENARIOS, search: SEARCH_SCENARIOS, v3: [...V3_SCENARIOS, ...AUTH_SCENARIOS], "summary-v3": SUMMARY_V3_SCENARIOS, v4: V4_SCENARIOS };
 const set = SETS[args.set ?? "main"].filter((sc) => !readOnly || sc.id < "30" || /^[QR]/.test(sc.id));
 const vars = { mock: args.mock ?? "http://127.0.0.1:3109", seedPassword: process.env.SEED_USER_PASSWORD, adminPassword: process.env.ADMIN_PASSWORD };
 const SECRET_VARS = new Set(["seedPassword", "adminPassword"]);

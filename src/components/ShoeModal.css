@@ -41,22 +41,54 @@
   color: var(--text-mid);
 }
 
-/* 왼쪽 이미지 */
+/* 왼쪽 이미지 — 흰 바탕(StockX 이미지가 흰 바탕이라 이어진다). 신발 크기는 예전 사진과 같게:
+   예전에는 400px 칸에서 신발이 약 213px(53%) — StockX 는 신발이 사진 폭의 98% 라 좌우 22%씩 띄운다 */
 .modal__visual {
   width: 400px;
   flex-shrink: 0;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
+  background: #fff;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  padding: 24px;
+  padding: 0 88px;                  /* % 는 모달 전체 폭 기준이라 데스크톱은 px(400px 칸의 22%) */
+}
+.modal__visual .gallery,
+.modal__visual .gallery__stage {
+  height: 100%;
+  min-height: 300px;
+}
+.modal__visual .gallery__stage .shoeimage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-/* 오른쪽 정보 */
+/* 오른쪽 정보 — 머리(회색 그라데이션) · 본문(흰색) */
 .modal__info {
   flex: 1;
   min-width: 0;
-  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 구역 그라데이션 — 원래 이미지 칸에 있던 것(흰색 → 회색)을 머리와 리뷰로 옮겼다 */
+.modal__head,
+.modal__reviews {
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
+}
+.modal__head {
+  padding: 32px 28px 20px;
+}
+.modal__body {
+  flex: 1;
+  padding: 8px 28px 32px;
+  background: #fff;
+}
+.modal__reviews .review {
+  border-top: none;
+}
+.modal__reviews .review-summary {
+  margin: 22px 28px 0;
 }
 
 .modal__no {
@@ -159,6 +191,14 @@
   white-space: nowrap;
 }
 
+/* 정가 출처 · 읽은 날(V5) — 가격 옆에 작게: "ABC마트 2026/10/28 기준" */
+.modal__price-basis {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-weak);
+}
+
 /* 모바일 */
 @media (max-width: 1199px) {
   .modal__specs {
@@ -166,6 +206,7 @@
   }
     .modal__visual {
     width: 340px;
+    padding: 0 75px;                /* 340px 칸의 22% */
   }
 }
 @media (max-width: 767px) {
@@ -184,11 +225,21 @@
   .modal__visual {
     width: 100%;
     min-height: 260px;
-    padding: 20px;
+    padding: 0 22%;
+  }
+  .modal__visual .gallery,
+  .modal__visual .gallery__stage {
+    min-height: 260px;
   }
 
-  .modal__info {
-    padding: 24px 20px;
+  .modal__head {
+    padding: 24px 20px 16px;
+  }
+  .modal__body {
+    padding: 8px 20px 24px;
+  }
+  .modal__reviews .review-summary {
+    margin: 18px 20px 0;
   }
 
   .modal__model {

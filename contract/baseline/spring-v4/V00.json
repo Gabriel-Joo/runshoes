@@ -1,0 +1,47 @@
+{
+  "id": "V00",
+  "plan": null,
+  "name": "로그인 admin@runshoes.test",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "admin@runshoes.test",
+      "password": "<가림>"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=<가림>; Path=/api/auth; Max-Age=1209600; Expires=Fri, 06 Nov 2026 16:59:24 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Fri, 23 Oct 2026 16:59:24 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "accessToken": "<jwt>",
+      "tokenType": "Bearer",
+      "expiresIn": 900,
+      "user": {
+        "id": 31,
+        "email": "admin@runshoes.test",
+        "nickname": "관리자",
+        "role": "ADMIN"
+      }
+    }
+  }
+}

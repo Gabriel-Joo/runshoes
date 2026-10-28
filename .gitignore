@@ -34,3 +34,8 @@ runshoes_env/
 # Spring 백엔드 빌드 산출물
 backend/target/
 contract/run/
+
+# 카탈로그 — 사이트별 수집기 · 받은 원본 · API 키(공개하지 않는다, docs/CATALOG_PIPELINE.md 7장)
+catalog/local/
+# 적재기 기록(넣은 id · 바꾸기 전 값) — 로컬 시험 기록이라 레포에 두지 않는다. 운영 적재 기록은 덤프 폴더에(runbooks/catalog-v4-v5.md)
+catalog/loads/
