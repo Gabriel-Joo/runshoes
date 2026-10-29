@@ -6435,6 +6435,46 @@
    "title": "Brooks Glycerin Max 2 White Blue Spellbound",
    "note": "사용자(2026-10-29) 화면에서 \"이미지 준비중\" → 대표 색상(110479-1D-131) 이미지가 StockX 에서 404. 같은 남성 모델 다른 색상(캐시된 KicksDB 결과, 이미지 200 · Claude 가 사진 확인)",
    "was": "404 이미지"
+  },
+  "nike:pegasus#42": {
+   "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+   "images": [
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+   ],
+   "skus": [
+    "IB1873-101",
+    "IB1873-001",
+    "IB1873-702",
+    "IB1873-020"
+   ],
+   "sku": "IB1873-101",
+   "title": "Nike Air Zoom Pegasus 42 White Photon Dust",
+   "via": "user",
+   "by": "user",
+   "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+  },
+  "hoka:clifton#10": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746731644",
+    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
+    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Sage-Neon-Flame.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679234"
+   ],
+   "skus": [
+    "1162030-BBLC",
+    "1162030-WWH",
+    "1162030-VLLN",
+    "1162030-SGNN"
+   ],
+   "sku": "1162030-BBLC",
+   "title": "Hoka One One Clifton 10 Black",
+   "via": "user",
+   "by": "user",
+   "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
   }
  },
  "seed_only_price_meta": {

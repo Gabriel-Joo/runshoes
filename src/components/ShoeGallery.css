@@ -1,3 +1,4 @@
+/* 상세 모달 사진 — 사진 칸(.modal__visual, 흰 구역)을 그대로 쓴다. 2장 이상이면 화살표 · 썸네일 줄(2026-10-30 되살림) */
 .gallery {
   width: 100%;
   display: flex;
@@ -6,15 +7,126 @@
 
 .gallery__stage {
   position: relative;
+  flex: 1;
   height: 300px;
+}
+
+.gallery__viewport {
+  height: 100%;
+  overflow: hidden;
+}
+
+.gallery__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.35s ease;
+}
+
+.gallery__slide {
+  flex: 0 0 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 }
 
 .gallery__stage .shoeimage {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+/* 화살표 — 사진 칸의 좌우 여백 안(모달 .modal__visual 의 padding). 사진 위에 겹치지 않는다 */
+.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-mid);
+  padding: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.gallery__arrow:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.gallery__arrow--prev {
+  left: -56px;
+}
+
+.gallery__arrow--next {
+  right: -56px;
+}
+
+/* 썸네일 줄 — 사진 아래, 끌어서 넘긴다. 넘치면 가운데 정렬을 버리고 스크롤 */
+.gallery__thumbs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  margin: 12px -56px 20px;     /* 화살표 여백까지 넓게 */
+  padding: 2px 0;
+}
+
+.gallery__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery__thumbs::before,
+.gallery__thumbs::after {
+  content: "";
+  margin: auto;                /* 적을 때는 가운데 */
+}
+
+.gallery__thumbs.is-dragging {
+  cursor: grabbing;
+}
+
+.gallery__thumb {
+  width: 52px;
+  height: 40px;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.gallery__thumb.is-active {
+  border-color: var(--accent);
+}
+
+.gallery__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+@media (max-width: 1199px) {
+  .gallery__arrow--prev { left: -50px; }
+  .gallery__arrow--next { right: -50px; }
+  .gallery__thumbs { margin-left: -50px; margin-right: -50px; }
+}
+
+@media (max-width: 767px) {
+  .gallery__arrow--prev { left: -40px; }
+  .gallery__arrow--next { right: -40px; }
+  .gallery__thumbs { margin-left: -40px; margin-right: -40px; margin-bottom: 14px; }
+  .gallery__thumb {
+    width: 46px;
+    height: 36px;
+  }
 }
