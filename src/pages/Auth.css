@@ -118,13 +118,19 @@
 }
 
 /* 체험 카드(docs/ADMIN_DEMO_DESIGN.md 8.4) */
+/* 체험 영역은 로그인 칸(440px)보다 넓게 — 카드 5장이 한 줄에 들어가게(2026-10-30). 가운데 정렬은 그대로 */
 .auth__demo {
+  position: relative;
+  left: 50%;
+  width: min(900px, calc(100vw - 2 * var(--page-gutter)));
+  transform: translateX(-50%);
   margin-top: 40px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
 .auth__demotitle {
+  text-align: center;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-strong);
@@ -178,8 +184,10 @@
 }
 
 .auth__admincard {
-  margin-top: 10px;
-  padding: 0 38px;
+  margin: 10px auto 0;
+  width: calc(2 * 162px);   /* 카드 두 장 폭 — DemoCards CARD_WIDTH */
+  max-width: 100%;
+  padding: 0 4px;
 }
 
 .auth__admincard .auth__card {
@@ -232,6 +240,7 @@
 }
 
 .auth__demonote {
+  text-align: center;
   margin-top: 10px;
   font-size: 12px;
   color: var(--text-weak);

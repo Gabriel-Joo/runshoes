@@ -272,7 +272,8 @@ for (const c of cands) {
   row.catalog_key = `${row.line_key}:${row.generation}`;
   // 관리 화면에서 고친 대표 · 추가 이미지(pull-admin.mjs) — 둘 다 그대로 낸다(대표가 추가 목록의 첫 장이 아닐 수 있다)
   const io = DEC.image_overrides?.[id];
-  if (io?.via === 'admin') { row.image = io.image ?? null; row.images = (io.images ?? []).map((url) => ({ url, source: 'admin' })); }
+  //   사람이 정한 여러 장(2026-10-30 — 상세 모달 갤러리 확인용 같은 모델 다른 색상)도 같다: images 가 있으면 대표 · 목록을 그대로
+  if (io?.via === 'admin' || Array.isArray(io?.images)) { row.image = io.image ?? null; row.images = (io.images ?? []).map((url) => ({ url, source: io.via === 'admin' ? 'admin' : 'stockx' })); }
   if (row.width === null) missing.width = 'not_found';
   if (row.wideAvailable === null) missing.wideAvailable = s?.missing?.wide_available ?? 'not_found';
   if (row.carbon === null) { missing.carbon = s?.missing?.carbon ?? 'not_found'; }

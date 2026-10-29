@@ -59,7 +59,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
         </button>
         <div className="modal__top">
           <div className="modal__visual">
-            <ShoeGallery image={shoe.image} alt={shoe.model} />
+            <ShoeGallery image={shoe.image} images={shoe.images} alt={shoe.model} />
           </div>
 
           <div className="modal__info">
