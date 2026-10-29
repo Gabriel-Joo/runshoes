@@ -55,7 +55,7 @@ function stripExcluded(s) {
 }
 const STORE_HOST = /^https?:\/\/(www\.nbkorea\.com|saucony\.co\.kr|www\.brooksrunning\.co\.kr|kor\.mizuno\.com|salomon\.co\.kr|kr\.puma\.com|altra\.co\.kr|www\.asics\.co\.kr|www\.merrellkorea\.co\.kr)\//;
 const DEC = JSON.parse(fs.readFileSync(path.join(ROOT, 'decisions.json'), 'utf8'));
-// 가격 메타(V5, 2026-10-28 사용자): 정가만 — 출처 '공식몰' | 'ABC마트', 읽은 날, 종류는 늘 '정가'. 다나와 · 쿠팡 참고가는 취소했다(docs 2.2.2)
+// 가격 메타(V5, 2026-10-28 사용자): 정가만 — 출처 '공식몰' | 'ABC마트', 읽은 날, 종류는 늘 '발매가'(2026-10-30 사용자 — '정가'에서 이름을 바꿔 통일). 다나와 · 쿠팡 참고가는 취소했다(docs 2.2.2)
 //   읽은 날: 공식몰은 받은 페이지 캐시의 fetched_at, ABC마트는 렌더 기록(local/work/abcmart-rendered.json)의 rendered_at
 const ABC_RENDER = fs.existsSync(path.join(WORK, 'abcmart-rendered.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'abcmart-rendered.json'), 'utf8')) : {};
 const CACHE_DIR = path.join(ROOT, 'local/cache');
@@ -66,8 +66,8 @@ function fetchedAt(url) {
 }
 function priceMeta(url, note) {
   if (!/^https?:\/\//.test(url ?? '')) return { source: null, checked_at: null, kind: null };  // 시드 20켤레의 운영 값(db.json) — 어디서 읽었는지 기록이 없다
-  if (/^https:\/\/abcmart\.a-rt\.com\//.test(url)) return { source: 'ABC마트', checked_at: ABC_RENDER[url]?.rendered_at ?? null, kind: '정가' };
-  if (STORE_HOST.test(url)) return { source: '공식몰', checked_at: fetchedAt(url) ?? (note?.match(/\((20\d\d-\d\d-\d\d)\)/) ?? [])[1] ?? null, kind: '정가' };
+  if (/^https:\/\/abcmart\.a-rt\.com\//.test(url)) return { source: 'ABC마트', checked_at: ABC_RENDER[url]?.rendered_at ?? null, kind: '발매가' };
+  if (STORE_HOST.test(url)) return { source: '공식몰', checked_at: fetchedAt(url) ?? (note?.match(/\((20\d\d-\d\d-\d\d)\)/) ?? [])[1] ?? null, kind: '발매가' };
   return { source: null, checked_at: null, kind: null };
 }
 const specs = new Map();

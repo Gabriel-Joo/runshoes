@@ -380,11 +380,7 @@ function Withdraw({ onKeep }: { onKeep: () => void }) {
           <li>작성하신 리뷰는 "탈퇴 회원" 이름으로 남습니다</li>
           <li>찜 목록은 모두 삭제됩니다</li>
           <li>탈퇴 후에는 계정을 복구할 수 없습니다</li>
-          <li>
-            같은 이메일로 다시 가입할 수 있지만,
-            <br />
-            이전에 작성한 리뷰는 돌아오지 않습니다
-          </li>
+          <li>같은 이메일로 다시 가입할 수 있지만, 이전에 작성한 리뷰는 돌아오지 않습니다</li>
         </ul>
         <p className="withdraw__ask">그래도 진행할까요?</p>
         {error && (
@@ -396,7 +392,7 @@ function Withdraw({ onKeep }: { onKeep: () => void }) {
           <button className="withdraw__go" onClick={go} disabled={busy}>
             {busy ? "탈퇴 중…" : "회원 탈퇴"}
           </button>
-          <button className="withdraw__keep" onClick={onKeep} autoFocus>
+          <button className="withdraw__keep" onClick={onKeep}>
             계속 이용하고 싶어요
           </button>
         </div>

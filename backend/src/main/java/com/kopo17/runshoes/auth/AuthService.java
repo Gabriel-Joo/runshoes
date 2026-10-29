@@ -240,11 +240,11 @@ class AuthService {
 		activity.log(Entry.of("user.withdraw", u.getId(), "user", u.getId()).meta(Map.of("reviews", reviewCount, "likes", likeCount)));
 	}
 
-	/** 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 3개(무작위) + 데모 관리자. 꺼져 있으면 404 */
+	/** 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 전부(id 순) + 데모 관리자, 리뷰 수 · 찜 수와 함께. 꺼져 있으면 404 */
 	@Transactional(readOnly = true)
 	List<Map<String, Object>> demoAccounts() {
 		requireDemo();
-		List<User> pool = new ArrayList<>(users.randomSeedUsers(3));
+		List<User> pool = new ArrayList<>(users.seedUsers());
 		users.findFirstByRoleAndDeletedAtIsNull(User.DEMO_ADMIN).ifPresent(pool::add);
 		return pool.stream().map(u -> {
 			Map<String, Object> d = new LinkedHashMap<>();
@@ -252,6 +252,7 @@ class AuthService {
 			d.put("nickname", u.getNickname());
 			d.put("role", u.getRole());
 			d.put("reviewCount", reviews.countByUserId(u.getId()));
+			d.put("likeCount", jdbc.queryForObject("SELECT COUNT(*) FROM likes WHERE user_id = ?", Integer.class, u.getId()));
 			return d;
 		}).toList();
 	}

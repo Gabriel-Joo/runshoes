@@ -33,12 +33,12 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "date": "Thu, 29 Oct 2026 20:24:53 GMT",
       "connection": "close"
     },
     "body": {
-      "code": "invalid",
-      "message": "출처가 WEB 이면 주소를 넣어 주세요(drop)"
+      "message": "출처가 WEB 이면 주소를 넣어 주세요(drop)",
+      "code": "invalid"
     }
   }
 }

@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { AuthError, demoAccounts, demoLogin, login, safeReturnTo, type DemoAccount } from "../auth/session";
 import Field from "../auth/Field";
+import DemoCards from "../components/DemoCards";
 import { useCooldown } from "../auth/useCooldown";
 import "./Auth.css";
 
@@ -18,7 +19,7 @@ function Login() {
   const [limited, setLimited] = useState(false);   // 429 — 기다리는 동안 버튼을 끈다
   const [busy, setBusy] = useState(false);
   const cooldown = useCooldown();
-  // 체험 카드 — 시드 계정 3개(무작위) + 데모 관리자. 서버가 꺼 두면(DEMO_LOGIN_ENABLED) 빈 목록이라 영역이 없다
+  // 체험 카드 — 시드 계정 전부(슬라이드) + 데모 관리자. 서버가 꺼 두면(DEMO_LOGIN_ENABLED) 빈 목록이라 영역이 없다
   const [cards, setCards] = useState<DemoAccount[]>([]);
 
   useEffect(() => {
@@ -86,15 +87,8 @@ function Login() {
       {cards.length > 0 && (
         <section className="auth__demo" aria-label="체험 계정">
           <h3 className="auth__demotitle">체험 계정으로 둘러보기</h3>
-          <div className="auth__cards">
-            {cards.map((c) => (
-              <button key={c.id} className={`auth__card ${c.role === "DEMO_ADMIN" ? "is-admin" : ""}`} onClick={() => tryDemo(c)} disabled={busy}>
-                <strong>{c.nickname}</strong>
-                <span>{c.role === "DEMO_ADMIN" ? "관리 화면 · 보기 전용" : `리뷰 ${c.reviewCount}개`}</span>
-              </button>
-            ))}
-          </div>
-          <p className="auth__demonote">체험 계정으로 남긴 리뷰 · 찜은 누구나 보고 바꿀 수 있어요.</p>
+          <DemoCards cards={cards} busy={busy} onPick={tryDemo} />
+          <p className="auth__demonote">공용 체험 계정이에요. 남긴 기록들(리뷰, 찜 등)이 바뀌거나 사라질 수 있어요</p>
         </section>
       )}
     </div>

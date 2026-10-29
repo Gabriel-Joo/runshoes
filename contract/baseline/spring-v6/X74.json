@@ -27,7 +27,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "date": "Thu, 29 Oct 2026 20:24:53 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -38,7 +38,7 @@
       "author": "탈퇴 회원",
       "rating": 3,
       "content": "탈퇴하기 전에 남기는 리뷰",
-      "createdAt": "2026-10-29T18:57:35.484Z",
+      "createdAt": "2026-10-29T20:24:53.290Z",
       "liked": false,
       "reviewType": "FIRST",
       "parentReviewId": null,

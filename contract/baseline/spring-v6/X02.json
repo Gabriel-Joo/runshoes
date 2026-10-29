@@ -1,8 +1,8 @@
 {
   "id": "X02",
   "plan": null,
-  "name": "체험 카드 — 시드 3(무작위) + 데모 관리자(무작위라 모양만 본다)",
-  "contract": false,
+  "name": "체험 카드 — 시드 30(id 순, 리뷰 수 · 찜 수) + 데모 관리자",
+  "contract": true,
   "expect": 200,
   "request": {
     "method": "GET",
@@ -20,34 +20,227 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 18:57:34 GMT",
+      "date": "Thu, 29 Oct 2026 20:24:52 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
     "body": [
       {
-        "id": 28,
-        "nickname": "회복주는천천히",
+        "id": 1,
+        "nickname": "산길10년차",
         "role": "USER",
-        "reviewCount": 4
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 2,
+        "nickname": "산악울트라",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 3,
+        "nickname": "트레일새내기",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 4,
+        "nickname": "빗길러너",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
       },
       {
         "id": 5,
         "nickname": "주말산행런",
         "role": "USER",
-        "reviewCount": 3
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 6,
+        "nickname": "로드에서산으로",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 7,
+        "nickname": "서브3향해",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 8,
+        "nickname": "하프PB도전",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 9,
+        "nickname": "10K기록단축",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 10,
+        "nickname": "서브4가목표",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 11,
+        "nickname": "템포는못참지",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 12,
+        "nickname": "트랙한바퀴",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 13,
+        "nickname": "인터벌입문",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 14,
+        "nickname": "페이스업",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 15,
+        "nickname": "발볼4E",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
       },
       {
         "id": 16,
         "nickname": "반사이즈업",
         "role": "USER",
-        "reviewCount": 4
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 17,
+        "nickname": "넓은발고민",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 18,
+        "nickname": "과내전주의",
+        "role": "USER",
+        "reviewCount": 1,
+        "likeCount": 0
+      },
+      {
+        "id": 19,
+        "nickname": "무릎소중",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 20,
+        "nickname": "평발러너",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 21,
+        "nickname": "한우물러너",
+        "role": "USER",
+        "reviewCount": 2,
+        "likeCount": 0
+      },
+      {
+        "id": 22,
+        "nickname": "20년차러너",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 23,
+        "nickname": "삼선러버",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 24,
+        "nickname": "룩북러너",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 25,
+        "nickname": "가성비탐험가",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 26,
+        "nickname": "런린이일기",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
+      },
+      {
+        "id": 27,
+        "nickname": "퇴근후한바퀴",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 28,
+        "nickname": "회복주는천천히",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 29,
+        "nickname": "매일5K",
+        "role": "USER",
+        "reviewCount": 4,
+        "likeCount": 0
+      },
+      {
+        "id": 30,
+        "nickname": "느긋한LSD",
+        "role": "USER",
+        "reviewCount": 3,
+        "likeCount": 0
       },
       {
         "id": 32,
         "nickname": "데모관리자",
         "role": "DEMO_ADMIN",
-        "reviewCount": 0
+        "reviewCount": 0,
+        "likeCount": 0
       }
     ]
   }

@@ -100,7 +100,7 @@ public class Shoe {
 	private Boolean carbon;
 	private Double price;
 
-	// 가격 메타(V5) — 가격의 출처('공식몰' · 'ABC마트' · '다나와') · 읽은 날 · '정가'(다나와는 정가인지 기록이 없어 null)
+	// 가격 메타(V5) — 가격의 출처('공식몰' · 'ABC마트' · '다나와') · 읽은 날 · '발매가'(2026-10-30 '정가'에서 바꿨다. 다나와는 기록이 없어 null)
 	@Column(name = "price_source")
 	private String priceSource;
 
