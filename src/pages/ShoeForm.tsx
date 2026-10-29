@@ -20,7 +20,8 @@ const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE
 const LEGACY_CODES: Record<string, string> = { DB: "DB(기존 값)", SX: "SX(StockX)" };
 // 가격 출처 — 종류는 늘 '발매가'(2026-10-30 '정가'에서 통일). 기존 '다나와'는 회색으로만
 const PRICE_SOURCES = ["공식몰", "ABC마트", "크림"];
-// 추가 이미지 — 칸 하나에 주소 하나, 6개까지(서버도 400)
+// 이미지 — 목록 하나, 칸 하나에 주소 하나, 첫 번째가 대표(2026-10-30 사용자). 6개까지(서버도 400).
+//   저장: images = 빈 칸을 뺀 목록, image = 그 첫 번째(1번이 비면 다음 것이 대표, 다 비면 이미지 없음 ""). DB 는 그대로(images[0] = image)
 const MAX_IMAGES = 6;
 
 // 숫자 칸 — type="number" 는 e · + · − 가 들어가고 휠로 값이 바뀐다(설계 3절). 붙여 넣기도 같은 검사
@@ -133,8 +134,6 @@ function ShoeForm() {
   const [priceCheckedAt, setPriceCheckedAt] = useState("");
   const [priceSource, setPriceSource] = useState("");
   const [sources, setSources] = useState<Record<SpecField, Source>>(() => Object.fromEntries(SPEC_FIELDS.map((f) => [f, NO_SOURCE])) as Record<SpecField, Source>);
-  const [image, setImage] = useState("");
-  const [imageDraft, setImageDraft] = useState("");   // 대표 이미지 칸 — "등록"을 누르면 image 가 되고 썸네일이 바뀐다
   const [images, setImages] = useState<string[]>([""]);
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
@@ -169,9 +168,9 @@ function ShoeForm() {
         setPriceSource(shoe.priceSource ?? "");
         const ss: SpecSources = shoe.specSources ?? {};
         setSources(Object.fromEntries(SPEC_FIELDS.map((f) => [f, ss[f] ? { code: ss[f]!.code, url: ss[f]!.url ?? "" } : NO_SOURCE])) as Record<SpecField, Source>);
-        setImage(shoe.image ?? "");
-        setImageDraft(shoe.image ?? "");
-        setImages(shoe.images?.length ? shoe.images.slice(0, MAX_IMAGES) : [""]);
+        // 불러올 때: [image, ...images] 에서 겹치는 것을 뺀다(운영은 모두 images[0] = image)
+        const list = [...new Set([shoe.image, ...(shoe.images ?? [])].filter((u): u is string => Boolean(u)))].slice(0, MAX_IMAGES);
+        setImages(list.length ? list : [""]);
         setSummary(shoe.summary ?? "");
         setDescription(shoe.description ?? "");
       })
@@ -254,7 +253,7 @@ function ShoeForm() {
       priceCheckedAt: hasPriceSource ? priceCheckedAt || null : null,
       priceKind: hasPriceSource ? "발매가" : null,   // 종류는 늘 발매가(2026-10-30 — 크림 발매가 · 공식몰 · ABC마트)
       specSources: Object.keys(specSources).length ? specSources : null,
-      image: imageDraft.trim(),   // 등록을 누르지 않고 저장해도 칸에 적힌 주소를 쓴다
+      image: imageLines[0] ?? "",   // 첫 번째가 대표 — 다 비면 이미지 없음
       images: imageLines,
       summary,
       description,
@@ -437,7 +436,7 @@ function ShoeForm() {
           <span className="form__exempt">출처 면제</span>
         </Row>
         <Row
-          label="가격"
+          label="가격(발매가)"
           htmlFor="f-price"
           source={
             <div className="form__source">
@@ -462,50 +461,44 @@ function ShoeForm() {
             <em>원</em>
           </span>
           <input aria-label="확인한 날" className="form__date" type="date" value={priceCheckedAt} onChange={(e) => setPriceCheckedAt(e.target.value)} disabled={!price} />
-          {price && <span className="form__hint">{Number(price).toLocaleString("ko-KR")}원{priceSource ? " · 발매가" : ""}</span>}
         </Row>
       </div>
 
       <h3 className="form__section">이미지</h3>
       <div className="form__grid">
         <div className="form__field form__field--wide">
-          <label htmlFor="f-image">대표 이미지 경로</label>
-          <div className="form__imgrow">
-            <input id="f-image" value={imageDraft} onChange={(e) => setImageDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && setImage(imageDraft.trim())}
-              placeholder="https://images.stockx.com/…" spellCheck={false} />
-            <button type="button" className="form__imgbtn" onClick={() => setImage(imageDraft.trim())}>
-              등록
-            </button>
-            <button type="button" className="form__imgbtn is-danger" onClick={() => { setImage(""); setImageDraft(""); }}>
-              삭제
-            </button>
-          </div>
-          {image && (
-            <span className="form__thumbs">
-              <Thumb src={image} />
-            </span>
-          )}
-        </div>
-        <div className="form__field form__field--wide">
-          <span>추가 이미지 (최대 {MAX_IMAGES}개까지 추가 가능합니다)</span>
+          <span>이미지 경로 (첫 번째 이미지가 대표 이미지가 되며, 최대 {MAX_IMAGES}개까지 추가 가능합니다)</span>
           {images.map((u, i) => (
-            <div className="form__imgrow" key={i}>
-              <input aria-label={`추가 이미지 ${i + 1}`} value={u} onChange={(e) => setImageAt(i, e.target.value)} placeholder="https://…" spellCheck={false} />
-              <button type="button" className="form__imgbtn is-icon" onClick={() => removeImageAt(i)} aria-label={`추가 이미지 ${i + 1} 빼기`}>
-                −
-              </button>
+            <div key={i} className="form__imgitem">
+              <div className="form__imgrow">
+                <input aria-label={`이미지 ${i + 1}${i === 0 ? " (대표)" : ""}`} value={u} onChange={(e) => setImageAt(i, e.target.value)}
+                  placeholder={i === 0 ? "https://images.stockx.com/… (대표)" : "https://…"} spellCheck={false} />
+                <button type="button" className="form__imgbtn is-icon" onClick={() => removeImageAt(i)} aria-label={`이미지 ${i + 1} 빼기`}>
+                  −
+                </button>
+              </div>
+              {/* 1번 칸 바로 아래 — 저장될 대표(1번이 비었으면 다음 주소)를 보인다 */}
+              {i === 0 && imageLines[0] && (
+                <span className="form__thumbs">
+                  <span className="form__mainthumb">
+                    <Thumb src={imageLines[0]} />
+                    <em>대표</em>
+                  </span>
+                </span>
+              )}
+              {/* 나머지는 마지막 칸 아래에 모아서 */}
+              {i === images.length - 1 && i > 0 && imageLines.length > 1 && (
+                <span className="form__thumbs">
+                  {imageLines.slice(1).map((x, j) => (
+                    <Thumb key={`${j}:${x}`} src={x} />
+                  ))}
+                </span>
+              )}
             </div>
           ))}
           <button type="button" className="form__imgadd" onClick={() => setImages((list) => [...list, ""])} disabled={images.length >= MAX_IMAGES}>
             + 이미지 칸 추가{images.length >= MAX_IMAGES ? ` (${MAX_IMAGES}개까지)` : ""}
           </button>
-          {imageLines.length > 0 && (
-            <span className="form__thumbs">
-              {imageLines.map((u, i) => (
-                <Thumb key={`${i}:${u}`} src={u} />
-              ))}
-            </span>
-          )}
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import ShoeImage from "../components/ShoeImage";
 import ConfirmModal from "../components/ConfirmModal";
 import ReviewCounter from "../components/ReviewCounter";
 import { clampReview, contentError, reviewError, REVIEW_MAX } from "../components/reviewRules";
+import { text, withUnit } from "../utils/display";
 import type { Review, Shoe } from "../types";
 import "./Auth.css";
 import "./Account.css";
@@ -20,12 +21,13 @@ async function failure(res: Response) {
   return { field: body?.error?.field as string | undefined, message: (body?.error?.message as string) ?? "잠시 뒤 다시 해 주세요." };
 }
 
-type Tab = "profile" | "reviews" | "likes" | "withdraw";
-const TABS: Tab[] = ["profile", "reviews", "likes", "withdraw"];
+type Tab = "profile" | "reviews" | "likes" | "helpful" | "withdraw";
+const TABS: Tab[] = ["profile", "reviews", "likes", "helpful", "withdraw"];
 
 /**
- * 마이페이지 — 왼쪽 목차 · 오른쪽 본문(2026-10-30 사용자). 본문 맨 위에는 늘 활동 요약(리뷰 · 찜 · 가입일).
+ * 마이페이지 — 왼쪽 목차 · 오른쪽 본문(2026-10-30 사용자). 본문 맨 위에는 늘 활동 요약(리뷰 · 찜 · 도움이 돼요 · 가입일).
  * 목차는 ?tab= 으로 — 새로고침 · 뒤로 가기에도 같은 칸. 로그인 필요(App 의 RequireAuth)
+ * "도움이 돼요"는 리뷰 공감(review_likes)의 화면 이름이다 — 화면에는 "공감"이라고 쓰지 않는다
  */
 function Account() {
   const { user } = useAuth();
@@ -36,6 +38,7 @@ function Account() {
   const [joined, setJoined] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [liked, setLiked] = useState<Shoe[] | null>(null);
+  const [helpful, setHelpful] = useState<Review[] | null>(null);
   const [reload, setReload] = useState(0);
   const refresh = () => setReload((n) => n + 1);
 
@@ -44,13 +47,14 @@ function Account() {
     apiFetch("/me").then((r) => (r.ok ? r.json() : null)).then((me) => setJoined(me?.createdAt ?? null)).catch(() => {});
     apiFetch(`/reviews?userId=${user.id}`).then((r) => r.json()).then(setReviews).catch(() => setReviews([]));
     apiFetch("/shoes?liked=true").then((r) => r.json()).then(setLiked).catch(() => setLiked([]));
+    // 내가 "도움이 돼요"를 누른 리뷰 — liked 는 요청한 사람 기준(서버). 숨긴 신발의 리뷰는 서버가 뺀다
+    apiFetch("/reviews?liked=true").then((r) => r.json()).then(setHelpful).catch(() => setHelpful([]));
   }, [user, reload]);
 
   if (!user) return null;
 
   const nav = (t: Tab, label: string, sub = false) => (
     <button className={`mypage__navitem ${sub ? "is-sub" : ""} ${tab === t ? "is-active" : ""}`} onClick={() => go(t)} aria-current={tab === t ? "page" : undefined}>
-      {sub && <span aria-hidden="true">· </span>}
       {label}
     </button>
   );
@@ -63,20 +67,105 @@ function Account() {
         <p className="mypage__navgroup">내 활동</p>
         {nav("reviews", "내 리뷰", true)}
         {nav("likes", "찜 목록", true)}
+        {nav("helpful", "도움이 돼요 누른 리뷰", true)}
         {nav("withdraw", "회원 탈퇴")}
       </nav>
 
       <div className="mypage__body">
         <p className="mypage__summary">
           <strong>{user.nickname}</strong>님 · 리뷰 <strong>{reviews?.length ?? "–"}개</strong> · 찜 <strong>{liked?.length ?? "–"}개</strong>
+          {" "}· 도움이 돼요 <strong>{helpful?.length ?? "–"}개</strong>
           {joined && <> · 가입일 {joined.slice(0, 10).replace(/-/g, ".")}</>}
         </p>
 
         {tab === "profile" && <Profile />}
         {tab === "reviews" && <MyReviews reviews={reviews} onChange={refresh} />}
         {tab === "likes" && <MyLikes shoes={liked} onChange={refresh} />}
+        {tab === "helpful" && <MyHelpful reviews={helpful} onChange={refresh} />}
         {tab === "withdraw" && <Withdraw onKeep={() => go("profile")} />}
       </div>
+    </div>
+  );
+}
+
+// ---- 표 · 카드가 같이 쓰는 것 ----
+
+/** 리뷰한 신발만 받는다(?id=…&id=… — json-server 처럼 OR) */
+function useShoesOf(list: Review[] | null) {
+  const [shoes, setShoes] = useState<Record<number, Shoe>>({});
+  const ids = [...new Set((list ?? []).map((r) => r.shoeId))].sort((a, b) => a - b).join(",");
+  useEffect(() => {
+    if (!ids) return;
+    apiFetch(`/shoes?${ids.split(",").map((i) => `id=${i}`).join("&")}`)
+      .then((r) => r.json())
+      .then((l: Shoe[]) => setShoes(Object.fromEntries(l.map((s) => [s.id, s]))))
+      .catch(() => {});
+  }, [ids]);
+  return shoes;
+}
+
+/** 여러 개 고르기 — 목록이 바뀌면 사라진 id 는 저절로 빠진다 */
+function useSelection(ids: number[]) {
+  const [picked, setPicked] = useState<Set<number>>(new Set());
+  const live = new Set([...picked].filter((id) => ids.includes(id)));
+  const toggle = (id: number) => setPicked((p) => { const n = new Set(p); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const all = ids.length > 0 && ids.every((id) => live.has(id));
+  const toggleAll = () => setPicked(all ? new Set() : new Set(ids));
+  return { picked: live, toggle, all, toggleAll, keep: (rest: number[]) => setPicked(new Set(rest)) };
+}
+
+/**
+ * 한꺼번에 — 기존 API 를 하나씩 차례로 부른다(새 API 없음, 활동 로그도 한 건씩). 데모 관리자 403 이면 거기서 멈춘다.
+ * 남은(실패한) id 와 화면 문구를 돌려준다
+ */
+async function runEach(ids: number[], call: (id: number) => Promise<Response | null>, what: string, words: { did: string; couldNot: string }) {
+  const failed: number[] = [];
+  let done = 0;
+  for (let i = 0; i < ids.length; i++) {
+    const res = await call(ids[i]).catch(() => null);
+    const blocked = res && (await demoBlocked(res));
+    if (blocked) return { failed: [...failed, ...ids.slice(i)], message: blocked };
+    if (res?.ok) done++;
+    else failed.push(ids[i]);
+  }
+  const message = failed.length === 0 ? `${what} ${done}개를 ${words.did}.` : `${ids.length}개 중 ${done}개를 ${words.did}. ${failed.length}개는 ${words.couldNot}.`;
+  return { failed, message };
+}
+
+/** 리뷰 전문 — 읽기 전용 모달(2026-10-30 사용자 — 표 안에서 펼치면 300자에 줄이 흔들린다) */
+function ReviewReader({ review, shoe, onClose }: { review: Review; shoe?: Shoe; onClose: () => void }) {
+  useEffect(() => {
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", esc);
+    return () => document.removeEventListener("keydown", esc);
+  }, [onClose]);
+  return (
+    <div className="confirm" onClick={onClose}>
+      <div className="reader" role="dialog" aria-modal="true" aria-label="리뷰 전문" onClick={(e) => e.stopPropagation()}>
+        <div className="reader__head">
+          <div>
+            <p className="reader__model">{shoe?.model ?? `NO.${review.shoeId}`}</p>
+            <p className="reader__meta">
+              {review.author} · {"★".repeat(review.rating)}
+              <span className="mypage__ratingoff">{"★".repeat(5 - review.rating)}</span> · {review.createdAt.slice(0, 10).replace(/-/g, ".")} · 도움이 돼요 {review.likeCount ?? 0}
+            </p>
+          </div>
+          <button className="reader__close" onClick={onClose} aria-label="닫기">×</button>
+        </div>
+        <p className="reader__content">{review.content}</p>
+      </div>
+    </div>
+  );
+}
+
+/** 표 위 — "N개 선택됨 · [선택 …]" */
+function BulkBar({ count, label, onRun }: { count: number; label: string; onRun: () => void }) {
+  return (
+    <div className="mypage__bulk">
+      <span className="mypage__bulkcount">{count > 0 ? `${count}개 선택됨` : ""}</span>
+      <button className="mypage__btn is-danger is-strong" onClick={onRun} disabled={count === 0}>
+        {label}
+      </button>
     </div>
   );
 }
@@ -168,29 +257,22 @@ function Profile() {
   );
 }
 
-/** 내 리뷰 — 등록·관리 목록과 비슷한 표. 내용은 한 줄로 자르고 누르면 펼친다. 수정 · 삭제는 그 자리에서 */
+/** 내 리뷰 — 표. 내용을 누르면 전문 모달(읽기), 수정 · 삭제는 표에서. 여러 개 골라 한꺼번에 삭제 */
 function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: () => void }) {
   const { setNotice } = useAuth();
-  const [shoes, setShoes] = useState<Record<number, Shoe>>({});
-  const [open, setOpen] = useState<number | null>(null);
+  const shoes = useShoesOf(reviews);
+  const [reading, setReading] = useState<Review | null>(null);
   const [editing, setEditing] = useState<Review | null>(null);
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [target, setTarget] = useState<Review | null>(null);
-
-  // 리뷰한 신발만 받는다(?id=…&id=… — json-server 처럼 OR). 숨긴 신발의 리뷰는 서버가 빼고 준다
-  const ids = [...new Set((reviews ?? []).map((r) => r.shoeId))].sort((a, b) => a - b).join(",");
-  useEffect(() => {
-    if (!ids) return;
-    apiFetch(`/shoes?${ids.split(",").map((i) => `id=${i}`).join("&")}`)
-      .then((r) => r.json())
-      .then((list: Shoe[]) => setShoes(Object.fromEntries(list.map((s) => [s.id, s]))))
-      .catch(() => {});
-  }, [ids]);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const sorted = [...(reviews ?? [])].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sel = useSelection(sorted.map((r) => r.id));
 
   if (!reviews) return null;
-  const sorted = [...reviews].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const startEdit = (r: Review) => {
     setEditing(r);
@@ -226,20 +308,37 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
     onChange();
   };
 
+  const removeMany = async () => {
+    setBusy(true);
+    const { failed, message } = await runEach([...sel.picked], (id) => apiFetch(`/reviews/${id}`, { method: "DELETE" }), "리뷰", { did: "지웠어요", couldNot: "지우지 못했어요" });
+    setBusy(false);
+    setBulkOpen(false);
+    sel.keep(failed);
+    setNotice(message);
+    onChange();
+  };
+
   return (
     <div className="mypage__panel">
-      <h3 className="mypage__title">내 리뷰</h3>
+      <div className="mypage__titlebar">
+        <h3 className="mypage__title">내 리뷰</h3>
+        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="선택 삭제" onRun={() => setBulkOpen(true)} />}
+      </div>
       {sorted.length === 0 ? (
         <p className="mypage__empty">
           아직 쓴 리뷰가 없어요. <Link to="/">신발을 둘러보세요</Link>
         </p>
       ) : (
         <ul className="mypage__table">
-          <li className="mypage__thead" aria-hidden="true">
+          <li className="mypage__thead">
+            <label className="mypage__check">
+              <input type="checkbox" checked={sel.all} onChange={sel.toggleAll} aria-label="전체 선택" />
+            </label>
             <span />
             <span>모델명</span>
             <span>평점</span>
             <span>내용</span>
+            <span>도움이 돼요</span>
             <span>날짜</span>
             <span />
           </li>
@@ -270,7 +369,10 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
               );
             }
             return (
-              <li className="mypage__row" key={r.id}>
+              <li className={`mypage__row ${sel.picked.has(r.id) ? "is-picked" : ""}`} key={r.id}>
+                <label className="mypage__check">
+                  <input type="checkbox" checked={sel.picked.has(r.id)} onChange={() => sel.toggle(r.id)} aria-label={`${shoe?.model ?? ""} 리뷰 선택`} />
+                </label>
                 <Link className="mypage__thumb" to={`/?shoe=${r.shoeId}`} aria-label={`${shoe?.model ?? ""} 상세`}>
                   <ShoeImage src={shoe?.image ?? ""} alt={shoe?.model ?? ""} />
                 </Link>
@@ -282,9 +384,10 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
                   {"★".repeat(r.rating)}
                   <span className="mypage__ratingoff">{"★".repeat(5 - r.rating)}</span>
                 </span>
-                <button className={`mypage__content ${open === r.id ? "is-open" : ""}`} onClick={() => setOpen(open === r.id ? null : r.id)} aria-expanded={open === r.id}>
+                <button className="mypage__content" onClick={() => setReading(r)} title="눌러서 전문 보기">
                   {r.content}
                 </button>
+                <span className="mypage__helpful" aria-label={`도움이 돼요 ${r.likeCount ?? 0}`}>👍 {r.likeCount ?? 0}</span>
                 <span className="mypage__date">{r.createdAt.slice(0, 10).replace(/-/g, ".")}</span>
                 <span className="mypage__actions">
                   <button className="mypage__btn" onClick={() => startEdit(r)}>수정</button>
@@ -295,6 +398,7 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
           })}
         </ul>
       )}
+      {reading && <ReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
       {target && (
         <ConfirmModal
           message="이 리뷰를 삭제할까요?"
@@ -303,13 +407,28 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
           onCancel={() => setTarget(null)}
         />
       )}
+      {bulkOpen && (
+        <ConfirmModal
+          message={`리뷰 ${sel.picked.size}개를 삭제할까요?`}
+          detail="되돌릴 수 없습니다."
+          busy={busy}
+          onConfirm={removeMany}
+          onCancel={() => setBulkOpen(false)}
+        />
+      )}
     </div>
   );
 }
 
-/** 찜 목록 — 카드. 홈의 찜 토글은 그대로 두고 여기서는 찜 해제만 */
+/**
+ * 찜 목록 — 카드. 홈 카드와 같은 정보(중량 · 드롭 · 발볼 · 안정성 · 평점 · 리뷰 수)를 같은 순서로 — 나란히 놓고 비교한다(2026-10-30 사용자).
+ * 홈의 찜 토글은 그대로 두고 여기서는 찜 해제만. 여러 개 골라 한꺼번에 해제
+ */
 function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => void }) {
   const { setNotice } = useAuth();
+  const sel = useSelection((shoes ?? []).map((s) => s.id));
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
   if (!shoes) return null;
 
   const unlike = async (s: Shoe) => {
@@ -320,9 +439,32 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
     onChange();
   };
 
+  const unlikeMany = async () => {
+    setBusy(true);
+    const { failed, message } = await runEach([...sel.picked], (id) => apiFetch(`/shoes/${id}/like`, { method: "DELETE" }), "찜", { did: "해제했어요", couldNot: "해제하지 못했어요" });
+    setBusy(false);
+    setBulkOpen(false);
+    sel.keep(failed);
+    setNotice(message);
+    onChange();
+  };
+
   return (
     <div className="mypage__panel">
-      <h3 className="mypage__title">찜 목록</h3>
+      <div className="mypage__titlebar">
+        <h3 className="mypage__title">찜 목록</h3>
+        {shoes.length > 0 && (
+          <div className="mypage__bulk">
+            <label className="mypage__checkall">
+              <input type="checkbox" checked={sel.all} onChange={sel.toggleAll} /> 전체 선택
+            </label>
+            <span className="mypage__bulkcount">{sel.picked.size > 0 ? `${sel.picked.size}개 선택됨` : ""}</span>
+            <button className="mypage__btn is-danger is-strong" onClick={() => setBulkOpen(true)} disabled={sel.picked.size === 0}>
+              선택 해제
+            </button>
+          </div>
+        )}
+      </div>
       {shoes.length === 0 ? (
         <p className="mypage__empty">
           찜한 신발이 없어요. <Link to="/">홈에서 하트를 눌러 보세요</Link>
@@ -330,21 +472,140 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
       ) : (
         <ul className="mypage__cards">
           {shoes.map((s) => (
-            <li className="mypage__card" key={s.id}>
+            <li className={`mypage__card ${sel.picked.has(s.id) ? "is-picked" : ""}`} key={s.id}>
+              <label className="mypage__cardcheck">
+                <input type="checkbox" checked={sel.picked.has(s.id)} onChange={() => sel.toggle(s.id)} aria-label={`${s.model} 선택`} />
+              </label>
               <Link to={`/?shoe=${s.id}`} className="mypage__cardlink">
                 <span className="mypage__cardimg">
                   <ShoeImage src={s.image} alt={s.model} />
                 </span>
                 <small>{s.brand}</small>
                 <strong>{s.model}</strong>
-                {s.price != null && <span>{s.price.toLocaleString("ko-KR")}원</span>}
               </Link>
+              <dl className="mypage__specs">
+                <div><dt>중량</dt><dd>{withUnit(s.weight, "g")}</dd></div>
+                <div><dt>드롭</dt><dd>{withUnit(s.drop, "mm")}</dd></div>
+                <div><dt>발볼</dt><dd>{text(s.width)}</dd></div>
+                <div><dt>안정성</dt><dd>{text(s.stability)}</dd></div>
+                <div><dt>평점</dt><dd><strong>{s.rating.toFixed(1)}</strong> · 리뷰 {s.reviewCount}</dd></div>
+              </dl>
               <button className="mypage__btn" onClick={() => unlike(s)}>
                 찜 해제
               </button>
             </li>
           ))}
         </ul>
+      )}
+      {bulkOpen && (
+        <ConfirmModal
+          message={`찜 ${sel.picked.size}개를 해제할까요?`}
+          confirmLabel="해제"
+          busy={busy}
+          onConfirm={unlikeMany}
+          onCancel={() => setBulkOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/** 도움이 돼요 누른 리뷰 — 내 리뷰와 같은 표(작성자 칸이 더 있다). [취소]는 내 "도움이 돼요"를 거둔다. 여러 개 골라 한꺼번에 취소 */
+function MyHelpful({ reviews, onChange }: { reviews: Review[] | null; onChange: () => void }) {
+  const { setNotice } = useAuth();
+  const shoes = useShoesOf(reviews);
+  const [reading, setReading] = useState<Review | null>(null);
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const sorted = [...(reviews ?? [])].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const sel = useSelection(sorted.map((r) => r.id));
+  if (!reviews) return null;
+
+  const unhelp = async (r: Review) => {
+    const res = await apiFetch(`/reviews/${r.id}/like`, { method: "DELETE" }).catch(() => null);
+    const blocked = res && (await demoBlocked(res));
+    if (blocked) return setNotice(blocked);
+    if (!res?.ok) return setNotice("취소하지 못했어요. 잠시 뒤 다시 해 주세요.");
+    onChange();
+  };
+
+  const unhelpMany = async () => {
+    setBusy(true);
+    const { failed, message } = await runEach([...sel.picked], (id) => apiFetch(`/reviews/${id}/like`, { method: "DELETE" }), "도움이 돼요", { did: "취소했어요", couldNot: "취소하지 못했어요" });
+    setBusy(false);
+    setBulkOpen(false);
+    sel.keep(failed);
+    setNotice(message);
+    onChange();
+  };
+
+  return (
+    <div className="mypage__panel">
+      <div className="mypage__titlebar">
+        <h3 className="mypage__title">도움이 돼요 누른 리뷰</h3>
+        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="선택 취소" onRun={() => setBulkOpen(true)} />}
+      </div>
+      {sorted.length === 0 ? (
+        <p className="mypage__empty">
+          아직 "도움이 돼요"를 누른 리뷰가 없어요. <Link to="/">리뷰를 둘러보세요</Link>
+        </p>
+      ) : (
+        <ul className="mypage__table is-helpful">
+          <li className="mypage__thead">
+            <label className="mypage__check">
+              <input type="checkbox" checked={sel.all} onChange={sel.toggleAll} aria-label="전체 선택" />
+            </label>
+            <span />
+            <span>모델명</span>
+            <span>작성자</span>
+            <span>평점</span>
+            <span>내용</span>
+            <span>도움이 돼요</span>
+            <span>날짜</span>
+            <span />
+          </li>
+          {sorted.map((r) => {
+            const shoe = shoes[r.shoeId];
+            return (
+              <li className={`mypage__row ${sel.picked.has(r.id) ? "is-picked" : ""}`} key={r.id}>
+                <label className="mypage__check">
+                  <input type="checkbox" checked={sel.picked.has(r.id)} onChange={() => sel.toggle(r.id)} aria-label={`${r.author} 리뷰 선택`} />
+                </label>
+                <Link className="mypage__thumb" to={`/?shoe=${r.shoeId}`} aria-label={`${shoe?.model ?? ""} 상세`}>
+                  <ShoeImage src={shoe?.image ?? ""} alt={shoe?.model ?? ""} />
+                </Link>
+                <Link className="mypage__model" to={`/?shoe=${r.shoeId}`}>
+                  {shoe?.model ?? `NO.${r.shoeId}`}
+                  {shoe && <small>{shoe.brand}</small>}
+                </Link>
+                <span className="mypage__author">{r.author}</span>
+                <span className="mypage__rating" aria-label={`${r.rating}점`}>
+                  {"★".repeat(r.rating)}
+                  <span className="mypage__ratingoff">{"★".repeat(5 - r.rating)}</span>
+                </span>
+                <button className="mypage__content" onClick={() => setReading(r)} title="눌러서 전문 보기">
+                  {r.content}
+                </button>
+                <span className="mypage__helpful" aria-label={`도움이 돼요 ${r.likeCount ?? 0}`}>👍 {r.likeCount ?? 0}</span>
+                <span className="mypage__date">{r.createdAt.slice(0, 10).replace(/-/g, ".")}</span>
+                <span className="mypage__actions">
+                  <button className="mypage__btn" onClick={() => unhelp(r)}>취소</button>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {reading && <ReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
+      {bulkOpen && (
+        <ConfirmModal
+          message={`"도움이 돼요" ${sel.picked.size}개를 취소할까요?`}
+          confirmLabel="취소하기"
+          cancelLabel="닫기"
+          busy={busy}
+          onConfirm={unhelpMany}
+          onCancel={() => setBulkOpen(false)}
+        />
       )}
     </div>
   );

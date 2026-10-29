@@ -1,10 +1,28 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { DemoAccount } from "../auth/session";
 
 const INTERVAL_MS = 3500;
 
-/** 한 화면에 보이는 카드 수 — 로그인 칸이 좁아(440px) 어느 폭에서나 2장(3장이면 닉네임이 잘린다) */
-const PER_VIEW = 2;
+/**
+ * 한 화면에 보이는 카드 수 — 카드 폭(162px, 2026-10-30 사용자 "지금이 좋다")은 그대로 두고 보이는 칸 폭에 들어가는 만큼, 5장까지.
+ * 데스크톱 5장(시드 30명이 6번에 한 바퀴), 휴대폰은 2장(조금 좁아진다)
+ */
+const CARD_WIDTH = 162;
+const MAX_PER_VIEW = 5;
+const MIN_PER_VIEW = 2;   // 휴대폰 — 한 장이면 카드가 칸 폭만큼 늘어난다
+
+function usePerView() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [per, setPer] = useState(MAX_PER_VIEW);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setPer(Math.max(MIN_PER_VIEW, Math.min(MAX_PER_VIEW, Math.floor(e.contentRect.width / CARD_WIDTH)))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, per] as const;
+}
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -15,7 +33,7 @@ const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)"
 function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolean; onPick: (c: DemoAccount) => void }) {
   const seeds = cards.filter((c) => c.role === "USER");
   const admin = cards.find((c) => c.role === "DEMO_ADMIN");
-  const per = PER_VIEW;
+  const [viewportRef, per] = usePerView();
   const last = Math.max(seeds.length - per, 0);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -57,7 +75,7 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
           <button className="auth__arrow" onClick={() => go(-1)} aria-label="이전 계정">
             ‹
           </button>
-          <div className="auth__viewport">
+          <div className="auth__viewport" ref={viewportRef}>
             <div className="auth__track" style={{ "--per": per, transform: `translateX(-${(at * 100) / per}%)` } as CSSProperties}>
               {seeds.map((c) => (
                 <div className="auth__slide" key={c.id}>

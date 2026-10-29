@@ -52,9 +52,13 @@
   justify-content: center;
   padding: 0 88px;                  /* % 는 모달 전체 폭 기준이라 데스크톱은 px(400px 칸의 22%) */
 }
-.modal__visual .gallery,
-.modal__visual .gallery__stage {
+/* 사진 칸 전체 높이를 갤러리가 쓴다 — 사진(stage)이 남는 높이를, 썸네일 줄(2장 이상일 때)은 아래 제 높이를 */
+.modal__visual .gallery {
   height: 100%;
+  min-height: 300px;
+}
+.modal__visual .gallery__stage {
+  height: auto;
   min-height: 300px;
 }
 .modal__visual .gallery__stage .shoeimage {
@@ -229,7 +233,7 @@
   }
   .modal__visual .gallery,
   .modal__visual .gallery__stage {
-    min-height: 260px;
+    min-height: 240px;
   }
 
   .modal__head {
