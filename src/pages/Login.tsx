@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { AuthError, demoAccounts, demoLogin, login, safeReturnTo, type DemoAccount } from "../auth/session";
+import { AuthError, DEMO_ADMIN_NAME, demoAccounts, demoLogin, login, safeReturnTo, type DemoAccount } from "../auth/session";
 import Field from "../auth/Field";
 import DemoCards from "../components/DemoCards";
 import { useCooldown } from "../auth/useCooldown";
@@ -51,6 +51,8 @@ function Login() {
   };
 
   // 카드를 누르면 바로 로그인 — 비밀번호는 화면에 없다(서버가 체험 풀 안의 id 만 받는다)
+  const admin = cards.find((c) => c.role === "DEMO_ADMIN");
+
   const tryDemo = async (card: DemoAccount) => {
     setBusy(true);
     setError(null);
@@ -84,11 +86,28 @@ function Login() {
         화면으로 이동합니다
       </p>
 
+      {/* 체험 — 일반 회원(시드 계정이 흐른다) · 관리자(데모 관리자 — 실제 관리 화면, 저장 · 삭제만 막힘)를 나눈다(2026-10-30 사용자) */}
       {cards.length > 0 && (
         <section className="auth__demo" aria-label="체험 계정">
-          <h3 className="auth__demotitle">체험 계정으로 둘러보기</h3>
-          <DemoCards cards={cards} busy={busy} onPick={tryDemo} />
-          <p className="auth__demonote">공용 체험 계정이에요. 남긴 기록들(리뷰, 찜 등)이 바뀌거나 사라질 수 있어요</p>
+          {cards.some((c) => c.role === "USER") && (
+            <div className="auth__demogroup">
+              <h3 className="auth__demotitle">일반 회원으로 체험하기</h3>
+              <p className="auth__demonote">누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰 · 찜은 다른 사람이 바꾸거나 지울 수 있어요</p>
+              <DemoCards cards={cards} busy={busy} onPick={tryDemo} />
+            </div>
+          )}
+          {admin && (
+            <div className="auth__demogroup">
+              <h3 className="auth__demotitle">관리자로 체험하기</h3>
+              <p className="auth__demonote">실제 관리자 화면을 그대로 둘러볼 수 있어요. 저장 · 삭제만 막혀 있어요</p>
+              <div className="auth__admincard">
+                <button className="auth__card is-admin" onClick={() => tryDemo(admin)} disabled={busy}>
+                  <strong>{DEMO_ADMIN_NAME}</strong>
+                  <span>등록 · 관리 화면 보기</span>
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       )}
     </div>

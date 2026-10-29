@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { logout } from "../auth/session";
+import { displayName, logout } from "../auth/session";
 import { loginPath } from "../auth/session";
 import "./Header.css";
 
@@ -9,10 +9,11 @@ import "./Header.css";
 function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  // 닉네임 메뉴는 연 경로에서만 열려 있다 — 다른 화면으로 가면 저절로 닫힌다
+  // 닉네임 메뉴 — 다른 화면으로 가면 저절로 닫힌다
   const [menuAt, setMenuAt] = useState<string | null>(null);
-  const menu = menuAt === location.pathname;
-  const setMenu = (v: boolean) => setMenuAt(v ? location.pathname : null);
+  // 연 그 이동(location.key)에서만 열려 있다 — 경로(pathname)로 두면 마이페이지 → 홈처럼 같은 경로로 돌아왔을 때 다시 열린다(2026-10-30)
+  const menu = menuAt === location.key;
+  const setMenu = (v: boolean) => setMenuAt(v ? location.key : null);
   const navigate = useNavigate();
   const { status, user, canViewAdmin, setNotice } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -78,7 +79,7 @@ function Header() {
           {user && (
             <div className="header__user" ref={menuRef}>
               <button className="header__link header__link--auth header__userbtn" onClick={() => setMenu(!menu)} aria-haspopup="menu" aria-expanded={menu}>
-                <span className="header__nick">{user.nickname}</span>
+                <span className="header__nick">{displayName(user)}</span>
                 <span className="header__caret" aria-hidden="true" />
               </button>
               {menu && (
@@ -120,7 +121,7 @@ function Header() {
           )}
           {user && (
             <>
-              <p className="header__drawernick">{user.nickname}님</p>
+              <p className="header__drawernick">{displayName(user)}{user.role === "DEMO_ADMIN" ? "" : "님"}</p>
               {drawerLink("/account", "마이페이지")}
               <button className="header__drawerlink header__drawerbtn" onClick={signOut}>
                 로그아웃

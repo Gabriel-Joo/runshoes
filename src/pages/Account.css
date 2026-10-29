@@ -251,7 +251,7 @@
 .mypage__cards {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 230px));   /* 가로만 조금 넓게(2026-10-30 — 세로로 긴 느낌). 세로는 사진 높이를 고정해 그대로 */
   gap: 16px;
 }
 
@@ -273,7 +273,7 @@
 
 .mypage__cardimg {
   display: block;
-  aspect-ratio: 7 / 5;
+  height: 111px;              /* 폭이 넓어져도 세로 길이는 그대로(예전 183px 카드의 7:5 사진 높이) */
   margin-bottom: 8px;
   overflow: hidden;
 }

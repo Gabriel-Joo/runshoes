@@ -70,6 +70,41 @@
   border-color: var(--danger);
 }
 
+/* 비밀번호 보기 — 칸 오른쪽 끝의 눈 단추(칸 안에 겹친다) */
+.auth__pw {
+  position: relative;
+  display: flex;
+}
+
+.auth__pw input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 46px;
+}
+
+.auth__field > .auth__pw {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.auth__pwtoggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-weak);
+}
+
+.auth__pwtoggle:hover,
+.auth__pwtoggle[aria-pressed="true"] {
+  color: var(--text-strong);
+}
+
 .auth__msg {
   font-size: 12px;
   line-height: 1.5;
@@ -138,7 +173,7 @@
 
 /* 시드 계정 — 2줄로 천천히 흐른다(DemoCards). 한 열 = 카드 154 + 사이 8 = 162(DemoCards COLUMN 과 같아야 끊김 없이 돈다) */
 .auth__carousel {
-  margin-top: 14px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,39 +209,15 @@
   overflow: hidden;
 }
 
-/* 화살표 — 꺾쇠는 SVG(Chevron)라 네모 한가운데 */
-.auth__arrow {
-  flex: 0 0 28px;
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text-mid);
-}
-
-.auth__arrow:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.auth__arrow:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-/* 휴대폰 — 두 열 + 화살표가 들어가지 않는다. 화살표는 빼고 끌어서 넘긴다 */
-@media (max-width: 480px) {
-  .auth__arrow {
-    display: none;
-  }
+/* 일반 회원 · 관리자 체험 묶음 — 사이에 구분선 */
+.auth__demogroup + .auth__demogroup {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-light);
 }
 
 .auth__admincard {
-  margin: 10px auto 0;
+  margin: 16px auto 0;
   width: calc(2 * 154px + 8px);   /* 카드 두 장 폭(DemoCards COLUMN) */
   max-width: 100%;
 }
@@ -256,7 +267,7 @@
 
 .auth__demonote {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 6px;
   font-size: 12px;
   color: var(--text-weak);
 }
