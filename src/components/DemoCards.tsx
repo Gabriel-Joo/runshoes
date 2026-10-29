@@ -1,47 +1,49 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import type { DemoAccount } from "../auth/session";
-import Chevron from "./Chevron";
 
 /**
- * 로그인 화면의 체험 카드(2026-10-30 사용자) — 시드 계정 전부가 2줄로 아주 천천히 한쪽으로 흐른다(구름처럼). 한 번에 4열 × 2줄 = 8장.
- * 마우스를 올리면 멈추고, 끌어서 넘기고, 화살표로 한 열씩 옮긴다. 끝없이 이어지게 목록을 두 번 이어 붙인다(뒤의 것은 화면 읽기 · 탭 순서에서 뺀다).
- * 데모 관리자 카드는 흐름 밖에 늘 보인다. 움직임 줄이기 설정이면 흐르지 않는다(화살표 · 끌기는 된다)
+ * 로그인 화면의 체험 카드(2026-10-30 사용자) — 시드 계정 전부가 2줄로 천천히 한쪽으로 흐른다(구름처럼). 한 번에 4열 × 2줄 = 8장.
+ * 마우스를 올리면 멈추고, 끌면 손을 따라오고, 놓으면 관성으로 미끄러지다 멈춘 뒤 다시 흐른다(화살표는 없다).
+ * 끝없이 이어지게 목록을 두 번 이어 붙인다(뒤의 것은 화면 읽기 · 탭 순서에서 뺀다). 움직임 줄이기 설정이면 스스로 흐르지 않는다(끌기는 된다)
  */
-const COLUMN = 162;          // 카드 한 열의 폭(카드 154 + 사이 8) — 카드 폭 · 글씨는 그대로(사용자 "지금이 좋다")
+const COLUMN = 162;          // 카드 한 열의 폭(카드 154 + 사이 8) — 카드 폭 · 글씨는 그대로
 const MAX_COLUMNS = 4;
 const MIN_COLUMNS = 2;       // 휴대폰
-const SPEED = 9;             // 초당 px — 162px 한 열이 18초쯤
-const NUDGE_MS = 450;        // 화살표로 한 열 옮기는 시간
+const SPEED = 13;            // 스스로 흐르는 속도(초당 px) — 9 는 느리다(2026-10-30 사용자 "12~14")
+const FRICTION = 3.2;        // 관성이 줄어드는 빠르기(1/초) — 클수록 빨리 멈춘다
+const EASE_BACK = 1.5;       // 멈췄다 다시 흐를 때 속도가 붙는 빠르기(1/초)
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolean; onPick: (c: DemoAccount) => void }) {
   const seeds = cards.filter((c) => c.role === "USER");
-  const admin = cards.find((c) => c.role === "DEMO_ADMIN");
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(MAX_COLUMNS);
-  const offset = useRef(0);                         // 흐른 거리(px) — 한 바퀴(loop)를 넘으면 0 으로 돌아온다
-  const paused = useRef(false);
-  const nudge = useRef<{ from: number; to: number; start: number } | null>(null);
-  const drag = useRef({ active: false, startX: 0, startOffset: 0, moved: 0 });
+  const offset = useRef(0);              // 흐른 거리(px) — 한 바퀴(loop)로 감싼다
+  const flow = useRef(0);                // 지금 스스로 흐르는 속도 — 멈췄다 다시 흐를 때 0 → SPEED 로 붙는다
+  const fling = useRef(0);               // 놓은 뒤 남은 관성(초당 px)
+  const hover = useRef(false);
+  const drag = useRef({ active: false, startX: 0, startOffset: 0, moved: 0, samples: [] as { t: number; x: number }[] });
   const [dragging, setDragging] = useState(false);
   const loop = Math.ceil(seeds.length / 2) * COLUMN;  // 2줄이라 열 수 = 사람 수 ÷ 2
   const flows = seeds.length > columns * 2;           // 8장보다 적으면 흐를 것이 없다
+
+  const paint = () => {
+    offset.current = ((offset.current % loop) + loop) % loop;
+    if (trackRef.current) trackRef.current.style.transform = `translate3d(${-offset.current}px, 0, 0)`;
+  };
 
   // 보이는 열 수 — 바깥 칸 폭에 들어가는 만큼(4열까지)
   useEffect(() => {
     const el = outerRef.current?.parentElement;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => {
-      const arrows = e.contentRect.width > 480 ? 76 : 0;   // 화살표 둘 + 사이(휴대폰은 화살표를 감춘다 — Auth.css)
-      setColumns(Math.max(MIN_COLUMNS, Math.min(MAX_COLUMNS, Math.floor((e.contentRect.width - arrows + 8) / COLUMN))));
-    });
+    const ro = new ResizeObserver(([e]) => setColumns(Math.max(MIN_COLUMNS, Math.min(MAX_COLUMNS, Math.floor((e.contentRect.width + 8) / COLUMN)))));
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
-  // 흐름 — 화면을 그릴 때마다 조금씩(transform 만 바꾼다, React 다시 그리기 없음)
+  // 흐름 · 관성 — 화면을 그릴 때마다(transform 만 바꾼다, React 다시 그리기 없음)
   useEffect(() => {
     if (!flows) return;
     let raf = 0, last = performance.now();
@@ -49,32 +51,33 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
     const tick = (now: number) => {
       const dt = Math.min(now - last, 64) / 1000;
       last = now;
-      const n = nudge.current;
-      if (n) {
-        const t = Math.min((now - n.start) / NUDGE_MS, 1);
-        offset.current = n.from + (n.to - n.from) * (1 - (1 - t) ** 3);   // 끝에서 천천히
-        if (t === 1) nudge.current = null;
-      } else if (!paused.current && !drag.current.active && !still) {
-        offset.current += SPEED * dt;
+      if (!drag.current.active) {
+        // 관성 — 지수로 줄어든다
+        if (fling.current !== 0) {
+          offset.current += fling.current * dt;
+          fling.current *= Math.exp(-FRICTION * dt);
+          if (Math.abs(fling.current) < 4) fling.current = 0;
+        }
+        // 스스로 흐름 — 마우스가 올라가 있거나 관성이 남았으면 쉬고, 다시 흐를 때는 속도가 천천히 붙는다
+        const target = hover.current || still || fling.current !== 0 ? 0 : SPEED;
+        flow.current += (target - flow.current) * (1 - Math.exp(-EASE_BACK * dt));
+        offset.current += flow.current * dt;
+        paint();
       }
-      offset.current = ((offset.current % loop) + loop) % loop;
-      if (trackRef.current) trackRef.current.style.transform = `translateX(${-offset.current}px)`;
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
+    // paint 는 loop 만 본다
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flows, loop]);
 
-  const step = (d: number) => {
-    const from = offset.current;
-    nudge.current = { from, to: from + d * COLUMN, start: performance.now() };
-  };
-
-  // 끌어서 넘기기 — 5px 넘게 끌었으면 손을 뗄 때의 클릭(로그인)은 먹는다
+  // 끌기 — 손을 그대로 따라오고(이벤트에서 바로 그린다), 놓으면 마지막 0.1초의 속도로 미끄러진다. 5px 넘게 끌었으면 그 클릭(로그인)은 먹는다
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (!flows) return;
-    drag.current = { active: true, startX: e.clientX, startOffset: offset.current, moved: 0 };
-    nudge.current = null;
+    drag.current = { active: true, startX: e.clientX, startOffset: offset.current, moved: 0, samples: [{ t: e.timeStamp, x: e.clientX }] };
+    fling.current = 0;
+    flow.current = 0;
     setDragging(true);
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -83,59 +86,58 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
     const dx = e.clientX - d.startX;
     d.moved = Math.max(d.moved, Math.abs(dx));
     if (d.moved > 5 && !e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.setPointerCapture(e.pointerId);
+    d.samples.push({ t: e.timeStamp, x: e.clientX });
+    while (d.samples.length > 2 && e.timeStamp - d.samples[0].t > 100) d.samples.shift();
     offset.current = d.startOffset - dx;
+    paint();
   };
-  const onPointerUp = () => {
-    drag.current.active = false;
+  const onPointerUp = (e?: PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d.active) return;
+    d.active = false;
     setDragging(false);
+    const first = d.samples[0], lastS = d.samples[d.samples.length - 1];
+    const ms = (e?.timeStamp ?? lastS.t) - first.t;
+    if (d.moved > 5 && ms > 0 && ms < 200) fling.current = Math.max(-3000, Math.min(3000, (-(lastS.x - first.x) / ms) * 1000));
   };
 
   const card = (c: DemoAccount, copy = false) => (
     <button
       key={`${copy ? "b" : "a"}${c.id}`}
-      className={`auth__card ${c.role === "DEMO_ADMIN" ? "is-admin" : ""}`}
+      className="auth__card"
       onClick={() => drag.current.moved <= 5 && onPick(c)}
       disabled={busy}
       tabIndex={copy ? -1 : undefined}
       aria-hidden={copy || undefined}
     >
       <strong>{c.nickname}</strong>
-      <span>{c.role === "DEMO_ADMIN" ? "관리 화면 · 보기 전용" : `리뷰 ${c.reviewCount} · 찜 ${c.likeCount}`}</span>
+      <span>{`리뷰 ${c.reviewCount} · 찜 ${c.likeCount}`}</span>
     </button>
   );
 
+  if (seeds.length === 0) return null;
   return (
-    <>
-      {seeds.length > 0 && (
-        <div className="auth__carousel" role="region" aria-roledescription="carousel" aria-label="체험 사용자 계정">
-          <button className="auth__arrow" onClick={() => step(-1)} aria-label="이전 계정" disabled={!flows}>
-            <Chevron dir="left" />
-          </button>
-          <div
-            className={`auth__viewport ${dragging ? "is-dragging" : ""}`}
-            ref={outerRef}
-            style={{ width: columns * COLUMN - 8, maxWidth: "100%" }}
-            onMouseEnter={() => (paused.current = true)}
-            onMouseLeave={() => { paused.current = false; onPointerUp(); }}
-            onFocus={() => (paused.current = true)}
-            onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && (paused.current = false)}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
-          >
-            <div className="auth__track" ref={trackRef}>
-              {seeds.map((c) => card(c))}
-              {flows && seeds.map((c) => card(c, true))}
-            </div>
-          </div>
-          <button className="auth__arrow" onClick={() => step(1)} aria-label="다음 계정" disabled={!flows}>
-            <Chevron dir="right" />
-          </button>
+    <div className="auth__carousel" role="region" aria-roledescription="carousel" aria-label="체험 사용자 계정">
+      <div
+        className={`auth__viewport ${dragging ? "is-dragging" : ""}`}
+        ref={outerRef}
+        style={{ width: columns * COLUMN - 8, maxWidth: "100%" }}
+        onMouseEnter={() => (hover.current = true)}
+        onMouseLeave={() => (hover.current = false)}
+        onFocus={() => (hover.current = true)}
+        onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && (hover.current = false)}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onLostPointerCapture={onPointerUp}
+      >
+        <div className="auth__track" ref={trackRef}>
+          {seeds.map((c) => card(c))}
+          {flows && seeds.map((c) => card(c, true))}
         </div>
-      )}
-      {admin && <div className="auth__admincard">{card(admin)}</div>}
-    </>
+      </div>
+    </div>
   );
 }
 
