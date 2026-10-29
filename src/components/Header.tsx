@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { displayName, logout } from "../auth/session";
+import { logout } from "../auth/session";
 import { loginPath } from "../auth/session";
 import "./Header.css";
 
@@ -79,7 +79,7 @@ function Header() {
           {user && (
             <div className="header__user" ref={menuRef}>
               <button className="header__link header__link--auth header__userbtn" onClick={() => setMenu(!menu)} aria-haspopup="menu" aria-expanded={menu}>
-                <span className="header__nick">{displayName(user)}</span>
+                <span className="header__nick">{user.nickname}</span>
                 <span className="header__caret" aria-hidden="true" />
               </button>
               {menu && (
@@ -121,7 +121,7 @@ function Header() {
           )}
           {user && (
             <>
-              <p className="header__drawernick">{displayName(user)}{user.role === "DEMO_ADMIN" ? "" : "님"}</p>
+              <p className="header__drawernick">{user.nickname}님</p>
               {drawerLink("/account", "마이페이지")}
               <button className="header__drawerlink header__drawerbtn" onClick={signOut}>
                 로그아웃

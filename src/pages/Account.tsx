@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { AuthError, apiFetch, displayName, logout, setUser, withdraw } from "../auth/session";
+import { AuthError, apiFetch, logout, setUser, withdraw } from "../auth/session";
 import { nicknameError, passwordError } from "../auth/rules";
 import { demoBlocked } from "../auth/demoAdmin";
 import Field from "../auth/Field";
@@ -74,7 +74,7 @@ function Account() {
 
       <div className="mypage__body">
         <p className="mypage__summary">
-          <strong>{displayName(user)}</strong>{user.role === "DEMO_ADMIN" ? "" : "님"} · 리뷰 <strong>{reviews?.length ?? "–"}개</strong> · 찜 <strong>{liked?.length ?? "–"}개</strong>
+          <strong>{user.nickname}</strong>님 · 리뷰 <strong>{reviews?.length ?? "–"}개</strong> · 찜 <strong>{liked?.length ?? "–"}개</strong>
           {" "}· 도움이 돼요 <strong>{helpful?.length ?? "–"}개</strong>
           {joined && <> · 가입일 {joined.slice(0, 10).replace(/-/g, ".")}</>}
         </p>
@@ -231,7 +231,7 @@ function Profile() {
       <section className="auth__section">
         <h4 className="auth__subtitle">닉네임</h4>
         <form className="auth__form" onSubmit={saveNickname} noValidate>
-          <Field id="account-nickname" label={`새 닉네임 (지금: ${displayName(user)})`} autoComplete="nickname" value={nickname}
+          <Field id="account-nickname" label={`새 닉네임 (지금: ${user.nickname})`} autoComplete="nickname" value={nickname}
             onChange={(e) => { setNickname(e.target.value); setNickErr(null); }} error={nickErr} hint="2~12자, 한글 · 영문 · 숫자. 지난 리뷰의 이름도 같이 바뀌어요" />
           <button className="auth__submit" type="submit" disabled={nickBusy || !nickname.trim()}>
             {nickBusy ? "저장 중…" : "닉네임 저장"}
