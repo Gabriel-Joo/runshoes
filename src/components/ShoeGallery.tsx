@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { asset } from "../api";
 import ShoeImage from "./ShoeImage";
+import Chevron from "./Chevron";
 import "./ShoeGallery.css";
 
 /**
@@ -65,10 +66,10 @@ function ShoeGallery({ image, images, alt }: ShoeGalleryProps) {
         {many && (
           <>
             <button className="gallery__arrow gallery__arrow--prev" onClick={prev} aria-label="이전 이미지">
-              ‹
+              <Chevron dir="left" />
             </button>
             <button className="gallery__arrow gallery__arrow--next" onClick={next} aria-label="다음 이미지">
-              ›
+              <Chevron dir="right" />
             </button>
           </>
         )}

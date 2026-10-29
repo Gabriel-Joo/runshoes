@@ -310,6 +310,8 @@ function ShoeForm() {
 
   const setImageAt = (i: number, v: string) => setImages((list) => list.map((x, j) => (j === i ? v : x)));
   const removeImageAt = (i: number) => setImages((list) => (list.length === 1 ? [""] : list.filter((_, j) => j !== i)));
+  // 대표로 지정 — 그 칸과 1번 칸의 자리를 바꾼다(2026-10-30 사용자)
+  const makeMain = (i: number) => setImages((list) => list.map((x, j) => (j === 0 ? list[i] : j === i ? list[0] : x)));
   const legacyPrice = priceSource && !PRICE_SOURCES.includes(priceSource);
 
   return (
@@ -473,6 +475,11 @@ function ShoeForm() {
               <div className="form__imgrow">
                 <input aria-label={`이미지 ${i + 1}${i === 0 ? " (대표)" : ""}`} value={u} onChange={(e) => setImageAt(i, e.target.value)}
                   placeholder={i === 0 ? "https://images.stockx.com/… (대표)" : "https://…"} spellCheck={false} />
+                {i > 0 && (
+                  <button type="button" className="form__imgbtn" onClick={() => makeMain(i)} disabled={!u.trim()}>
+                    대표로 지정
+                  </button>
+                )}
                 <button type="button" className="form__imgbtn is-icon" onClick={() => removeImageAt(i)} aria-label={`이미지 ${i + 1} 빼기`}>
                   −
                 </button>

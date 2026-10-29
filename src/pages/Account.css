@@ -616,3 +616,41 @@
   white-space: pre-wrap;
   word-break: keep-all;
 }
+
+/* 행택 느낌(2026-10-30 사용자) — 위쪽 가운데 끈 구멍 하나 · 아래쪽 작은 바코드. 레이아웃 · 모서리(각진 그대로)는 바꾸지 않는다 */
+.mypage__card {
+  padding-top: 28px;
+}
+
+.mypage__card::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--bg-light);              /* 뚫린 자리 — 페이지 바탕색 */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+}
+
+.mypage__tagcode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-top: 8px;
+}
+
+.barcode {
+  width: 96px;
+  fill: var(--text-strong);
+}
+
+.mypage__tagcode small {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-weak);
+}

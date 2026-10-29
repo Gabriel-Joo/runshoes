@@ -7,6 +7,7 @@ import { demoBlocked } from "../auth/demoAdmin";
 import Field from "../auth/Field";
 import ShoeImage from "../components/ShoeImage";
 import ConfirmModal from "../components/ConfirmModal";
+import Barcode from "../components/Barcode";
 import ReviewCounter from "../components/ReviewCounter";
 import { clampReview, contentError, reviewError, REVIEW_MAX } from "../components/reviewRules";
 import { text, withUnit } from "../utils/display";
@@ -67,7 +68,7 @@ function Account() {
         <p className="mypage__navgroup">내 활동</p>
         {nav("reviews", "내 리뷰", true)}
         {nav("likes", "찜 목록", true)}
-        {nav("helpful", "도움이 돼요 누른 리뷰", true)}
+        {nav("helpful", "도움받은 리뷰", true)}
         {nav("withdraw", "회원 탈퇴")}
       </nav>
 
@@ -322,7 +323,7 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
     <div className="mypage__panel">
       <div className="mypage__titlebar">
         <h3 className="mypage__title">내 리뷰</h3>
-        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="선택 삭제" onRun={() => setBulkOpen(true)} />}
+        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="리뷰 삭제" onRun={() => setBulkOpen(true)} />}
       </div>
       {sorted.length === 0 ? (
         <p className="mypage__empty">
@@ -420,6 +421,9 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
   );
 }
 
+/** 찜 카드 바코드 값 — RS + id 네 자리(예: RS0002) */
+const tagCode = (id: number) => `RS${String(id).padStart(4, "0")}`;
+
 /**
  * 찜 목록 — 카드. 홈 카드와 같은 정보(중량 · 드롭 · 발볼 · 안정성 · 평점 · 리뷰 수)를 같은 순서로 — 나란히 놓고 비교한다(2026-10-30 사용자).
  * 홈의 찜 토글은 그대로 두고 여기서는 찜 해제만. 여러 개 골라 한꺼번에 해제
@@ -460,7 +464,7 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
             </label>
             <span className="mypage__bulkcount">{sel.picked.size > 0 ? `${sel.picked.size}개 선택됨` : ""}</span>
             <button className="mypage__btn is-danger is-strong" onClick={() => setBulkOpen(true)} disabled={sel.picked.size === 0}>
-              선택 해제
+              찜 해제
             </button>
           </div>
         )}
@@ -493,6 +497,11 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
               <button className="mypage__btn" onClick={() => unlike(s)}>
                 찜 해제
               </button>
+              {/* 행택 — 아래쪽 작은 바코드. 값은 영문 · 숫자만(한글 모델명은 바코드가 안 된다 — id 로) */}
+              <span className="mypage__tagcode">
+                <Barcode value={tagCode(s.id)} />
+                <small>{tagCode(s.id)}</small>
+              </span>
             </li>
           ))}
         </ul>
@@ -510,7 +519,7 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
   );
 }
 
-/** 도움이 돼요 누른 리뷰 — 내 리뷰와 같은 표(작성자 칸이 더 있다). [취소]는 내 "도움이 돼요"를 거둔다. 여러 개 골라 한꺼번에 취소 */
+/** 도움받은 리뷰(내가 "도움이 돼요"를 누른 리뷰, 2026-10-30 이름) — 내 리뷰와 같은 표(작성자 칸이 더 있다). [취소]는 내 "도움이 돼요"를 거둔다. 여러 개 골라 한꺼번에 취소 */
 function MyHelpful({ reviews, onChange }: { reviews: Review[] | null; onChange: () => void }) {
   const { setNotice } = useAuth();
   const shoes = useShoesOf(reviews);
@@ -542,8 +551,8 @@ function MyHelpful({ reviews, onChange }: { reviews: Review[] | null; onChange: 
   return (
     <div className="mypage__panel">
       <div className="mypage__titlebar">
-        <h3 className="mypage__title">도움이 돼요 누른 리뷰</h3>
-        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="선택 취소" onRun={() => setBulkOpen(true)} />}
+        <h3 className="mypage__title">도움받은 리뷰</h3>
+        {sorted.length > 0 && <BulkBar count={sel.picked.size} label="도움 취소" onRun={() => setBulkOpen(true)} />}
       </div>
       {sorted.length === 0 ? (
         <p className="mypage__empty">

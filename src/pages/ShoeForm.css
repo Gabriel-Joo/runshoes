@@ -366,6 +366,11 @@
   color: var(--accent);
 }
 
+.form__imgbtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .form__imgbtn.is-danger:hover {
   border-color: var(--danger-soft);
   color: var(--danger);
