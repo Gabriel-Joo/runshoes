@@ -1,0 +1,59 @@
+{
+  "id": "X71",
+  "plan": null,
+  "name": "탈퇴 전 리뷰 → 201",
+  "contract": true,
+  "expect": 201,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{w}}"
+    },
+    "body": {
+      "shoeId": "{{x6:num}}",
+      "rating": 3,
+      "content": "탈퇴하기 전에 남기는 리뷰"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/107",
+      "access-control-expose-headers": "Location",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 107,
+      "shoeId": 21,
+      "userId": 33,
+      "author": "탈퇴시험",
+      "rating": 3,
+      "content": "탈퇴하기 전에 남기는 리뷰",
+      "createdAt": "2026-10-29T18:57:35.484Z",
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

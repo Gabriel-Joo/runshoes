@@ -33,6 +33,8 @@ app:
     cookie-secure: ${AUTH_COOKIE_SECURE:true}     # 로컬 http 에서만 false
     seed-user-password: ${SEED_USER_PASSWORD:}
     admin-password: ${ADMIN_PASSWORD:}
+    # 체험 카드(시드 3 + 데모 관리자, docs/ADMIN_DEMO_DESIGN.md 8.3) — 기본 꺼짐. 끄면 GET /api/auth/demo-accounts · POST /api/auth/demo 가 404
+    demo-login-enabled: ${DEMO_LOGIN_ENABLED:false}
   # 로그인 시도 제한 · 활동 로그(docs/AUTH_RATELIMIT_DESIGN.md)
   ratelimit:
     login-account: 5        # 같은 계정(이메일) 15분에 실패 5번 → 마지막 실패에서 15분
@@ -40,6 +42,7 @@ app:
     login-window: 15m
     signup-ip: 10           # 같은 IP 1시간에 가입 10건
     signup-window: 1h
+    demo-ip: 30             # 같은 IP 15분(login-window)에 체험 로그인 30번
   activity:
     retention-auth: 90d     # auth.* · user.*
     retention-other: 180d   # review.* · like.* · review_like.* · shoe.* · compare.*

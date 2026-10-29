@@ -147,3 +147,274 @@
     flex: 1;
   }
 }
+
+/* ---- 관리 폼 보강(docs/ADMIN_DEMO_DESIGN.md 2~5절, 2026-10-30) ---- */
+
+/* 드롭다운 화살표 — 가장자리에서 띄운다(설계 4절) */
+.form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23666' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.form select:disabled {
+  cursor: default;
+  color: var(--text-weak);
+  background-color: var(--bg-light);
+}
+
+/* 기존 값에만 보이는 출처(DB · SX · 다나와) — 회색 */
+.form select.is-legacy {
+  color: var(--text-weak);
+}
+
+.form__demo {
+  margin-left: 12px;
+  padding: 3px 9px;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.form__section {
+  margin-top: 36px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.form__section + .form__grid,
+.form__section + .form__gen,
+.form__section + .form__rows {
+  margin-top: 16px;
+}
+
+/* 세대 — 한 줄 */
+.form__gen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px auto 130px;
+  align-items: end;
+  gap: 16px 20px;
+}
+
+.form__gen .form__check {
+  height: 40px;
+}
+
+/* 스펙 — 칸 이름 · 값 · 출처 */
+.form__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) minmax(0, 260px);
+  align-items: start;
+  gap: 12px;
+}
+
+.form__rowlabel {
+  padding-top: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.form__rowvalue,
+.form__source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.form__source {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form__rows input,
+.form__rows select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  background-color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-strong);
+}
+
+.form__rows select {
+  padding-right: 36px;
+}
+
+.form__rows input:focus,
+.form__rows select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* 숫자 + 단위(칸 안 접미사) */
+.form__unit {
+  position: relative;
+  display: inline-flex;
+}
+
+.form__unit input {
+  width: 120px;
+  padding-right: 40px;
+  text-align: right;
+}
+
+.form__unit em {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-style: normal;
+  font-size: 12px;
+  color: var(--text-weak);
+  pointer-events: none;
+}
+
+.form__text {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.form__size {
+  width: 120px;
+}
+
+.form__date {
+  width: 150px;
+}
+
+.form__url {
+  width: 100%;
+  font-size: 13px !important;
+}
+
+.form__hint,
+.form__exempt {
+  font-size: 12px;
+  color: var(--text-weak);
+}
+
+.form__exempt {
+  display: inline-block;
+  padding-top: 11px;
+}
+
+.form__need {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.form__error {
+  margin-top: 24px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  background: oklch(0.97 0.02 25);
+  border-left: 3px solid var(--danger);
+}
+
+/* 이미지 썸네일(설계 5절) — 64px, 못 불러오면 빨간 테두리 */
+.form__withthumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form__withthumb input {
+  flex: 1;
+  min-width: 0;
+}
+
+.form__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.form__thumb {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  overflow: hidden;
+}
+
+.form__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.form__thumb.is-empty {
+  background: var(--bg-light);
+}
+
+.form__thumb.is-failed {
+  border: 1px solid var(--danger);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--danger);
+  padding: 4px;
+}
+
+.form__save:disabled {
+  opacity: 0.6;
+}
+
+@media (max-width: 767px) {
+  .form__row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .form__rowlabel,
+  .form__exempt {
+    padding-top: 0;
+  }
+  .form__gen {
+    grid-template-columns: 1fr 1fr;
+  }
+  .form__field--linekey {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 긴 주소가 칸을 밀어 가로로 넘치지 않게 */
+.form__field,
+.form__rowvalue,
+.form__rowsource {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .form__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

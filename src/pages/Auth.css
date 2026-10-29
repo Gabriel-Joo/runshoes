@@ -112,9 +112,70 @@
 }
 
 .auth__alt a {
-  margin-left: 6px;
+  margin: 0 4px 0 6px;
   font-weight: 700;
   color: var(--accent);
+}
+
+/* 체험 카드(docs/ADMIN_DEMO_DESIGN.md 8.4) */
+.auth__demo {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.auth__demotitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.auth__cards {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.auth__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.auth__card strong {
+  font-size: 14px;
+  color: var(--text-strong);
+}
+
+.auth__card span {
+  font-size: 12px;
+  color: var(--text-weak);
+}
+
+.auth__card:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.auth__card.is-admin {
+  border-style: dashed;
+}
+
+.auth__card:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.auth__demonote {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-weak);
 }
 
 @media (max-width: 767px) {

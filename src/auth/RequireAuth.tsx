@@ -8,9 +8,9 @@ import { loginPath } from "./session";
  * 실제로 막는 것은 서버다(쓰기 401 · 403). 가드는 화면이 헛돌지 않게 할 뿐이다.
  */
 function RequireAuth({ admin = false, children }: { admin?: boolean; children: ReactNode }) {
-  const { status, isAdmin, setNotice } = useAuth();
+  const { status, canViewAdmin, setNotice } = useAuth();
   const location = useLocation();
-  const denied = status === "user" && admin && !isAdmin;
+  const denied = status === "user" && admin && !canViewAdmin;   // 데모 관리자도 관리 화면은 본다(저장 · 삭제는 서버 403)
 
   useEffect(() => {
     if (denied) setNotice("관리자만 볼 수 있어요.");

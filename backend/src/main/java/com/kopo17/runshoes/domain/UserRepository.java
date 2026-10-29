@@ -3,6 +3,7 @@ package com.kopo17.runshoes.domain;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -14,4 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByEmail(String email);
 
 	List<User> findByPasswordHashIsNull();
+
+	/** 체험 카드(GET /api/auth/demo-accounts) — 시드 계정(runner01~30@runshoes.test, V3)에서 무작위. 탈퇴 · 실제 가입자 · 관리자는 빠진다 */
+	@Query(value = "select * from users where role = 'USER' and deleted_at is null and email regexp '^runner[0-9]{2}@runshoes[.]test$' order by rand() limit :n", nativeQuery = true)
+	List<User> randomSeedUsers(int n);
+
+	Optional<User> findFirstByRoleAndDeletedAtIsNull(String role);
 }

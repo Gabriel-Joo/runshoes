@@ -9,6 +9,10 @@ export interface AuthState {
   status: "loading" | "anonymous" | "user";
   user: User | null;
   isAdmin: boolean;
+  /** 데모 관리자(V7) — 관리 화면은 보이고, 저장 · 삭제 · 리뷰 · 찜은 서버가 403 */
+  isDemoAdmin: boolean;
+  /** 관리 화면을 볼 수 있는가 — admin 또는 데모 관리자 */
+  canViewAdmin: boolean;
   notice: string | null;
   setNotice: (n: string | null) => void;
 }

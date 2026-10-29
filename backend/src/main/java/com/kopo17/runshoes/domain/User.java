@@ -8,13 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
-/** users(V3) — 이메일은 소문자, 비밀번호는 BCrypt. password_hash 가 NULL 이면 로그인할 수 없다(V3 가 넣은 계정은 기동 때 채운다) */
+/** users(V3) — 이메일은 소문자, 비밀번호는 BCrypt. password_hash 가 NULL 이면 로그인할 수 없다(V3 가 넣은 계정은 기동 때 채운다). BCrypt 가 아닌 표식('!demo' · '!withdrawn')도 로그인할 수 없다 */
 @Entity
 @Table(name = "users")
 public class User {
 
 	public static final String USER = "USER";
 	public static final String ADMIN = "ADMIN";
+	/** 데모 관리자(V7) — 관리 화면을 보기만. 쓰기 · 리뷰 · 찜은 403(api/Viewer) */
+	public static final String DEMO_ADMIN = "DEMO_ADMIN";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,10 @@ public class User {
 	@Column(name = "last_login_at")
 	private LocalDateTime lastLoginAt;
 
+	/** 탈퇴한 때(V9) — 있으면 로그인 · refresh · /api/me 가 막힌다(AuthService) */
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
+
 	public Long getId() { return id; }
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
@@ -47,10 +53,14 @@ public class User {
 	public String getRole() { return role; }
 	public void setRole(String role) { this.role = role; }
 	public boolean isAdmin() { return ADMIN.equals(role); }
+	public boolean isDemoAdmin() { return DEMO_ADMIN.equals(role); }
 	public LocalDateTime getCreatedAt() { return createdAt; }
 	public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 	public LocalDateTime getUpdatedAt() { return updatedAt; }
 	public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 	public LocalDateTime getLastLoginAt() { return lastLoginAt; }
 	public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
+	public LocalDateTime getDeletedAt() { return deletedAt; }
+	public void setDeletedAt(LocalDateTime deletedAt) { this.deletedAt = deletedAt; }
+	public boolean isWithdrawn() { return deletedAt != null; }
 }

@@ -114,6 +114,7 @@ for (const c of cands) {
   for (const [k, x] of Object.entries(v)) {
     const y = got?.[k], u = got?.sources?.[k];
     const d0 = DEC.rows[id]?.[k];  // 사람의 판단이 수집값보다 먼저다(수집값이 없어도, DB 값이 비어 있어도 적용 — 클라우드 10 스택)
+    if (d0?.action === 'clear') { v[k] = null; continue; }  // 사람이 비웠다(관리 화면 수정 가져오기 포함, 2026-10-29)
     if (x === null && d0?.action !== 'use_source') continue;
     if (d0?.action === 'keep_db') { sources[k] = `${dbsrc} (사용자 확인: ${d0.note})`; continue; }
     if (d0?.action === 'use_source') { v[k] = d0.value ?? y; sources[k] = d0.source ?? u; if (k === 'weight_g' && /M9/.test(d0.note)) basisM9.add(id); continue; }
@@ -200,12 +201,15 @@ const SRC_DB = { weight: 'official_weight_g', drop: 'official_drop_mm', stackHei
 //   어느 쪽을 화면에 쓸지는 비교 페이지에서 정한다
 function toDb(row) {
   const { weight, weight_basis, drop, stackHeight, sources, width, ...rest } = row;
-  const mw = DEC.rows[`${row.line_key}#${row.generation}`]?.measured_weight_g;
+  //   관리 화면에서 고친 실측 · 스펙 기준 사이즈(pull-admin.mjs — measured_heel_mm · measured_drop_mm · official_spec_size, clear 는 비운다)도 여기서
+  const dr = DEC.rows[row.source_key.replace(/:(?=[^:]*$)/, '#')] ?? {};  // 판단은 처음 후보 목록의 키로 적는다(라인키 · 세대를 바꾼 행도)
+  const mw = dr.measured_weight_g?.action === 'clear' ? null : dr.measured_weight_g;
+  const one = (k) => (dr[k]?.action === 'use_source' ? dr[k].value : null);
   const spec = {
     official_weight_g: weight, official_weight_size: weight === null || !weight_basis || weight_basis === 'unknown' ? null : weight_basis.replace(/^US_/, ''),
-    official_heel_mm: stackHeight, official_drop_mm: drop, official_spec_size: null,
-    measured_weight_g: mw?.value ?? null, measured_weight_size: mw?.size ?? null, measured_heel_mm: null, measured_drop_mm: null,
-    measured_source: mw?.source ?? null, measured_count: mw ? (mw.count ?? 1) : null,
+    official_heel_mm: stackHeight, official_drop_mm: drop, official_spec_size: one('official_spec_size'),
+    measured_weight_g: mw?.value ?? null, measured_weight_size: mw?.size ?? null, measured_heel_mm: one('measured_heel_mm'), measured_drop_mm: one('measured_drop_mm'),
+    measured_source: mw?.source ?? null, measured_count: mw ? ('count' in mw ? mw.count : 1) : null,
   };
   const o = {};
   for (const [k, v] of Object.entries(rest)) { o[k] = v; if (k === 'midsole') Object.assign(o, spec, { toebox_width: width }); }  // 스펙 · 발볼(토박스 너비, V4 toebox_width)은 midsole 다음에
@@ -227,7 +231,7 @@ for (const c of cands) {
   const srcKey = { weight: 'weight_g', drop: 'drop_mm', stackHeight: 'stack_heel_mm', price: 'price_krw', wideAvailable: 'wide_available' };
   for (const [a, b] of Object.entries(srcKey)) if (src[b] && !src[a]) { src[a] = src[b]; delete src[b]; }
   const row = {
-    catalog_key: id.replace('#', ':'),
+    catalog_key: id.replace('#', ':'), source_key: id.replace('#', ':'),  // source_key = 후보 목록의 키(판단 · 문구를 찾는 키). 관리 화면에서 라인키 · 세대를 바꾸면 catalog_key 만 바뀐다
     line_key: c.line_key, generation: Number(c.generation), is_current: c.is_current === 'true',
     brand: c.brand, model: c.model,
     purpose: c.purpose, stability: c.stability,
@@ -257,7 +261,18 @@ for (const c of cands) {
   if (row.price !== null) { const m = priceMeta(src.price, s?.note); row.price_source = m.source; row.price_checked_at = m.checked_at; row.price_kind = m.kind; }
   // 시드 가격 중 ABC · 공식몰에 없는 것 — 사용자가 다나와에서 넣은 값(2026-10-29 사용자: 값은 두고 출처를 "다나와"로). 날짜는 db.json 에 들어간 커밋 날짜
   const dp = DEC.rows[id]?.price_krw;
-  if (row.price !== null && dp?.action === 'keep_db' && dp.price_source) { row.price_source = dp.price_source; row.price_checked_at = dp.price_checked_at ?? null; row.price_kind = dp.price_kind ?? null; }
+  //   관리 화면에서 고친 가격(pull-admin.mjs, use_source)도 판단에 적힌 출처 · 날짜 · 종류를 쓴다
+  if (row.price !== null && (dp?.action === 'keep_db' || dp?.action === 'use_source') && dp.price_source) { row.price_source = dp.price_source; row.price_checked_at = dp.price_checked_at ?? null; row.price_kind = dp.price_kind ?? null; }
+  // 후보 목록(candidates.csv)이 정하는 칸 중 관리 화면에서 고친 것(pull-admin.mjs, 2026-10-29) — 브랜드 · 모델명 · 안정성 · 현행
+  for (const [f, rk] of [['brand', 'brand'], ['model', 'model'], ['stability', 'stability'], ['is_current', 'is_current']]) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[rk] = d.value; }
+  //   라인키 · 세대 · 성별(2026-10-30 사용자 — 관리 화면 수정은 전부 반영) — 운영 행을 찾는 키(catalog_key)가 바뀐다. 성별은 판단이 있을 때만 행에 둔다(없으면 적재기가 men)
+  for (const f of ['line_key', 'generation', 'gender']) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[f] = d.value; }
+  //   스펙 출처(V6) — 관리 화면에서 고른 것(pull-admin.mjs spec_sources). 없으면 적재기가 sources 에서 만든다(live-fields.mjs specSourcesOf)
+  if (DEC.rows[id]?.spec_sources?.action === 'use_source') row.spec_sources = DEC.rows[id].spec_sources.value;
+  row.catalog_key = `${row.line_key}:${row.generation}`;
+  // 관리 화면에서 고친 대표 · 추가 이미지(pull-admin.mjs) — 둘 다 그대로 낸다(대표가 추가 목록의 첫 장이 아닐 수 있다)
+  const io = DEC.image_overrides?.[id];
+  if (io?.via === 'admin') { row.image = io.image ?? null; row.images = (io.images ?? []).map((url) => ({ url, source: 'admin' })); }
   if (row.width === null) missing.width = 'not_found';
   if (row.wideAvailable === null) missing.wideAvailable = s?.missing?.wide_available ?? 'not_found';
   if (row.carbon === null) { missing.carbon = s?.missing?.carbon ?? 'not_found'; }
@@ -274,8 +289,11 @@ for (const c of cands) {
   else if (reasons.some((x) => !x.startsWith('conflict:db_differs:') && !x.startsWith('db_value:') && !/^conflict:unverified_source:(wide_available|width|carbon):/.test(x)) || nums < 2) row.status = 'review';  // 카본이 비었다고 막지 않는다(2026-10-24 사용자 — 카본은 출처 면제 항목, 화면은 "정보 없음")
   else if (Object.keys(missing).length) row.status = 'partial';
   if (nums < 2 && s) reasons.push(`min_fields:${nums}/3`);
+  // 관리 화면에서 숨긴 신발(V8, pull-admin.mjs hidden) — 적재 대상에서 뺀다. 적재기가 다시 넣지 않는다(2026-10-30 사용자). 되살리면 pull-admin 이 판단을 지운다
+  if (DEC.rows[id]?.hidden?.action === 'hide') { row.status = 'hidden'; reasons.push('hidden:admin'); }
   out.push(toDb(row));
 }
+{ const seen = new Map(); for (const r of out) { if (seen.has(r.catalog_key)) throw new Error(`catalog_key 가 겹친다: ${r.catalog_key} (${seen.get(r.catalog_key)} · ${r.source_key}) — 관리 화면 라인키 · 세대 판단을 확인한다`); seen.set(r.catalog_key, r.source_key); } }
 fs.writeFileSync(BASE ? path.join(WORK, 'shoes.base.jsonl') : path.join(ROOT, 'shoes.jsonl'), out.map((r) => JSON.stringify(r)).join('\n') + '\n');
 fs.writeFileSync(path.join(WORK, 'dropped.json'), JSON.stringify(dropped, null, 1));
 
