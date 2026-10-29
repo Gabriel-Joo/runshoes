@@ -11,12 +11,8 @@ export interface User {
   role: "USER" | "ADMIN" | "DEMO_ADMIN";   // DEMO_ADMIN = 데모 관리자(관리 화면을 보기만)
 }
 
-/**
- * 화면에 보이는 이름 — 데모 관리자는 DB 닉네임("데모관리자") 대신 "관리자 체험 계정"(2026-10-30 사용자 — 체험 카드와 같게, "데모"가 가짜처럼 보인다).
- * DB 값은 그대로. 다른 계정은 닉네임 그대로
- */
+/** 로그인 화면의 관리자 체험 카드 이름 — 카드에만 쓴다. 로그인한 뒤 헤더 · 마이페이지는 DB 닉네임("데모관리자") 그대로(2026-10-30 사용자) */
 export const DEMO_ADMIN_NAME = "관리자 체험 계정";
-export const displayName = (u: Pick<User, "nickname" | "role">) => (u.role === "DEMO_ADMIN" ? DEMO_ADMIN_NAME : u.nickname);
 
 /** 로그인 화면의 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 전부(id 순) + 데모 관리자 */
 export interface DemoAccount {
