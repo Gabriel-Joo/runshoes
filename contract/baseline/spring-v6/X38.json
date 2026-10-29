@@ -49,13 +49,13 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "date": "Thu, 29 Oct 2026 20:24:52 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
     "body": {
-      "code": "hidden_generation",
-      "message": "숨긴 신발(NO.20)과 라인 · 세대 · 성별이 같습니다. 숨긴 신발 목록에서 되살려 주세요."
+      "message": "숨긴 신발(NO.20)과 라인 · 세대 · 성별이 같습니다. 숨긴 신발 목록에서 되살려 주세요.",
+      "code": "hidden_generation"
     }
   }
 }

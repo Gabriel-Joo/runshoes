@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findByPasswordHashIsNull();
 
-	/** 체험 카드(GET /api/auth/demo-accounts) — 시드 계정(runner01~30@runshoes.test, V3)에서 무작위. 탈퇴 · 실제 가입자 · 관리자는 빠진다 */
-	@Query(value = "select * from users where role = 'USER' and deleted_at is null and email regexp '^runner[0-9]{2}@runshoes[.]test$' order by rand() limit :n", nativeQuery = true)
-	List<User> randomSeedUsers(int n);
+	/** 체험 카드(GET /api/auth/demo-accounts) — 시드 계정(runner01~30@runshoes.test, V3) 전부, id 순(화면이 슬라이드로 돌린다). 탈퇴 · 실제 가입자 · 관리자는 빠진다 */
+	@Query(value = "select * from users where role = 'USER' and deleted_at is null and email regexp '^runner[0-9]{2}@runshoes[.]test$' order by id", nativeQuery = true)
+	List<User> seedUsers();
 
 	Optional<User> findFirstByRoleAndDeletedAtIsNull(String role);
 }

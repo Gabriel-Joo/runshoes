@@ -227,24 +227,37 @@
   border: 1px solid var(--accent);
 }
 
-.admin__hidden {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-light);
+/* 등록된 신발 · 숨긴 신발 탭 — 개수 줄 오른쪽 */
+.admin__countbar {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.admin__hiddentoggle {
-  font-size: 13px;
+.admin__countbar .admin__count {
+  margin-top: 0;
+}
+
+.admin__tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.admin__tab {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-mid);
 }
 
-.admin__hiddentoggle:hover {
-  color: var(--text-strong);
-}
-
-.admin__hidden .admin__list {
-  margin-top: 14px;
+.admin__tab.is-active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
 }
 
 .admin__row.is-hidden .admin__thumb,

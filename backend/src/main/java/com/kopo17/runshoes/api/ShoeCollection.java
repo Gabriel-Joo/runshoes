@@ -204,9 +204,17 @@ class ShoeCollection implements DocCollection {
 	}
 
 	private static final java.util.Set<String> GENDERS = java.util.Set.of("men", "women", "unisex");
-	// 정가 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
-	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(정가, 2026-10-29)
-	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("정가");
+	// 가격 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
+	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(2026-10-29)
+	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("발매가");   // 2026-10-30 사용자 — "정가"를 "발매가"로 통일(크림 발매가 · 공식몰 · ABC마트 정가 모두)
+
+	/** 추가 이미지는 6장까지(2026-10-30 사용자 — 관리 폼이 칸 하나에 주소 하나) */
+	static final int MAX_IMAGES = 6;
+
+	private static List<String> images(List<String> v) {
+		if (v != null && v.size() > MAX_IMAGES) throw ApiException.invalid("추가 이미지는 " + MAX_IMAGES + "개까지예요");
+		return v;
+	}
 
 	private static String oneOf(String field, Object v, java.util.Set<String> allowed) {
 		String x = Values.str(field, v);
@@ -253,7 +261,7 @@ class ShoeCollection implements DocCollection {
 				case "carbon" -> s.setCarbon(Values.bool(k, v));
 				case "price" -> s.setPrice(Values.dbl(k, v));
 				case "image" -> s.setImage(Values.str(k, v));
-				case "images" -> s.setImages(Values.strings(k, v));
+				case "images" -> s.setImages(images(Values.strings(k, v)));
 				case "summary" -> s.setSummary(Values.str(k, v));
 				case "description" -> s.setDescription(Values.str(k, v));
 				case "lineKey" -> s.setLineKey(Values.str(k, v));

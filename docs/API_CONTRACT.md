@@ -126,16 +126,17 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ### 2.5 스펙 출처 · 데모 관리자 · 신발 숨김 · 회원 탈퇴(V6~V9, 2026-10-30)
 
-기준선은 `contract/baseline/spring-v6`(X 58건 — 새 기능만). 옛 기준선은 `--allow-added=…,specSources` 로 본다. 옛 기준선과 달라지는 9건은 모두 의도한 변경이다:
+기준선은 `contract/baseline/spring-v6`(X 60건 — 새 기능만). 옛 기준선은 `--allow-added=…,specSources` 로 본다. 옛 기준선과 달라지는 9건은 모두 의도한 변경이다:
 spring-v3 A06 · A11 · A16 · A20 · A21 · A26(가입한 계정 id 32 → 33 — V7 의 데모 관리자가 32, A11 은 `/api/me` 에 `createdAt` 이 더해졌다), W51 · W52 · W52b(위 1.1).
 
 | 항목 | 동작 | 녹화 |
 |---|---|---|
 | 스펙 출처 | 신발 끝에 `specSources` — `{"weight":{"code":"BITR","url":"…"}, …}`, 칸은 weight · drop · stackHeight · midsole · width · wideAvailable. 코드는 BITR · RSG · STORE · PR · WEB · MAN · DB · SX(관리 화면은 DB · SX 를 고를 수 없다), WEB 은 url 필수. 틀리면 400 `{code:"invalid", message}`. MySQL JSON 이라 키 순서는 저장할 때 바뀐다 | X51~X57 |
-| 가격 출처 | `priceSource` 에 `크림`(발매가 — `priceKind` 는 `정가`) | X56 |
+| 가격 출처 · 종류 | `priceSource` 에 `크림`. `priceKind` 는 **`발매가`** 하나(2026-10-30 `정가`에서 통일 — 공식몰 · ABC마트 · 크림 모두), 다른 값은 400 | X56 · X56a |
+| 추가 이미지 | `images` 는 6장까지, 넘으면 400 `{code:"invalid"}` | X56b |
 | 와이드 "없음" | 출처 필수는 **관리 폼이 본다** — 서버가 막으면 W30 · W36(`wideAvailable:false`)이 깨진다 | — |
 | 데모 관리자 | role `DEMO_ADMIN`. 신발 쓰기 · 리뷰 쓰기 · 고치기 · 지우기 · 찜 · 공감 · 닉네임 · 비밀번호 · 탈퇴는 403 `{code:"demo_admin", message:"데모 관리자 계정은 할 수 없습니다"}`(이 오류만 본문이 있다 — 화면이 문구를 그대로 띄운다). 숨긴 신발 목록은 본다 | X10~X16 · X15 |
-| 체험 로그인 | `GET /api/auth/demo-accounts` → 시드 계정 3개(무작위) + 데모 관리자 `[{id, nickname, role, reviewCount}]`. `POST /api/auth/demo {id}` → 로그인과 같은 응답 · 쿠키, 풀 밖 id(진짜 관리자 · 실제 가입자 · 없는 id)는 400. env `DEMO_LOGIN_ENABLED` 가 꺼져 있으면 둘 다 404. 같은 IP 15분 30번 넘으면 429. 활동 로그 `auth.demo_login` | X02~X07 |
+| 체험 로그인 | `GET /api/auth/demo-accounts` → 시드 계정 전부(id 순 — 화면이 슬라이드로 돌린다) + 데모 관리자 `[{id, nickname, role, reviewCount, likeCount}]`. `POST /api/auth/demo {id}` → 로그인과 같은 응답 · 쿠키, 풀 밖 id(진짜 관리자 · 실제 가입자 · 없는 id)는 400. env `DEMO_LOGIN_ENABLED` 가 꺼져 있으면 둘 다 404. 같은 IP 15분 30번 넘으면 429. 활동 로그 `auth.demo_login` | X02~X07 |
 | 체험 계정 보호 | 시드 계정(runner01~30) · 관리자는 닉네임 변경 · 탈퇴 403(체험 카드로 들어온 누구나 바꿀 수 있게 되므로). 비밀번호 변경은 지금 비밀번호를 알아야 해 그대로 | X17~X19 |
 | 신발 삭제 = 숨김 | `DELETE /api/shoes/{id}` 는 `deleted_at` 을 적는다. 숨긴 신발은 목록 · 상세 · 찜 · 리뷰 쓰기에서 없는 신발(404 · 400), 그 리뷰는 목록 · 상세에서 빠진다(DB 에는 남는다). 다시 DELETE 는 404. 활동 로그 `shoe.delete`(모델 · 라인키 · 세대 · 현행 · 숨긴 시각 · 그때의 리뷰 수 · 찜 수) | X30~X36 |
 | 숨긴 신발 | `GET /api/admin/shoes/hidden`(admin · 데모 관리자, 비로그인 401 · USER 403) — 신발 문서 + `deletedAt`. `POST /api/admin/shoes/{id}/restore`(admin) — 리뷰 · 찜이 돌아온다, 숨기지 않은 신발은 404. 활동 로그 `shoe.restore` | X37 · X40~X43 |

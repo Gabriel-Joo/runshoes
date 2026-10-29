@@ -1,7 +1,7 @@
 {
   "id": "X56",
   "plan": null,
-  "name": "가격 출처 크림 · 정가 → 200",
+  "name": "가격 출처 크림 · 발매가 → 200",
   "contract": true,
   "expect": 200,
   "request": {
@@ -14,7 +14,7 @@
     "body": {
       "priceSource": "크림",
       "priceCheckedAt": "2026-10-30",
-      "priceKind": "정가"
+      "priceKind": "발매가"
     }
   },
   "response": {
@@ -31,7 +31,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "date": "Thu, 29 Oct 2026 20:24:53 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -76,7 +76,7 @@
       "measuredCount": null,
       "priceSource": "크림",
       "priceCheckedAt": "2026-10-30",
-      "priceKind": "정가",
+      "priceKind": "발매가",
       "specSources": {
         "weight": {
           "url": "https://example.test/weight",

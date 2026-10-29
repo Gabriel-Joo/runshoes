@@ -11,12 +11,13 @@ export interface User {
   role: "USER" | "ADMIN" | "DEMO_ADMIN";   // DEMO_ADMIN = 데모 관리자(관리 화면을 보기만)
 }
 
-/** 로그인 화면의 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 3개 + 데모 관리자 */
+/** 로그인 화면의 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 전부(id 순) + 데모 관리자 */
 export interface DemoAccount {
   id: number;
   nickname: string;
   role: "USER" | "DEMO_ADMIN";
   reviewCount: number;
+  likeCount: number;
 }
 
 interface SessionBody {
