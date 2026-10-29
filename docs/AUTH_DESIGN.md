@@ -40,18 +40,22 @@ V3 는 계정의 비밀번호 해시를 NULL 로 넣고, 앱이 기동할 때 �
 | 경로 | 누가 |
 |---|---|
 | 모든 GET(신발 · 리뷰 · 용어 · 브랜드 · 요약) | 누구나. `liked` 는 요청한 사람 기준(비로그인은 false) |
-| `POST /api/reviews` | 로그인. author · user_id · createdAt 은 서버(본문 값은 버린다 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다). 한 신발에 첫 리뷰 하나(409) · 별점 1~5 · 내용 10~1,000자(400) |
+| `POST /api/reviews` | 로그인. author · user_id · createdAt 은 서버(본문 값은 버린다 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다). 한 신발에 첫 리뷰 하나(409) · 별점 1~5 · 내용 10~300자(400, 2026-10-30 — 남은 글자 수를 입력 중에 보인다) |
 | `PATCH` · `DELETE /api/reviews/{id}` | 작성자. PATCH 는 rating · content 만. DELETE 는 admin 도 |
 | `PUT /api/reviews/{id}` | 405 — admin 에게도 열지 않는다(아무 필드나 덮어쓰는 길) |
 | `PUT` · `DELETE /api/shoes/{id}/like`, `/api/reviews/{id}/like` | 로그인. 멱등, 숫자는 서버가 센다. 내 리뷰에는 공감 불가 |
-| 신발 쓰기(POST · PATCH · PUT · DELETE) | ADMIN |
+| 신발 쓰기(POST · PATCH · PUT · DELETE) | ADMIN. DELETE 는 숨김(V8 — 리뷰 · 찜은 남는다) |
+| `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 목록은 ADMIN · DEMO_ADMIN, 되살리기는 ADMIN |
 | `POST /api/activity` | 로그인. `shoe.view`(30분 중복 제거) · `compare.view`(2~3개). 언제나 204 |
-| `/api/auth/*` | signup · login · refresh · logout · nickname-available |
-| `/api/me` | GET 나, `PATCH /nickname`, `PUT /password` |
+| `/api/auth/*` | signup · login · refresh · logout · nickname-available · demo-accounts · demo(체험 로그인 — 시드 30 · 데모 관리자만, env `DEMO_LOGIN_ENABLED`) |
+| `/api/me` | GET 나(+ 가입일 `createdAt`), `PATCH /nickname`, `PUT /password`, `DELETE`(탈퇴 — V9). 시드 · 관리자 계정은 닉네임 · 탈퇴 403 |
+
+**DEMO_ADMIN**(V7, `demo-admin@runshoes.test`): 관리 화면은 다 보이고, 신발 쓰기 · 리뷰 · 찜 · 공감 · 회원 정보 수정은 403 `{code:"demo_admin", message:"데모 관리자 계정은 할 수 없습니다"}`. 비밀번호로는 들어갈 수 없다(`password_hash` = `'!demo'`).
+**탈퇴 회원**(V9): 로그인 · refresh · `/api/me` · 리뷰 쓰기 · 찜이 막힌다(남은 access token 도). 리뷰는 "탈퇴 회원"으로 남는다.
 
 리뷰를 쓰고 · 고치고 · 지우면 서버가 신발의 rating · reviewCount 를 다시 센다(FIRST 만, 소수 한 자리 — `ROUND(AVG(INT), 1)` 은 DECIMAL 이라 0.5 를 올린다, V3 와 같은 식).
 셈하는 값(rating · reviewCount · likeCount · liked)은 본문에 와도 admin 이어도 버리고, 신발 PUT 도 지우지 않는다.
-오류 본문: 리뷰 · 신발 · 찜 API 는 json-server 처럼 `{}`(화면은 상태코드로 문구를 고른다), 인증 API(`/api/auth` · `/api/me`)만 `{error:{code, field, message}}`.
+오류 본문: 리뷰 · 신발 · 찜 API 는 json-server 처럼 `{}`(화면은 상태코드로 문구를 고른다) — 새 오류 셋(데모 관리자 403 · 숨긴 세대 409 · 스펙 출처 400)만 `{code, message}`. 인증 API(`/api/auth` · `/api/me`)는 `{error:{code, field, message}}`.
 
 ## 3. 스키마 (V3 는 추가만, 지우는 것은 V4)
 
@@ -88,7 +92,7 @@ V4(안정된 뒤): `reviews.user_id` NOT NULL, `shoes.liked` · `reviews.liked` 
 | 가입 `/signup` | 이메일(형식, 254자) · 비밀번호(8~64자, 영문+숫자) · 확인 · 닉네임(2~12자, 한글 완성형 · 영문 · 숫자, 중복 · 예약어 불가) | "이메일 형식이 아닙니다." "이미 가입된 이메일입니다." "비밀번호는 8자 이상이어야 합니다." "영문과 숫자를 함께 써 주세요." "비밀번호가 서로 다릅니다." "닉네임은 2~12자로 써 주세요." "한글, 영문, 숫자만 쓸 수 있어요." "이미 쓰는 닉네임입니다." "쓸 수 없는 닉네임입니다." | 바로 로그인 → returnTo(없으면 `/`), "{닉네임}님, 환영해요" |
 | 로그인 `/login` | 이메일 · 비밀번호 | "이메일과 비밀번호를 입력해 주세요." "이메일 또는 비밀번호가 맞지 않습니다." (429) "로그인 시도가 너무 많아요. N분 뒤에 다시 해 주세요." — 남은 시간 동안 버튼을 끄고 분을 줄여 보인다 | returnTo(없으면 `/`) |
 | 회원 정보 `/account` | 이메일(보기만) · 닉네임 · 비밀번호(지금 · 새 · 확인) — 따로 저장 | "지금 닉네임과 같아요." "지금 비밀번호가 맞지 않습니다." "지금 비밀번호와 다른 비밀번호를 써 주세요." | 닉네임: 헤더 · 지난 리뷰 작성자까지 바뀜. 비밀번호: 다른 기기 로그아웃 안내 |
-| 리뷰 작성(상세 모달) | 닉네임 칸 없음("{닉네임}님으로 작성") · 별점 1~5 · 내용 10~1,000자 | "내용을 10자 이상 써 주세요." 이미 썼으면 폼 대신 "이 신발에는 이미 리뷰를 썼어요." + 내 리뷰 보기 | 목록 · 평점을 서버 값으로. 쓰던 중 로그인이 끝나면 내용을 sessionStorage 에 남겨 두고, 다시 로그인하면 같은 모달(`/?shoe={id}`)로 돌아와 되살린다 |
+| 리뷰 작성(상세 모달) | 닉네임 칸 없음("{닉네임}님으로 작성") · 별점 1~5 · 내용 10~300자(남은 글자 수) | "내용을 10자 이상 써 주세요." 이미 썼으면 폼 대신 "이 신발에는 이미 리뷰를 썼어요." + 내 리뷰 보기 | 목록 · 평점을 서버 값으로. 쓰던 중 로그인이 끝나면 내용을 sessionStorage 에 남겨 두고, 다시 로그인하면 같은 모달(`/?shoe={id}`)로 돌아와 되살린다 |
 
 헤더: 비로그인 "로그인", 로그인 닉네임 메뉴(회원 정보 수정 · 로그아웃), admin 만 등록·관리. 1199px 이하는 닉네임을 6글자 폭에서 말줄임. 찜 · 공감은 비로그인이면 로그인으로, "찜한 것만 보기"는 로그인했을 때만.
 관리 화면은 admin 이 아니면 `/`("관리자만 볼 수 있어요."). 로그아웃은 홈으로 먼저 옮긴 뒤 세션을 끊는다(로그인이 필요한 화면에서 가드가 로그인으로 보내지 않게).

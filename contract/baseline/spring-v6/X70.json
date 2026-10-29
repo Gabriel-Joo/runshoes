@@ -1,0 +1,48 @@
+{
+  "id": "X70",
+  "plan": null,
+  "name": "탈퇴 시험 계정 가입 → 201",
+  "contract": true,
+  "expect": 201,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/signup",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "withdraw@runshoes.test",
+      "password": "<가림>",
+      "nickname": "탈퇴시험"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=<가림>; Path=/api/auth; Max-Age=1209600; Expires=Thu, 12 Nov 2026 18:57:35 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "accessToken": "<jwt>",
+      "tokenType": "Bearer",
+      "expiresIn": 900,
+      "user": {
+        "id": 33,
+        "email": "withdraw@runshoes.test",
+        "nickname": "탈퇴시험",
+        "role": "USER"
+      }
+    }
+  }
+}

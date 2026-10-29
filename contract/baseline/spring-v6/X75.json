@@ -1,0 +1,73 @@
+{
+  "id": "X75",
+  "plan": null,
+  "name": "찜은 지워지고 찜 수 0",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes/21",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 21,
+      "brand": "계약테스트",
+      "model": "Contract Runner V6",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "rating": 3.5,
+      "reviewCount": 2,
+      "likeCount": 0,
+      "liked": false,
+      "lineKey": null,
+      "generation": null,
+      "isCurrent": null,
+      "gender": null,
+      "weightSize": null,
+      "specSize": null,
+      "measuredWeight": null,
+      "measuredWeightSize": null,
+      "measuredStackHeight": null,
+      "measuredDrop": null,
+      "measuredSource": null,
+      "measuredCount": null,
+      "priceSource": null,
+      "priceCheckedAt": null,
+      "priceKind": null,
+      "specSources": null
+    }
+  }
+}

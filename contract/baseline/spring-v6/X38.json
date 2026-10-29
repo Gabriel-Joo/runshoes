@@ -1,0 +1,61 @@
+{
+  "id": "X38",
+  "plan": null,
+  "name": "숨긴 신발과 같은 라인 · 세대 · 성별 POST → 409 hidden_generation",
+  "contract": true,
+  "expect": 409,
+  "request": {
+    "method": "POST",
+    "path": "/api/shoes",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "brand": "계약테스트",
+      "model": "숨긴 세대와 겹침",
+      "purpose": "조깅·회복주",
+      "stability": "중립화",
+      "midsole": "테스트폼",
+      "weight": 250,
+      "drop": 8,
+      "stackHeight": 38.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 159000,
+      "image": "/images/gel-kayano-32.png",
+      "images": [
+        "/images/gel-kayano-32.png"
+      ],
+      "summary": "계약 테스트용 신발",
+      "description": "Spring 전환 응답 비교용으로 만든 항목이다.",
+      "lineKey": "asics:gel-trabuco",
+      "generation": 13,
+      "gender": "men"
+    }
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "hidden_generation",
+      "message": "숨긴 신발(NO.20)과 라인 · 세대 · 성별이 같습니다. 숨긴 신발 목록에서 되살려 주세요."
+    }
+  }
+}

@@ -8,7 +8,15 @@ export interface User {
   id: number;
   email: string;
   nickname: string;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "DEMO_ADMIN";   // DEMO_ADMIN = 데모 관리자(관리 화면을 보기만)
+}
+
+/** 로그인 화면의 체험 카드(GET /api/auth/demo-accounts) — 시드 계정 3개 + 데모 관리자 */
+export interface DemoAccount {
+  id: number;
+  nickname: string;
+  role: "USER" | "DEMO_ADMIN";
+  reviewCount: number;
 }
 
 interface SessionBody {
@@ -79,6 +87,30 @@ const json = (body: unknown): RequestInit => ({
 export async function login(email: string, password: string) {
   set(await (await authCall("/auth/login", json({ email, password }))).json());
   return user!;
+}
+
+/** 체험 로그인 — 비밀번호 없이, 서버가 체험 풀 안의 id 만 받는다 */
+export async function demoLogin(id: number) {
+  set(await (await authCall("/auth/demo", json({ id }))).json());
+  return user!;
+}
+
+/** 체험 카드 — 서버가 꺼 두었으면(404) 빈 목록 */
+export async function demoAccounts(): Promise<DemoAccount[]> {
+  const res = await fetch(`${API}/auth/demo-accounts`).catch(() => null);
+  return res?.ok ? res.json() : [];
+}
+
+/**
+ * 회원 탈퇴 — 실패하면 AuthError(서버 문구 — 체험 · 관리자 계정은 403). 성공한 뒤 부른 쪽이 홈으로 옮기고 logout() 한다
+ * (먼저 로그아웃하면 마이페이지의 가드가 로그인 화면으로 보낸다 — Header 의 로그아웃과 같은 순서)
+ */
+export async function withdraw() {
+  const res = await apiFetch("/me", { method: "DELETE" });
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new AuthError(res.status, body?.error?.code ?? "ERROR", body?.error?.message ?? "탈퇴하지 못했어요. 잠시 뒤 다시 해 주세요.");
+  }
 }
 
 export async function signup(email: string, password: string, nickname: string) {

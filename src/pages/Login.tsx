@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
-import { AuthError, login, safeReturnTo } from "../auth/session";
+import { AuthError, demoAccounts, demoLogin, login, safeReturnTo, type DemoAccount } from "../auth/session";
 import Field from "../auth/Field";
 import { useCooldown } from "../auth/useCooldown";
 import "./Auth.css";
@@ -18,6 +18,12 @@ function Login() {
   const [limited, setLimited] = useState(false);   // 429 — 기다리는 동안 버튼을 끈다
   const [busy, setBusy] = useState(false);
   const cooldown = useCooldown();
+  // 체험 카드 — 시드 계정 3개(무작위) + 데모 관리자. 서버가 꺼 두면(DEMO_LOGIN_ENABLED) 빈 목록이라 영역이 없다
+  const [cards, setCards] = useState<DemoAccount[]>([]);
+
+  useEffect(() => {
+    demoAccounts().then(setCards);
+  }, []);
 
   if (status === "user" && !busy) return <Navigate to={returnTo} replace />;
 
@@ -43,6 +49,19 @@ function Login() {
     }
   };
 
+  // 카드를 누르면 바로 로그인 — 비밀번호는 화면에 없다(서버가 체험 풀 안의 id 만 받는다)
+  const tryDemo = async (card: DemoAccount) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await demoLogin(card.id);
+      navigate(card.role === "DEMO_ADMIN" ? "/admin" : returnTo, { replace: true });
+    } catch (err) {
+      setError(err instanceof AuthError ? err.message : "잠시 뒤 다시 해 주세요.");
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="auth">
       <h2 className="auth__title">로그인</h2>
@@ -61,7 +80,23 @@ function Login() {
       <p className="auth__alt">
         처음이세요?
         <Link to={`/signup${returnTo !== "/" ? `?returnTo=${encodeURIComponent(returnTo)}` : ""}`}>회원가입</Link>
+        화면으로 이동합니다
       </p>
+
+      {cards.length > 0 && (
+        <section className="auth__demo" aria-label="체험 계정">
+          <h3 className="auth__demotitle">체험 계정으로 둘러보기</h3>
+          <div className="auth__cards">
+            {cards.map((c) => (
+              <button key={c.id} className={`auth__card ${c.role === "DEMO_ADMIN" ? "is-admin" : ""}`} onClick={() => tryDemo(c)} disabled={busy}>
+                <strong>{c.nickname}</strong>
+                <span>{c.role === "DEMO_ADMIN" ? "관리 화면 · 보기 전용" : `리뷰 ${c.reviewCount}개`}</span>
+              </button>
+            ))}
+          </div>
+          <p className="auth__demonote">체험 계정으로 남긴 리뷰 · 찜은 누구나 보고 바꿀 수 있어요.</p>
+        </section>
+      )}
     </div>
   );
 }

@@ -13,7 +13,8 @@ Spring Boot 로 처음 설계했다면 하지 않았을 선택이 몇 있다 —
 
 ### 1.1 id 는 AUTO_INCREMENT 가 아니라 `max(id) + 1`
 
-새 신발 · 리뷰의 id 는 **지금 남아 있는 최대 id + 1** 이다. 마지막 행을 지우고 다시 만들면 **지운 id 를 다시 쓴다**(시나리오 48 → 51: 21 을 지우고 POST 하면 다시 21).
+새 신발 · 리뷰의 id 는 **지금 남아 있는 최대 id + 1** 이다. 리뷰는 마지막 행을 지우고 다시 만들면 **지운 id 를 다시 쓴다**.
+신발은 지우면 숨긴다(V8, 2.5) — 숨긴 행이 id 를 계속 가지므로 숨긴 것까지 센 최대 + 1 이다(spring-v3 W51 의 21 이 22 가 된다 — 의도한 변경).
 InnoDB AUTO_INCREMENT 는 지운 값을 다시 쓰지 않으므로 컬럼에 AUTO_INCREMENT 를 두지 않고 앱이 매긴다(`ShoeCollection.create` · `ReviewCollection.create`).
 
 - POST 본문에 `id` 가 있으면 그 id 를 쓴다. 이미 있으면 500 `{}`
@@ -93,7 +94,7 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 | 읽기 | 누구나. 신발 `liked` · 리뷰 `liked` 는 **요청한 사람 기준**(비로그인은 false). `?liked=true` 도 그 사람의 찜 | R01~R26 · W03 · W04 · W34b · W52b |
 | 쓰기 401 | 토큰 없이 `/api` 쓰기 → 401 `{}` — 대상이 있는지 보기 전에(없는 신발 PATCH 도 401) | W30a · W32a · W40a |
 | 404 → 403 | 그 뒤 없는 대상은 404, 있으면 권한 — 신발 쓰기는 admin, 리뷰 PATCH 는 작성자, 리뷰 DELETE 는 작성자 또는 admin | W30b · W34a · W37a · W37b · W40b · W44a · W48a |
-| 리뷰 POST | author · userId · createdAt 은 서버(본문 값은 버린다). 한 신발에 첫 리뷰 하나 → 409. 별점 1~5 · 내용 10~1,000자 → 400 | W32 · W32b · W32c |
+| 리뷰 POST | author · userId · createdAt 은 서버(본문 값은 버린다). 한 신발에 첫 리뷰 하나 → 409. 별점 1~5 · 내용 10~300자 → 400(2026-10-30 1,000 → 300) | W32 · W32b · W32c |
 | 리뷰 PATCH · PUT | PATCH 는 rating · content 만(다른 키는 버린다). PUT 은 405 — 아무 필드나 덮어쓰는 길을 두지 않는다 | W37 · W42a |
 | 셈하는 값 | 신발 rating · reviewCount 는 리뷰를 쓸 때 서버가 센다(FIRST 만, 소수 한 자리 반올림). likeCount 는 찜이 센다. 본문에 와도(admin 이어도) 버리고, PUT 도 지우지 않는다 | W30 · W36 · W39 · W42 · W47b |
 | 찜 · 공감 | `PUT` · `DELETE /api/shoes/{id}/like` · `/api/reviews/{id}/like` → `{liked, likeCount}`. 멱등. 내 리뷰에는 403 | W34 · W38 · W38a |
@@ -123,6 +124,26 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 | 응답 키 | 신발 끝(V4 키 뒤)에 `priceSource`(`공식몰` · `ABC마트` · `다나와`, 읽은 곳 기록이 없으면 null — `다나와`는 시드 가격 중 ABC · 공식몰에 없는 것, 2026-10-29) · `priceCheckedAt`(`YYYY-MM-DD`, 읽은 날) · `priceKind`(`정가`) |
 | 쓰기 | admin 이 POST · PATCH · PUT 으로 보낸다. 다른 출처 · 종류 문자열이나 날짜 모양이 아니면 400 |
 
+### 2.5 스펙 출처 · 데모 관리자 · 신발 숨김 · 회원 탈퇴(V6~V9, 2026-10-30)
+
+기준선은 `contract/baseline/spring-v6`(X 58건 — 새 기능만). 옛 기준선은 `--allow-added=…,specSources` 로 본다. 옛 기준선과 달라지는 9건은 모두 의도한 변경이다:
+spring-v3 A06 · A11 · A16 · A20 · A21 · A26(가입한 계정 id 32 → 33 — V7 의 데모 관리자가 32, A11 은 `/api/me` 에 `createdAt` 이 더해졌다), W51 · W52 · W52b(위 1.1).
+
+| 항목 | 동작 | 녹화 |
+|---|---|---|
+| 스펙 출처 | 신발 끝에 `specSources` — `{"weight":{"code":"BITR","url":"…"}, …}`, 칸은 weight · drop · stackHeight · midsole · width · wideAvailable. 코드는 BITR · RSG · STORE · PR · WEB · MAN · DB · SX(관리 화면은 DB · SX 를 고를 수 없다), WEB 은 url 필수. 틀리면 400 `{code:"invalid", message}`. MySQL JSON 이라 키 순서는 저장할 때 바뀐다 | X51~X57 |
+| 가격 출처 | `priceSource` 에 `크림`(발매가 — `priceKind` 는 `정가`) | X56 |
+| 와이드 "없음" | 출처 필수는 **관리 폼이 본다** — 서버가 막으면 W30 · W36(`wideAvailable:false`)이 깨진다 | — |
+| 데모 관리자 | role `DEMO_ADMIN`. 신발 쓰기 · 리뷰 쓰기 · 고치기 · 지우기 · 찜 · 공감 · 닉네임 · 비밀번호 · 탈퇴는 403 `{code:"demo_admin", message:"데모 관리자 계정은 할 수 없습니다"}`(이 오류만 본문이 있다 — 화면이 문구를 그대로 띄운다). 숨긴 신발 목록은 본다 | X10~X16 · X15 |
+| 체험 로그인 | `GET /api/auth/demo-accounts` → 시드 계정 3개(무작위) + 데모 관리자 `[{id, nickname, role, reviewCount}]`. `POST /api/auth/demo {id}` → 로그인과 같은 응답 · 쿠키, 풀 밖 id(진짜 관리자 · 실제 가입자 · 없는 id)는 400. env `DEMO_LOGIN_ENABLED` 가 꺼져 있으면 둘 다 404. 같은 IP 15분 30번 넘으면 429. 활동 로그 `auth.demo_login` | X02~X07 |
+| 체험 계정 보호 | 시드 계정(runner01~30) · 관리자는 닉네임 변경 · 탈퇴 403(체험 카드로 들어온 누구나 바꿀 수 있게 되므로). 비밀번호 변경은 지금 비밀번호를 알아야 해 그대로 | X17~X19 |
+| 신발 삭제 = 숨김 | `DELETE /api/shoes/{id}` 는 `deleted_at` 을 적는다. 숨긴 신발은 목록 · 상세 · 찜 · 리뷰 쓰기에서 없는 신발(404 · 400), 그 리뷰는 목록 · 상세에서 빠진다(DB 에는 남는다). 다시 DELETE 는 404. 활동 로그 `shoe.delete`(모델 · 라인키 · 세대 · 현행 · 숨긴 시각 · 그때의 리뷰 수 · 찜 수) | X30~X36 |
+| 숨긴 신발 | `GET /api/admin/shoes/hidden`(admin · 데모 관리자, 비로그인 401 · USER 403) — 신발 문서 + `deletedAt`. `POST /api/admin/shoes/{id}/restore`(admin) — 리뷰 · 찜이 돌아온다, 숨기지 않은 신발은 404. 활동 로그 `shoe.restore` | X37 · X40~X43 |
+| 숨긴 세대와 겹침 | 같은 라인 · 세대 · 성별의 숨긴 신발이 있으면 POST · PATCH 409 `{code:"hidden_generation", message}`(DB UNIQUE 가 숨긴 행에도 걸린다 — 새로 넣지 말고 되살린다) | X38 |
+| 회원 탈퇴 | `DELETE /api/me` → 204. 리뷰는 남고 작성자 "탈퇴 회원", 찜은 지우고 신발의 찜 수를 뺀다, 리뷰 공감은 남긴다, 모든 refresh 폐기. 이메일 · 닉네임을 자리표시로 바꿔 같은 이메일 · 닉네임으로 다시 가입할 수 있다(새 id — 이전 리뷰는 안 돌아온다). 남은 access token(15분)은 `/api/me` · 리뷰 · 찜에서 401. 복구 없음. 활동 로그 `user.withdraw` | X70~X82 |
+| `/api/me` | `createdAt`(가입 시각, UTC) — 마이페이지의 가입일 | X81 |
+| 리뷰 | 내용 10~300자(400) | X60 · X61 |
+
 ## 3. 일부러 다르게 둔 것 (녹화에 없고 프런트가 쓰지 않는 경우)
 
 | 경우 | 원래 API(json-server) | RUNSHOES |
@@ -140,5 +161,5 @@ INT · DECIMAL 이면 잘리거나 반올림돼 돌아온다. JSON 숫자와 같
 
 ## 4. 코드 위치
 
-`backend/src/main/java/com/kopo17/runshoes/` — `auth/`(SecurityConfig · AuthController · MeController · AuthService · TokenService), `api/`(JsonServerController · BrandController · LikeController · Viewer · Likes · Ratings · ShoeCollection · ReviewCollection · TermCollection · ListQuery · Js · Values),
+`backend/src/main/java/com/kopo17/runshoes/` — `auth/`(SecurityConfig · AuthController · MeController · AuthService · TokenService), `api/`(JsonServerController · BrandController · AdminController · LikeController · Viewer · Likes · Ratings · ShoeCollection · ReviewCollection · TermCollection · SpecSources · ListQuery · Js · Values),
 `config/`(ApiHeadersFilter · JacksonConfig · SpaConfig · BasePathConfig), `summary/`(SummaryService). 스키마 `db/migration/V1__schema.sql` 의 주석에도 같은 근거가 있다.

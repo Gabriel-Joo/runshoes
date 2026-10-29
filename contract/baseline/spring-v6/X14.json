@@ -1,0 +1,38 @@
+{
+  "id": "X14",
+  "plan": null,
+  "name": "데모 관리자 리뷰 지우기 → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/reviews/1",
+    "headers": {
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "demo_admin",
+      "message": "데모 관리자 계정은 할 수 없습니다"
+    }
+  }
+}

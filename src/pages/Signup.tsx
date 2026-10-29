@@ -98,6 +98,7 @@ function Signup() {
       <p className="auth__alt">
         이미 계정이 있으세요?
         <Link to={`/login${returnTo !== "/" ? `?returnTo=${encodeURIComponent(returnTo)}` : ""}`}>로그인</Link>
+        화면으로 이동합니다
       </p>
     </div>
   );

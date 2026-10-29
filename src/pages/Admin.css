@@ -214,3 +214,40 @@
     margin-left: auto;
   }
 }
+
+/* 데모 관리자 표시 · 숨긴 신발(V8, 2026-10-30) */
+.admin__demo {
+  margin-left: 12px;
+  padding: 3px 9px;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.admin__hidden {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+.admin__hiddentoggle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.admin__hiddentoggle:hover {
+  color: var(--text-strong);
+}
+
+.admin__hidden .admin__list {
+  margin-top: 14px;
+}
+
+.admin__row.is-hidden .admin__thumb,
+.admin__row.is-hidden .admin__names {
+  opacity: 0.55;
+}

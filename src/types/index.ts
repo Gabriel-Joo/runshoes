@@ -17,7 +17,7 @@ export interface Shoe {
 
   price: number | null;
   // 정가 메타(V5) — 출처 · 읽은 날(YYYY-MM-DD) · 늘 "정가". 출처 기록이 없으면 null(화면은 가격만)
-  priceSource?: "공식몰" | "ABC마트" | "다나와" | null;
+  priceSource?: "공식몰" | "ABC마트" | "다나와" | "크림" | null;   // 크림 = 발매가(정가)
   priceCheckedAt?: string | null;
   priceKind?: "정가" | null;
   image: string;
@@ -29,7 +29,23 @@ export interface Shoe {
   reviewCount: number;
   likeCount: number;
   liked: boolean;
+
+  // 세대 구조(V4) — 관리 화면이 보고 고친다
+  lineKey?: string | null;
+  generation?: number | null;
+  isCurrent?: boolean | null;
+  gender?: "men" | "women" | "unisex" | null;
+  weightSize?: string | null;
+  // 스펙 출처(V6) — 칸마다 {code, url?}. 카본은 출처 면제
+  specSources?: SpecSources | null;
+  // 숨긴 때(V8) — 관리 화면의 숨긴 신발 목록에만 온다
+  deletedAt?: string;
 }
+
+/** 스펙 출처 코드 — 화면에서 고르는 것(BITR … MAN)과 기존 값에만 보이는 것(DB · SX) */
+export type SourceCode = "BITR" | "RSG" | "STORE" | "PR" | "WEB" | "MAN" | "DB" | "SX";
+export type SpecField = "weight" | "drop" | "stackHeight" | "midsole" | "width" | "wideAvailable";
+export type SpecSources = Partial<Record<SpecField, { code: SourceCode; url?: string }>>;
 
 export interface Review {
   id: number;

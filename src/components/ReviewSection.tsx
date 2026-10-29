@@ -5,7 +5,9 @@ import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
 import { loginPath } from "../auth/session";
 import ReviewItem from "./ReviewItem";
-import { contentError, reviewFailure } from "./reviewRules";
+import { clampReview, contentError, reviewError, REVIEW_MAX } from "./reviewRules";
+import ReviewCounter from "./ReviewCounter";
+import { demoBlocked } from "../auth/demoAdmin";
 import ConfirmModal from "./ConfirmModal";
 import "./ReviewSection.css";
 
@@ -37,7 +39,7 @@ const saveDraft = (shoeId: number, d: { rating: number; content: string } | null
  * 수정은 내 리뷰만, 지우기는 내 리뷰 또는 admin. 공감은 남의 리뷰에만. 평점은 서버가 다시 센다(onReviewChange 는 목록만 다시 받는다)
  */
 function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
-  const { status, user, isAdmin } = useAuth();
+  const { status, user, isAdmin, setNotice } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
@@ -90,7 +92,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       setExpired(true);
       return;
     }
-    if (!res.ok) return setFormError(reviewFailure[res.status] ?? "리뷰를 올리지 못했어요. 내용을 확인해 주세요.");
+    if (!res.ok) return setFormError(await reviewError(res, "리뷰를 올리지 못했어요. 내용을 확인해 주세요."));
     saveDraft(shoeId, null);
     setContent("");
     setRating(5);
@@ -106,7 +108,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       body: JSON.stringify({ rating, content: content.trim() }),
     }).catch(() => null);
     if (!res) return "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요.";
-    if (!res.ok) return reviewFailure[res.status] ?? "고치지 못했어요. 내용을 확인해 주세요.";
+    if (!res.ok) return reviewError(res, "고치지 못했어요. 내용을 확인해 주세요.");
     await getReviews();
     onReviewChange();
     return null;
@@ -114,8 +116,10 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
 
   const deleteReview = async () => {
     if (!deleteTarget) return;
-    await apiFetch(`/reviews/${deleteTarget.id}`, { method: "DELETE" });
+    const res = await apiFetch(`/reviews/${deleteTarget.id}`, { method: "DELETE" });
     setDeleteTarget(null);
+    const blocked = await demoBlocked(res);
+    if (blocked) return setNotice(blocked);
     await getReviews();
     onReviewChange();
   };
@@ -123,6 +127,8 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   // 공감 — 응답의 liked · likeCount 로 그 리뷰만 바꾼다(순서는 그대로 — 누르자마자 베스트가 바뀌어 튀지 않게)
   const toggleLike = async (review: Review) => {
     const res = await apiFetch(`/reviews/${review.id}/like`, { method: review.liked ? "DELETE" : "PUT" });
+    const blocked = await demoBlocked(res);   // 데모 관리자 — 공감도 막는다
+    if (blocked) return setNotice(blocked);
     if (!res.ok) return;
     const { liked, likeCount } = await res.json();
     setReviews((list) => list.map((r) => (r.id === review.id ? { ...r, liked, likeCount } : r)));
@@ -211,16 +217,17 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
 
           <textarea
             className="review__textarea"
-            placeholder="이 신발을 신어본 경험을 남겨 주세요. (10자 이상)"
+            placeholder="이 신발을 신어본 경험을 남겨 주세요. (10~300자)"
             value={content}
             onChange={(e) => {
-              setContent(e.target.value);
+              setContent(clampReview(e.target.value));
               setFormError(null);
             }}
             rows={3}
-            maxLength={1000}
+            maxLength={REVIEW_MAX * 2}
             aria-invalid={Boolean(formError)}
           />
+          <ReviewCounter value={content} />
           {formError && (
             <p className="review__error" role="alert">
               {formError}

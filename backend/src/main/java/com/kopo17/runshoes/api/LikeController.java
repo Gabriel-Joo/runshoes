@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 찜 · 리뷰 공감 — PUT 은 켠다, DELETE 는 끈다(몇 번 보내도 같다). 응답 {liked, likeCount} — 숫자는 서버가 센다(예전에는 프런트가 계산해 PATCH 했다).
- * 로그인해야 한다(401 — SecurityConfig). 없는 신발 · 리뷰는 404. 내 리뷰에는 공감할 수 없다(403).
+ * 로그인해야 한다(401 — SecurityConfig). 없는 신발 · 리뷰는 404(숨긴 신발 · 그 리뷰도). 내 리뷰에는 공감할 수 없다(403).
+ * 데모 관리자는 403 demo_admin(V7) — 끄는 쪽(DELETE)도 막는다(읽기 전용). 탈퇴한 사람의 남은 토큰(15분)은 401.
  * json-server 계약 밖(docs/AUTH_DESIGN.md 2절).
  */
 @RestController
@@ -38,7 +39,7 @@ class LikeController {
 	@PutMapping("/shoes/{id}/like")
 	@Transactional
 	public Map<String, Object> likeShoe(@PathVariable String id) {
-		long userId = Viewer.current().requireUser(), shoeId = shoe(id);
+		long userId = writer(Viewer.current()), shoeId = shoe(id);
 		if (likes.likeShoe(userId, shoeId)) activity.log(Entry.of("like.add", userId, "shoe", shoeId));
 		return state(true, likes.shoeLikeCount(shoeId));
 	}
@@ -46,7 +47,7 @@ class LikeController {
 	@DeleteMapping("/shoes/{id}/like")
 	@Transactional
 	public Map<String, Object> unlikeShoe(@PathVariable String id) {
-		long userId = Viewer.current().requireUser(), shoeId = shoe(id);
+		long userId = writer(Viewer.current()), shoeId = shoe(id);
 		if (likes.unlikeShoe(userId, shoeId)) activity.log(Entry.of("like.remove", userId, "shoe", shoeId));
 		return state(false, likes.shoeLikeCount(shoeId));
 	}
@@ -55,7 +56,7 @@ class LikeController {
 	@Transactional
 	public Map<String, Object> likeReview(@PathVariable String id) {
 		Viewer v = Viewer.current();
-		long userId = v.requireUser();
+		long userId = writer(v);
 		Review r = review(id);
 		if (v.owns(r.getUserId())) throw ApiException.forbidden("내 리뷰에는 공감하지 않는다");
 		if (likes.likeReview(userId, r.getId())) activity.log(Entry.of("review_like.add", userId, "review", r.getId()));
@@ -65,10 +66,16 @@ class LikeController {
 	@DeleteMapping("/reviews/{id}/like")
 	@Transactional
 	public Map<String, Object> unlikeReview(@PathVariable String id) {
-		long userId = Viewer.current().requireUser();
+		long userId = writer(Viewer.current());
 		Review r = review(id);
 		if (likes.unlikeReview(userId, r.getId())) activity.log(Entry.of("review_like.remove", userId, "review", r.getId()));
 		return state(false, likes.reviewLikeCount(r.getId()));
+	}
+
+	private long writer(Viewer v) {
+		long userId = v.requireWriter();
+		if (!likes.activeUser(userId)) throw ApiException.unauthorized();
+		return userId;
 	}
 
 	private long shoe(String raw) {
@@ -78,7 +85,8 @@ class LikeController {
 	}
 
 	private Review review(String raw) {
-		return reviews.findById(JsonServerController.id(raw)).orElseThrow(ApiException::notFound);
+		return reviews.findById(JsonServerController.id(raw)).filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()))
+				.orElseThrow(ApiException::notFound);
 	}
 
 	private static Map<String, Object> state(boolean liked, int likeCount) {
