@@ -313,7 +313,7 @@ export const V4_SCENARIOS = [
 export const V6_SCENARIOS = [
   login("X00", "admin@runshoes.test", "{{adminPassword}}", "admin"),
   login("X01", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
-  W("X02", "체험 카드 — 시드 3(무작위) + 데모 관리자(무작위라 모양만 본다)", "GET", "/api/auth/demo-accounts", { expect: 200, contract: false }),
+  W("X02", "체험 카드 — 시드 30(id 순, 리뷰 수 · 찜 수) + 데모 관리자", "GET", "/api/auth/demo-accounts", { expect: 200 }),
   W("X03", "체험 로그인 — 진짜 관리자 id 31 → 400", "POST", "/api/auth/demo", { headers: json, body: { id: 31 }, expect: 400 }),
   W("X04", "체험 로그인 — 없는 id → 400", "POST", "/api/auth/demo", { headers: json, body: { id: 9999 }, expect: 400 }),
   W("X05", "체험 로그인 — 데모 관리자 32 → 200", "POST", "/api/auth/demo", { headers: json, body: { id: 32 }, capture: { d: "body.accessToken" }, expect: 200 }),
@@ -355,7 +355,9 @@ export const V6_SCENARIOS = [
   W("X53", "모르는 출처 코드 → 400", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { specSources: { drop: { code: "XYZ" } } }, expect: 400 }),
   W("X54", "출처 칸이 아닌 것(carbon) → 400", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { specSources: { carbon: { code: "MAN" } } }, expect: 400 }),
   W("X55", "다른 칸만 PATCH — specSources 그대로 → 200", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { summary: "계약 요약 V6" }, expect: 200 }),
-  W("X56", "가격 출처 크림 · 정가 → 200", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { priceSource: "크림", priceCheckedAt: "2026-10-30", priceKind: "정가" }, expect: 200 }),
+  W("X56", "가격 출처 크림 · 발매가 → 200", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { priceSource: "크림", priceCheckedAt: "2026-10-30", priceKind: "발매가" }, expect: 200 }),
+  W("X56a", "가격 종류 정가 → 400(발매가로 통일, 2026-10-30)", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { priceKind: "정가" }, expect: 400 }),
+  W("X56b", "추가 이미지 7장 → 400(6장까지)", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { images: ["a", "b", "c", "d", "e", "f", "g"] }, expect: 400 }),
   W("X57", "GET shoe 1 — specSources", "GET", "/api/shoes/1", { expect: 200 }),
 
   W("X60", "리뷰 301자 → 400", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: "{{x6:num}}", rating: 4, content: "가".repeat(301) }, expect: 400 }),

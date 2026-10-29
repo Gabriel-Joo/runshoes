@@ -30,7 +30,7 @@ function Admin() {
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState<Shoe[]>([]);
-  const [showHidden, setShowHidden] = useState(false);
+  const [tab, setTab] = useState<"list" | "hidden">("list");   // 등록된 신발 · 숨긴 신발(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
   const [busy, setBusy] = useState(false);
   const { setNotice, isDemoAdmin } = useAuth();
 
@@ -143,10 +143,21 @@ function Admin() {
         </div>
       </div>
 
-      <p className="admin__count">
-        {shoes.length}개 / 전체 {total}개
-      </p>
+      <div className="admin__countbar">
+        <p className="admin__count">
+          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : `숨긴 신발 ${hidden.length}개`}
+        </p>
+        <div className="admin__tabs" role="tablist" aria-label="목록">
+          <button role="tab" aria-selected={tab === "list"} className={`admin__tab ${tab === "list" ? "is-active" : ""}`} onClick={() => setTab("list")}>
+            등록된 신발
+          </button>
+          <button role="tab" aria-selected={tab === "hidden"} className={`admin__tab ${tab === "hidden" ? "is-active" : ""}`} onClick={() => setTab("hidden")}>
+            숨긴 신발 {hidden.length}
+          </button>
+        </div>
+      </div>
 
+      {tab === "list" && (
       <ul className="admin__list">
         {loaded && shoes.length === 0 && (
           <li className="admin__empty">조건에 맞는 러닝화가 없습니다.</li>
@@ -180,12 +191,9 @@ function Admin() {
           </li>
         ))}
       </ul>
+      )}
 
-      <section className="admin__hidden">
-        <button className="admin__hiddentoggle" onClick={() => setShowHidden((v) => !v)} aria-expanded={showHidden}>
-          숨긴 신발 {hidden.length}개 {showHidden ? "접기" : "보기"}
-        </button>
-        {showHidden && (
+      {tab === "hidden" && (
           <ul className="admin__list">
             {hidden.length === 0 && <li className="admin__empty">숨긴 신발이 없습니다.</li>}
             {hidden.map((shoe) => (
@@ -209,8 +217,7 @@ function Admin() {
               </li>
             ))}
           </ul>
-        )}
-      </section>
+      )}
 
       {target && <HideShoeConfirm shoe={target} busy={busy} onConfirm={removeShoe} onCancel={() => setTarget(null)} />}
     </div>
