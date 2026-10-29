@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import type { Review } from "../types";
 import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
-import { loginPath } from "../auth/session";
+import { displayName, loginPath } from "../auth/session";
 import ReviewItem from "./ReviewItem";
 import { clampReview, contentError, reviewError, REVIEW_MAX } from "./reviewRules";
 import ReviewCounter from "./ReviewCounter";
@@ -204,7 +204,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
         <div className="review__form">
           <div className="review__row">
             <span className="review__as">
-              <strong>{user!.nickname}</strong>님으로 작성
+              <strong>{displayName(user!)}</strong>님으로 작성
             </span>
             <div className="review__rating" role="radiogroup" aria-label="별점">
               {[1, 2, 3, 4, 5].map((n) => (
