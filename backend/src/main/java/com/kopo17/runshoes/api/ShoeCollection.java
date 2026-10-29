@@ -1,5 +1,7 @@
 package com.kopo17.runshoes.api;
 
+import com.kopo17.runshoes.activity.ActivityLogger;
+import com.kopo17.runshoes.activity.ActivityLogger.Entry;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.Shoe;
 import com.kopo17.runshoes.domain.ShoeRepository;
@@ -13,7 +15,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * /api/shoes — 쓰기(POST · PATCH · PUT · DELETE)는 admin 만(403). 없는 신발은 권한보다 먼저 404.
+ * /api/shoes — 쓰기(POST · PATCH · PUT · DELETE)는 admin 만(403, 데모 관리자는 403 demo_admin). 없는 신발은 권한보다 먼저 404.
+ * DELETE 는 숨긴다(V8, 2026-10-30) — 행 · 리뷰 · 찜은 남고 목록 · 상세에서 빠진다(domain/Shoe @SQLRestriction). 되살리기는 AdminController.
+ *   숨긴 신발은 없는 신발과 같다(404) — 숨긴 것을 다시 DELETE 해도 404.
+ * 와이드 모델 "없음"의 출처 필수(2026-10-29)는 관리 폼이 본다 — 서버가 막으면 json-server 계약(spring-v3 W30 · W36 의 wideAvailable:false)이 깨진다.
  * rating · reviewCount 는 리뷰가 정하고(Ratings), likeCount · liked 는 찜이 정한다(Likes) — 본문에 와도 admin 이어도 버린다.
  * 응답의 liked 는 요청한 사람이 찜했는지(likes). 공용 칸 shoes.liked 는 읽지 않는다(V4 에서 지운다).
  */
@@ -23,11 +28,13 @@ class ShoeCollection implements DocCollection {
 	private final ShoeRepository shoes;
 	private final ReviewRepository reviews;
 	private final Likes likes;
+	private final ActivityLogger activity;
 
-	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes) {
+	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity) {
 		this.shoes = shoes;
 		this.reviews = reviews;
 		this.likes = likes;
+		this.activity = activity;
 	}
 
 	@Override
@@ -108,11 +115,46 @@ class ShoeCollection implements DocCollection {
 	@Override
 	@Transactional
 	public boolean delete(long id, Viewer viewer) {
-		if (!shoes.existsById(id)) return false;
+		Optional<Shoe> found = shoes.findById(id);
+		if (found.isEmpty()) return false;
 		viewer.requireAdmin();
-		reviews.deleteByShoeId(id);
-		shoes.deleteById(id);
+		Shoe s = found.get();
+		java.time.LocalDateTime at = Values.nowUtc().truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+		if (shoes.hide(id, at) != 1) return false;
+		// 숨긴 신발의 기록 — 숨긴 뒤에는 엔티티로 읽히지 않아 모델 · 라인 · 세대를 여기 남긴다(리뷰 · 찜 수는 그때의 것)
+		Map<String, Object> meta = new LinkedHashMap<>();
+		meta.put("model", s.getModel());
+		meta.put("brand", s.getBrand());
+		meta.put("lineKey", s.getLineKey());
+		meta.put("generation", s.getGeneration());
+		meta.put("isCurrent", s.getIsCurrent());
+		meta.put("hiddenAt", Values.formatCreatedAt(at));
+		meta.put("reviews", reviews.countByShoeId(id));
+		meta.put("likes", s.getLikeCount());
+		activity.log(new Entry("shoe.delete", viewer.userId(), "shoe", id, meta));
 		return true;
+	}
+
+	/** 숨긴 신발(관리 화면의 되살리기 목록) — admin · 데모 관리자 */
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> hidden(Viewer viewer) {
+		viewer.requireAdminView();
+		return shoes.findHidden().stream().map(s -> {
+			Map<String, Object> d = toDoc(s, false);
+			d.put("deletedAt", s.getDeletedAt() == null ? null : Values.formatCreatedAt(s.getDeletedAt()));
+			return d;
+		}).toList();
+	}
+
+	/** 되살리기 — 리뷰 · 찜이 그대로 돌아온다. 없는 · 숨기지 않은 신발은 404 */
+	@Transactional
+	public Map<String, Object> restore(long id, Viewer viewer) {
+		if (shoes.countHidden(id) == 0) throw ApiException.notFound();
+		viewer.requireAdmin();
+		shoes.unhide(id);
+		Shoe s = shoes.findById(id).orElseThrow(ApiException::notFound);
+		activity.log(new Entry("shoe.restore", viewer.userId(), "shoe", id, Map.of("model", s.getModel())));
+		return toDoc(s, likes.likesShoe(viewer.userId(), id));
 	}
 
 	/** 키 순서는 기준선 GET 과 같게(db.json 의 필드 순서). liked 는 요청한 사람 기준 */
@@ -156,12 +198,14 @@ class ShoeCollection implements DocCollection {
 		d.put("priceSource", s.getPriceSource());
 		d.put("priceCheckedAt", s.getPriceCheckedAt() == null ? null : s.getPriceCheckedAt().toString());
 		d.put("priceKind", s.getPriceKind());
+		// V6 — 스펙 출처. 같은 방식으로 맨 뒤에(계약 spring-v4 · v3 는 "추가"로만 본다)
+		d.put("specSources", s.getSpecSources());
 		return d;
 	}
 
 	private static final java.util.Set<String> GENDERS = java.util.Set.of("men", "women", "unisex");
 	// 정가 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
-	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29)
+	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(정가, 2026-10-29)
 	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("정가");
 
 	private static String oneOf(String field, Object v, java.util.Set<String> allowed) {
@@ -187,7 +231,10 @@ class ShoeCollection implements DocCollection {
 		boolean taken = shoes.findByLineKeyAndGenerationAndGender(s.getLineKey(), s.getGeneration(), s.getGender()).stream()
 				.anyMatch(o -> !o.getId().equals(selfId));
 		if (taken) throw ApiException.duplicateGeneration("duplicate generation " + s.getLineKey() + " " + s.getGeneration() + " " + s.getGender());
+		List<Long> hidden = shoes.hiddenGeneration(s.getLineKey(), s.getGeneration(), s.getGender()).stream().filter(h -> !h.equals(selfId)).toList();
+		if (!hidden.isEmpty()) throw ApiException.hiddenGeneration(hidden.get(0));   // DB UNIQUE 는 숨긴 행에도 걸린다 — 500 대신 409
 	}
+
 
 	/** body 에 있는 키만 — null 도 그대로 넣는다(수정 폼이 빈 칸을 null 로 보낸다). id · 셈하는 값(rating · reviewCount · likeCount · liked) · 모르는 키는 무시 */
 	static void apply(Shoe s, Map<String, Object> body) {
@@ -224,6 +271,7 @@ class ShoeCollection implements DocCollection {
 				case "priceSource" -> s.setPriceSource(oneOf(k, v, PRICE_SOURCES));
 				case "priceCheckedAt" -> s.setPriceCheckedAt(Values.date(k, v));
 				case "priceKind" -> s.setPriceKind(oneOf(k, v, PRICE_KINDS));
+				case "specSources" -> s.setSpecSources(SpecSources.parse(v));
 				default -> { }
 			}
 		});

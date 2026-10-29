@@ -1,0 +1,44 @@
+{
+  "id": "X52",
+  "plan": null,
+  "name": "WEB 인데 주소 없음 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/1",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "specSources": {
+        "drop": {
+          "code": "WEB"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "code": "invalid",
+      "message": "출처가 WEB 이면 주소를 넣어 주세요(drop)"
+    }
+  }
+}

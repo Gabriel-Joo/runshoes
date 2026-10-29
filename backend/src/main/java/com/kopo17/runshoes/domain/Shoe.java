@@ -5,13 +5,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
-/** shoes — V1__schema.sql. id 는 앱이 매긴다(json-server 처럼 max+1, AUTO_INCREMENT 없음). */
+/**
+ * shoes — V1__schema.sql. id 는 앱이 매긴다(json-server 처럼 max+1, AUTO_INCREMENT 없음).
+ * 숨긴 신발(V8 deleted_at)은 엔티티로 읽히지 않는다 — 목록 · 상세 · existsById · 찜 · 리뷰 쓰기에서 저절로 빠진다.
+ * 숨긴 행까지 봐야 하는 곳(새 id · 세대 겹침 · 숨긴 목록 · 되살리기)은 ShoeRepository 의 native 쿼리.
+ */
 @Entity
 @Table(name = "shoes")
+@SQLRestriction("deleted_at IS NULL")
 public class Shoe {
 
 	@Id
@@ -102,6 +110,15 @@ public class Shoe {
 	@Column(name = "price_kind")
 	private String priceKind;
 
+	// 스펙 출처(V6) — {"weight":{"code":"BITR","url":"…"}, …}. 칸 · 코드 형식은 api/SpecSources 가 본다
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "spec_sources", columnDefinition = "json")
+	private Map<String, Map<String, String>> specSources;
+
+	// 숨긴 때(V8) — 엔티티로 읽히는 행은 늘 NULL(@SQLRestriction). 숨기기 · 되살리기는 ShoeRepository native
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
+
 	private String image;
 
 	@JdbcTypeCode(SqlTypes.JSON)
@@ -179,6 +196,9 @@ public class Shoe {
 	public void setPriceCheckedAt(LocalDate priceCheckedAt) { this.priceCheckedAt = priceCheckedAt; }
 	public String getPriceKind() { return priceKind; }
 	public void setPriceKind(String priceKind) { this.priceKind = priceKind; }
+	public Map<String, Map<String, String>> getSpecSources() { return specSources; }
+	public void setSpecSources(Map<String, Map<String, String>> specSources) { this.specSources = specSources; }
+	public LocalDateTime getDeletedAt() { return deletedAt; }
 	public String getImage() { return image; }
 	public void setImage(String image) { this.image = image; }
 	public List<String> getImages() { return images; }

@@ -1,0 +1,37 @@
+{
+  "id": "X03",
+  "plan": null,
+  "name": "체험 로그인 — 진짜 관리자 id 31 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/demo",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 31
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:34 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION",
+        "message": "체험 계정이 아니에요."
+      }
+    }
+  }
+}

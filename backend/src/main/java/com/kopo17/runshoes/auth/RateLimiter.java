@@ -56,6 +56,16 @@ class RateLimiter {
 		if (!nth.isEmpty()) throw tooMany(nth.get(0).toLocalDateTime().plus(props.signupWindow()), now, SIGNUP);
 	}
 
+	/** 체험 로그인(POST /api/auth/demo) — 같은 IP 의 성공이 로그인 창(15분)에 demoIp 번이면 막는다. 비밀번호가 없는 길이라 성공을 센다 */
+	void checkDemo(String ip) {
+		if (ip == null) return;
+		LocalDateTime now = now();
+		Map<String, Object> byIp = jdbc.queryForMap("""
+				SELECT COUNT(*) AS n, MAX(occurred_at) AS last FROM activity_logs
+				WHERE ip = ? AND event = 'auth.demo_login' AND occurred_at > ?""", ip, Timestamp.valueOf(now.minus(props.loginWindow())));
+		blockIf(byIp, props.demoIp(), props.loginWindow(), now, LOGIN);
+	}
+
 	private static void blockIf(Map<String, Object> row, int limit, Duration window, LocalDateTime now, String template) {
 		long n = ((Number) row.get("n")).longValue();
 		if (n < limit) return;

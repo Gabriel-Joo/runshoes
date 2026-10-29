@@ -1,0 +1,35 @@
+{
+  "id": "X21",
+  "plan": null,
+  "name": "숨긴 목록 USER → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/shoes/hidden",
+    "headers": {
+      "Authorization": "Bearer {{u1}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

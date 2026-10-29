@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Review } from "../types";
 import { formatDate } from "../utils/date";
-import { contentError } from "./reviewRules";
+import { clampReview, contentError, REVIEW_MAX } from "./reviewRules";
+import ReviewCounter from "./ReviewCounter";
 
 interface ReviewItemProps {
   review: Review;
@@ -73,13 +74,14 @@ function ReviewItem({
             className="review__textarea"
             value={editContent}
             onChange={(e) => {
-              setEditContent(e.target.value);
+              setEditContent(clampReview(e.target.value));
               setEditError(null);
             }}
             rows={3}
-            maxLength={1000}
+            maxLength={REVIEW_MAX * 2}
             aria-invalid={Boolean(editError)}
           />
+          <ReviewCounter value={editContent} />
           {editError && (
             <p className="review__error" role="alert">
               {editError}

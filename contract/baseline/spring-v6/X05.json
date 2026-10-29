@@ -1,0 +1,46 @@
+{
+  "id": "X05",
+  "plan": null,
+  "name": "체험 로그인 — 데모 관리자 32 → 200",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/demo",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": 32
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "set-cookie": [
+        "runshoes_refresh=<가림>; Path=/api/auth; Max-Age=1209600; Expires=Thu, 12 Nov 2026 18:57:34 GMT; Secure; HttpOnly; SameSite=Strict"
+      ],
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:34 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "accessToken": "<jwt>",
+      "tokenType": "Bearer",
+      "expiresIn": 900,
+      "user": {
+        "id": 32,
+        "email": "demo-admin@runshoes.test",
+        "nickname": "데모관리자",
+        "role": "DEMO_ADMIN"
+      }
+    }
+  }
+}

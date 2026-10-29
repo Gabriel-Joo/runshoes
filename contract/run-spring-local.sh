@@ -2,6 +2,7 @@
 # Spring 백엔드를 시드 상태에서 띄워 계약 시나리오를 녹화하고 기준선과 비교한다(로컬).
 #   contract/run-spring-local.sh v3          # V3(로그인) 뒤 계약 115건 — 기준선 baseline/spring-v3(읽기 R · 쓰기 W · 인증 A)
 #   contract/run-spring-local.sh v4          # V4(세대 구조) 새 기능 — 기준선 baseline/spring-v4. v3 · v3-search 는 V4 키를 --allow-added 로 "추가"만 허용해 옛 기준선과 비교
+#   contract/run-spring-local.sh v6          # V6~V9(스펙 출처 · 데모 관리자 · 숨김 · 탈퇴 · 300자) 새 기능 — 기준선 baseline/spring-v6
 #   contract/run-spring-local.sh v3-search   # 검색 24건 — 기준선 baseline/spring-v3-search
 #   contract/run-spring-local.sh v3-summary  # 요약 10건 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다. 기준선 baseline/spring-v3-summary
 #   main · summary · search                 # V3 전 기준선(node · node-summary · spring-search) — 이력. V3 뒤 앱에는 맞지 않는다(작성자 · 쓰기 401)
@@ -34,7 +35,7 @@ OLLAMA=http://127.0.0.1:9            # 본 시나리오는 Ollama 를 부르지 
 # 로그인(V3~) — 녹화마다 새로 만든 임시 값. Secret runshoes-auth 와 상관없다. 비밀번호는 record.mjs 도 env 로 받는다(기록에는 <가림>)
 JWT_SECRET=${JWT_SECRET:-$(openssl rand -base64 48)}
 export SEED_USER_PASSWORD=${SEED_USER_PASSWORD:-seed$(openssl rand -hex 8)1} ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin$(openssl rand -hex 8)2}
-AUTH_ENV=(-e JWT_SECRET="$JWT_SECRET" -e SEED_USER_PASSWORD -e ADMIN_PASSWORD)
+AUTH_ENV=(-e JWT_SECRET="$JWT_SECRET" -e SEED_USER_PASSWORD -e ADMIN_PASSWORD -e DEMO_LOGIN_ENABLED=true)   # 체험 로그인(V7) — v6 세트가 쓴다. 다른 세트에는 영향 없다
 if [ "$SET" = summary ] || [ "$SET" = v3-summary ]; then
   node contract/mock-ollama.mjs 3109 >/dev/null 2>&1 & MOCK_PID=$!
   OLLAMA=http://127.0.0.1:3109
@@ -65,6 +66,7 @@ case "$SET" in
   v3-search)  REC=search;     BASE=spring-v3-search ;;
   v3-summary) REC=summary-v3; BASE=spring-v3-summary ;;
   v4)         REC=v4;         BASE=spring-v4 ;;
+  v6)         REC=v6;         BASE=spring-v6 ;;
   *) echo "모르는 세트: $SET"; exit 2 ;;
 esac
 rm -rf "$OUT"
@@ -74,4 +76,6 @@ if [ ! -d "contract/baseline/$BASE" ]; then echo "기준선 contract/baseline/$B
 V4_KEYS=lineKey,generation,isCurrent,gender,weightSize,specSize,measuredWeight,measuredWeightSize,measuredStackHeight,measuredDrop,measuredSource,measuredCount
 # V5 키 — 정가의 출처 · 확인 날짜 · 종류(2026-10-28). 시드에서는 셋 다 null
 V5_KEYS=priceSource,priceCheckedAt,priceKind
-node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS" "contract/baseline/$BASE" "$OUT"
+# V6 키 — 스펙 출처(2026-10-30). 시드에서는 null
+V6_KEYS=specSources
+node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS" "contract/baseline/$BASE" "$OUT"

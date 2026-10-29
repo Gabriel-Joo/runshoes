@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * /api/reviews — 쓰기는 로그인한 사람만(401 은 SecurityConfig).
  * POST: 작성자 · 닉네임 · 시각은 서버가 정한다(본문의 author · createdAt · likeCount · liked · id 는 버린다 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다).
- *       한 신발에 첫 리뷰 하나(409). 별점 1~5 · 내용 10~1,000자(400)
+ *       한 신발에 첫 리뷰 하나(409). 별점 1~5 · 내용 10~300자(400, 2026-10-30)
  * PATCH: 작성자만(403), rating · content 만 — 다른 키는 버린다. DELETE: 작성자 또는 admin. PUT: 405(아무 필드나 덮어쓰는 길을 열지 않는다)
+ * 데모 관리자(V7)는 쓰기 · 고치기 · 지우기 모두 403 demo_admin. 탈퇴 회원(V9)의 리뷰는 남는다(작성자 "탈퇴 회원").
+ * 숨긴 신발(V8)의 리뷰는 없는 것으로 본다 — 목록에서 빠지고 GET · PATCH · DELETE 는 404(DB 에는 남는다, 되살리면 돌아온다).
  * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings).
  */
 @Component
@@ -51,21 +53,27 @@ class ReviewCollection implements DocCollection {
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> all(Viewer viewer) {
 		Set<Long> liked = likes.reviewsLikedBy(viewer.userId());
-		return reviews.findAll(Sort.by("id")).stream().map(r -> toDoc(r, liked.contains(r.getId()))).toList();
+		Set<Long> hidden = Set.copyOf(shoes.hiddenIds());
+		return reviews.findAll(Sort.by("id")).stream().filter(r -> !hidden.contains(r.getShoeId())).map(r -> toDoc(r, liked.contains(r.getId()))).toList();
+	}
+
+	/** 숨긴 신발의 리뷰는 없는 것과 같다 */
+	private Optional<Review> visible(long id) {
+		return reviews.findById(id).filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Map<String, Object>> get(long id, Viewer viewer) {
 		Set<Long> liked = likes.reviewsLikedBy(viewer.userId());
-		return reviews.findById(id).map(r -> toDoc(r, liked.contains(r.getId())));
+		return visible(id).map(r -> toDoc(r, liked.contains(r.getId())));
 	}
 
 	@Override
 	@Transactional
 	public Map<String, Object> create(Map<String, Object> body, Viewer viewer) {
-		long userId = viewer.requireUser();
-		User author = users.findById(userId).orElseThrow(ApiException::unauthorized);
+		long userId = viewer.requireWriter();
+		User author = users.findById(userId).filter(u -> !u.isWithdrawn()).orElseThrow(ApiException::unauthorized);
 		Long shoeId = Values.id("shoeId", body.get("shoeId"));
 		if (shoeId == null || !shoes.existsById(shoeId)) throw ApiException.badRequest("shoeId " + shoeId + " 인 신발이 없다");
 		int rating = ReviewRules.rating(body.get("rating"));
@@ -97,7 +105,8 @@ class ReviewCollection implements DocCollection {
 	@Override
 	@Transactional
 	public Optional<Map<String, Object>> patch(long id, Map<String, Object> body, Viewer viewer) {
-		return reviews.findById(id).map(r -> {
+		return visible(id).map(r -> {
+			if (viewer.demoAdmin()) throw ApiException.demoAdmin();
 			if (!viewer.owns(r.getUserId())) throw ApiException.forbidden("작성자만 고친다");
 			if (body.containsKey("rating")) r.setRating(ReviewRules.rating(body.get("rating")));
 			if (body.containsKey("content")) r.setContent(ReviewRules.content(body.get("content")));
@@ -116,9 +125,10 @@ class ReviewCollection implements DocCollection {
 	@Override
 	@Transactional
 	public boolean delete(long id, Viewer viewer) {
-		Optional<Review> found = reviews.findById(id);
+		Optional<Review> found = visible(id);
 		if (found.isEmpty()) return false;
 		Review r = found.get();
+		if (viewer.demoAdmin()) throw ApiException.demoAdmin();
 		if (!viewer.owns(r.getUserId()) && !viewer.admin()) throw ApiException.forbidden("작성자 또는 admin 만 지운다");
 		reviews.delete(r);
 		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다

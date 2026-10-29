@@ -1,0 +1,54 @@
+{
+  "id": "X02",
+  "plan": null,
+  "name": "체험 카드 — 시드 3(무작위) + 데모 관리자(무작위라 모양만 본다)",
+  "contract": false,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/auth/demo-accounts",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:34 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 28,
+        "nickname": "회복주는천천히",
+        "role": "USER",
+        "reviewCount": 4
+      },
+      {
+        "id": 5,
+        "nickname": "주말산행런",
+        "role": "USER",
+        "reviewCount": 3
+      },
+      {
+        "id": 16,
+        "nickname": "반사이즈업",
+        "role": "USER",
+        "reviewCount": 4
+      },
+      {
+        "id": 32,
+        "nickname": "데모관리자",
+        "role": "DEMO_ADMIN",
+        "reviewCount": 0
+      }
+    ]
+  }
+}

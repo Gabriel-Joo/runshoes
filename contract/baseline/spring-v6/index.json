@@ -1,0 +1,305 @@
+{
+  "recordedAt": "2026-10-29T18:57:34.509Z",
+  "base": "http://127.0.0.1:3200/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "v6",
+  "readOnly": false,
+  "note": "",
+  "scenarios": [
+    {
+      "id": "X00",
+      "name": "로그인 admin@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "X01",
+      "name": "로그인 runner01@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "X02",
+      "name": "체험 카드 — 시드 3(무작위) + 데모 관리자(무작위라 모양만 본다)",
+      "status": 200
+    },
+    {
+      "id": "X03",
+      "name": "체험 로그인 — 진짜 관리자 id 31 → 400",
+      "status": 400
+    },
+    {
+      "id": "X04",
+      "name": "체험 로그인 — 없는 id → 400",
+      "status": 400
+    },
+    {
+      "id": "X05",
+      "name": "체험 로그인 — 데모 관리자 32 → 200",
+      "status": 200
+    },
+    {
+      "id": "X06",
+      "name": "체험 로그인 — 시드 runner03 → 200",
+      "status": 200
+    },
+    {
+      "id": "X07",
+      "name": "데모 관리자는 비밀번호로 못 들어간다 → 401",
+      "status": 401
+    },
+    {
+      "id": "X10",
+      "name": "데모 관리자 PATCH shoe → 403 {code:demo_admin, message}",
+      "status": 403
+    },
+    {
+      "id": "X11",
+      "name": "데모 관리자 DELETE shoe → 403",
+      "status": 403
+    },
+    {
+      "id": "X12",
+      "name": "데모 관리자 POST review → 403",
+      "status": 403
+    },
+    {
+      "id": "X13",
+      "name": "데모 관리자 찜 → 403",
+      "status": 403
+    },
+    {
+      "id": "X14",
+      "name": "데모 관리자 리뷰 지우기 → 403",
+      "status": 403
+    },
+    {
+      "id": "X15",
+      "name": "데모 관리자 숨긴 신발 목록 → 200 []",
+      "status": 200
+    },
+    {
+      "id": "X16",
+      "name": "데모 관리자 닉네임 변경 → 403",
+      "status": 403
+    },
+    {
+      "id": "X17",
+      "name": "시드 체험 계정 닉네임 변경 → 403",
+      "status": 403
+    },
+    {
+      "id": "X18",
+      "name": "시드 체험 계정 탈퇴 → 403",
+      "status": 403
+    },
+    {
+      "id": "X19",
+      "name": "관리자 탈퇴 → 403",
+      "status": 403
+    },
+    {
+      "id": "X20",
+      "name": "숨긴 목록 비로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "X21",
+      "name": "숨긴 목록 USER → 403",
+      "status": 403
+    },
+    {
+      "id": "X30",
+      "name": "신발 20 숨기기 admin → 200 {}",
+      "status": 200
+    },
+    {
+      "id": "X31",
+      "name": "숨긴 신발 GET → 404",
+      "status": 404
+    },
+    {
+      "id": "X32",
+      "name": "목록에서 빠진다 — 19켤레",
+      "status": 200
+    },
+    {
+      "id": "X33",
+      "name": "숨긴 신발의 리뷰 — 목록에 없다",
+      "status": 200
+    },
+    {
+      "id": "X34",
+      "name": "숨긴 신발 찜 → 404",
+      "status": 404
+    },
+    {
+      "id": "X35",
+      "name": "숨긴 신발에 리뷰 → 400",
+      "status": 400
+    },
+    {
+      "id": "X36",
+      "name": "숨긴 것을 다시 DELETE → 404",
+      "status": 404
+    },
+    {
+      "id": "X37",
+      "name": "숨긴 목록 admin — 신발 20 + deletedAt",
+      "status": 200
+    },
+    {
+      "id": "X38",
+      "name": "숨긴 신발과 같은 라인 · 세대 · 성별 POST → 409 hidden_generation",
+      "status": 409
+    },
+    {
+      "id": "X39",
+      "name": "새 신발 → 201, id 21(숨긴 20 을 다시 쓰지 않는다)",
+      "status": 201
+    },
+    {
+      "id": "X40",
+      "name": "데모 관리자 되살리기 → 403",
+      "status": 403
+    },
+    {
+      "id": "X41",
+      "name": "되살리기 admin → 200, 리뷰 수 · 찜 수 그대로",
+      "status": 200
+    },
+    {
+      "id": "X42",
+      "name": "되살린 신발의 리뷰가 돌아온다",
+      "status": 200
+    },
+    {
+      "id": "X43",
+      "name": "숨기지 않은 신발 되살리기 → 404",
+      "status": 404
+    },
+    {
+      "id": "X51",
+      "name": "와이드 없음 + 출처 STORE · 중량 WEB+주소 → 200",
+      "status": 200
+    },
+    {
+      "id": "X52",
+      "name": "WEB 인데 주소 없음 → 400",
+      "status": 400
+    },
+    {
+      "id": "X53",
+      "name": "모르는 출처 코드 → 400",
+      "status": 400
+    },
+    {
+      "id": "X54",
+      "name": "출처 칸이 아닌 것(carbon) → 400",
+      "status": 400
+    },
+    {
+      "id": "X55",
+      "name": "다른 칸만 PATCH — specSources 그대로 → 200",
+      "status": 200
+    },
+    {
+      "id": "X56",
+      "name": "가격 출처 크림 · 정가 → 200",
+      "status": 200
+    },
+    {
+      "id": "X57",
+      "name": "GET shoe 1 — specSources",
+      "status": 200
+    },
+    {
+      "id": "X60",
+      "name": "리뷰 301자 → 400",
+      "status": 400
+    },
+    {
+      "id": "X61",
+      "name": "리뷰 300자 → 201",
+      "status": 201
+    },
+    {
+      "id": "X70",
+      "name": "탈퇴 시험 계정 가입 → 201",
+      "status": 201
+    },
+    {
+      "id": "X71",
+      "name": "탈퇴 전 리뷰 → 201",
+      "status": 201
+    },
+    {
+      "id": "X72",
+      "name": "탈퇴 전 찜 → likeCount 1",
+      "status": 200
+    },
+    {
+      "id": "X73",
+      "name": "탈퇴 → 204",
+      "status": 204
+    },
+    {
+      "id": "X74",
+      "name": "리뷰는 남고 작성자 \"탈퇴 회원\"",
+      "status": 200
+    },
+    {
+      "id": "X75",
+      "name": "찜은 지워지고 찜 수 0",
+      "status": 200
+    },
+    {
+      "id": "X76",
+      "name": "탈퇴한 계정 로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "X77",
+      "name": "남은 토큰 /api/me → 401",
+      "status": 401
+    },
+    {
+      "id": "X78",
+      "name": "남은 토큰 찜 → 401",
+      "status": 401
+    },
+    {
+      "id": "X79",
+      "name": "남은 refresh 쿠키 → 401",
+      "status": 401
+    },
+    {
+      "id": "X80",
+      "name": "같은 이메일 · 닉네임으로 다시 가입 → 201(새 계정)",
+      "status": 201
+    },
+    {
+      "id": "X81",
+      "name": "새 계정 /api/me — createdAt",
+      "status": 200
+    },
+    {
+      "id": "X82",
+      "name": "새 계정의 리뷰 — 이전 리뷰는 돌아오지 않는다",
+      "status": 200
+    },
+    {
+      "id": "X90",
+      "name": "끝 상태 — shoes 전체(specSources 포함)",
+      "status": 200
+    },
+    {
+      "id": "X91",
+      "name": "끝 상태 — reviews 전체",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109",
+    "x6": 21,
+    "wv": 107
+  }
+}

@@ -73,6 +73,11 @@ class Likes {
 		return n == null ? 0 : n;
 	}
 
+	/** 탈퇴하지 않은 계정인가(V9) — 탈퇴한 뒤 남은 access token(15분)으로 찜을 바꾸지 못하게 */
+	boolean activeUser(long userId) {
+		return Boolean.TRUE.equals(jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM users WHERE id = ? AND deleted_at IS NULL)", Boolean.class, userId));
+	}
+
 	private static Timestamp now() {
 		return Timestamp.valueOf(Values.nowUtc());
 	}

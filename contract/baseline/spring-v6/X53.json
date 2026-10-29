@@ -1,0 +1,44 @@
+{
+  "id": "X53",
+  "plan": null,
+  "name": "모르는 출처 코드 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/1",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "specSources": {
+        "drop": {
+          "code": "XYZ"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "code": "invalid",
+      "message": "specSources.drop.code 는 BITR · RSG · STORE · PR · WEB · MAN 중 하나"
+    }
+  }
+}

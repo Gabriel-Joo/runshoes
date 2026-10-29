@@ -305,3 +305,78 @@ export const V4_SCENARIOS = [
   W("V31", "DELETE 새 shoe b", "DELETE", "/api/shoes/{{v4b}}", { headers: bearer("admin"), expect: 200 }),
   W("V32", "끝 상태 — 시드 20켤레(V4 키 포함)", "GET", "/api/shoes", { expect: 200 }),
 ];
+
+// V6~V9(2026-10-30) — 스펙 출처 · 데모 관리자 · 신발 숨김 · 회원 탈퇴 · 리뷰 300자 · 가격 출처 크림. 새 기능만 담는다(기준선 spring-v6).
+// 옛 기준선(spring-v3 · v4 …)은 다시 녹화하지 않고 --allow-added 로 specSources 가 더해진 것만 허용한다.
+//   단 spring-v3 의 W51 · W52(지운 신발 id 를 다시 쓴다)는 숨김(V8)으로 달라진다 — 숨긴 행이 id 를 가지고 있어 새 신발은 22(의도한 변경)
+// 시드(Flyway)에서 시작한다: 데모 관리자는 V7 이 넣은 id 32. 체험 로그인은 녹화 때 DEMO_LOGIN_ENABLED=true
+export const V6_SCENARIOS = [
+  login("X00", "admin@runshoes.test", "{{adminPassword}}", "admin"),
+  login("X01", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
+  W("X02", "체험 카드 — 시드 3(무작위) + 데모 관리자(무작위라 모양만 본다)", "GET", "/api/auth/demo-accounts", { expect: 200, contract: false }),
+  W("X03", "체험 로그인 — 진짜 관리자 id 31 → 400", "POST", "/api/auth/demo", { headers: json, body: { id: 31 }, expect: 400 }),
+  W("X04", "체험 로그인 — 없는 id → 400", "POST", "/api/auth/demo", { headers: json, body: { id: 9999 }, expect: 400 }),
+  W("X05", "체험 로그인 — 데모 관리자 32 → 200", "POST", "/api/auth/demo", { headers: json, body: { id: 32 }, capture: { d: "body.accessToken" }, expect: 200 }),
+  W("X06", "체험 로그인 — 시드 runner03 → 200", "POST", "/api/auth/demo", { headers: json, body: { id: 3 }, capture: { s3: "body.accessToken" }, expect: 200 }),
+  W("X07", "데모 관리자는 비밀번호로 못 들어간다 → 401", "POST", "/api/auth/login", { headers: json, body: { email: "demo-admin@runshoes.test", password: "{{seedPassword}}" }, expect: 401 }),
+  W("X10", "데모 관리자 PATCH shoe → 403 {code:demo_admin, message}", "PATCH", "/api/shoes/1", { headers: jb("d"), body: { summary: "x" }, expect: 403 }),
+  W("X11", "데모 관리자 DELETE shoe → 403", "DELETE", "/api/shoes/1", { headers: bearer("d"), expect: 403 }),
+  W("X12", "데모 관리자 POST review → 403", "POST", "/api/reviews", { headers: jb("d"), body: { shoeId: 1, rating: 5, content: "데모 관리자가 써 보는 리뷰" }, expect: 403 }),
+  W("X13", "데모 관리자 찜 → 403", "PUT", "/api/shoes/1/like", { headers: bearer("d"), expect: 403 }),
+  W("X14", "데모 관리자 리뷰 지우기 → 403", "DELETE", "/api/reviews/1", { headers: bearer("d"), expect: 403 }),
+  W("X15", "데모 관리자 숨긴 신발 목록 → 200 []", "GET", "/api/admin/shoes/hidden", { headers: bearer("d"), expect: 200 }),
+  W("X16", "데모 관리자 닉네임 변경 → 403", "PATCH", "/api/me/nickname", { headers: jb("d"), body: { nickname: "바꿔본다" }, expect: 403 }),
+  W("X17", "시드 체험 계정 닉네임 변경 → 403", "PATCH", "/api/me/nickname", { headers: jb("s3"), body: { nickname: "바꿔본다" }, expect: 403 }),
+  W("X18", "시드 체험 계정 탈퇴 → 403", "DELETE", "/api/me", { headers: bearer("s3"), expect: 403 }),
+  W("X19", "관리자 탈퇴 → 403", "DELETE", "/api/me", { headers: bearer("admin"), expect: 403 }),
+  W("X20", "숨긴 목록 비로그인 → 401", "GET", "/api/admin/shoes/hidden", { expect: 401 }),
+  W("X21", "숨긴 목록 USER → 403", "GET", "/api/admin/shoes/hidden", { headers: bearer("u1"), expect: 403 }),
+
+  W("X30", "신발 20 숨기기 admin → 200 {}", "DELETE", "/api/shoes/20", { headers: bearer("admin"), expect: 200 }),
+  W("X31", "숨긴 신발 GET → 404", "GET", "/api/shoes/20", { expect: 404 }),
+  W("X32", "목록에서 빠진다 — 19켤레", "GET", "/api/shoes", { expect: 200 }),
+  W("X33", "숨긴 신발의 리뷰 — 목록에 없다", "GET", "/api/reviews?shoeId=20", { expect: 200 }),
+  W("X34", "숨긴 신발 찜 → 404", "PUT", "/api/shoes/20/like", { headers: bearer("u1"), expect: 404 }),
+  W("X35", "숨긴 신발에 리뷰 → 400", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: 20, rating: 4, content: "숨긴 신발에 써 보는 리뷰" }, expect: 400 }),
+  W("X36", "숨긴 것을 다시 DELETE → 404", "DELETE", "/api/shoes/20", { headers: bearer("admin"), expect: 404 }),
+  W("X37", "숨긴 목록 admin — 신발 20 + deletedAt", "GET", "/api/admin/shoes/hidden", { headers: bearer("admin"), volatile: ["deletedAt"], expect: 200 }),
+  W("X38", "숨긴 신발과 같은 라인 · 세대 · 성별 POST → 409 hidden_generation", "POST", "/api/shoes",
+    { headers: jb("admin"), body: { ...contractShoe, model: "숨긴 세대와 겹침", lineKey: "asics:gel-trabuco", generation: 13, gender: "men" }, expect: 409 }),
+  W("X39", "새 신발 → 201, id 21(숨긴 20 을 다시 쓰지 않는다)", "POST", "/api/shoes", { headers: jb("admin"), body: { ...contractShoe, model: "Contract Runner V6" }, capture: { x6: "body.id" }, expect: 201 }),
+  W("X40", "데모 관리자 되살리기 → 403", "POST", "/api/admin/shoes/20/restore", { headers: bearer("d"), expect: 403 }),
+  W("X41", "되살리기 admin → 200, 리뷰 수 · 찜 수 그대로", "POST", "/api/admin/shoes/20/restore", { headers: bearer("admin"), expect: 200 }),
+  W("X42", "되살린 신발의 리뷰가 돌아온다", "GET", "/api/reviews?shoeId=20", { expect: 200 }),
+  W("X43", "숨기지 않은 신발 되살리기 → 404", "POST", "/api/admin/shoes/20/restore", { headers: bearer("admin"), expect: 404 }),
+
+  // 와이드 "없음"의 출처 필수는 관리 폼이 본다(서버가 막으면 spring-v3 W30 · W36 이 깨진다) — 여기서는 출처를 함께 저장하는 것만
+  W("X51", "와이드 없음 + 출처 STORE · 중량 WEB+주소 → 200", "PATCH", "/api/shoes/1",
+    { headers: jb("admin"), body: { wideAvailable: false, specSources: { wideAvailable: { code: "STORE" }, weight: { code: "WEB", url: "https://example.test/weight" } } }, expect: 200 }),
+  W("X52", "WEB 인데 주소 없음 → 400", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { specSources: { drop: { code: "WEB" } } }, expect: 400 }),
+  W("X53", "모르는 출처 코드 → 400", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { specSources: { drop: { code: "XYZ" } } }, expect: 400 }),
+  W("X54", "출처 칸이 아닌 것(carbon) → 400", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { specSources: { carbon: { code: "MAN" } } }, expect: 400 }),
+  W("X55", "다른 칸만 PATCH — specSources 그대로 → 200", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { summary: "계약 요약 V6" }, expect: 200 }),
+  W("X56", "가격 출처 크림 · 정가 → 200", "PATCH", "/api/shoes/1", { headers: jb("admin"), body: { priceSource: "크림", priceCheckedAt: "2026-10-30", priceKind: "정가" }, expect: 200 }),
+  W("X57", "GET shoe 1 — specSources", "GET", "/api/shoes/1", { expect: 200 }),
+
+  W("X60", "리뷰 301자 → 400", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: "{{x6:num}}", rating: 4, content: "가".repeat(301) }, expect: 400 }),
+  W("X61", "리뷰 300자 → 201", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: "{{x6:num}}", rating: 4, content: "가".repeat(300) }, volatile: ["createdAt"], expect: 201 }),
+
+  W("X70", "탈퇴 시험 계정 가입 → 201", "POST", "/api/auth/signup",
+    { headers: json, body: { email: "withdraw@runshoes.test", password: "withdraw123", nickname: "탈퇴시험" }, capture: { w: "body.accessToken", wr: "cookie.runshoes_refresh" }, expect: 201 }),
+  W("X71", "탈퇴 전 리뷰 → 201", "POST", "/api/reviews", { headers: jb("w"), body: { shoeId: "{{x6:num}}", rating: 3, content: "탈퇴하기 전에 남기는 리뷰" }, capture: { wv: "body.id" }, volatile: ["createdAt"], expect: 201 }),
+  W("X72", "탈퇴 전 찜 → likeCount 1", "PUT", "/api/shoes/{{x6}}/like", { headers: bearer("w"), expect: 200 }),
+  W("X73", "탈퇴 → 204", "DELETE", "/api/me", { headers: bearer("w"), expect: 204 }),
+  W("X74", "리뷰는 남고 작성자 \"탈퇴 회원\"", "GET", "/api/reviews/{{wv}}", { volatile: ["createdAt"], expect: 200 }),
+  W("X75", "찜은 지워지고 찜 수 0", "GET", "/api/shoes/{{x6}}", { expect: 200 }),
+  W("X76", "탈퇴한 계정 로그인 → 401", "POST", "/api/auth/login", { headers: json, body: { email: "withdraw@runshoes.test", password: "withdraw123" }, expect: 401 }),
+  W("X77", "남은 토큰 /api/me → 401", "GET", "/api/me", { headers: bearer("w"), expect: 401 }),
+  W("X78", "남은 토큰 찜 → 401", "PUT", "/api/shoes/{{x6}}/like", { headers: bearer("w"), expect: 401 }),
+  W("X79", "남은 refresh 쿠키 → 401", "POST", "/api/auth/refresh", { headers: { Cookie: "runshoes_refresh={{wr}}" }, expect: 401 }),
+  W("X80", "같은 이메일 · 닉네임으로 다시 가입 → 201(새 계정)", "POST", "/api/auth/signup",
+    { headers: json, body: { email: "withdraw@runshoes.test", password: "withdraw123", nickname: "탈퇴시험" }, capture: { w2: "body.accessToken" }, expect: 201 }),
+  W("X81", "새 계정 /api/me — createdAt", "GET", "/api/me", { headers: bearer("w2"), volatile: ["createdAt"], expect: 200 }),
+  W("X82", "새 계정의 리뷰 — 이전 리뷰는 돌아오지 않는다", "GET", "/api/reviews?userId=34", { expect: 200 }),
+
+  W("X90", "끝 상태 — shoes 전체(specSources 포함)", "GET", "/api/shoes", { expect: 200 }),
+  W("X91", "끝 상태 — reviews 전체", "GET", "/api/reviews", { volatile: ["createdAt"], expect: 200 }),
+];

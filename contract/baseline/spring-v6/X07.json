@@ -1,0 +1,39 @@
+{
+  "id": "X07",
+  "plan": null,
+  "name": "데모 관리자는 비밀번호로 못 들어간다 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "demo-admin@runshoes.test",
+      "password": "<가림>"
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:34 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "INVALID_CREDENTIALS",
+        "message": "이메일 또는 비밀번호가 맞지 않습니다."
+      }
+    }
+  }
+}

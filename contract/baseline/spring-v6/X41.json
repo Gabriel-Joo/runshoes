@@ -1,0 +1,80 @@
+{
+  "id": "X41",
+  "plan": null,
+  "name": "되살리기 admin → 200, 리뷰 수 · 찜 수 그대로",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/shoes/20/restore",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 29 Oct 2026 18:57:35 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 20,
+      "brand": "아식스",
+      "model": "젤 트라부코 13",
+      "purpose": "트레일",
+      "stability": "중립화",
+      "midsole": "FF Blast Plus Eco",
+      "weight": 288,
+      "drop": 8,
+      "stackHeight": 34.5,
+      "width": "보통",
+      "wideAvailable": false,
+      "carbon": false,
+      "price": 179000,
+      "image": "/images/gel-trabuco-13.png",
+      "images": [
+        "/images/gel-trabuco-13.png",
+        "/images/gel-trabuco-13-1.png",
+        "/images/gel-trabuco-13-2.png",
+        "/images/gel-trabuco-13-3.png",
+        "/images/gel-trabuco-13-4.png",
+        "/images/gel-trabuco-13-5.png"
+      ],
+      "summary": "트레일을 처음 시작하는 분에게",
+      "description": "아식스의 만능형 트레일화로, 로드에서 트레일로 넘어오는 첫 신발로 자주 추천됩니다. 발바닥에 록플레이트가 들어가 돌밭에서 발을 보호하고, 뒤꿈치를 감싸는 구조가 단단해 울퉁불퉁한 길에서도 흔들림이 적습니다. 포장도로 구간이 섞인 코스에서도 무리 없이 달릴 수 있습니다.",
+      "rating": 4.4,
+      "reviewCount": 5,
+      "likeCount": 41,
+      "liked": false,
+      "lineKey": "asics:gel-trabuco",
+      "generation": 13,
+      "isCurrent": false,
+      "gender": "men",
+      "weightSize": null,
+      "specSize": null,
+      "measuredWeight": null,
+      "measuredWeightSize": null,
+      "measuredStackHeight": null,
+      "measuredDrop": null,
+      "measuredSource": null,
+      "measuredCount": null,
+      "priceSource": null,
+      "priceCheckedAt": null,
+      "priceKind": null,
+      "specSources": null
+    }
+  }
+}

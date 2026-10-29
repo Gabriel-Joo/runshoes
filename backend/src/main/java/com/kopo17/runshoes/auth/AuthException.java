@@ -39,6 +39,11 @@ class AuthException extends RuntimeException {
 		return new AuthException(HttpStatus.UNAUTHORIZED, code, null, message);
 	}
 
+	/** 체험 로그인이 꺼져 있을 때(DEMO_LOGIN_ENABLED) — 카드도 API 도 없다 */
+	static AuthException notFound() {
+		return new AuthException(HttpStatus.NOT_FOUND, "NOT_FOUND", null, "없는 경로예요.");
+	}
+
 	static AuthException forbidden(String code, String message) {
 		return new AuthException(HttpStatus.FORBIDDEN, code, null, message);
 	}

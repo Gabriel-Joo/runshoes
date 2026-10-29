@@ -5,7 +5,7 @@ import { logout } from "../auth/session";
 import { loginPath } from "../auth/session";
 import "./Header.css";
 
-/** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(회원 정보 수정 · 로그아웃). 등록·관리는 admin 에게만 */
+/** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 등록·관리는 admin · 데모 관리자(보기만)에게 */
 function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -14,7 +14,7 @@ function Header() {
   const menu = menuAt === location.pathname;
   const setMenu = (v: boolean) => setMenuAt(v ? location.pathname : null);
   const navigate = useNavigate();
-  const { status, user, isAdmin, setNotice } = useAuth();
+  const { status, user, canViewAdmin, setNotice } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
 
   const close = () => setOpen(false);
@@ -65,7 +65,7 @@ function Header() {
           <Link to="/best" className="header__link header__link--sub">
             러너들의 선택
           </Link>
-          {isAdmin && (
+          {canViewAdmin && (
             <Link to="/admin" className="header__link header__link--admin">
               등록·관리
             </Link>
@@ -84,7 +84,7 @@ function Header() {
               {menu && (
                 <div className="header__menu" role="menu">
                   <Link to="/account" className="header__menuitem" role="menuitem">
-                    회원 정보 수정
+                    마이페이지
                   </Link>
                   <button className="header__menuitem" role="menuitem" onClick={signOut}>
                     로그아웃
@@ -112,7 +112,7 @@ function Header() {
           {drawerLink("/", "홈")}
           {drawerLink("/recommend", "맞춤 추천")}
           {drawerLink("/best", "러너들의 선택")}
-          {isAdmin && drawerLink("/admin", "등록·관리")}
+          {canViewAdmin && drawerLink("/admin", "등록·관리")}
           {status === "anonymous" && (
             <Link to={toLogin} className="header__drawerlink header__drawerlink--auth" onClick={close}>
               로그인
@@ -121,7 +121,7 @@ function Header() {
           {user && (
             <>
               <p className="header__drawernick">{user.nickname}님</p>
-              {drawerLink("/account", "회원 정보 수정")}
+              {drawerLink("/account", "마이페이지")}
               <button className="header__drawerlink header__drawerbtn" onClick={signOut}>
                 로그아웃
               </button>

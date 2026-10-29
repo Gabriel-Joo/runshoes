@@ -75,6 +75,21 @@ class AuthController {
 		return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, clear(req).toString()).build();
 	}
 
+	record DemoBody(Long id) {}
+
+	/** 체험 카드 — 시드 계정 3개(무작위) + 데모 관리자(docs/ADMIN_DEMO_DESIGN.md 8.3). DEMO_LOGIN_ENABLED 가 꺼져 있으면 404 */
+	@GetMapping("/demo-accounts")
+	java.util.List<Map<String, Object>> demoAccounts() {
+		return auth.demoAccounts();
+	}
+
+	/** 체험 로그인 — 비밀번호 없이, 체험 풀 안의 id 만(밖은 400). 응답 · 쿠키는 로그인과 같다 */
+	@PostMapping("/demo")
+	ResponseEntity<Object> demo(@RequestBody DemoBody b, HttpServletRequest req) {
+		sameOrigin(req);
+		return session(HttpStatus.OK, auth.demoLogin(b.id(), RequestInfo.of(req)), req);
+	}
+
 	/** 가입 화면의 미리 확인 — 형식이 틀리면 400(메시지), 쓰는 중이면 409. 최종 판정은 가입할 때 */
 	@GetMapping("/nickname-available")
 	Map<String, Object> nicknameAvailable(@RequestParam(required = false) String nickname) {

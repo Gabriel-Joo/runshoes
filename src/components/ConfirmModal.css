@@ -53,3 +53,20 @@
   background: oklch(0.5 0.18 25);
   color: #fff;
 }
+.confirm__detail p + p {
+  margin-top: 2px;
+}
+
+.confirm__warning {
+  margin-top: 12px;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  background: oklch(0.97 0.02 25);
+  border-left: 3px solid var(--danger);
+}
+
+.confirm__ok:disabled {
+  opacity: 0.6;
+}

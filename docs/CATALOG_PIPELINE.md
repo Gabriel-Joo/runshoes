@@ -61,7 +61,7 @@
 | Running Warehouse | 약관이 "data mining, robots, crawling … whether automatic or manual"을 금지한다 |
 | 무신사 | robots가 `User-agent: *`에 `Disallow: /` |
 | RunRepeat | 데이터 API가 유료 상업 라이선스다(연 €1,000부터). 개인 · 취미 프로젝트는 대상 밖이다. 이미지가 없다 |
-| 크림(KREAM) | 공개 API가 없다. 이미지 CDN이 외부 Referer에 403을 준다(핫링크 차단). 약관 제12 · 14조가 이미지 권리를 회사 · 판매자에게 둔다 |
+| 크림(KREAM) | 2026-10-21 은 **이미지** 소스로 봤다: 공개 API가 없다, 이미지 CDN이 외부 Referer에 403을 준다(핫링크 차단), 약관 제12 · 14조가 이미지 권리를 회사 · 판매자에게 둔다. 2026-10-29 **발매가**(사실 값)로 다시 봤다: 약관 제12 · 13 · 21조에 자동 수집 금지가 없다(사용자 확인 — 13조 "자동화된 수단"은 게시물 등록, 21조는 거래 부정행위, 12조 2항은 일반 지재권 조항). 그러나 서버가 브라우저가 아닌 접속에 **HTTP 500(빈 본문)** 을 준다 — robots.txt · 첫 화면 · 약관 · 상품 페이지 모두, Playwright 렌더링(HeadlessChrome UA + 우리 UA, ABC마트와 같은 조건)도 500 → 차단 신호라 그 자리에서 멈췄다. **쓰지 않는다**(브라우저로 위장하지 않는다) |
 | 브랜드 프레스룸 | 신제품 보도자료에만 이미지가 있다(300켤레 중 30~40% 추정). 히어로 · 라이프스타일 컷이 섞여 배경과 각도가 통일되지 않는다 |
 | 다른 스니커즈 API | Sneaks-API는 StockX · GOAT를 긁는 스크레이퍼다. StockX 공식 API는 승인받은 판매자용이다 |
 
@@ -395,7 +395,44 @@ catalog/local/              ← .gitignore
     - 같으면 건너뛴다
   - **기본은 건조 실행**이다. `--apply`를 붙여야 쓴다. 구현은 `catalog/load.mjs`(계획은 `local/work/load-plan.json`). 시드 20켤레는 사실 값만 PATCH하고 이미지 · 요약 · 설명은 건드리지 않는다.
   - 운영에는 30 → 100 → 300 순서로 넣는다. `/api/shoes`는 페이지 없이 전부 돌려준다. 300켤레면 약 450KB이고, 첫 30켤레에서 화면과 응답 크기를 본다.
-  - 넣은 id를 `catalog/loads/<시각>.json`에 남겨 `--revert`할 수 있게 한다. 리뷰가 붙기 전까지만 깔끔하게 되돌릴 수 있다.
+  - 넣은 id를 `catalog/loads/<시각>.json`(gitignore — 운영 기록은 런북의 덤프 폴더에)에 남겨 `--revert`할 수 있게 한다. 리뷰가 붙기 전까지만 깔끔하게 되돌릴 수 있다.
+  - 시드 20켤레의 요약 · 설명은 `copy.json` 에 `seed_choice`(사용자가 원본 · 재작성 중 고른 것)가 있을 때만 PATCH 한다(2026-10-29). 그 전 V4 전 DB(시드에 lineKey 없음)에는 돌지 않는다 — 시드를 새 행으로 또 넣기 때문(exit 2). 운영은 `--base http://192.168.122.240 --host runshoes.ronanlab.dev`.
+
+### 7.1 관리 화면 수정 보호(2026-10-29 사용자 — "진짜 관리자가 고친 값이 적재 때 되돌아가면 안 된다")
+
+적재기는 카탈로그가 정답이라 운영 값이 다르면 되돌린다. 사람이 관리 화면에서 고친 값이 그렇게 사라지지 않게:
+
+1. **스냅숏** — `load.mjs --apply` 가 끝나면 그 직후의 운영 값을 `catalog/local/work/snapshot-<호스트>.json` 에 둔다(`--snapshot` 은 적재 없이 적기만). 칸 목록은 `catalog/live-fields.mjs`(사실 값 + 용도 · 문구 · 이미지)
+2. **알아보기** — 스냅숏과 지금 운영 값이 다른 칸 = 관리 화면에서 고친 칸. 데모 관리자는 서버가 쓰기를 막으니 진짜 관리자 계정의 수정이다
+3. **저절로 가져오기** — `--apply` 는 적재 전에 `pull-admin.mjs --write` 를 부르고, 옮긴 것이 있으면 `build.mjs` 를 다시 돌린 뒤 진행한다(2026-10-30 사용자 — 멈추지 말고 끌어와서 진행, CronJob 은 나중에).
+   - 로그: 화면에 `어드민 수정 N건을 decisions.json에 반영했다` + 칸마다 `<catalog_key> <필드>: 전 → 후`(문구는 `(copy.json)`). 같은 내용이 `loads/<시각>.json` 의 `adminPulled` 에(바꿀 것이 없어도 파일을 남긴다), 마지막 실행은 `local/work/pull-admin-last.json`
+   - 건조 실행은 `pull-admin.mjs` 를 쓰지 않고 돌려 `적용하면 어드민 수정 N건을 … 반영한다` 만 낸다
+   - 멈추는 것은 **관리 화면에서 새로 넣은 신발(구조 변경)** 뿐이다(2026-10-30 사용자). 후보 목록에 넣을지 정한 뒤 `--structure-ok` 로 진행한다(exit 3)
+   - 관리 화면의 삭제는 숨김(V8)이다 — 숨긴 신발은 `decisions.json` rows.hidden(`action: "hide"`)으로 옮겨 빌드가 적재 대상에서 빼고(status `hidden`), 되살리면 `show` 로 바꾼다. 멈추지 않는다. 그래도 숨긴 신발을 POST 하려 하면 멈춘다
+   - V6 전 앱(응답에 `specSources` 가 없다)에는 `--apply` 하지 않는다(exit 2) — 건조 실행은 된다
+   - 끌어온 뒤에도 되돌릴 칸이 남으면(빈틈) 멈춘다. 스냅숏이 없으면 `--apply` 하지 않는다(`--no-snapshot-ok` 는 처음 한 번만)
+4. **가져오기 규칙** — `node pull-admin.mjs [--base … --host …] --write` 로 따로 돌려도 된다(운영은 읽기만):
+   - 스펙(중량 · 중량 사이즈 · 드롭 · 스택하이트 · 미드솔 · 발볼 · 와이드 · 카본) · 가격(+출처 · 날짜 · 종류) → `decisions.json` rows, `by: "user"`, `via: "admin"`, 출처 `manual`(MAN). 비운 칸은 `clear`
+   - 브랜드 · 모델명 · 안정성 · 현행 → `decisions.json` rows(빌드가 후보 목록 값을 덮는다)
+   - 요약 · 설명 → `copy.json`(시드면 `seed_choice: "admin"`), 대표 · 추가 이미지 → `image_overrides`(`via: "admin"` 이면 빌드가 둘 다 그대로 낸다)
+   - 라인키 · 세대 · 성별 · 실측(무게 · 사이즈 · 출처 · 횟수 · 스택 · 드롭) · 스펙 기준 사이즈 → `decisions.json` rows(2026-10-30 사용자 — 관리 화면 수정은 전부 의도한 수정)
+   - 스펙 출처(V6 `specSources`) → `decisions.json` rows.spec_sources(빌드가 `shoes.jsonl` 의 `spec_sources` 로 낸다). 관리 화면에서 고른 출처에 주소가 있으면 그 칸의 판단 `source` 도 그 주소(없으면 `manual`)
+     - 라인키 · 세대를 바꾸면 `shoes.jsonl` 의 `catalog_key`(운영 행을 찾는 키)만 바뀌고, 판단 · 문구를 찾는 키 `source_key`(후보 목록 키)는 그대로다. 빌드는 `catalog_key` 가 겹치면 멈춘다
+   - 카탈로그 밖 시드(엔돌핀 스피드 4): 이미지 → `seed_only_images`, 가격 출처 → `seed_only_price_meta`, 문구 → `copy.json`. 나머지 칸은 적재기가 덮지 않아 로그에만 남긴다
+   - 새로 넣은 신발 → 옮기지 않는다(구조 변경, 위 3). 숨긴 · 되살린 신발 → rows.hidden(위 3)
+   - 같은 스냅숏으로 다시 돌려도 같은 판단을 두 번 쓰지 않는다
+5. 적재가 끝나면 스냅숏이 새로 적힌다 — 다음 적재는 그 뒤의 수정만 본다
+
+로컬 시험(2026-10-29): 관리 API 로 7칸(중량+사이즈 · 문구 · 카본 null · 시드 가격+날짜 · 안정성 · 시드 와이드 · 미드솔 null)을 고친 뒤 적재기 `--apply` 가 exit 3 으로 멈췄고(값 그대로), 가져오기 → 빌드 → 건조 실행 PATCH 0.
+저절로 가져오기 시험(2026-10-30): 관리 API 로 5칸(시드 가격+출처+날짜 · 중량+사이즈 · 요약 · 스택 · 카본 null)을 고친 뒤 `--apply` 한 번 — `어드민 수정 5건을 decisions.json에 반영했다` + 5줄, 빌드 다시, PATCH 0(값 그대로), 로그 파일 `adminPulled.count` 5. 다시 돌리면 0건.
+전부 끌어오기 시험(2026-10-30): 세대 3→103 · 현행 · 성별 · 스펙 기준 사이즈 · 실측 스택 · 추가 이미지 · 시드 대표 이미지 7칸 + 신발 1켤레 삭제 → `어드민 수정 7건을 decisions.json에 반영했다` + 7줄, 삭제 때문에 exit 3. `--structure-ok` 로 다시 — PATCH 0(세대를 바꾼 행도 새 행으로 넣지 않는다), 지운 신발만 POST 1. 그다음 적용 0건.
+숨김 · 출처 시험(2026-10-30, V9 로컬): `specSources` 채우기 PATCH 293 → 다시 0(MySQL 이 JSON 키 순서를 바꿔도 `live-fields.mjs canon` 으로 같다). 신발 하나 숨기기 + 다른 신발 출처 고치기 → `--apply` 한 번에 `어드민 수정 2건`(hidden · specSources), 빌드 다시, POST 0 · PATCH 0. 되살리기 → `hidden: true → false`, PATCH 0.
+운영 첫 스냅숏: 2026-10-29(운영 = 카탈로그, 건조 실행 0 을 확인한 뒤).
+
+### 7.2 스펙 출처 채우기(V6)
+
+적재기가 카탈로그 `sources`(DB 칸 이름)에서 `specSources` 를 만든다(`live-fields.mjs specSourcesOf`): 코드는 `todo.mjs code()` 와 같다 — BITR · RSG · STORE · PR · MAN(`manual`) · DB(`db.json#…` · 사용자 확인) · SX, 그 밖의 http(s) 주소는 WEB. 주소가 있으면 `url` 도. 값이 빈 칸은 출처도 없다. 카본은 출처 면제라 넣지 않는다.
+2026-10-30 로컬: 409행 중 379행에 출처, 적재 대상 293행 PATCH(카탈로그 밖 시드 1켤레는 그대로 null).
 
 ---
 

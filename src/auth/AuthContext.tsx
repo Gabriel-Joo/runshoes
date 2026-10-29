@@ -21,6 +21,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     status: !ready && !user ? "loading" : user ? "user" : "anonymous",
     user,
     isAdmin: user?.role === "ADMIN",
+    isDemoAdmin: user?.role === "DEMO_ADMIN",
+    canViewAdmin: user?.role === "ADMIN" || user?.role === "DEMO_ADMIN",
     notice,
     setNotice,
   };

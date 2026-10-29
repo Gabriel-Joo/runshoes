@@ -5,7 +5,9 @@ import { apiFetch } from "../auth/session";
 import { Link, useNavigate } from "react-router-dom";
 import type { Shoe } from "../types";
 import ShoeImage from "../components/ShoeImage";
-import ConfirmModal from "../components/ConfirmModal";
+import HideShoeConfirm from "../components/HideShoeConfirm";
+import { useAuth } from "../auth/useAuth";
+import { demoBlocked } from "../auth/demoAdmin";
 import SearchBox from "../components/SearchBox";
 import "./Admin.css";
 
@@ -27,6 +29,10 @@ function Admin() {
   const [total, setTotal] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
+  const [hidden, setHidden] = useState<Shoe[]>([]);
+  const [showHidden, setShowHidden] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const { setNotice, isDemoAdmin } = useAuth();
 
   const search = useDebounced(keyword.trim());
 
@@ -61,23 +67,47 @@ function Admin() {
     fetch(`${API}/shoes?_limit=0`).then((res) =>
       setTotal(Number(res.headers.get("X-Total-Count") ?? 0)),
     );
+    // 숨긴 신발(V8) — admin · 데모 관리자가 본다
+    apiFetch("/admin/shoes/hidden")
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setHidden)
+      .catch(() => setHidden([]));
   }, [reload]);
 
   const getShoes = () => setReload((n) => n + 1);
 
-  // 리뷰 · 찜은 서버가 같이 지운다(FK ON DELETE CASCADE) — 하나씩 지우지 않는다. admin 만(서버 403)
+  // 삭제 = 숨김(V8) — 리뷰 · 찜은 남고 신발과 함께 화면에서 빠진다. admin 만(서버 403 — 데모 관리자는 그 문구)
   const removeShoe = async () => {
     if (!target) return;
+    setBusy(true);
     const res = await apiFetch(`/shoes/${target.id}`, { method: "DELETE" });
-    if (!res.ok) alert(res.status === 403 ? "관리자만 지울 수 있어요." : "지우지 못했어요. 잠시 뒤 다시 해 주세요.");
+    setBusy(false);
+    const blocked = await demoBlocked(res);
+    if (blocked) setNotice(blocked);
+    else if (!res.ok) alert(res.status === 403 ? "관리자만 지울 수 있어요." : "지우지 못했어요. 잠시 뒤 다시 해 주세요.");
+    else setNotice(`'${target.model}'을(를) 숨겼어요. 숨긴 신발에서 되살릴 수 있어요.`);
     setTarget(null);
     getShoes();
   };
 
+  const restoreShoe = async (shoe: Shoe) => {
+    const res = await apiFetch(`/admin/shoes/${shoe.id}/restore`, { method: "POST" });
+    const blocked = await demoBlocked(res);
+    if (blocked) return setNotice(blocked);
+    if (!res.ok) return alert("되살리지 못했어요. 잠시 뒤 다시 해 주세요.");
+    setNotice(`'${shoe.model}'을(를) 되살렸어요. 리뷰 · 찜도 돌아왔어요.`);
+    getShoes();
+  };
+
+  // 데모 관리자 — 화면은 다 보이고, 누르면 서버가 막는다(새 등록 폼도 열어 볼 수 있다)
+
   return (
     <div className="admin">
       <div className="admin__head">
-        <h2 className="admin__title">러닝화 관리</h2>
+        <h2 className="admin__title">
+          러닝화 관리
+          {isDemoAdmin && <span className="admin__demo">데모 관리자 · 보기 전용</span>}
+        </h2>
         <button className="admin__new" onClick={() => navigate("/new")}>
           + 새 러닝화 등록
         </button>
@@ -151,14 +181,38 @@ function Admin() {
         ))}
       </ul>
 
-      {target && (
-        <ConfirmModal
-          message={`'${target.model}'을(를) 삭제할까요?`}
-          detail="등록된 리뷰도 함께 삭제되며 되돌릴 수 없습니다."
-          onConfirm={removeShoe}
-          onCancel={() => setTarget(null)}
-        />
-      )}
+      <section className="admin__hidden">
+        <button className="admin__hiddentoggle" onClick={() => setShowHidden((v) => !v)} aria-expanded={showHidden}>
+          숨긴 신발 {hidden.length}개 {showHidden ? "접기" : "보기"}
+        </button>
+        {showHidden && (
+          <ul className="admin__list">
+            {hidden.length === 0 && <li className="admin__empty">숨긴 신발이 없습니다.</li>}
+            {hidden.map((shoe) => (
+              <li className="admin__row is-hidden" key={shoe.id}>
+                <div className="admin__thumb">
+                  <ShoeImage src={shoe.image} alt={shoe.model} />
+                </div>
+                <span className="admin__no">NO.{String(shoe.id).padStart(2, "0")}</span>
+                <span className="admin__purpose">리뷰 {shoe.reviewCount} · 찜 {shoe.likeCount}</span>
+                <div className="admin__names">
+                  <span className="admin__model">{shoe.model}</span>
+                  <span className="admin__brandname">
+                    {shoe.brand} · {shoe.deletedAt?.slice(0, 10)} 숨김
+                  </span>
+                </div>
+                <div className="admin__actions">
+                  <button className="admin__edit" onClick={() => restoreShoe(shoe)}>
+                    되살리기
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {target && <HideShoeConfirm shoe={target} busy={busy} onConfirm={removeShoe} onCancel={() => setTarget(null)} />}
     </div>
   );
 }

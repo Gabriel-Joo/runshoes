@@ -22,7 +22,7 @@ class JwtTest {
 	private final SecurityConfig config = new SecurityConfig();
 
 	private static AuthProperties props(String secret) {
-		return new AuthProperties(secret, Duration.ofMinutes(15), Duration.ofDays(14), true, null, null);
+		return new AuthProperties(secret, Duration.ofMinutes(15), Duration.ofDays(14), true, null, null, false);
 	}
 
 	@Test

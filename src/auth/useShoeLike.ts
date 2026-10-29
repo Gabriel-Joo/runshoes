@@ -3,6 +3,7 @@ import type { Shoe } from "../types";
 import { useAuth } from "./useAuth";
 import { apiFetch } from "./session";
 import { loginPath } from "./session";
+import { demoBlocked } from "./demoAdmin";
 
 /**
  * 카드의 찜(하트) — 로그인했으면 PUT/DELETE /api/shoes/{id}/like(숫자는 서버가 센다), 안 했으면 로그인 화면으로.
@@ -11,13 +12,15 @@ import { loginPath } from "./session";
 export function useShoeLike(onDone: () => void) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { status } = useAuth();
+  const { status, setNotice } = useAuth();
   const toLogin = () => navigate(loginPath(location.pathname + location.search));
 
   return async (shoe: Shoe) => {
     if (status !== "user") return toLogin();
     const res = await apiFetch(`/shoes/${shoe.id}/like`, { method: shoe.liked ? "DELETE" : "PUT" });
     if (res.status === 401) return toLogin();
+    const blocked = await demoBlocked(res);   // 데모 관리자 — 찜도 막는다
+    if (blocked) return setNotice(blocked);
     onDone();
   };
 }

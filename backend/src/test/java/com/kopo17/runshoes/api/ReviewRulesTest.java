@@ -20,12 +20,12 @@ class ReviewRulesTest {
 	}
 
 	@Test
-	void 내용은_앞뒤_공백을_빼고_10에서_1000자() {
+	void 내용은_앞뒤_공백을_빼고_10에서_300자() {
 		assertEquals("신발이 너무 좋아요!", ReviewRules.content("  신발이 너무 좋아요!  "));   // 시드의 가장 짧은 리뷰가 10자
 		assertThrows(ApiException.class, () -> ReviewRules.content("너무 좋아요!"));
 		assertThrows(ApiException.class, () -> ReviewRules.content("          가나다"));
-		assertEquals(1000, ReviewRules.content("가".repeat(1000)).length());
-		assertThrows(ApiException.class, () -> ReviewRules.content("가".repeat(1001)));
+		assertEquals(300, ReviewRules.content("가".repeat(300)).length());
+		assertThrows(ApiException.class, () -> ReviewRules.content("가".repeat(301)));
 		assertThrows(ApiException.class, () -> ReviewRules.content(null));
 		assertThrows(ApiException.class, () -> ReviewRules.content(10));
 	}
