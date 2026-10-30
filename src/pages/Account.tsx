@@ -494,14 +494,14 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
                 <div><dt>안정성</dt><dd>{text(s.stability)}</dd></div>
                 <div><dt>평점</dt><dd><strong>{s.rating.toFixed(1)}</strong> · 리뷰 {s.reviewCount}</dd></div>
               </dl>
-              <button className="mypage__btn" onClick={() => unlike(s)}>
-                찜 해제
-              </button>
-              {/* 행택 — 아래쪽 작은 바코드. 값은 영문 · 숫자만(한글 모델명은 바코드가 안 된다 — id 로) */}
+              {/* 행택 — 정보 아래 바코드. 값은 영문 · 숫자만(한글 모델명은 바코드가 안 된다 — id 로). 찜 해제는 맨 아래(찾기 쉽게) */}
               <span className="mypage__tagcode">
                 <Barcode value={tagCode(s.id)} />
                 <small>{tagCode(s.id)}</small>
               </span>
+              <button className="mypage__btn mypage__cardbtn" onClick={() => unlike(s)}>
+                찜 해제
+              </button>
             </li>
           ))}
         </ul>

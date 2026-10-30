@@ -67,7 +67,7 @@ function Login() {
 
   return (
     <div className="auth">
-      <h2 className="auth__title">로그인</h2>
+      <h2 className="auth__title is-center">로그인</h2>
       <form className="auth__form" onSubmit={submit} noValidate>
         <Field id="login-email" label="이메일" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Field id="login-password" label="비밀번호" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
