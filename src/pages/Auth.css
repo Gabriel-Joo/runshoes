@@ -11,6 +11,11 @@
   letter-spacing: -0.02em;
 }
 
+/* 로그인 — 아래 체험 영역이 가운데라 제목도 가운데 */
+.auth__title.is-center {
+  text-align: center;
+}
+
 .auth__lead {
   margin-top: 8px;
   font-size: 14px;
@@ -166,8 +171,9 @@
 
 .auth__demotitle {
   text-align: center;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 22px;            /* "로그인"(28px)에 가깝게 — 아래 단계 제목 */
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--text-strong);
 }
 
@@ -267,6 +273,7 @@
 
 .auth__demonote {
   text-align: center;
+  word-break: keep-all;       /* 줄이 바뀌어도 낱말 중간에서 끊지 않는다 */
   margin-top: 6px;
   font-size: 12px;
   color: var(--text-weak);
@@ -278,5 +285,8 @@
   }
   .auth__title {
     font-size: 24px;
+  }
+  .auth__demotitle {
+    font-size: 19px;
   }
 }
