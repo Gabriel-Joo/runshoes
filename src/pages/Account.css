@@ -302,6 +302,12 @@
   align-self: flex-start;
 }
 
+/* 찜 해제 — 카드 맨 아래 가운데(위치를 찾기 쉽게). 카드 높이가 달라도 아래 끝에 붙는다 */
+.mypage__card .mypage__cardbtn {
+  align-self: center;
+  margin-top: auto;
+}
+
 /* 회원 탈퇴 확인 */
 .withdraw {
   margin-top: 20px;
@@ -645,7 +651,7 @@
 }
 
 .barcode {
-  width: 96px;
+  width: 150px;               /* 가로로 넉넉하게 — 96px 은 막대가 빽빽했다 */
   fill: var(--text-strong);
 }
 

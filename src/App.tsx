@@ -7,6 +7,7 @@ import ShoeForm from "./pages/ShoeForm";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ScrollTop from "./components/ScrollTop";
+import ResetScroll from "./components/ResetScroll";
 import ChatBot from "./components/ChatBot";
 import Notice from "./components/Notice";
 import Login from "./pages/Login";
@@ -19,6 +20,7 @@ import "./App.css";
 function App() {
   return (
     <AuthProvider>
+      <ResetScroll />
       <Header />
       <Notice />
       <Routes>
