@@ -147,7 +147,7 @@ hoka:mach,7,true,호카,hoka,Mach 7,마하 7,템포·인터벌,중립화,no,high
 hoka:mach,6,false,호카,hoka,Mach 6,마하 6,템포·인터벌,중립화,no,,2,,Hoka One One Mach 6,직전 세대 — 존재 확인 필요
 hoka:mach-x,3,true,호카,hoka,Mach X 3,마하 X 3,템포·인터벌,중립화,미확인,medium,2,,Hoka One One Mach X 3,
 hoka:mach-x,2,false,호카,hoka,Mach X 2,마하 X 2,템포·인터벌,중립화,미확인,,2,,Hoka One One Mach X 2,직전 세대 — 존재 확인 필요
-hoka:rincon,4,true,호카,hoka,Rincon 4,린콘 4,조깅·회복주,중립화,no,medium,2,,Hoka One One Rincon 4,입문
+hoka:rincon,4,true,호카,hoka,Rincon 4,린콘 4,조깅·회복주,중립화,no,medium,2,,Hoka One One Rincon 4,"입문 — 린콘 5 는 글로벌 출시 · 국내 미출시라 넣지 않는다(2026-11-01 사용자, 호카 공식몰 확인). 현행 = 국내 판매 중인 최신 세대"
 hoka:rincon,3,false,호카,hoka,Rincon 3,린콘 3,조깅·회복주,중립화,no,,2,,Hoka One One Rincon 3,직전 세대 — 존재 확인 필요
 hoka:skyward-x,2,true,호카,hoka,Skyward X 2,스카이워드 X 2,LSD·장거리,중립화,yes,medium,2,,Hoka One One Skyward X 2,
 hoka:skyward-x,1,false,호카,hoka,Skyward X 1,스카이워드 X 1,LSD·장거리,중립화,yes,,2,,Hoka One One Skyward X 1,직전 세대 — 존재 확인 필요
