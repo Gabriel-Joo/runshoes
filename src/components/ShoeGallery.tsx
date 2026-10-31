@@ -7,7 +7,7 @@ import "./ShoeGallery.css";
 /**
  * 상세 모달의 신발 사진. 이미지가 2장 이상이면 좌우 화살표 · 썸네일 줄(끌어서 넘김)이 보인다 — 1장이면 사진만(2026-10-30 사용자, 카탈로그 확장 때 지운 것을 되살렸다).
  * 목록은 [image, ...images] 에서 겹치는 것을 뺀 것 — 첫 장이 대표(관리 폼과 같은 규칙)
- * 화살표는 사진 칸 좌우 여백(.modal__visual padding) 안에, 썸네일 줄은 아래 — 흰 구역 그대로(머리 · 리뷰의 회색 그라데이션과 겹치지 않는다)
+ * 화살표는 사진 칸 좌우 여백(.modal__visual padding) 안에, 썸네일 줄은 아래 — 바탕은 사진 칸(.modal__visual) 것 그대로
  */
 interface ShoeGalleryProps {
   image: string;
