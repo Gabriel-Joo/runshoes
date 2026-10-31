@@ -250,15 +250,24 @@
    },
    "weight_g": {
     "action": "use_source",
-    "value": 218,
-    "source": "https://www.nike.com/ph/t/alphafly-3-mens-road-racing-shoes-d6x9mh/FD8311-300",
-    "sources_more": [
-     "https://www.fit2run.com/products/nike-air-zoom-alphafly-next-3-prm-mens"
-    ],
-    "via": "web",
-    "by": "claude",
-    "weight_basis": "US_M10",
-    "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 218g men's UK 9 (=US10) · search summary: 218 g/7.7 oz (Men's US 10) | Nike AU page summary labels 218 g as 'men's size 9' (likely UK 9). BlackToe 218 g M10. DoR 198 g M9 not used. | 이전: use_source 218"
+    "value": 195,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "use_source",
+     "value": 218,
+     "source": "https://www.nike.com/ph/t/alphafly-3-mens-road-racing-shoes-d6x9mh/FD8311-300",
+     "sources_more": [
+      "https://www.fit2run.com/products/nike-air-zoom-alphafly-next-3-prm-mens"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "US_M10",
+     "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 218g men's UK 9 (=US10) · search summary: 218 g/7.7 oz (Men's US 10) | Nike AU page summary labels 218 g as 'men's size 9' (likely UK 9). BlackToe 218 g M10. DoR 198 g M9 not used. | 이전: use_source 218"
+    }
    },
    "price_krw": {
     "action": "use_source",
@@ -278,6 +287,46 @@
      "by": "user",
      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 나이키 공식몰은 접근하지 않는다(사용자 규칙). 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
     }
+   },
+   "wide_available": {
+    "action": "use_source",
+    "value": false,
+    "source": "https://runningwikii.com/entry/nike-alphafly3/",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+      "code": "BITR"
+     },
+     "weight": {
+      "url": "https://runningwikii.com/entry/nike-alphafly3/",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://runningwikii.com/entry/nike-alphafly3/",
+      "code": "MAN"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://runningwikii.com/entry/nike-alphafly3/",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "newbalance:rebel#5": {
@@ -657,14 +706,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 298,
-    "source": "https://www.gearx.com/products/hoka-bondi-9-mens-qs8kf",
-    "sources_more": [
-     "https://www.fit2run.com/products/hoka-bondi-9-mens"
-    ],
-    "via": "web",
-    "by": "claude",
-    "weight_basis": "unknown",
-    "note": "사용자(2026-10-23) 승인: 웹 검색 공식값 298(사이즈 불명) | 이전 판단: use_source 297"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "use_source",
+     "value": 298,
+     "source": "https://www.gearx.com/products/hoka-bondi-9-mens-qs8kf",
+     "sources_more": [
+      "https://www.fit2run.com/products/hoka-bondi-9-mens"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "unknown",
+     "note": "사용자(2026-10-23) 승인: 웹 검색 공식값 298(사이즈 불명) | 이전 판단: use_source 297"
+    }
    },
    "stack_heel_mm": {
     "action": "use_source",
@@ -701,6 +759,37 @@
      "by": "user",
      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
     }
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-bondi-9-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.runningshoesguru.com/reviews/road/hoka-bondi-9-review/",
+      "code": "RSG"
+     },
+     "weight": {
+      "url": "https://www.hoka.com/en/us/mens-everyday-running-shoes/bondi-9/1162011.html?dwvar_1162011_color=MVR&dwvar_1162011_size=9&dwvar_1162011_width=Regular",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://www.treelinereview.com/gearreviews/hoka-bondi-9-road-running-shoes-review",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-bondi-9-review/",
+      "code": "BITR"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "hoka:speedgoat#6": {
@@ -1535,6 +1624,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — 판매처 3곳 | product listing title: Hoka Challenger 8 2E Wide Mens · product listing title: Hoka Challenger 8 Men's Trail Running Shoes (2E Width) · product listing title: Hoka Men's Challenger 8 Wide"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "hoka:mach-x#3": {
@@ -1579,6 +1679,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: Mens Hoka Mach X 3 (2E Wide) · search summary: men's Mach X 3 Wide 1168871"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 249000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "hoka:mach-x#2": {
@@ -1681,6 +1792,17 @@
     "source": "https://believeintherun.com/shoe-reviews/hoka-skyward-x-review/",
     "count": 1,
     "note": "Claude(2026-10-23): 공식값으로 바꾼 BITR 무게를 측정값으로 남긴다(사용자 원칙: 두 값 모두 저장)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 279000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "on:cloudsurfer#2": {
@@ -3392,6 +3514,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 185000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "altra:experience-flow#3": {
@@ -4801,6 +4934,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24): 남성 공식 33/29mm · 드롭 4mm 3곳 일치(Yahoo 열람 · REI · GearJunkie 검색 요약). BITR 31/27 은 여성 스펙이었다. 이전 판단: review(31mm 의심, 사용자)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "nike:streakfly#1": {
@@ -6726,6 +6870,133 @@
      "https://images.stockx.com/images/Nike-Vomero-17-Black-White-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743189670"
     ]
    }
+  },
+  "hoka:bondi#9": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Black-Vermillion.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772469549",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Galactic-Grey-Stellar-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1736970527",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Sea-Moss-Eucalyptus.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1738615250",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Grassland-Oyster-Mushroom.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1748027456",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-White-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746823492"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241"
+    ]
+   }
+  },
+  "hoka:bondi#8": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Impala-Mock-Orange.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1788441961",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Impala-Mock-Orange.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1788441961",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Puffins-Bill-Orange-Amber-Yellow.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1661892791",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Shifting-Sand-Eggnog.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1727872610",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-8-D-Black-White-Product.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1738193358",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Real-Teal-Shadow-Product.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739394699"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Shifting-Sand-Eggnog.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1727872610",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-8-Shifting-Sand-Eggnog.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1727872610"
+    ]
+   }
+  },
+  "hoka:mach#6": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Mach-6-Frost-Starlight-Glow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1764797895",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Mach-6-Frost-Starlight-Glow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1764797895",
+    "https://images.stockx.com/images/Hoka-One-One-Mach-6-Stardust-Alabaster.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1743922883",
+    "https://images.stockx.com/images/Hoka-One-One-Mach-6-White-Skyward-Blue.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746823585"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Mach-6-Frost-Starlight-Glow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1764797895",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Mach-6-Frost-Starlight-Glow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1764797895"
+    ]
+   }
+  },
+  "hoka:mach-x#3": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Mach-3-White-Alabaster.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941466",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Mach-3-White-Alabaster.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941466",
+    "https://images.stockx.com/images/Hoka-One-One-Mach-3-Neon-Citrus-Lime.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1756157252",
+    "https://images.stockx.com/images/Hoka-One-One-Mach-3-Neon-Yuzu-Squid-Ink.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1773131261"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Mach-3-White-Alabaster.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941466",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Mach-3-White-Alabaster.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941466"
+    ]
+   }
+  },
+  "hoka:skyward-x#1": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Skyward-Black-Electric-Aqua.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1726509992",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-Black-Electric-Aqua.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1726509992",
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-X-Blanc-De-Blanc-Virtual-Blue.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1715935741",
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-Luna-Moth-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1741108758",
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-Clear-Sea-Alpine-Blue.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941465",
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-X-Lettuce-Cloudless.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1723144833",
+    "https://images.stockx.com/images/Hoka-One-One-Skyward-Mint-Fluorite-Blue-Spark.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1740045900"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Skyward-Clear-Sea-Alpine-Blue.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941465",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Skyward-Clear-Sea-Alpine-Blue.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772941465"
+    ]
+   }
+  },
+  "hoka:challenger#8": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Dry-Chili-Oatgrass.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772730973",
+   "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Dry-Chili-Oatgrass.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772730973",
+    "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Faded-Navy-Pampass-Grass.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772730966",
+    "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Mustard-Seed-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772730967",
+    "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Jade-Truffle-Salt.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1759784687"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Dry-Chili-Oatgrass.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772730973",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Challenger-8-Dry-Chili-Oatgrass.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772730973"
+    ]
+   }
+  },
+  "mizuno:wave-rider#30": {
+   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/808/277/original/J1GM262058.png.png",
+   "sku": "J1GM262058",
+   "title": "Mizuno Wave Rider 30 'Green Black'",
+   "source": "goat",
+   "by": "user",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외)"
+  },
+  "brooks:hyperion-elite#6": {
+   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/335/original/1000541D699.png.png",
+   "sku": "100054",
+   "title": "Brooks Hyperion Elite 6 'Tigerlily Red White'",
+   "source": "goat",
+   "by": "user",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외) · 품번은 GOAT 1000541D699 에서 브룩스 형식(모델 6자리 · 1D 발볼 · 699 색상)대로 모델 번호만"
   }
  },
  "seed_only_price_meta": {
