@@ -62,6 +62,11 @@ class ApiException extends RuntimeException {
 		return new ApiException(HttpStatus.CONFLICT, message);
 	}
 
+	/** 영구 삭제(V11)는 숨긴 신발만 — 보이는 신발을 바로 지우지 않게 */
+	static ApiException notHidden() {
+		return new ApiException(HttpStatus.CONFLICT, "not_hidden", "숨긴 신발만 영구 삭제할 수 있어요. 먼저 숨겨 주세요.");
+	}
+
 	static ApiException methodNotAllowed(String message) {
 		return new ApiException(HttpStatus.METHOD_NOT_ALLOWED, message);
 	}

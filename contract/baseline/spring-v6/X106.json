@@ -1,0 +1,38 @@
+{
+  "id": "X106",
+  "plan": null,
+  "name": "보이는 신발 영구 삭제 → 409 not_hidden",
+  "contract": true,
+  "expect": 409,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/admin/shoes/21",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 31 Oct 2026 20:33:40 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "message": "숨긴 신발만 영구 삭제할 수 있어요. 먼저 숨겨 주세요.",
+      "code": "not_hidden"
+    }
+  }
+}

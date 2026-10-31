@@ -4,6 +4,17 @@
   padding: 56px 48px 120px;
 }
 
+/* 수정 폼 — 신발을 받기 전(입력을 막는다) */
+.form__loading {
+  margin: 40px 0 24px;
+  font-size: 14px;
+  color: var(--text-weak);
+}
+
+.form__loading.is-error {
+  color: var(--danger);
+}
+
 .form__title {
   font-size: 28px;
   font-weight: 800;
@@ -210,6 +221,11 @@
 
 .form__gen .form__check {
   height: 40px;
+}
+
+/* 품번(V11) — 세대 줄 아래 새 줄, 라인키와 같은 폭 */
+.form__field--sku {
+  grid-column: 1;
 }
 
 /* 스펙 — 칸 이름 · 값 · 출처 */
@@ -526,7 +542,8 @@
   .form__gen {
     grid-template-columns: 1fr 1fr;
   }
-  .form__field--linekey {
+  .form__field--linekey,
+  .form__field--sku {
     grid-column: 1 / -1;
   }
 }

@@ -1,0 +1,40 @@
+{
+  "id": "X101",
+  "plan": null,
+  "name": "품번에 한글 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/2",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "sku": "품번"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 31 Oct 2026 20:33:39 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "품번은 영문 · 숫자 · 하이픈 50자까지예요(예: 1011C284-400)",
+      "code": "invalid"
+    }
+  }
+}

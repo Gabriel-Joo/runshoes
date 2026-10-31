@@ -78,4 +78,6 @@ V4_KEYS=lineKey,generation,isCurrent,gender,weightSize,specSize,measuredWeight,m
 V5_KEYS=priceSource,priceCheckedAt,priceKind
 # V6 키 — 스펙 출처(2026-10-30). 시드에서는 null
 V6_KEYS=specSources
-node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS" "contract/baseline/$BASE" "$OUT"
+# V11 키 — 품번 · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸(2026-11-01). 시드에서는 셋 다 null, 관리자가 고친 신발만 값이 생긴다
+V11_KEYS=sku,updatedAt,lastChange
+node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS,$V11_KEYS" "contract/baseline/$BASE" "$OUT"

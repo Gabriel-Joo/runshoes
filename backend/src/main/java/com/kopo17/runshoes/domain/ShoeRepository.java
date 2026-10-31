@@ -16,13 +16,19 @@ public interface ShoeRepository extends JpaRepository<Shoe, Long> {
 	@Query(value = "select id from shoes where deleted_at is not null", nativeQuery = true)
 	java.util.List<Long> hiddenIds();
 
+	/** 숨기기 · 되살리기도 관리자의 수정이다(V11) — 수정 시각 · 바뀐 칸을 같이 찍는다 */
 	@Modifying
-	@Query(value = "update shoes set deleted_at = :at where id = :id and deleted_at is null", nativeQuery = true)
+	@Query(value = "update shoes set deleted_at = :at, updated_at = :at, last_change = json_array('hidden') where id = :id and deleted_at is null", nativeQuery = true)
 	int hide(Long id, java.time.LocalDateTime at);
 
 	@Modifying
-	@Query(value = "update shoes set deleted_at = null where id = :id and deleted_at is not null", nativeQuery = true)
-	int unhide(Long id);
+	@Query(value = "update shoes set deleted_at = null, updated_at = :at, last_change = json_array('restored') where id = :id and deleted_at is not null", nativeQuery = true)
+	int unhide(Long id, java.time.LocalDateTime at);
+
+	/** 영구 삭제(V11) — 숨긴 행만. 리뷰 · 답글 · 도움이 돼요 · 찜은 FK ON DELETE CASCADE 로 같이 지워진다 */
+	@Modifying
+	@Query(value = "delete from shoes where id = :id and deleted_at is not null", nativeQuery = true)
+	int purge(Long id);
 
 	/** 숨긴 행까지 — 같은 라인 · 세대 · 성별의 숨긴 신발이 있으면 새로 넣지 않고 되살리게(409). DB UNIQUE 는 숨긴 행에도 걸린다 */
 	@Query(value = "select id from shoes where line_key = :lineKey and generation = :generation and gender = :gender and deleted_at is not null", nativeQuery = true)
