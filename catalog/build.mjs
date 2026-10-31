@@ -18,6 +18,25 @@ function modelOk(m) {
   return m.split(' ').every((t) => /^[가-힣·]+$/.test(t) || /^V\d+$/.test(t) || /^v?\d+(\.\d+)?\+?$/.test(t) || LATIN_OK.has(t));
 }
 
+// 품번은 모델 번호만(2026-11-01 사용자 — 가격은 색상과 무관하고, 색상별 이미지를 여러 장 쓰니 한 색상을 가리키면 어색하다).
+//   StockX 품번에서 하이픈 뒤 색상 코드를 뗀다 — 브랜드 형식이 정확히 맞을 때만(구분자가 분명한 8개 브랜드, 171켤레).
+//   아디다스 · 뉴발란스 · 온 · 미즈노 · 살로몬 · 머렐은 색상이 번호 안에 붙어 있어 그대로 둔다 — 잘라 내면 근거 없는 값을 만든다(사용자).
+//   관리 화면에서 넣은 품번(decisions.json rows[].sku)은 손대지 않는다
+const MODEL_SKU = {
+  '아식스': /^(\d{4}[A-Z]\d{3})-[0-9A-Z]+$/,          // 1011C284-400
+  '나이키': /^([A-Z]{2}\d{4})-\d{3}$/,                // IB1873-101
+  '호카': /^(\d{7})-[A-Z]{3,5}$/,                     // 1162030-BBLC
+  '브룩스': /^(\d{6})-\d[A-Z]-\d{3}$/,               // 110442-1D-090(1D 는 발볼, 090 은 색상)
+  '사우코니': /^(S\d{5,6})-\d{2,4}$/,                 // S30994-131 · S100981-1018
+  '푸마': /^(\d{6})-\d{2}$/,                         // 312123-03
+  '알트라': /^(AL0A[0-9A-Z]{4})-[0-9A-Z]{3}$/,         // AL0A85PA-140
+  '언더아머': /^(\d{7})-\d{3}$/,                      // 3027205-103
+};
+function modelSku(brand, sku) {
+  const m = sku && MODEL_SKU[brand]?.exec(sku);
+  return m ? m[1] : sku;
+}
+
 const cands = parseCsv(fs.readFileSync(path.join(ROOT, 'candidates.csv'), 'utf8'));
 const stockx = fs.existsSync(path.join(WORK, 'stockx.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'stockx.json'), 'utf8')) : {};
 // 사람이 화면에서 찾은 이미지 문제(2026-10-28): 박스 사진 · 자리표시 이미지 → 다른 색상으로 바꾸거나(image) 이미지 없음(none)으로. stockx.mjs 를 다시 돌려도 이것이 먼저다
@@ -247,7 +266,7 @@ for (const c of cands) {
     // 가격은 참고가(다나와 공식판매처 · 쿠팡, 2026-10-28 사용자)만 — 공식몰 정가(specs-store-price · 시드 DB)는 쓰지 않는다. 기준이 둘이 되지 않게
     price: val('price', s?.price_krw), price_source: null, price_checked_at: null, price_kind: null,
     summary: '', description: '',
-    sku: sx?.sku ?? null, slug: sx?.slug ?? null,
+    sku: modelSku(c.brand, sx?.sku ?? null), slug: sx?.slug ?? null,
     images: sx?.image ? [{ url: sx.image, source: 'stockx' }] : [],
     sources: src,
     status: 'ok', _missing: missing, _review: reasons,

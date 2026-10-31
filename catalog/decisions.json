@@ -3612,6 +3612,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: 'Vomero 17 Wide M' men's listing"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T21:05Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "hoka:torrent#4": {
@@ -6695,6 +6706,24 @@
     "image": "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Galaxy-Blue-Lab-Green-Blue-Agate.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049683",
     "images": [
      "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Galaxy-Blue-Lab-Green-Blue-Agate.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049683"
+    ]
+   }
+  },
+  "nike:vomero#17": {
+   "image": "https://images.stockx.com/images/Nike-Vomero-17-Talaria.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1729147626",
+   "images": [
+    "https://images.stockx.com/images/Nike-Vomero-17-Talaria.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1729147626",
+    "https://images.stockx.com/images/Nike-Vomero-17-Black-White-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743189670",
+    "https://images.stockx.com/images/Nike-Vomero-17-Smoke-Grey-White-Volt-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1729145549",
+    "https://images.stockx.com/images/Nike-Vomero-17-White-Platinum-Tint.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1707331653"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T21:05Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Nike-Vomero-17-Black-White-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743189670",
+    "images": [
+     "https://images.stockx.com/images/Nike-Vomero-17-Black-White-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743189670"
     ]
    }
   }
