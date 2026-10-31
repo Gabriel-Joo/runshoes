@@ -161,6 +161,46 @@
      "by": "user",
      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(카야노 32 럭스는 다른 판) · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://kream.co.kr/products/521778",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-kayano-32-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://kream.co.kr/products/521778",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-kayano-32-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-kayano-32-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-kayano-32-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-kayano-32-review/",
+      "code": "BITR"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "nike:pegasus#42": {

@@ -271,6 +271,9 @@ for (const c of cands) {
   for (const f of ['line_key', 'generation', 'gender']) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[f] = d.value; }
   //   스펙 출처(V6) — 관리 화면에서 고른 것(pull-admin.mjs spec_sources). 없으면 적재기가 sources 에서 만든다(live-fields.mjs specSourcesOf)
   if (DEC.rows[id]?.spec_sources?.action === 'use_source') row.spec_sources = DEC.rows[id].spec_sources.value;
+  //   품번(V11) — 관리 화면에서 고친 것(pull-admin.mjs sku). 없으면 StockX 조회 결과
+  if (DEC.rows[id]?.sku?.action === 'use_source') row.sku = DEC.rows[id].sku.value;
+  else if (DEC.rows[id]?.sku?.action === 'clear') row.sku = null;
   row.catalog_key = `${row.line_key}:${row.generation}`;
   // 관리 화면에서 고친 대표 · 추가 이미지(pull-admin.mjs) — 둘 다 그대로 낸다(대표가 추가 목록의 첫 장이 아닐 수 있다)
   const io = DEC.image_overrides?.[id];
@@ -294,6 +297,8 @@ for (const c of cands) {
   if (nums < 2 && s) reasons.push(`min_fields:${nums}/3`);
   // 관리 화면에서 숨긴 신발(V8, pull-admin.mjs hidden) — 적재 대상에서 뺀다. 적재기가 다시 넣지 않는다(2026-10-30 사용자). 되살리면 pull-admin 이 판단을 지운다
   if (DEC.rows[id]?.hidden?.action === 'hide') { row.status = 'hidden'; reasons.push('hidden:admin'); }
+  // 관리 화면에서 영구 삭제한 신발(V11, pull-admin.mjs purged) — 숨김과 같이 뺀다. 되살릴 수 없다(행이 없다)
+  if (DEC.rows[id]?.purged?.action === 'purge') { row.status = 'hidden'; reasons.push('purged:admin'); }
   out.push(toDb(row));
 }
 { const seen = new Map(); for (const r of out) { if (seen.has(r.catalog_key)) throw new Error(`catalog_key 가 겹친다: ${r.catalog_key} (${seen.get(r.catalog_key)} · ${r.source_key}) — 관리 화면 라인키 · 세대 판단을 확인한다`); seen.set(r.catalog_key, r.source_key); } }
