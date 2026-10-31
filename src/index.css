@@ -11,6 +11,12 @@
   --text-weak: oklch(0.58 0 0);
   --text-invert: oklch(0.97 0 0);
 
+  /* 코랄 — 틸과 함께 쓰는 보조 강조색(2026-11-01 사용자). #FF7A59 는 흰 바탕 대비 2.57:1 이라 글자 · 선은 진한 코랄(5.0:1) */
+  --coral: #ff7a59;
+  --coral-strong: #c2462a;
+  --coral-soft: rgba(255, 122, 89, 0.08);
+  --coral-border: rgba(255, 122, 89, 0.35);
+
   --danger: oklch(0.5 0.18 25);        /* 오류 문구 · 지우기 */
   --danger-soft: oklch(0.7 0.12 25);
 

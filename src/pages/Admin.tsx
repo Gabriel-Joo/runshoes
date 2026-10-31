@@ -14,7 +14,7 @@ import "./Admin.css";
 
 // 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
 //   화면에서 정렬한다 — 목록은 늘 전부 받고, 최근 수정순의 "고친 적 없음(null)은 뒤에, id 순"은 서버의 _sort 로 나타낼 수 없다
-type SortKey = "updated" | "id" | "brand" | "model";
+type SortKey = "gaps" | "updated" | "id" | "brand" | "model";
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "updated", label: "최근 수정순" },
   { key: "id", label: "등록순" },
@@ -22,11 +22,29 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "model", label: "모델명순" },
 ];
 
+// 보완 필요 탭(2026-11-01 사용자) — 비어 있는(null) 칸. 와이드 · 카본은 null 만("없음" false 는 확인한 값).
+//   드롭 · 중량 사이즈(중량은 있는데 사이즈가 빈 것)를 더했다 — 같은 날 사용자 승인. 가격 출처(가격과 늘 같이 빈다) · 스펙 기준 사이즈(전부 비고 화면에 안 쓴다)는 뺐다
+const GAPS: { key: string; label: string; empty: (s: Shoe) => boolean }[] = [
+  { key: "price", label: "가격", empty: (s) => s.price == null },
+  { key: "width", label: "발볼", empty: (s) => !s.width },
+  { key: "wideAvailable", label: "와이드", empty: (s) => s.wideAvailable == null },
+  { key: "stackHeight", label: "스택", empty: (s) => s.stackHeight == null },
+  { key: "midsole", label: "미드솔", empty: (s) => !s.midsole },
+  { key: "carbon", label: "카본", empty: (s) => s.carbon == null },
+  { key: "weight", label: "중량", empty: (s) => s.weight == null },
+  { key: "drop", label: "드롭", empty: (s) => s.drop == null },
+  { key: "weightSize", label: "중량 사이즈", empty: (s) => s.weight != null && !s.weightSize },
+  { key: "sku", label: "품번", empty: (s) => !s.sku },
+];
+const gapsOf = (s: Shoe) => GAPS.filter((g) => g.empty(s));
+const GAP_SORTS: { key: SortKey; label: string }[] = [{ key: "gaps", label: "빈 칸 많은 순" }, ...SORTS];
+
 function sortShoes(list: Shoe[], key: SortKey, down: boolean): Shoe[] {
   const byId = (a: Shoe, b: Shoe) => a.id - b.id;
   const ko = (a: string, b: string) => a.localeCompare(b, "ko");
   const sign = down ? 1 : -1;
   return [...list].sort((a, b) => {
+    if (key === "gaps") return sign * (gapsOf(b).length - gapsOf(a).length) || byId(a, b);
     if (key === "updated") {
       if (!a.updatedAt || !b.updatedAt) return a.updatedAt ? -1 : b.updatedAt ? 1 : byId(a, b);   // 고친 적 없는 것은 방향과 상관없이 뒤에, id 순
       return sign * (Date.parse(b.updatedAt) - Date.parse(a.updatedAt)) || byId(a, b);
@@ -75,7 +93,11 @@ function Admin() {
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState<Shoe[]>([]);
-  const [tab, setTab] = useState<"list" | "hidden">("list");   // 등록된 신발 · 숨긴 신발(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
+  const [tab, setTab] = useState<"list" | "hidden" | "gaps">("list");
+  // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 많은 순)
+  const [gapKey, setGapKey] = useState<string | null>(null);
+  const [gapSort, setGapSort] = useState<SortKey>("gaps");
+  const [gapDown, setGapDown] = useState(true);   // 등록된 신발 · 숨긴 신발(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
   const [busy, setBusy] = useState(false);
   const { setNotice, isDemoAdmin } = useAuth();
 
@@ -127,6 +149,21 @@ function Admin() {
       setDown(true);
     }
   };
+  const pickGapSort = (key: SortKey) => {
+    if (key === gapSort) setGapDown((d) => !d);
+    else {
+      setGapSort(key);
+      setGapDown(true);
+    }
+  };
+  // 보완 필요 — 받은 목록(브랜드 칩 · 검색이 걸린 그대로)에서 브라우저가 거른다
+  const lacking = useMemo(() => shoes.filter((x) => gapsOf(x).length > 0), [shoes]);
+  const gapCounts = useMemo(() => Object.fromEntries(GAPS.map((g) => [g.key, shoes.filter(g.empty).length])), [shoes]);
+  const gapList = useMemo(() => {
+    const g = GAPS.find((x) => x.key === gapKey);
+    return sortShoes(g ? lacking.filter(g.empty) : lacking, gapSort, gapDown);
+  }, [lacking, gapKey, gapSort, gapDown]);
+  const sortBar = tab === "gaps" ? { list: GAP_SORTS, key: gapSort, down: gapDown, pick: pickGapSort } : { list: SORTS, key: sort, down, pick: pickSort };
 
   // 숨김(V8, 화면 이름도 "숨김" — 2026-11-01) — 리뷰 · 찜은 남고 신발과 함께 화면에서 빠진다. admin 만(서버 403 — 데모 관리자는 그 문구)
   const removeShoe = async () => {
@@ -197,15 +234,15 @@ function Admin() {
         </div>
 
         <div className="admin__sorts">
-          {SORTS.map((s) => (
+          {sortBar.list.map((s) => (
             <button
               key={s.key}
-              className={`admin__sort ${sort === s.key ? "is-active" : ""}`}
-              onClick={() => pickSort(s.key)}
-              aria-pressed={sort === s.key}
+              className={`admin__sort ${sortBar.key === s.key ? "is-active" : ""}`}
+              onClick={() => sortBar.pick(s.key)}
+              aria-pressed={sortBar.key === s.key}
             >
               {s.label}
-              {sort === s.key && <span className="admin__sortdir" aria-label={down ? "내림차순" : "오름차순"}>{down ? "↓" : "↑"}</span>}
+              {sortBar.key === s.key && <span className="admin__sortdir" aria-label={sortBar.down ? "내림차순" : "오름차순"}>{sortBar.down ? "↓" : "↑"}</span>}
             </button>
           ))}
         </div>
@@ -213,14 +250,17 @@ function Admin() {
 
       <div className="admin__countbar">
         <p className="admin__count">
-          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : `숨긴 신발 ${hidden.length}개`}
+          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : tab === "hidden" ? `숨긴 신발 ${hidden.length}개` : `보완 필요 ${gapList.length}개 / 전체 ${shoes.length}개`}
         </p>
         <div className="admin__tabs" role="tablist" aria-label="목록">
           <button role="tab" aria-selected={tab === "list"} className={`admin__tab ${tab === "list" ? "is-active" : ""}`} onClick={() => setTab("list")}>
-            등록된 신발
+            등록된 신발 {shoes.length}
           </button>
           <button role="tab" aria-selected={tab === "hidden"} className={`admin__tab ${tab === "hidden" ? "is-active" : ""}`} onClick={() => setTab("hidden")}>
             숨긴 신발 {hidden.length}
+          </button>
+          <button role="tab" aria-selected={tab === "gaps"} className={`admin__tab admin__tab--gaps ${tab === "gaps" ? "is-active" : ""}`} onClick={() => setTab("gaps")}>
+            보완 필요 {lacking.length}
           </button>
         </div>
       </div>
@@ -272,6 +312,48 @@ function Admin() {
           );
         })}
       </ul>
+      )}
+
+      {tab === "gaps" && (
+        <>
+          {/* 칸 하나씩 — 고른 것은 코랄. 0 인 칸은 감춘다 */}
+          <div className="admin__gapfilters" role="group" aria-label="빈 칸 필터">
+            <button className={`admin__gapfilter ${gapKey === null ? "is-active" : ""}`} onClick={() => setGapKey(null)} aria-pressed={gapKey === null}>
+              전체 {lacking.length}
+            </button>
+            {GAPS.filter((g) => gapCounts[g.key] > 0).map((g) => (
+              <button key={g.key} className={`admin__gapfilter ${gapKey === g.key ? "is-active" : ""}`} onClick={() => setGapKey(g.key)} aria-pressed={gapKey === g.key}>
+                {g.label} {gapCounts[g.key]}
+              </button>
+            ))}
+          </div>
+          <ul className="admin__list">
+            {loaded && gapList.length === 0 && <li className="admin__empty">비어 있는 칸이 없습니다.</li>}
+            {gapList.map((shoe) => {
+              const gaps = gapsOf(shoe).sort((a, b) => Number(b.key === gapKey) - Number(a.key === gapKey));   // 고른 칸을 앞에
+              const names = gaps.map((g) => g.label);
+              const text = names.length > 3 ? `${names.slice(0, 3).join(", ")} 외 ${names.length - 3}건` : names.join(", ");
+              return (
+                <li key={shoe.id}>
+                  {/* 줄 전체가 수정 화면으로 — 링크라 새 탭으로도 열린다 */}
+                  <Link className="admin__row admin__row--gap" to={`/edit/${shoe.id}`}>
+                    <div className="admin__thumb">
+                      <ShoeImage src={shoe.image} alt={shoe.model} />
+                    </div>
+                    <span className="admin__no">NO.{String(shoe.id).padStart(2, "0")}</span>
+                    <div className="admin__names">
+                      <span className="admin__model">{shoe.model}</span>
+                      <span className="admin__brandname">{shoe.brand}</span>
+                    </div>
+                    <span className="admin__gaps" title={`비어 있음: ${names.join(", ")}`}>
+                      비어 있음: <strong>{text}</strong>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
 
       {tab === "hidden" && (
