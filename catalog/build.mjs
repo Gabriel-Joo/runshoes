@@ -23,7 +23,9 @@ const stockx = fs.existsSync(path.join(WORK, 'stockx.json')) ? JSON.parse(fs.rea
 // 사람이 화면에서 찾은 이미지 문제(2026-10-28): 박스 사진 · 자리표시 이미지 → 다른 색상으로 바꾸거나(image) 이미지 없음(none)으로. stockx.mjs 를 다시 돌려도 이것이 먼저다
 for (const [id, o] of Object.entries(JSON.parse(fs.readFileSync(path.join(ROOT, 'decisions.json'), 'utf8')).image_overrides ?? {})) {
   if (o.none) stockx[id] = { status: 'review', reason: o.reason ?? 'no_clean_image' };
-  else stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku, title: o.title, gender: 'men' };
+  // sku · title 은 판단에 적힌 것이 있을 때만 바꾼다(다른 StockX 상품으로 바꾼 이미지). 관리 화면에서 고친 이미지(via admin)에는 없어
+  //   예전에는 undefined 로 덮어 sku 가 지워졌다(2026-11-01 사용자 — sku 는 모델을 가리키고 이미지와 별개다). 없으면 StockX 조회 결과 그대로
+  else stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku ?? stockx[id]?.sku, title: o.title ?? stockx[id]?.title, gender: 'men' };
 }
 // 감사(audit.mjs) 결과는 파일 · 행마다 있다(<file>::<id>) — 읽을 때 그 기록에 먼저 적용한 뒤 합친다
 const audit = fs.existsSync(path.join(WORK, 'audit.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'audit.json'), 'utf8')) : {};
