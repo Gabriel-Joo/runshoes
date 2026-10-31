@@ -216,8 +216,7 @@ saucony:endorphin-elite,3,true,사우코니,saucony,Endorphin Elite 3,엔돌핀 
 saucony:endorphin-elite,2,false,사우코니,saucony,Endorphin Elite 2,엔돌핀 엘리트 2,레이스,중립화,yes,,1,,Saucony Endorphin Elite 2,직전 세대 — 존재 확인 필요
 saucony:endorphin-pro,5,true,사우코니,saucony,Endorphin Pro 5,엔돌핀 프로 5,레이스,중립화,yes,high,1,,Saucony Endorphin Pro 5,
 saucony:endorphin-pro,4,false,사우코니,saucony,Endorphin Pro 4,엔돌핀 프로 4,레이스,중립화,yes,,1,,Saucony Endorphin Pro 4,직전 세대 — 존재 확인 필요
-saucony:endorphin-speed,6,true,사우코니,saucony,Endorphin Speed 6,엔돌핀 스피드 6,템포·인터벌,중립화,no,high,1,,Saucony Endorphin Speed 6,
-saucony:endorphin-speed,5,false,사우코니,saucony,Endorphin Speed 5,엔돌핀 스피드 5,템포·인터벌,중립화,no,,1,,Saucony Endorphin Speed 5,직전 세대 — 존재 확인 필요
+saucony:endorphin-speed,5,true,사우코니,saucony,Endorphin Speed 5,엔돌핀 스피드 5,템포·인터벌,중립화,no,,1,,Saucony Endorphin Speed 5,"현행(2026-11-01 사용자) — 엔돌핀 스피드 6 은 국내 미출시라 넣지 않는다. 근거: 사우코니 국내 공식몰 검색(https://saucony.co.kr/product/search.html?keyword=endorphin%20speed, 2026-11-01)에 스피드 5 만 있고 6 은 없다. 현행 = 국내 판매 중인 최신 세대"
 saucony:endorphin-azura,1,true,사우코니,saucony,Endorphin Azura,엔돌핀 아주라,템포·인터벌,중립화,no,high,1,,Saucony Endorphin Azura,
 saucony:kinvara,16,true,사우코니,saucony,Kinvara 16,킨바라 16,템포·인터벌,중립화,no,high,1,,Saucony Kinvara 16,
 saucony:kinvara,15,false,사우코니,saucony,Kinvara 15,킨바라 15,템포·인터벌,중립화,no,,1,,Saucony Kinvara 15,직전 세대 — 존재 확인 필요
