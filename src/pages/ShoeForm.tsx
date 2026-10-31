@@ -1,5 +1,5 @@
 import { apiFetch } from "../auth/session";
-import { useState, useEffect, type ChangeEvent, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ChangeEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { Shoe, SourceCode, SpecField, SpecSources } from "../types";
 import { asset } from "../api";
@@ -310,8 +310,62 @@ function ShoeForm() {
 
   const setImageAt = (i: number, v: string) => setImages((list) => list.map((x, j) => (j === i ? v : x)));
   const removeImageAt = (i: number) => setImages((list) => (list.length === 1 ? [""] : list.filter((_, j) => j !== i)));
-  // 대표로 지정 — 그 칸과 1번 칸의 자리를 바꾼다(2026-10-30 사용자)
-  const makeMain = (i: number) => setImages((list) => list.map((x, j) => (j === 0 ? list[i] : j === i ? list[0] : x)));
+  // 순서 — 칸 왼쪽 핸들(≡)을 끌어 놓는다. 1번 자리에 온 것이 대표("대표로 지정" 버튼 대신, 2026-11-01 사용자)
+  const moveImage = (from: number, to: number) =>
+    setImages((list) => {
+      const next = [...list];
+      next.splice(to, 0, ...next.splice(from, 1));
+      return next;
+    });
+  // 끄는 동안: 잡은 줄만 손가락 · 마우스를 따라가고, 놓일 자리에 가로선. 놓을 때 한 번만 순서를 바꾼다.
+  //   자리는 잡을 때 잰 칸 위치로 정한다 — 끄는 동안 칸이 움직이지 않으니 다시 잴 필요가 없다
+  const imgList = useRef<HTMLDivElement>(null);
+  const imgItems = useRef<(HTMLDivElement | null)[]>([]);
+  const imgHandles = useRef<(HTMLButtonElement | null)[]>([]);
+  const dragAt = useRef<{ y: number; mids: number[]; tops: number[]; bottoms: number[]; base: number } | null>(null);
+  const [drag, setDrag] = useState<{ from: number; to: number; dy: number; line: number | null } | null>(null);
+  const dropLine = (from: number, to: number) => {
+    const at = dragAt.current;
+    if (!at || to === from) return null;
+    const others = at.tops.map((_, j) => j).filter((j) => j !== from);
+    if (to === 0) return at.tops[others[0]] - at.base - 4;
+    if (to === others.length) return at.bottoms[others[to - 1]] - at.base + 4;
+    return (at.bottoms[others[to - 1]] + at.tops[others[to]]) / 2 - at.base;
+  };
+  const onHandleDown = (i: number, e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (images.length < 2 || e.button !== 0) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const items = imgItems.current.slice(0, images.length).map((el) => el!.getBoundingClientRect());
+    const rows = imgItems.current.slice(0, images.length).map((el) => el!.firstElementChild!.getBoundingClientRect());
+    dragAt.current = {
+      y: e.clientY,
+      mids: rows.map((r) => r.top + r.height / 2),
+      tops: items.map((r) => r.top),
+      bottoms: items.map((r) => r.bottom),
+      base: imgList.current!.getBoundingClientRect().top,
+    };
+    setDrag({ from: i, to: i, dy: 0, line: null });
+  };
+  const onHandleMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    const at = dragAt.current;
+    if (!drag || !at) return;
+    const to = at.mids.filter((m, j) => j !== drag.from && m < e.clientY).length;
+    setDrag({ from: drag.from, to, dy: e.clientY - at.y, line: dropLine(drag.from, to) });
+  };
+  const onHandleUp = () => {
+    if (drag && drag.to !== drag.from) moveImage(drag.from, drag.to);
+    dragAt.current = null;
+    setDrag(null);
+  };
+  // 키보드 — 핸들에서 ↑ · ↓ 로 한 칸씩
+  const onHandleKey = (i: number, e: KeyboardEvent<HTMLButtonElement>) => {
+    const to = e.key === "ArrowUp" ? i - 1 : e.key === "ArrowDown" ? i + 1 : -1;
+    if (to < 0 || to >= images.length) return;
+    e.preventDefault();
+    moveImage(i, to);
+    requestAnimationFrame(() => imgHandles.current[to]?.focus());
+  };
   const legacyPrice = priceSource && !PRICE_SOURCES.includes(priceSource);
 
   return (
@@ -470,16 +524,20 @@ function ShoeForm() {
       <div className="form__grid">
         <div className="form__field form__field--wide">
           <span>이미지 경로 (첫 번째 이미지가 대표 이미지가 되며, 최대 {MAX_IMAGES}개까지 추가 가능합니다)</span>
+          <div ref={imgList} className={`form__imglist${drag ? " is-sorting" : ""}`}>
           {images.map((u, i) => (
-            <div key={i} className="form__imgitem">
-              <div className="form__imgrow">
+            <div key={i} ref={(el) => { imgItems.current[i] = el; }} className="form__imgitem">
+              <div className={`form__imgrow${drag?.from === i ? " is-dragging" : ""}`}
+                style={drag?.from === i ? { transform: `translateY(${drag.dy}px)` } : undefined}>
+                <button type="button" className="form__imghandle" ref={(el) => { imgHandles.current[i] = el; }}
+                  aria-label={`이미지 ${i + 1} 순서 바꾸기 — 끌거나 ↑ · ↓`} disabled={images.length < 2}
+                  onPointerDown={(e) => onHandleDown(i, e)} onPointerMove={onHandleMove}
+                  onPointerUp={onHandleUp} onPointerCancel={() => { dragAt.current = null; setDrag(null); }}
+                  onKeyDown={(e) => onHandleKey(i, e)}>
+                  ≡
+                </button>
                 <input aria-label={`이미지 ${i + 1}${i === 0 ? " (대표)" : ""}`} value={u} onChange={(e) => setImageAt(i, e.target.value)}
                   placeholder={i === 0 ? "https://images.stockx.com/… (대표)" : "https://…"} spellCheck={false} />
-                {i > 0 && (
-                  <button type="button" className="form__imgbtn" onClick={() => makeMain(i)} disabled={!u.trim()}>
-                    대표로 지정
-                  </button>
-                )}
                 <button type="button" className="form__imgbtn is-icon" onClick={() => removeImageAt(i)} aria-label={`이미지 ${i + 1} 빼기`}>
                   −
                 </button>
@@ -489,7 +547,7 @@ function ShoeForm() {
                 <span className="form__thumbs">
                   <span className="form__mainthumb">
                     <Thumb src={imageLines[0]} />
-                    <em>대표</em>
+                    <em>대표 이미지</em>
                   </span>
                 </span>
               )}
@@ -503,6 +561,10 @@ function ShoeForm() {
               )}
             </div>
           ))}
+          {drag?.line != null && (
+            <div className="form__imgdrop" style={{ top: drag.line }} aria-hidden="true" />
+          )}
+          </div>
           <button type="button" className="form__imgadd" onClick={() => setImages((list) => [...list, ""])} disabled={images.length >= MAX_IMAGES}>
             + 이미지 칸 추가{images.length >= MAX_IMAGES ? ` (${MAX_IMAGES}개까지)` : ""}
           </button>
