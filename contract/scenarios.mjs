@@ -374,6 +374,9 @@ export const V6_SCENARIOS = [
   W("X76", "탈퇴한 계정 로그인 → 401", "POST", "/api/auth/login", { headers: json, body: { email: "withdraw@runshoes.test", password: "withdraw123" }, expect: 401 }),
   W("X77", "남은 토큰 /api/me → 401", "GET", "/api/me", { headers: bearer("w"), expect: 401 }),
   W("X78", "남은 토큰 찜 → 401", "PUT", "/api/shoes/{{x6}}/like", { headers: bearer("w"), expect: 401 }),
+  // 남은 토큰으로 자기 리뷰 수정 · 삭제도 401(2026-11-01) — 그전에는 작성자만 보고 통과했다. X91 의 리뷰 전체가 그대로인 것도 이것
+  W("X78b", "남은 토큰 내 리뷰 수정 → 401", "PATCH", "/api/reviews/{{wv}}", { headers: jb("w"), body: { content: "탈퇴한 뒤에 고치려는 내용" }, expect: 401 }),
+  W("X78c", "남은 토큰 내 리뷰 삭제 → 401", "DELETE", "/api/reviews/{{wv}}", { headers: bearer("w"), expect: 401 }),
   W("X79", "남은 refresh 쿠키 → 401", "POST", "/api/auth/refresh", { headers: { Cookie: "runshoes_refresh={{wr}}" }, expect: 401 }),
   W("X80", "같은 이메일 · 닉네임으로 다시 가입 → 201(새 계정)", "POST", "/api/auth/signup",
     { headers: json, body: { email: "withdraw@runshoes.test", password: "withdraw123", nickname: "탈퇴시험" }, capture: { w2: "body.accessToken" }, expect: 201 }),

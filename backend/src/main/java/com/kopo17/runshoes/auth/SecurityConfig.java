@@ -1,5 +1,6 @@
 package com.kopo17.runshoes.auth;
 
+import com.kopo17.runshoes.domain.UserRepository;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
@@ -7,17 +8,21 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,7 +41,7 @@ class SecurityConfig {
 	static final String ISSUER = "runshoes";
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthEntryPoints entry) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthEntryPoints entry, UserRepository users) throws Exception {
 		http.csrf(c -> c.disable())
 				.cors(c -> c.disable())
 				.httpBasic(b -> b.disable())
@@ -54,9 +59,32 @@ class SecurityConfig {
 						.requestMatchers("/api/**").authenticated()
 						.anyRequest().permitAll())
 				.oauth2ResourceServer(o -> o.authenticationEntryPoint(entry)
-						.jwt(j -> j.jwtAuthenticationConverter(roleConverter())))
+						.jwt(j -> j.jwtAuthenticationConverter(activeUser(users, roleConverter()))))
 				.exceptionHandling(e -> e.authenticationEntryPoint(entry).accessDeniedHandler(entry));
 		return http.build();
+	}
+
+	/**
+	 * 탈퇴(V9)한 사람의 토큰은 남은 시간(최대 15분)에도 401 — 서명 · 만료만 보면 자기 리뷰 수정 · 삭제가 통과했다(2026-11-01 사용자 "아무것도 못 하게").
+	 * 컬렉션마다 막지 않고 토큰을 받는 여기 한 곳에서 — 쓰기 · 토큰을 붙인 읽기 · 관리 API 모두. 요청마다 users 를 PK 로 한 번 읽는다.
+	 * /api/auth 는 토큰을 보내지 않아(refresh 쿠키) 탈퇴 직후의 로그아웃은 그대로 된다
+	 */
+	private static Converter<Jwt, AbstractAuthenticationToken> activeUser(UserRepository users, JwtAuthenticationConverter roles) {
+		return jwt -> {
+			Long id = parseId(jwt.getSubject());
+			if (id == null || users.findById(id).filter(u -> !u.isWithdrawn()).isEmpty()) {
+				throw new InvalidBearerTokenException("탈퇴했거나 없는 사용자");
+			}
+			return roles.convert(jwt);
+		};
+	}
+
+	private static Long parseId(String sub) {
+		try {
+			return sub == null ? null : Long.valueOf(sub);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	/** 클레임 role(USER · ADMIN) → ROLE_USER · ROLE_ADMIN */
