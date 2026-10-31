@@ -25,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
  * PATCH: 작성자만(403), rating · content 만 — 다른 키는 버린다. DELETE: 작성자 또는 admin. PUT: 405(아무 필드나 덮어쓰는 길을 열지 않는다)
  * 데모 관리자(V7)는 쓰기 · 고치기 · 지우기 모두 403 demo_admin. 탈퇴 회원(V9)의 리뷰는 남는다(작성자 "탈퇴 회원").
  * 숨긴 신발(V8)의 리뷰는 없는 것으로 본다 — 목록에서 빠지고 GET · PATCH · DELETE 는 404(DB 에는 남는다, 되살리면 돌아온다).
- * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings).
+ * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings). 그 전에 신발 행부터 잠근다(Ratings.lock — 데드락, 2026-11-01).
+ * 새 id 는 DB 가 매긴다(V10 AUTO_INCREMENT). 저장 오류는 제약 이름으로 가른다 — 첫 리뷰 UNIQUE 만 409, 그 밖(PK 등)은 500.
  */
 @Component
 class ReviewCollection implements DocCollection {
@@ -78,11 +79,10 @@ class ReviewCollection implements DocCollection {
 		if (shoeId == null || !shoes.existsById(shoeId)) throw ApiException.badRequest("shoeId " + shoeId + " 인 신발이 없다");
 		int rating = ReviewRules.rating(body.get("rating"));
 		String content = ReviewRules.content(body.get("content"));
+		ratings.lock(shoeId);
 		if (reviews.existsByUserIdAndShoeIdAndReviewType(userId, shoeId, Review.FIRST)) throw ApiException.reviewExists();
 
 		Review r = new Review();
-		Long max = reviews.maxId();
-		r.setId(max == null ? 1 : max + 1);
 		r.setShoeId(shoeId);
 		r.setUserId(userId);
 		r.setAuthor(author.getNickname());
@@ -95,7 +95,8 @@ class ReviewCollection implements DocCollection {
 		try {
 			r = reviews.saveAndFlush(r);
 		} catch (DataIntegrityViolationException e) {           // 같은 순간 두 번 — UNIQUE 가 막는다
-			throw ApiException.reviewExists();
+			if (DuplicateKey.is(e, "uk_reviews_user_first_shoe")) throw ApiException.reviewExists();
+			throw ApiException.conflict("리뷰를 저장하지 못했다(" + DuplicateKey.key(e) + ")");   // "이미 리뷰를 썼다"가 아니다
 		}
 		ratings.recompute(shoeId);
 		activity.log(Entry.of("review.create", userId, "review", r.getId()).meta(Map.of("shoeId", shoeId)));
@@ -108,6 +109,7 @@ class ReviewCollection implements DocCollection {
 		return visible(id).map(r -> {
 			if (viewer.demoAdmin()) throw ApiException.demoAdmin();
 			if (!viewer.owns(r.getUserId())) throw ApiException.forbidden("작성자만 고친다");
+			ratings.lock(r.getShoeId());
 			if (body.containsKey("rating")) r.setRating(ReviewRules.rating(body.get("rating")));
 			if (body.containsKey("content")) r.setContent(ReviewRules.content(body.get("content")));
 			r = reviews.saveAndFlush(r);
@@ -130,6 +132,7 @@ class ReviewCollection implements DocCollection {
 		Review r = found.get();
 		if (viewer.demoAdmin()) throw ApiException.demoAdmin();
 		if (!viewer.owns(r.getUserId()) && !viewer.admin()) throw ApiException.forbidden("작성자 또는 admin 만 지운다");
+		ratings.lock(r.getShoeId());
 		reviews.delete(r);
 		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다
 		ratings.recompute(r.getShoeId());

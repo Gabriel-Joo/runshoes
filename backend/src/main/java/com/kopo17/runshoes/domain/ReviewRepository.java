@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-	@Query("select max(r.id) from Review r")
-	Long maxId();
-
 	/** 한 신발에 첫 리뷰 하나 — uk_reviews_user_first_shoe 가 정답이고, 이건 409 를 먼저 알려 주려고 */
 	boolean existsByUserIdAndShoeIdAndReviewType(Long userId, Long shoeId, String reviewType);
 

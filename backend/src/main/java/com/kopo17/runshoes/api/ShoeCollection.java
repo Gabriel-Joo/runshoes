@@ -5,11 +5,14 @@ import com.kopo17.runshoes.activity.ActivityLogger.Entry;
 import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.Shoe;
 import com.kopo17.runshoes.domain.ShoeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +32,14 @@ class ShoeCollection implements DocCollection {
 	private final ReviewRepository reviews;
 	private final Likes likes;
 	private final ActivityLogger activity;
+	private final EntityManager em;
 
-	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity) {
+	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity, EntityManager em) {
 		this.shoes = shoes;
 		this.reviews = reviews;
 		this.likes = likes;
 		this.activity = activity;
+		this.em = em;
 	}
 
 	@Override
@@ -75,13 +80,26 @@ class ShoeCollection implements DocCollection {
 		s.setReviewCount(0);
 		s.setLikeCount(0);
 		s.setLiked(false);
+		// id 는 DB 가 매긴다(V10). 본문에 id 가 있으면 그 id — save 는 id 가 있으면 merge 로 보므로 persist 를 직접 부른다
 		Long id = Values.id("id", body.get("id"));
-		if (id == null || id == 0) {
-			Long max = shoes.maxId();
-			id = max == null ? 1 : max + 1;
-		} else if (shoes.existsById(id)) throw ApiException.conflict("duplicate id " + id);
-		s.setId(id);
-		return toDoc(shoes.saveAndFlush(s), false);
+		try {
+			if (id == null || id == 0) return toDoc(shoes.saveAndFlush(s), false);
+			if (shoes.existsById(id)) throw ApiException.conflict("duplicate id " + id);
+			s.setId(id);
+			em.persist(s);
+			em.flush();
+			return toDoc(s, false);
+		} catch (DataIntegrityViolationException e) {
+			throw saveFailed(DuplicateKey.key(e), id);
+		} catch (PersistenceException e) {                      // persist 는 저장소를 거치지 않아 Spring 예외로 바뀌지 않는다
+			throw saveFailed(e.getCause() == null ? e.getMessage() : e.getCause().getMessage(), id);
+		}
+	}
+
+	/** DB 가 막은 저장 — 숨긴 신발(엔티티로 안 보인다)의 id 를 본문에 주면 PK, 동시에 같은 세대를 넣으면 세대 UNIQUE */
+	private static ApiException saveFailed(String key, Long id) {
+		if (key != null && key.contains("uk_shoes_line_generation_gender")) return ApiException.duplicateGeneration("같은 라인키 · 세대 · 성별의 신발이 이미 있다");
+		return ApiException.conflict("duplicate id " + id);
 	}
 
 	@Override
