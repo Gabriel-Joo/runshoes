@@ -6,16 +6,59 @@ import { Link, useNavigate } from "react-router-dom";
 import type { Shoe } from "../types";
 import ShoeImage from "../components/ShoeImage";
 import HideShoeConfirm from "../components/HideShoeConfirm";
+import ConfirmModal from "../components/ConfirmModal";
 import { useAuth } from "../auth/useAuth";
 import { demoBlocked } from "../auth/demoAdmin";
 import SearchBox from "../components/SearchBox";
 import "./Admin.css";
 
-const SORTS = [
+// 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
+//   화면에서 정렬한다 — 목록은 늘 전부 받고, 최근 수정순의 "고친 적 없음(null)은 뒤에, id 순"은 서버의 _sort 로 나타낼 수 없다
+type SortKey = "updated" | "id" | "brand" | "model";
+const SORTS: { key: SortKey; label: string }[] = [
+  { key: "updated", label: "최근 수정순" },
   { key: "id", label: "등록순" },
   { key: "brand", label: "브랜드순" },
   { key: "model", label: "모델명순" },
 ];
+
+function sortShoes(list: Shoe[], key: SortKey, down: boolean): Shoe[] {
+  const byId = (a: Shoe, b: Shoe) => a.id - b.id;
+  const ko = (a: string, b: string) => a.localeCompare(b, "ko");
+  const sign = down ? 1 : -1;
+  return [...list].sort((a, b) => {
+    if (key === "updated") {
+      if (!a.updatedAt || !b.updatedAt) return a.updatedAt ? -1 : b.updatedAt ? 1 : byId(a, b);   // 고친 적 없는 것은 방향과 상관없이 뒤에, id 순
+      return sign * (Date.parse(b.updatedAt) - Date.parse(a.updatedAt)) || byId(a, b);
+    }
+    if (key === "id") return sign * (b.id - a.id);
+    return sign * ko(a[key], b[key]) || byId(a, b);
+  });
+}
+
+// 바뀐 칸 이름(API) → 화면 이름. 한 번에 같이 바뀌는 칸(대표 · 추가 이미지, 가격 출처 · 날짜 · 종류)은 한 이름으로 묶는다
+const FIELD_LABEL: Record<string, string> = {
+  brand: "브랜드", model: "모델명", purpose: "용도", stability: "안정성", midsole: "미드솔", weight: "중량", drop: "드롭",
+  stackHeight: "스택하이트", width: "발볼", wideAvailable: "와이드 모델", carbon: "카본 플레이트", price: "가격",
+  image: "이미지", images: "이미지", summary: "한 줄 요약", description: "상세 설명", lineKey: "라인키", generation: "세대",
+  isCurrent: "현행", gender: "성별", weightSize: "중량 기준 사이즈", specSize: "스펙 기준 사이즈", measuredWeight: "실측 중량",
+  measuredWeightSize: "실측 사이즈", measuredStackHeight: "실측 스택", measuredDrop: "실측 드롭", measuredSource: "실측 출처",
+  measuredCount: "실측 수", priceSource: "가격 출처", priceCheckedAt: "가격 출처", priceKind: "가격 출처", specSources: "스펙 출처", sku: "품번",
+};
+const EVENT_LABEL: Record<string, string> = { created: "신규 등록", hidden: "숨김", restored: "되살림" };
+
+/** 수정 이력 칸 — 2개까지, 넘으면 "외 N건"(2026-11-01 사용자). 고친 적 없으면 null */
+function changeOf(shoe: Shoe): { text: string; all: string; at: string } | null {
+  if (!shoe.updatedAt || !shoe.lastChange?.length) return null;
+  const d = new Date(shoe.updatedAt);
+  const p2 = (n: number) => String(n).padStart(2, "0");
+  const at = `${p2(d.getMonth() + 1)}-${p2(d.getDate())} ${p2(d.getHours())}:${p2(d.getMinutes())}`;
+  const event = shoe.lastChange.length === 1 ? EVENT_LABEL[shoe.lastChange[0]] : undefined;
+  if (event) return { text: event, all: event, at };
+  const names = [...new Set(shoe.lastChange.map((f) => FIELD_LABEL[f] ?? f))];
+  const text = names.length === 1 ? `${names[0]} 수정` : names.length === 2 ? names.join("·") : `${names.slice(0, 2).join("·")} 외 ${names.length - 2}건`;
+  return { text, all: names.join(", "), at };
+}
 
 function Admin() {
   const navigate = useNavigate();
@@ -23,8 +66,10 @@ function Admin() {
   const [shoes, setShoes] = useState<Shoe[]>([]);
   const [brand, setBrand] = useState("전체");
   const [keyword, setKeyword] = useState("");
-  const [sort, setSort] = useState("id");
+  const [sort, setSort] = useState<SortKey>("updated");
+  const [down, setDown] = useState(true);
   const [target, setTarget] = useState<Shoe | null>(null);
+  const [purgeTarget, setPurgeTarget] = useState<Shoe | null>(null);
   const [brands, setBrands] = useState<string[]>([]);
   const [total, setTotal] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -41,9 +86,8 @@ function Admin() {
     const p = new URLSearchParams();
     if (brand !== "전체") p.set("brand", brand);
     if (search) p.set("search", search);
-    p.set("_sort", sort);
     return p.toString();
-  }, [brand, search, sort]);
+  }, [brand, search]);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -75,8 +119,16 @@ function Admin() {
   }, [reload]);
 
   const getShoes = () => setReload((n) => n + 1);
+  const sorted = useMemo(() => sortShoes(shoes, sort, down), [shoes, sort, down]);
+  const pickSort = (key: SortKey) => {
+    if (key === sort) setDown((d) => !d);
+    else {
+      setSort(key);
+      setDown(true);
+    }
+  };
 
-  // 삭제 = 숨김(V8) — 리뷰 · 찜은 남고 신발과 함께 화면에서 빠진다. admin 만(서버 403 — 데모 관리자는 그 문구)
+  // 숨김(V8, 화면 이름도 "숨김" — 2026-11-01) — 리뷰 · 찜은 남고 신발과 함께 화면에서 빠진다. admin 만(서버 403 — 데모 관리자는 그 문구)
   const removeShoe = async () => {
     if (!target) return;
     setBusy(true);
@@ -84,7 +136,7 @@ function Admin() {
     setBusy(false);
     const blocked = await demoBlocked(res);
     if (blocked) setNotice(blocked);
-    else if (!res.ok) alert(res.status === 403 ? "관리자만 지울 수 있어요." : "지우지 못했어요. 잠시 뒤 다시 해 주세요.");
+    else if (!res.ok) alert(res.status === 403 ? "관리자만 숨길 수 있어요." : "숨기지 못했어요. 잠시 뒤 다시 해 주세요.");
     else setNotice(`'${target.model}'을(를) 숨겼어요. 숨긴 신발에서 되살릴 수 있어요.`);
     setTarget(null);
     getShoes();
@@ -96,6 +148,20 @@ function Admin() {
     if (blocked) return setNotice(blocked);
     if (!res.ok) return alert("되살리지 못했어요. 잠시 뒤 다시 해 주세요.");
     setNotice(`'${shoe.model}'을(를) 되살렸어요. 리뷰 · 찜도 돌아왔어요.`);
+    getShoes();
+  };
+
+  // 영구 삭제(V11) — 숨긴 신발만. 리뷰 · 찜도 DB 에서 지워진다. 카탈로그가 다시 넣지 않게 pull-admin 이 제외로 옮긴다
+  const purgeShoe = async () => {
+    if (!purgeTarget) return;
+    setBusy(true);
+    const res = await apiFetch(`/admin/shoes/${purgeTarget.id}`, { method: "DELETE" }).catch(() => null);
+    setBusy(false);
+    const blocked = res && (await demoBlocked(res));
+    if (blocked) setNotice(blocked);
+    else if (!res?.ok) alert("영구 삭제하지 못했어요. 잠시 뒤 다시 해 주세요.");
+    else setNotice(`'${purgeTarget.model}'을(를) 영구 삭제했어요.`);
+    setPurgeTarget(null);
     getShoes();
   };
 
@@ -135,9 +201,11 @@ function Admin() {
             <button
               key={s.key}
               className={`admin__sort ${sort === s.key ? "is-active" : ""}`}
-              onClick={() => setSort(s.key)}
+              onClick={() => pickSort(s.key)}
+              aria-pressed={sort === s.key}
             >
               {s.label}
+              {sort === s.key && <span className="admin__sortdir" aria-label={down ? "내림차순" : "오름차순"}>{down ? "↓" : "↑"}</span>}
             </button>
           ))}
         </div>
@@ -163,7 +231,9 @@ function Admin() {
           <li className="admin__empty">조건에 맞는 러닝화가 없습니다.</li>
         )}
 
-        {shoes.map((shoe) => (
+        {sorted.map((shoe) => {
+          const change = changeOf(shoe);
+          return (
           <li className="admin__row" key={shoe.id}>
             <div className="admin__thumb">
               <ShoeImage src={shoe.image} alt={shoe.model} />
@@ -180,16 +250,27 @@ function Admin() {
               <span className="admin__brandname">{shoe.brand}</span>
             </div>
 
+            {/* 마지막 수정 — 바뀐 칸(2개까지 · 외 N건, 올리면 전체) · 날짜. 고친 적 없으면 빈 칸 */}
+            <span className="admin__change" title={change ? `${change.all} — ${change.at}` : undefined}>
+              {change && (
+                <>
+                  <span className="admin__changewhat">{change.text}</span>
+                  <span className="admin__changeat">{change.at}</span>
+                </>
+              )}
+            </span>
+
             <div className="admin__actions">
               <Link className="admin__edit" to={`/edit/${shoe.id}`}>
                 수정
               </Link>
               <button className="admin__delete" onClick={() => setTarget(shoe)}>
-                삭제
+                숨김
               </button>
             </div>
           </li>
-        ))}
+          );
+        })}
       </ul>
       )}
 
@@ -213,6 +294,9 @@ function Admin() {
                   <button className="admin__edit" onClick={() => restoreShoe(shoe)}>
                     되살리기
                   </button>
+                  <button className="admin__delete" onClick={() => setPurgeTarget(shoe)}>
+                    영구 삭제
+                  </button>
                 </div>
               </li>
             ))}
@@ -220,6 +304,23 @@ function Admin() {
       )}
 
       {target && <HideShoeConfirm shoe={target} busy={busy} onConfirm={removeShoe} onCancel={() => setTarget(null)} />}
+      {purgeTarget && (
+        <ConfirmModal
+          message={`'${purgeTarget.model}'을(를) 영구 삭제할까요?`}
+          detail={
+            <>
+              <p>
+                리뷰 <strong>{purgeTarget.reviewCount}개</strong> · 찜 <strong>{purgeTarget.likeCount}개</strong>가 함께 삭제됩니다.
+              </p>
+              <p>되돌릴 수 없어요. 다음 카탈로그 적재에서도 다시 들어오지 않습니다.</p>
+            </>
+          }
+          confirmLabel="영구 삭제"
+          busy={busy}
+          onConfirm={purgeShoe}
+          onCancel={() => setPurgeTarget(null)}
+        />
+      )}
     </div>
   );
 }

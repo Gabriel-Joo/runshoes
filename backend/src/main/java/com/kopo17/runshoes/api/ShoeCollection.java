@@ -12,10 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Objects;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * /api/shoes — 쓰기(POST · PATCH · PUT · DELETE)는 admin 만(403, 데모 관리자는 403 demo_admin). 없는 신발은 권한보다 먼저 404.
@@ -24,6 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
  * 와이드 모델 "없음"의 출처 필수(2026-10-29)는 관리 폼이 본다 — 서버가 막으면 json-server 계약(spring-v3 W30 · W36 의 wideAvailable:false)이 깨진다.
  * rating · reviewCount 는 리뷰가 정하고(Ratings), likeCount · liked 는 찜이 정한다(Likes) — 본문에 와도 admin 이어도 버린다.
  * 응답의 liked 는 요청한 사람이 찜했는지(likes). 공용 칸 shoes.liked 는 읽지 않는다(V4 에서 지운다).
+ * 수정 이력(V11, 2026-11-01 사용자): 등록 · 수정 · 숨김 · 되살리기가 updated_at · last_change(바뀐 칸 이름)를 찍고, 등록 · 수정은 활동 로그에도
+ *   shoe.create · shoe.update(바뀐 칸 이름만 — 값은 넣지 않는다). 바뀐 칸이 없는 저장은 찍지도 남기지도 않는다.
+ *   적재기(헤더 X-Runshoes-Client: loader)의 등록 · 수정은 시각 · 칸을 찍지 않는다 — 293켤레가 "최근 수정순" 맨 위로 올라오지 않게. 로그에는 via loader 로 남긴다.
  */
 @Component
 class ShoeCollection implements DocCollection {
@@ -33,13 +43,15 @@ class ShoeCollection implements DocCollection {
 	private final Likes likes;
 	private final ActivityLogger activity;
 	private final EntityManager em;
+	private final JdbcTemplate jdbc;
 
-	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity, EntityManager em) {
+	ShoeCollection(ShoeRepository shoes, ReviewRepository reviews, Likes likes, ActivityLogger activity, EntityManager em, JdbcTemplate jdbc) {
 		this.shoes = shoes;
 		this.reviews = reviews;
 		this.likes = likes;
 		this.activity = activity;
 		this.em = em;
+		this.jdbc = jdbc;
 	}
 
 	@Override
@@ -80,14 +92,19 @@ class ShoeCollection implements DocCollection {
 		s.setReviewCount(0);
 		s.setLikeCount(0);
 		s.setLiked(false);
+		boolean loader = fromLoader();
+		if (!loader) stamp(s, List.of("created"));
 		// id 는 DB 가 매긴다(V10). 본문에 id 가 있으면 그 id — save 는 id 가 있으면 merge 로 보므로 persist 를 직접 부른다
 		Long id = Values.id("id", body.get("id"));
 		try {
-			if (id == null || id == 0) return toDoc(shoes.saveAndFlush(s), false);
-			if (shoes.existsById(id)) throw ApiException.conflict("duplicate id " + id);
-			s.setId(id);
-			em.persist(s);
-			em.flush();
+			if (id == null || id == 0) s = shoes.saveAndFlush(s);
+			else {
+				if (shoes.existsById(id)) throw ApiException.conflict("duplicate id " + id);
+				s.setId(id);
+				em.persist(s);
+				em.flush();
+			}
+			activity.log(new Entry("shoe.create", viewer.userId(), "shoe", s.getId(), Map.of("model", s.getModel() == null ? "" : s.getModel(), "via", loader ? "loader" : "admin")));
 			return toDoc(s, false);
 		} catch (DataIntegrityViolationException e) {
 			throw saveFailed(DuplicateKey.key(e), id);
@@ -108,7 +125,9 @@ class ShoeCollection implements DocCollection {
 		return shoes.findById(id).map(s -> {
 			viewer.requireAdmin();
 			requireUniqueGeneration(target(s, body), s.getId());   // 바꾸기 전에 — 바꾼 엔티티는 조회 전에 먼저 flush 돼 DB UNIQUE 가 500 으로 터진다
+			Map<String, Object> before = toDoc(s, false);
 			apply(s, body);
+			recordUpdate(s, before, viewer);
 			return toDoc(shoes.saveAndFlush(s), likes.likesShoe(viewer.userId(), s.getId()));
 		});
 	}
@@ -126,6 +145,9 @@ class ShoeCollection implements DocCollection {
 			s.setReviewCount(old.getReviewCount());
 			s.setLikeCount(old.getLikeCount());
 			s.setLiked(old.getLiked());
+			s.setUpdatedAt(old.getUpdatedAt());               // 수정 이력도 셈하는 값처럼 — 바뀐 칸이 있을 때만 아래에서 새로
+			s.setLastChange(old.getLastChange());
+			recordUpdate(s, toDoc(old, false), viewer);
 			return toDoc(shoes.saveAndFlush(s), likes.likesShoe(viewer.userId(), s.getId()));   // merge — body 에 없는 필드는 null 이 된다
 		});
 	}
@@ -169,10 +191,89 @@ class ShoeCollection implements DocCollection {
 	public Map<String, Object> restore(long id, Viewer viewer) {
 		if (shoes.countHidden(id) == 0) throw ApiException.notFound();
 		viewer.requireAdmin();
-		shoes.unhide(id);
+		shoes.unhide(id, Values.nowUtc().truncatedTo(ChronoUnit.MILLIS));
 		Shoe s = shoes.findById(id).orElseThrow(ApiException::notFound);
 		activity.log(new Entry("shoe.restore", viewer.userId(), "shoe", id, Map.of("model", s.getModel())));
 		return toDoc(s, likes.likesShoe(viewer.userId(), id));
+	}
+
+	/**
+	 * 영구 삭제(V11, 2026-11-01 사용자) — 숨긴 신발만(보이는 신발 409 not_hidden, 없는 신발 404). admin 만(데모 관리자 403).
+	 * 리뷰 · 답글 · 도움이 돼요 · 찜은 FK CASCADE 로 같이 지워진다. 지우기 전에 shoe_purges 에 남긴다 — pull-admin 이 읽어 카탈로그 제외로 옮긴다
+	 */
+	@Transactional
+	public Map<String, Object> purge(long id, Viewer viewer) {
+		if (shoes.countHidden(id) == 0) {
+			if (!shoes.existsById(id)) throw ApiException.notFound();
+			viewer.requireAdmin();
+			throw ApiException.notHidden();
+		}
+		viewer.requireAdmin();
+		Map<String, Object> row = jdbc.queryForMap("SELECT line_key, generation, gender, brand, model, like_count FROM shoes WHERE id = ? FOR UPDATE", id);
+		long reviewCount = jdbc.queryForObject("SELECT COUNT(*) FROM reviews WHERE shoe_id = ?", Long.class, id);
+		int likeCount = jdbc.queryForObject("SELECT COUNT(*) FROM likes WHERE shoe_id = ?", Integer.class, id);
+		LocalDateTime at = Values.nowUtc().truncatedTo(ChronoUnit.MILLIS);
+		jdbc.update("INSERT INTO shoe_purges (shoe_id, line_key, generation, gender, brand, model, review_count, like_count, purged_at, purged_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				id, row.get("line_key"), row.get("generation"), row.get("gender"), row.get("brand"), row.get("model"), reviewCount, likeCount, at, viewer.userId());
+		if (shoes.purge(id) != 1) throw ApiException.notFound();
+		Map<String, Object> meta = new LinkedHashMap<>();
+		meta.put("model", row.get("model"));
+		meta.put("brand", row.get("brand"));
+		meta.put("lineKey", row.get("line_key"));
+		meta.put("generation", row.get("generation"));
+		meta.put("gender", row.get("gender"));
+		meta.put("reviews", reviewCount);
+		meta.put("likes", likeCount);
+		activity.log(new Entry("shoe.purge", viewer.userId(), "shoe", id, meta));
+		return Map.of("id", id, "reviews", reviewCount, "likes", likeCount);
+	}
+
+	/** 영구 삭제 기록 — pull-admin 이 읽는다(admin · 데모 관리자). 지운 순서 */
+	@Transactional(readOnly = true)
+	public List<Map<String, Object>> purged(Viewer viewer) {
+		viewer.requireAdminView();
+		return jdbc.query("SELECT shoe_id, line_key, generation, gender, brand, model, review_count, like_count, purged_at FROM shoe_purges ORDER BY id", (rs, i) -> {
+			Map<String, Object> d = new LinkedHashMap<>();
+			d.put("id", rs.getLong("shoe_id"));
+			d.put("lineKey", rs.getString("line_key"));
+			d.put("generation", rs.getObject("generation"));
+			d.put("gender", rs.getString("gender"));
+			d.put("brand", rs.getString("brand"));
+			d.put("model", rs.getString("model"));
+			d.put("reviews", rs.getInt("review_count"));
+			d.put("likes", rs.getInt("like_count"));
+			d.put("purgedAt", Values.formatCreatedAt(rs.getTimestamp("purged_at").toLocalDateTime()));
+			return d;
+		});
+	}
+
+	/** 수정 이력에 넣지 않는 키 — 셈하는 값 · 요청한 사람 기준 값 · 이력 자신 */
+	private static final Set<String> NOT_EDITS = Set.of("id", "rating", "reviewCount", "likeCount", "liked", "updatedAt", "lastChange");
+
+	/** 바뀐 칸 이름(API 이름, toDoc 순서) — 값은 보지 않고 같은지만 */
+	static List<String> changedFields(Map<String, Object> before, Map<String, Object> after) {
+		List<String> out = new ArrayList<>();
+		for (String k : after.keySet()) if (!NOT_EDITS.contains(k) && !Objects.equals(before.get(k), after.get(k))) out.add(k);
+		return out;
+	}
+
+	private void recordUpdate(Shoe s, Map<String, Object> before, Viewer viewer) {
+		List<String> fields = changedFields(before, toDoc(s, false));
+		if (fields.isEmpty()) return;
+		boolean loader = fromLoader();
+		if (!loader) stamp(s, fields);
+		activity.log(new Entry("shoe.update", viewer.userId(), "shoe", s.getId(), Map.of("fields", fields, "via", loader ? "loader" : "admin")));
+	}
+
+	private static void stamp(Shoe s, List<String> fields) {
+		s.setUpdatedAt(Values.nowUtc().truncatedTo(ChronoUnit.MILLIS));
+		s.setLastChange(List.copyOf(fields));
+	}
+
+	/** 적재기 요청인가 — catalog/load.mjs 가 붙이는 헤더. 관리자 토큰으로만 쓰기가 되니 스스로 밝히는 값이면 된다 */
+	private static boolean fromLoader() {
+		return RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes a
+				&& "loader".equals(a.getRequest().getHeader("X-Runshoes-Client"));
 	}
 
 	/** 키 순서는 기준선 GET 과 같게(db.json 의 필드 순서). liked 는 요청한 사람 기준 */
@@ -218,6 +319,10 @@ class ShoeCollection implements DocCollection {
 		d.put("priceKind", s.getPriceKind());
 		// V6 — 스펙 출처. 같은 방식으로 맨 뒤에(계약 spring-v4 · v3 는 "추가"로만 본다)
 		d.put("specSources", s.getSpecSources());
+		// V11 — 품번 · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸 이름. 같은 방식으로 맨 뒤에
+		d.put("sku", s.getSku());
+		d.put("updatedAt", s.getUpdatedAt() == null ? null : Values.formatCreatedAt(s.getUpdatedAt()));
+		d.put("lastChange", s.getLastChange());
 		return d;
 	}
 
@@ -225,6 +330,14 @@ class ShoeCollection implements DocCollection {
 	// 가격 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
 	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(2026-10-29)
 	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("발매가");   // 2026-10-30 사용자 — "정가"를 "발매가"로 통일(크림 발매가 · 공식몰 · ABC마트 정가 모두)
+
+	/** 품번(V11) — 영문 · 숫자와 - . / 공백, 50자까지. 온은 점(71.98674), 미즈노는 두 품번을 / 로(411448-RBUN / U1GD241751) — 카탈로그 실제 값. 빈 칸은 없음(null) */
+	private static String sku(String v) {
+		if (v == null || v.isBlank()) return null;
+		String t = v.trim();
+		if (!t.matches("[A-Za-z0-9./ -]{1,50}")) throw ApiException.invalid("품번은 영문 · 숫자와 - . / 로 50자까지예요(예: 1011C284-400)");
+		return t;
+	}
 
 	/** 추가 이미지는 6장까지(2026-10-30 사용자 — 관리 폼이 칸 하나에 주소 하나) */
 	static final int MAX_IMAGES = 6;
@@ -298,6 +411,7 @@ class ShoeCollection implements DocCollection {
 				case "priceCheckedAt" -> s.setPriceCheckedAt(Values.date(k, v));
 				case "priceKind" -> s.setPriceKind(oneOf(k, v, PRICE_KINDS));
 				case "specSources" -> s.setSpecSources(SpecSources.parse(v));
+				case "sku" -> s.setSku(sku(Values.str(k, v)));
 				default -> { }
 			}
 		});

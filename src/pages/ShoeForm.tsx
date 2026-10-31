@@ -135,6 +135,7 @@ function ShoeForm() {
   const [priceSource, setPriceSource] = useState("");
   const [sources, setSources] = useState<Record<SpecField, Source>>(() => Object.fromEntries(SPEC_FIELDS.map((f) => [f, NO_SOURCE])) as Record<SpecField, Source>);
   const [images, setImages] = useState<string[]>([""]);
+  const [sku, setSku] = useState("");
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -155,6 +156,7 @@ function ShoeForm() {
         setGeneration(shoe.generation == null ? "" : String(shoe.generation));
         setIsCurrent(Boolean(shoe.isCurrent));
         setGender(shoe.gender ?? "");
+        setSku(shoe.sku ?? "");
         setMidsole(shoe.midsole ?? "");
         setWeight(shoe.weight == null ? "" : String(shoe.weight));
         setWeightSize(shoe.weightSize ?? "");
@@ -220,6 +222,7 @@ function ShoeForm() {
     }
     if (price && priceSource && !priceCheckedAt) return "가격을 확인한 날을 넣어 주세요.";
     if (lineKey.trim() && !/^[a-z0-9-]+:[a-z0-9-]+$/.test(lineKey.trim())) return "라인키는 브랜드:라인 모양이에요(예: asics:gel-kayano).";
+    if (sku.trim() && !/^[A-Za-z0-9./ -]{1,50}$/.test(sku.trim())) return "품번은 영문 · 숫자와 - . / 로 50자까지예요(예: 1011C284-400).";
     return null;
   };
 
@@ -240,6 +243,7 @@ function ShoeForm() {
       generation: generation === "" ? null : Number(generation),
       isCurrent,
       gender: gender || null,
+      sku: sku.trim() || null,
       midsole: specValue.midsole,
       weight: specValue.weight,
       weightSize: specValue.weight === null ? null : weightSize || null,
@@ -368,6 +372,24 @@ function ShoeForm() {
   };
   const legacyPrice = priceSource && !PRICE_SOURCES.includes(priceSource);
 
+  // 수정 — 신발을 받기 전에는 폼을 그리지 않는다(2026-11-01 사용자). 그리면 빈 칸에 먼저 입력할 수 있고, 늦게 온 응답이 그 입력을 덮어
+  //   바꾼 줄 알았던 칸이 그대로 저장됐다(V11 리허설에서 재현 — 발볼을 고른 뒤 응답이 와 "보통"으로 되돌아갔다)
+  if (isEdit && !loaded) {
+    return (
+      <div className="form">
+        <h2 className="form__title">러닝화 수정</h2>
+        <p className={`form__loading${error ? " is-error" : ""}`} role={error ? "alert" : "status"} aria-live="polite">
+          {error ?? "불러오는 중…"}
+        </p>
+        {error && (
+          <button className="form__cancel" onClick={() => navigate("/admin")}>
+            목록으로
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="form">
       <h2 className="form__title">
@@ -431,6 +453,11 @@ function ShoeForm() {
               </option>
             ))}
           </select>
+        </label>
+        {/* 품번(V11, 2026-11-01 사용자 — 크림에서 모델 번호를 보며 넣는다). 색상까지: 1011C284 모델 · -400 색상 */}
+        <label className="form__field form__field--sku">
+          <span>품번 (색상 포함)</span>
+          <input value={sku} onChange={(e) => setSku(e.target.value)} placeholder="1011C284-400" spellCheck={false} autoCapitalize="characters" />
         </label>
       </div>
 
@@ -592,7 +619,7 @@ function ShoeForm() {
       <div className="form__actions">
         {isEdit && (
           <button className="form__delete" onClick={() => setConfirmOpen(true)}>
-            삭제
+            숨김
           </button>
         )}
         <button className="form__cancel" onClick={() => navigate("/admin")}>

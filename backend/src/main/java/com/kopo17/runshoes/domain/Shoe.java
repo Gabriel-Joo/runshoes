@@ -116,6 +116,16 @@ public class Shoe {
 	@Column(name = "spec_sources", columnDefinition = "json")
 	private Map<String, Map<String, String>> specSources;
 
+	// V11 — 품번(색상 포함) · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸 이름(api/ShoeCollection 이 찍는다, 적재기는 찍지 않는다)
+	private String sku;
+
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
+
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "last_change", columnDefinition = "json")
+	private List<String> lastChange;
+
 	// 숨긴 때(V8) — 엔티티로 읽히는 행은 늘 NULL(@SQLRestriction). 숨기기 · 되살리기는 ShoeRepository native
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
@@ -199,6 +209,12 @@ public class Shoe {
 	public void setPriceKind(String priceKind) { this.priceKind = priceKind; }
 	public Map<String, Map<String, String>> getSpecSources() { return specSources; }
 	public void setSpecSources(Map<String, Map<String, String>> specSources) { this.specSources = specSources; }
+	public String getSku() { return sku; }
+	public void setSku(String sku) { this.sku = sku; }
+	public LocalDateTime getUpdatedAt() { return updatedAt; }
+	public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+	public List<String> getLastChange() { return lastChange; }
+	public void setLastChange(List<String> lastChange) { this.lastChange = lastChange; }
 	public LocalDateTime getDeletedAt() { return deletedAt; }
 	public String getImage() { return image; }
 	public void setImage(String image) { this.image = image; }
