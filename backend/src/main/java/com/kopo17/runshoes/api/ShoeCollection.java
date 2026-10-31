@@ -328,7 +328,9 @@ class ShoeCollection implements DocCollection {
 
 	private static final java.util.Set<String> GENDERS = java.util.Set.of("men", "women", "unisex");
 	// 가격 출처 · 종류(V5) — 다른 값은 400. 할인가는 받지 않는다(2026-10-28)
-	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림");  // 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(2026-10-29)
+	// 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(2026-10-29).
+	// 직접 확인 = 공식몰에서 내려간 모델을 사용자가 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인한 발매가(2026-11-01)
+	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림", "직접 확인");
 	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("발매가");   // 2026-10-30 사용자 — "정가"를 "발매가"로 통일(크림 발매가 · 공식몰 · ABC마트 정가 모두)
 
 	/** 품번(V11) — 영문 · 숫자와 - . / 공백, 50자까지. 온은 점(71.98674), 미즈노는 두 품번을 / 로(411448-RBUN / U1GD241751) — 카탈로그 실제 값. 빈 칸은 없음(null) */
