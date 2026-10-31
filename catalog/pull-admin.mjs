@@ -24,6 +24,18 @@ function get(path) {
   }).on('error', reject));
 }
 
+// 관리자 길(영구 삭제 기록) — 로그인 · 토큰. 운영 VIP 는 Host 헤더로
+function call(method, path, body, token) {
+  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, data = body ? JSON.stringify(body) : undefined;
+  if (!HOST) return fetch(BASE + path, { method, headers, body: data }).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${method} ${path} → ${r.status}`))));
+  return new Promise((resolve, reject) => {
+    const req = http.request(BASE + path, { method, headers: { ...headers, Host: HOST, ...(data ? { 'Content-Length': Buffer.byteLength(data) } : {}) } }, (res) => {
+      let t = ''; res.setEncoding('utf8'); res.on('data', (c) => (t += c)); res.on('end', () => (res.statusCode < 300 ? resolve(JSON.parse(t)) : reject(new Error(`${method} ${path} → ${res.statusCode}`))));
+    });
+    req.on('error', reject); if (data) req.write(data); req.end();
+  });
+}
+
 const SNAP_FILE = snapFile(BASE, HOST);
 if (!fs.existsSync(SNAP_FILE)) { console.error(`스냅숏이 없다(${SNAP_FILE.pathname}) — 운영 값이 카탈로그와 같을 때 node load.mjs --snapshot 으로 먼저 적는다`); process.exit(2); }
 const SNAP = JSON.parse(fs.readFileSync(SNAP_FILE, 'utf8'));
@@ -49,7 +61,7 @@ const DEC = JSON.parse(fs.readFileSync(U('decisions.json'), 'utf8'));
 const COPY = JSON.parse(fs.readFileSync(U('copy.json'), 'utf8'));
 const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });  // 한국 날짜
 const note = `관리 화면 수정(진짜 관리자 계정, 운영 ${HOST ?? new URL(BASE).host}, 스냅숏 ${SNAP.at.slice(0, 16)}Z 뒤 · 가져온 날 ${today})`;
-const out = { moved: [], untouched: [], reportOnly: [], newShoes: [], hidden: [], restored: [] };
+const out = { moved: [], untouched: [], reportOnly: [], newShoes: [], hidden: [], restored: [], purged: [] };
 const fields = [];   // 새로 옮긴 칸 — { key, field, from, to, file } (적재기 로그 · pull-admin-last.json)
 const same = (a, b) => ['action', 'value', 'weight_basis', 'price_source', 'price_checked_at', 'price_kind', 'size', 'source', 'count'].every((k) => eq(a?.[k], b?.[k]));
 let already = 0;
@@ -152,6 +164,11 @@ for (const s of live) {
         `${key} ${k} ${JSON.stringify(was[k])} → ${JSON.stringify(s[k])}`, { key, field: k, from: was[k] ?? null, to: s[k] ?? null, file: 'decisions.json' });
       continue;
     }
+    if (k === 'sku') {   // V11 품번 — 관리 화면 값이 StockX 조회 결과보다 먼저다(build.mjs)
+      moved(put(id, 'sku', s.sku == null ? { action: 'clear', by: 'user', via: 'admin', note } : { action: 'use_source', value: s.sku, via: 'admin', by: 'user', note }),
+        `${key} sku ${JSON.stringify(was.sku)} → ${JSON.stringify(s.sku)}`, { key, field: k, from: was.sku ?? null, to: s.sku ?? null, file: 'decisions.json' });
+      continue;
+    }
     if (k === 'specSources') {
       moved(put(id, 'spec_sources', { action: 'use_source', value: s.specSources ?? null, via: 'admin', by: 'user', note }),
         `${key} specSources ${JSON.stringify(was.specSources)} → ${JSON.stringify(s.specSources)}`, { key, field: k, from: was.specSources ?? null, to: s.specSources ?? null, file: 'decisions.json' });
@@ -196,8 +213,24 @@ for (const sid of Object.keys(SNAP.shoes)) {
   fields.push({ key: rk, field: 'hidden', from: false, to: true, file: 'decisions.json' });
 }
 
-console.log(`${WRITE ? '썼다' : '건조 실행'} — ${HOST ?? BASE} | 스냅숏 ${SNAP.at} | 옮김 ${out.moved.length}(그중 이미 옮긴 것 ${already}) · 덮지 않는 칸 ${out.untouched.length} · 보고만 ${out.reportOnly.length} · 새 신발 ${out.newShoes.length} · 숨긴 신발 ${out.hidden.length} · 되살린 신발 ${out.restored.length}`);
-for (const [t, a] of [['옮김', out.moved], ['적재기가 덮지 않는 칸(그대로 둔다)', out.untouched], ['보고만(스냅숏에 lineKey 가 없어 행을 모른다)', out.reportOnly], ['관리 화면에서 새로 넣은 신발(구조 변경 — 적재기가 멈춘다. 후보 목록에 넣을지 사람이 정한다)', out.newShoes], ['관리 화면에서 숨긴 신발(decisions.json hidden — 적재기가 다시 넣지 않는다)', out.hidden], ['관리 화면에서 되살린 신발(hidden 판단을 지웠다)', out.restored]])
+// 영구 삭제(V11) — 운영 shoe_purges 를 읽어 카탈로그 행을 purged 로(빌드가 빼고 적재기가 다시 넣지 않는다). 관리자만 읽는 길이라 ADMIN_EMAIL · ADMIN_PASSWORD 가 있을 때만.
+//   없어도 빠지지는 않는다 — 스냅숏에 있는데 운영에 없는 신발은 위에서 hidden 으로 옮긴다. purged 는 "되살릴 수 없다"를 남기는 기록
+if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+  const token = (await call('POST', '/api/auth/login', { email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD })).accessToken;
+  for (const p of await call('GET', '/api/admin/shoes/purged', null, token)) {
+    const rk = p.lineKey && p.generation != null ? SOURCE.get(`${p.lineKey}:${p.generation}`) : null, rid = rk?.replace(/:(?=[^:]*$)/, '#');
+    const label = `${p.id} ${p.model} (${p.lineKey ?? '-'}:${p.generation ?? '-'}) ${p.purgedAt}`;
+    if (!rid) { out.purged.push(`${label} — 카탈로그 밖(적재기가 넣지 않는다)`); continue; }
+    const row = (DEC.rows[rid] ??= {});
+    if (row.purged?.action === 'purge') { already++; out.purged.push(`${label} — 이미 반영`); continue; }
+    row.purged = { action: 'purge', shoe_id: p.id, purged_at: p.purgedAt, reviews: p.reviews, likes: p.likes, via: 'admin', by: 'user', note };
+    out.purged.push(label);
+    fields.push({ key: rk, field: 'purged', from: false, to: true, file: 'decisions.json' });
+  }
+} else out.purged.push('(ADMIN_EMAIL · ADMIN_PASSWORD 가 없어 영구 삭제 기록은 읽지 않았다 — 숨긴 신발로는 이미 빠진다)');
+
+console.log(`${WRITE ? '썼다' : '건조 실행'} — ${HOST ?? BASE} | 스냅숏 ${SNAP.at} | 옮김 ${out.moved.length}(그중 이미 옮긴 것 ${already}) · 덮지 않는 칸 ${out.untouched.length} · 보고만 ${out.reportOnly.length} · 새 신발 ${out.newShoes.length} · 숨긴 신발 ${out.hidden.length} · 되살린 신발 ${out.restored.length} · 영구 삭제 ${out.purged.filter((x) => !x.startsWith('(')).length}`);
+for (const [t, a] of [['옮김', out.moved], ['적재기가 덮지 않는 칸(그대로 둔다)', out.untouched], ['보고만(스냅숏에 lineKey 가 없어 행을 모른다)', out.reportOnly], ['관리 화면에서 새로 넣은 신발(구조 변경 — 적재기가 멈춘다. 후보 목록에 넣을지 사람이 정한다)', out.newShoes], ['관리 화면에서 숨긴 신발(decisions.json hidden — 적재기가 다시 넣지 않는다)', out.hidden], ['관리 화면에서 되살린 신발(hidden 판단을 지웠다)', out.restored], ['관리 화면에서 영구 삭제한 신발(decisions.json purged — 다시 넣지 않는다)', out.purged]])
   if (a.length) { console.log(`\n${t}`); for (const x of a) console.log('  ' + x); }
 fs.mkdirSync(U('local/work/'), { recursive: true });
 fs.writeFileSync(U('local/work/pull-admin-last.json'), JSON.stringify({ at: new Date().toISOString(), host: HOST ?? new URL(BASE).host, snapshot: SNAP.at, write: WRITE, fields, already, ...out }, null, 1));
