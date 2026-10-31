@@ -41,12 +41,12 @@
   color: var(--text-mid);
 }
 
-/* 왼쪽 이미지 — 흰 바탕(StockX 이미지가 흰 바탕이라 이어진다). 신발 크기는 예전 사진과 같게:
+/* 왼쪽 이미지 — 머리와 같은 그라데이션(흰색 → 회색, 2026-10-31 사용자 "모바일 쪽이 보기 좋다"). 신발 크기는 예전 사진과 같게:
    예전에는 400px 칸에서 신발이 약 213px(53%) — StockX 는 신발이 사진 폭의 98% 라 좌우 22%씩 띄운다 */
 .modal__visual {
   width: 400px;
   flex-shrink: 0;
-  background: #fff;
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -65,6 +65,10 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+/* 사진의 흰 바탕이 그라데이션 위에 네모로 뜨지 않게 곱하기로 겹친다 — 트랙(transform)이 따로 묶이므로 트랙째로 */
+.modal__visual .gallery__track {
+  mix-blend-mode: multiply;
 }
 
 /* 오른쪽 정보 — 머리(회색 그라데이션) · 본문(흰색) */
@@ -226,14 +230,22 @@
     flex-direction: column;
   }
 
+  /* 사진 칸은 사진 높이만큼(700 × 500 비율) — 높이가 정해지지 않으면 사진이 위에 붙고 아래가 빈다(2026-10-31). 바탕은 흰색 그대로(아래 머리가 그라데이션) */
   .modal__visual {
     width: 100%;
-    min-height: 260px;
-    padding: 0 22%;
+    padding: 24px 22%;
+    background: #fff;
   }
   .modal__visual .gallery,
   .modal__visual .gallery__stage {
-    min-height: 240px;
+    min-height: 0;
+  }
+  .modal__visual .gallery__stage {
+    flex: none;
+    aspect-ratio: 7 / 5;
+  }
+  .modal__visual .gallery__thumbs {
+    margin-bottom: 0;
   }
 
   .modal__head {
