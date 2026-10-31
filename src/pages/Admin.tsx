@@ -211,9 +211,6 @@ function Admin() {
           러닝화 관리
           {isDemoAdmin && <span className="admin__demo">데모 관리자 · 보기 전용</span>}
         </h2>
-        <button className="admin__new" onClick={() => navigate("/new")}>
-          + 새 러닝화 등록
-        </button>
       </div>
 
       <div className="admin__brands">
@@ -263,6 +260,10 @@ function Admin() {
             보완 필요 {lacking.length}
           </button>
         </div>
+        {/* 새 등록 — 탭 줄 오른쪽, 탭 묶음과 띄운다(성격이 다른 버튼, 2026-11-01 사용자) */}
+        <button className="admin__new" onClick={() => navigate("/new")}>
+          + 새 러닝화 등록
+        </button>
       </div>
 
       {tab === "list" && (
