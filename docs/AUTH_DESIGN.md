@@ -51,7 +51,7 @@ V3 는 계정의 비밀번호 해시를 NULL 로 넣고, 앱이 기동할 때 �
 | `/api/me` | GET 나(+ 가입일 `createdAt`), `PATCH /nickname`, `PUT /password`, `DELETE`(탈퇴 — V9). 시드 · 관리자 계정은 닉네임 · 탈퇴 403 |
 
 **DEMO_ADMIN**(V7, `demo-admin@runshoes.test`): 관리 화면은 다 보이고, 신발 쓰기 · 리뷰 · 찜 · 공감 · 회원 정보 수정은 403 `{code:"demo_admin", message:"데모 관리자 계정은 할 수 없습니다"}`. 비밀번호로는 들어갈 수 없다(`password_hash` = `'!demo'`).
-**탈퇴 회원**(V9): 로그인 · refresh · `/api/me` · 리뷰 쓰기 · 찜이 막힌다(남은 access token 도). 리뷰는 "탈퇴 회원"으로 남는다.
+**탈퇴 회원**(V9): 로그인 · refresh 가 막히고, 남은 access token(최대 15분)은 어디에 보내도 401 — 토큰을 받는 곳(`SecurityConfig` 의 JWT 변환)이 users 를 읽어 탈퇴했으면 거절한다. 리뷰는 "탈퇴 회원"으로 남는다.
 
 리뷰를 쓰고 · 고치고 · 지우면 서버가 신발의 rating · reviewCount 를 다시 센다(FIRST 만, 소수 한 자리 — `ROUND(AVG(INT), 1)` 은 DECIMAL 이라 0.5 를 올린다, V3 와 같은 식).
 셈하는 값(rating · reviewCount · likeCount · liked)은 본문에 와도 admin 이어도 버리고, 신발 PUT 도 지우지 않는다.

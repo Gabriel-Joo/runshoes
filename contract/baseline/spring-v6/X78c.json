@@ -1,0 +1,35 @@
+{
+  "id": "X78c",
+  "plan": null,
+  "name": "남은 토큰 내 리뷰 삭제 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/reviews/107",
+    "headers": {
+      "Authorization": "Bearer {{w}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "www-authenticate": "Bearer",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "content-type": "application/json;charset=UTF-8",
+      "content-length": "2",
+      "date": "Sat, 31 Oct 2026 19:27:08 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}
