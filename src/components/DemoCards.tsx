@@ -11,6 +11,8 @@ const MAX_COLUMNS = 4;
 const MIN_COLUMNS = 2;       // 휴대폰
 const SPEED = 13;            // 스스로 흐르는 속도(초당 px) — 9 는 느리다(2026-10-30 사용자 "12~14")
 const FRICTION = 3.2;        // 관성이 줄어드는 빠르기(1/초) — 클수록 빨리 멈춘다
+const FRICTION_TOUCH = 2.6;  // 손가락은 끄는 거리가 짧아 같은 마찰이면 금방 멈춘다(2026-10-31 사용자 "PC 와 비슷하게")
+const STILL_MS = 80;         // 놓기 전에 이만큼 멈춰 있었으면 던진 것이 아니다(관성 없음)
 const EASE_BACK = 1.5;       // 멈췄다 다시 흐를 때 속도가 붙는 빠르기(1/초)
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -23,6 +25,7 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
   const offset = useRef(0);              // 흐른 거리(px) — 한 바퀴(loop)로 감싼다
   const flow = useRef(0);                // 지금 스스로 흐르는 속도 — 멈췄다 다시 흐를 때 0 → SPEED 로 붙는다
   const fling = useRef(0);               // 놓은 뒤 남은 관성(초당 px)
+  const friction = useRef(FRICTION);     // 마지막으로 끈 것이 손가락이면 FRICTION_TOUCH
   const hover = useRef(false);
   const drag = useRef({ active: false, startX: 0, startOffset: 0, moved: 0, samples: [] as { t: number; x: number }[] });
   const [dragging, setDragging] = useState(false);
@@ -55,7 +58,7 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
         // 관성 — 지수로 줄어든다
         if (fling.current !== 0) {
           offset.current += fling.current * dt;
-          fling.current *= Math.exp(-FRICTION * dt);
+          fling.current *= Math.exp(-friction.current * dt);
           if (Math.abs(fling.current) < 4) fling.current = 0;
         }
         // 스스로 흐름 — 마우스가 올라가 있거나 관성이 남았으면 쉬고, 다시 흐를 때는 속도가 천천히 붙는다
@@ -72,12 +75,14 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flows, loop]);
 
-  // 끌기 — 손을 그대로 따라오고(이벤트에서 바로 그린다), 놓으면 마지막 0.1초의 속도로 미끄러진다. 5px 넘게 끌었으면 그 클릭(로그인)은 먹는다
+  // 끌기 — 손을 그대로 따라오고(이벤트에서 바로 그린다), 놓으면 마지막 0.1초의 속도로 미끄러진다. 5px 넘게 끌었으면 그 클릭(로그인)은 먹는다.
+  // 속도는 마지막 움직임까지로 잰다 — 손가락을 떼는 이벤트는 늦게 와서 거기까지 재면 속도가 작게 나온다. 브라우저가 묶은 움직임(coalesced)도 표본에 넣는다
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (!flows) return;
     drag.current = { active: true, startX: e.clientX, startOffset: offset.current, moved: 0, samples: [{ t: e.timeStamp, x: e.clientX }] };
     fling.current = 0;
     flow.current = 0;
+    friction.current = e.pointerType === "touch" ? FRICTION_TOUCH : FRICTION;
     setDragging(true);
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -86,19 +91,23 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
     const dx = e.clientX - d.startX;
     d.moved = Math.max(d.moved, Math.abs(dx));
     if (d.moved > 5 && !e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.setPointerCapture(e.pointerId);
-    d.samples.push({ t: e.timeStamp, x: e.clientX });
+    const moves = e.nativeEvent.getCoalescedEvents?.() ?? [];
+    for (const m of moves.length ? moves : [e.nativeEvent]) d.samples.push({ t: m.timeStamp, x: m.clientX });
     while (d.samples.length > 2 && e.timeStamp - d.samples[0].t > 100) d.samples.shift();
     offset.current = d.startOffset - dx;
     paint();
   };
+  // 손가락은 처음 닿은 카드(button)가 저절로 잡고(implicit capture) 있다가, 위에서 칸으로 옮길 때 카드 쪽 lostpointercapture 가 올라온다 —
+  // 그것을 '놓음'으로 보면 5px 만에 끌기가 끝난다(2026-10-31, 터치가 덜 미끄러진 원인). 칸 자신의 것만 본다
   const onPointerUp = (e?: PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d.active) return;
     d.active = false;
     setDragging(false);
     const first = d.samples[0], lastS = d.samples[d.samples.length - 1];
-    const ms = (e?.timeStamp ?? lastS.t) - first.t;
-    if (d.moved > 5 && ms > 0 && ms < 200) fling.current = Math.max(-3000, Math.min(3000, (-(lastS.x - first.x) / ms) * 1000));
+    const ms = lastS.t - first.t;
+    const still = (e?.timeStamp ?? lastS.t) - lastS.t;
+    if (d.moved > 5 && ms > 0 && ms < 200 && still < STILL_MS) fling.current = Math.max(-3000, Math.min(3000, (-(lastS.x - first.x) / ms) * 1000));
   };
 
   const card = (c: DemoAccount, copy = false) => (
@@ -130,7 +139,7 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        onLostPointerCapture={onPointerUp}
+        onLostPointerCapture={(e) => e.target === e.currentTarget && onPointerUp(e)}
       >
         <div className="auth__track" ref={trackRef}>
           {seeds.map((c) => card(c))}
