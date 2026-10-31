@@ -45,20 +45,19 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
     }).catch(() => {});
   }, [shoe.id, status, user?.id]);
   const findTerm = (key: string) => terms.find((t) => t.key === key);
-  // PC — 썸네일 줄 윗선을 설명문 첫 줄 높이에(2026-11-01 사용자). 사진 칸 높이 = 설명문 위치 - 썸네일 위 간격.
-  //   설명문 위치는 요약 · 스펙 · 가격을 받아 오며 바뀌니 오른쪽 정보 칸 크기가 바뀔 때마다 다시 잰다
+  // PC — 썸네일 줄 윗선을 설명문 첫 줄 높이에(2026-11-01 사용자). 사진은 칸 위에서 고정된 자리라(ShoeModal.css) 썸네일이 생겨도 움직이지 않는다.
+  //   설명문 위치는 요약 · 스펙 · 가격을 받아 오며 바뀌니 정보 칸 크기가 바뀔 때마다 다시 잰다. 설명문이 없으면 CSS 기본값(사진 바로 아래)
   const visualRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
-  const [stageH, setStageH] = useState<number | null>(null);
+  const [thumbsTop, setThumbsTop] = useState<number | null>(null);
   useLayoutEffect(() => {
     const visual = visualRef.current, info = infoRef.current;
     if (!visual || !info) return;
     const measure = () => {
-      const desc = info.querySelector(".modal__desc"), thumbs = visual.querySelector<HTMLElement>(".gallery__thumbs");
-      if (!desc || !thumbs || !window.matchMedia("(min-width: 768px)").matches) return setStageH(null);
-      const gap = parseFloat(getComputedStyle(thumbs).marginTop) || 0;
-      const h = Math.round(desc.getBoundingClientRect().top - visual.getBoundingClientRect().top - gap);
-      setStageH(h > 120 ? h : null);    // 너무 낮으면(설명문이 거의 맨 위) 예전처럼 칸 전체
+      const desc = info.querySelector(".modal__desc"), thumbs = visual.querySelector(".gallery__thumbs");
+      if (!desc || !thumbs || !window.matchMedia("(min-width: 768px)").matches) return setThumbsTop(null);
+      const top = Math.round(desc.getBoundingClientRect().top - visual.getBoundingClientRect().top);
+      setThumbsTop(top > 370 ? top : null);    // 신발(1280 기준 256~365)과 겹칠 만큼 위면 기본값(사진 바로 아래)
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -79,8 +78,8 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
           ×
         </button>
         <div className="modal__top">
-          <div ref={visualRef} className={`modal__visual${stageH ? " is-aligned" : ""}`}
-            style={stageH ? ({ "--stage-h": `${stageH}px` } as CSSProperties) : undefined}>
+          <div ref={visualRef} className="modal__visual"
+            style={thumbsTop ? ({ "--thumbs-top": `${thumbsTop}px` } as CSSProperties) : undefined}>
             <ShoeGallery image={shoe.image} images={shoe.images} alt={shoe.model} />
           </div>
 
