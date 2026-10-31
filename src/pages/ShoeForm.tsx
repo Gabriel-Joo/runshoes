@@ -454,10 +454,12 @@ function ShoeForm() {
             ))}
           </select>
         </label>
-        {/* 품번(V11, 2026-11-01 사용자 — 크림에서 모델 번호를 보며 넣는다). 색상까지: 1011C284 모델 · -400 색상 */}
+        {/* 품번(V11) — 모델 번호만, 색상 코드는 뺀다(2026-11-01 사용자 — 가격은 색상과 무관, 색상별 이미지를 여러 장 쓴다).
+            아디다스 · 온처럼 색상이 번호 안에 붙은 브랜드는 그 번호 그대로. 입력 검사는 그대로(하이픈 · 점 · / 허용) */}
         <label className="form__field form__field--sku">
-          <span>품번 (색상 포함)</span>
-          <input value={sku} onChange={(e) => setSku(e.target.value)} placeholder="1011C284-400" spellCheck={false} autoCapitalize="characters" />
+          <span>품번</span>
+          <input value={sku} onChange={(e) => setSku(e.target.value)} placeholder="1011C284" spellCheck={false} autoCapitalize="characters" />
+          <small className="form__hint">예: 1011C284 (색상 코드는 빼고 모델 번호만)</small>
         </label>
       </div>
 

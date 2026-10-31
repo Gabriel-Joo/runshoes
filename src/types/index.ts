@@ -40,7 +40,7 @@ export interface Shoe {
   specSources?: SpecSources | null;
   // 숨긴 때(V8) — 관리 화면의 숨긴 신발 목록에만 온다
   deletedAt?: string;
-  // V11 — 품번(색상 포함) · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸 이름(API 이름, created · hidden · restored 도). 고친 적 없으면 null
+  // V11 — 품번(모델 번호, 색상 코드 뺌 — 색상이 번호에 붙은 브랜드는 그대로) · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸 이름(API 이름, created · hidden · restored 도). 고친 적 없으면 null
   sku?: string | null;
   updatedAt?: string | null;
   lastChange?: string[] | null;
