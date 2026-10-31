@@ -39,3 +39,6 @@ contract/run/
 catalog/local/
 # 적재기 기록(넣은 id · 바꾸기 전 값) — 로컬 시험 기록이라 레포에 두지 않는다. 운영 적재 기록은 덤프 폴더에(runbooks/catalog-v4-v5.md)
 catalog/loads/
+
+# 비밀 값(텔레그램 봇 토큰 등) — 커밋하지 않는다. GitHub 미러가 있다
+.env*
