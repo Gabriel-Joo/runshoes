@@ -144,12 +144,23 @@
     "weight_basis": "US_M9"
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-21",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(카야노 32 럭스는 다른 판) · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-21",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(카야노 32 럭스는 다른 판) · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   },
   "nike:pegasus#42": {
@@ -175,10 +186,21 @@
    "price_krw": {
     "action": "use_source",
     "value": 169000,
-    "source": "https://abcmart.a-rt.com/product?prdtNo=1020128235",
-    "via": "abcmart",
-    "by": "claude",
-    "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 IB1873 = StockX sku IB1873-101(일치). 남성 목록 18개 모두 169,000"
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-10-28",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "use_source",
+     "value": 169000,
+     "source": "https://abcmart.a-rt.com/product?prdtNo=1020128235",
+     "via": "abcmart",
+     "by": "claude",
+     "note": "사용자(2026-10-29) \"시드도 ABC 에서 정가를 받아라\" — ABC마트 상품 페이지 정가(메인 표시가, 최대 혜택가 아님) 2026-10-28 · 스타일 IB1873 = StockX sku IB1873-101(일치). 남성 목록 18개 모두 169,000"
+    }
    }
   },
   "nike:alphafly#3": {
@@ -199,12 +221,23 @@
     "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 218g men's UK 9 (=US10) · search summary: 218 g/7.7 oz (Men's US 10) | Nike AU page summary labels 218 g as 'men's size 9' (likely UK 9). BlackToe 218 g M10. DoR 198 g M9 not used. | 이전: use_source 218"
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-21",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 329000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 나이키 공식몰은 접근하지 않는다(사용자 규칙). 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-21",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 나이키 공식몰은 접근하지 않는다(사용자 규칙). 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   },
   "newbalance:rebel#5": {
@@ -561,12 +594,23 @@
     "note": "Claude 웹 검색(2026-10-23): 42mm heel, 34mm forefoot for men's US 10 (search summary) · 42 mm / 34 mm, 8 mm | Running Warehouse says 43/35 and BITR 43 (current value); REI says 41/33. The brand page says 42 at M10."
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-21",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-21",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   },
   "hoka:bondi#9": {
@@ -600,12 +644,23 @@
     "note": "Claude 웹 검색(2026-10-29, 문구 미드솔 7행): \"now made from supercritical EVA foam\" (both pages fetched). The treeline spec table just says EVA; it is the same material, so not a conflict."
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-21",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-21",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   },
   "hoka:speedgoat#6": {
@@ -776,6 +831,45 @@
     "via": "abcmart",
     "by": "user",
     "note": "ABC마트 상품 페이지 정가(메인 표시가) 2026-10-29 · ABC 남성 목록 3개 — 189,000 이 2개(M880K15 · M88072T), 199,000 이 1개(M880GB15). StockX sku M880G15 와 같은 코드는 없다. 사용자(2026-10-29) \"가장 많은 목록의 값\""
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://kream.co.kr/products/894462",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+      "code": "RSG"
+     },
+     "width": {
+      "url": "https://kream.co.kr/products/894462",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+      "code": "RSG"
+     },
+     "midsole": {
+      "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+      "code": "RSG"
+     },
+     "stackHeight": {
+      "url": "https://www.roadtrailrun.com/2025/01/new-balance-fresh-foam-x-880-v15-multi.html",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "DB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
    }
   },
   "puma:magmax-nitro#1": {
@@ -6305,12 +6399,23 @@
   },
   "asics:novablast#5": {
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-21",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 169000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-01",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(노바블라스트 5 TR 은 다른 판) · 아식스 국내몰 검색은 6 만. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-21",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(노바블라스트 5 TR 은 다른 판) · 아식스 국내몰 검색은 6 만. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   }
  },
@@ -6437,24 +6542,47 @@
    "was": "404 이미지"
   },
   "nike:pegasus#42": {
+   "previous": {
+    "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+    "images": [
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+    ],
+    "skus": [
+     "IB1873-101",
+     "IB1873-001",
+     "IB1873-702",
+     "IB1873-020"
+    ],
+    "sku": "IB1873-101",
+    "title": "Nike Air Zoom Pegasus 42 White Photon Dust",
+    "via": "user",
+    "by": "user",
+    "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+   },
    "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
    "images": [
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
-    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Sapphire-Black-Lime-Blast-GS.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1777412458",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-Anthracite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1775143658"
    ],
-   "skus": [
-    "IB1873-101",
-    "IB1873-001",
-    "IB1873-702",
-    "IB1873-020"
-   ],
-   "sku": "IB1873-101",
-   "title": "Nike Air Zoom Pegasus 42 White Photon Dust",
-   "via": "user",
+   "via": "admin",
    "by": "user",
-   "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+    "images": [
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+    ]
+   }
   },
   "hoka:clifton#10": {
    "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
@@ -6475,6 +6603,60 @@
    "via": "user",
    "by": "user",
    "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+  },
+  "asics:gel-kayano#32": {
+   "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+   "images": [
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Orange-Glow.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775540",
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Midnight-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775522",
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Black-Graphite-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775530"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+    "images": [
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479"
+    ]
+   }
+  },
+  "nike:alphafly#3": {
+   "image": "https://images.stockx.com/images/Nike-Alphafly-Next-3-Proto-Product.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784995074",
+   "images": [
+    "https://images.stockx.com/images/Nike-Alphafly-Next-3-Proto-Product.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784995074",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Alphafly-Next-3-Neo-Turquoise.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1786384493",
+    "https://images.stockx.com/images/Nike-Air-Zoom-Alphafly-Next-3-White-Pure-Platinum-Obsidian-Mist-Gridiron-Product.jpg?fit=fill&bg=FFFFFF&w=300&h=214&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1785882111"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/Nike-Air-Zoom-Alphafly-Next-3-Neo-Turquoise.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1786384493",
+    "images": [
+     "https://images.stockx.com/images/Nike-Air-Zoom-Alphafly-Next-3-Neo-Turquoise.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1786384493"
+    ]
+   }
+  },
+  "newbalance:880#15": {
+   "image": "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Slate-Grey-Reflection-Urgent-Red.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1752049589",
+   "images": [
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Slate-Grey-Reflection-Urgent-Red.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1752049589",
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Galaxy-Blue-Lab-Green-Blue-Agate.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049683",
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Slate-Grey-Mineral-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1740950753",
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Dried-Apricot-White-Marmalade.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1740950475"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "was": {
+    "image": "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Galaxy-Blue-Lab-Green-Blue-Agate.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049683",
+    "images": [
+     "https://images.stockx.com/images/New-Balance-Fresh-Foam-880v15-Galaxy-Blue-Lab-Green-Blue-Agate.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049683"
+    ]
+   }
   }
  },
  "seed_only_price_meta": {
