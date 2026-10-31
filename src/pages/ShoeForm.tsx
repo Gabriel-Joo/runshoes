@@ -19,7 +19,7 @@ const GENDERS: [string, string][] = [["men", "남성"], ["women", "여성"], ["u
 const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(국내 공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서)"], ["MAN", "MAN(직접 확인)"]];
 const LEGACY_CODES: Record<string, string> = { DB: "DB(기존 값)", SX: "SX(StockX)" };
 // 가격 출처 — 종류는 늘 '발매가'(2026-10-30 '정가'에서 통일). 기존 '다나와'는 회색으로만
-const PRICE_SOURCES = ["공식몰", "ABC마트", "크림"];
+const PRICE_SOURCES = ["공식몰", "ABC마트", "크림", "직접 확인"];   // 직접 확인 — 공식몰에서 내려간 모델을 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인(2026-11-01)
 // 이미지 — 목록 하나, 칸 하나에 주소 하나, 첫 번째가 대표(2026-10-30 사용자). 6개까지(서버도 400).
 //   저장: images = 빈 칸을 뺀 목록, image = 그 첫 번째(1번이 비면 다음 것이 대표, 다 비면 이미지 없음 ""). DB 는 그대로(images[0] = image)
 const MAX_IMAGES = 6;
