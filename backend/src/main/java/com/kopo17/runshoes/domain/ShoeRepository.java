@@ -6,10 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ShoeRepository extends JpaRepository<Shoe, Long> {
 
-	/** 새 id = 최대값 + 1 — json-server createId. 숨긴 행(V8)도 id 를 가지고 있어 포함한다(native — 엔티티 쿼리는 숨긴 행을 못 본다) */
-	@Query(value = "select max(id) from shoes", nativeQuery = true)
-	Long maxId();
-
 	/** 숨긴 신발(V8) — 관리 화면의 되살리기 목록. 숨긴 순서 최근 먼저 */
 	@Query(value = "select * from shoes where deleted_at is not null order by deleted_at desc, id", nativeQuery = true)
 	java.util.List<Shoe> findHidden();

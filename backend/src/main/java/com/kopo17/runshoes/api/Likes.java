@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
  * 찜(likes) · 리뷰 공감(review_likes) — 사용자별 행과 카운터(shoes.like_count · reviews.like_count)를 같은 트랜잭션에서.
  * 카운터는 시드 값이 기준이라 COUNT 로 다시 세지 않는다 — 행이 실제로 생기거나 없어졌을 때만 ±1(V3__auth.sql).
  * 호출하는 쪽의 @Transactional 안에서 돈다(JpaTransactionManager 가 JDBC 도 같은 연결로 묶는다).
+ * 켜고 끄기 전에 부모 행(신발 · 리뷰)부터 잠근다(2026-11-01) — 행 INSERT 의 FK 검사가 부모에 공유 잠금을 걸고 카운터 UPDATE 가 배타 잠금을 원해,
+ * 두 사람이 같은 대상을 동시에 누르면 서로 기다리다 데드락(500)이 났다. 먼저 잠그면 같은 대상끼리만 차례로 선다.
  */
 @Component
 class Likes {
@@ -32,12 +34,14 @@ class Likes {
 
 	/** 이미 찜했으면 그대로(멱등). 실제로 바뀌었으면 true — 활동 로그는 바뀐 때만 남긴다 */
 	boolean likeShoe(long userId, long shoeId) {
+		lock("shoes", shoeId);
 		if (jdbc.update("INSERT IGNORE INTO likes (user_id, shoe_id, created_at) VALUES (?, ?, ?)", userId, shoeId, now()) != 1) return false;
 		jdbc.update("UPDATE shoes SET like_count = like_count + 1 WHERE id = ?", shoeId);
 		return true;
 	}
 
 	boolean unlikeShoe(long userId, long shoeId) {
+		lock("shoes", shoeId);
 		if (jdbc.update("DELETE FROM likes WHERE user_id = ? AND shoe_id = ?", userId, shoeId) != 1) return false;
 		jdbc.update("UPDATE shoes SET like_count = GREATEST(like_count - 1, 0) WHERE id = ?", shoeId);
 		return true;
@@ -45,12 +49,14 @@ class Likes {
 
 	/** 공감 수가 NULL(시드 2건 · 새 리뷰)이면 0 에서 센다 */
 	boolean likeReview(long userId, long reviewId) {
+		lock("reviews", reviewId);
 		if (jdbc.update("INSERT IGNORE INTO review_likes (user_id, review_id, created_at) VALUES (?, ?, ?)", userId, reviewId, now()) != 1) return false;
 		jdbc.update("UPDATE reviews SET like_count = COALESCE(like_count, 0) + 1 WHERE id = ?", reviewId);
 		return true;
 	}
 
 	boolean unlikeReview(long userId, long reviewId) {
+		lock("reviews", reviewId);
 		if (jdbc.update("DELETE FROM review_likes WHERE user_id = ? AND review_id = ?", userId, reviewId) != 1) return false;
 		jdbc.update("UPDATE reviews SET like_count = GREATEST(COALESCE(like_count, 0) - 1, 0) WHERE id = ?", reviewId);
 		return true;
@@ -76,6 +82,11 @@ class Likes {
 	/** 탈퇴하지 않은 계정인가(V9) — 탈퇴한 뒤 남은 access token(15분)으로 찜을 바꾸지 못하게 */
 	boolean activeUser(long userId) {
 		return Boolean.TRUE.equals(jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM users WHERE id = ? AND deleted_at IS NULL)", Boolean.class, userId));
+	}
+
+	/** table 은 위의 상수(shoes · reviews)만 */
+	private void lock(String table, long id) {
+		jdbc.queryForList("SELECT id FROM " + table + " WHERE id = ? FOR UPDATE", Long.class, id);
 	}
 
 	private static Timestamp now() {

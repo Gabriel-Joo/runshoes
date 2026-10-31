@@ -33,7 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 class JsonServerController {
 
 	private final Map<String, DocCollection> collections;
-	/** 새 id(max+1)를 매기는 동안 쓰기를 한 줄로 — json-server 도 한 프로세스가 차례로 쓴다. Pod 가 둘이면 PK 충돌이 500 으로 드러난다 */
+	/** 쓰기를 한 줄로 — json-server 도 한 프로세스가 차례로 쓴다. 예전에는 새 id(max+1) 때문이었고, V10 부터 id 는 DB 가 매긴다(Pod 가 둘이어도 겹치지 않는다) */
 	private final ReentrantLock writeLock = new ReentrantLock();
 
 	JsonServerController(List<DocCollection> collections) {

@@ -84,6 +84,10 @@ node contract/diff.mjs --read-only contract/baseline/node contract/run/prod-spri
 spring-v3 를 굳히기 전 검산: R 26건은 Node 기준선에 의도한 변경(작성자 · #81 · 8번 신발 · 비로그인 liked · 리뷰 새 키)을 입힌 것과 같고(INFO 25 는 #81 로 104),
 W · A 는 단계마다 서버가 센 값(평점 · 찜 수 · 공감 수 · cascade · id max+1 · 쿠키 속성)을 따로 확인했다. 검색은 Q15(비로그인 `liked=true` → `[]`)만 달라졌다 — 의도한 변경.
 
+**V10(2026-11-01) — id 를 DB 가 매긴다**: spring-v3 는 PASS 101 · FAIL 11. 그전의 FAIL 9(가입 계정 id 32 → 33 여섯 건 · 신발 21 → 22 세 건)에
+**W46 · W47 두 건이 더해졌다** — W44 에서 지운 리뷰 id(106)를 다시 쓰지 않아 107 · 108(의도한 변경, [docs/API_CONTRACT.md](../docs/API_CONTRACT.md) 1.1).
+v4 21 · v3-search 24 · v3-summary 5 · v6 60 은 그대로. 기준선은 다시 녹화하지 않는다(W51 때와 같이 차이를 여기 적는다).
+
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
 계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
 
@@ -99,5 +103,5 @@ INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/d
 | 그 외 쿼리 파라미터 | 무시 | 컬렉션에 **있는 필드면 필터한다**(`?brand=호카`). 없는 필드(`junk`)만 무시 — 프런트는 `shoeId` 만 쓰므로 Spring 은 shoeId 만 지원해도 된다(시나리오 24는 INFO) |
 
 그대로 맞은 것: 404 `{}`(없는 id · 비숫자 id · 없는 컬렉션), 정렬 동점 id 순, POST 201 + `Location`(절대 URL) +
-`Access-Control-Expose-Headers: Location`, 새 id = max+1(지운 id 를 다시 쓴다), PATCH 는 body 에 있는 키만(null 도 반영),
+`Access-Control-Expose-Headers: Location`, 새 id = max+1(지운 id 를 다시 쓴다 — Spring 은 V10 부터 DB AUTO_INCREMENT 라 리뷰는 다시 쓰지 않는다, 아래), PATCH 는 body 에 있는 키만(null 도 반영),
 POST review 응답에 `likeCount` 없음, `createdAt` 은 보낸 문자열 그대로, 요약 캐시(리뷰 수가 같으면 다시 부르지 않음)·실패 시 `reason`.

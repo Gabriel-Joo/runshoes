@@ -11,14 +11,15 @@ Spring Boot 로 처음 설계했다면 하지 않았을 선택이 몇 있다 —
 
 ## 1. 데이터 표현 — 스키마가 이상해 보이는 곳
 
-### 1.1 id 는 AUTO_INCREMENT 가 아니라 `max(id) + 1`
+### 1.1 id 는 DB 가 매긴다(AUTO_INCREMENT, V10)
 
-새 신발 · 리뷰의 id 는 **지금 남아 있는 최대 id + 1** 이다. 리뷰는 마지막 행을 지우고 다시 만들면 **지운 id 를 다시 쓴다**.
-신발은 지우면 숨긴다(V8, 2.5) — 숨긴 행이 id 를 계속 가지므로 숨긴 것까지 센 최대 + 1 이다(spring-v3 W51 의 21 이 22 가 된다 — 의도한 변경).
-InnoDB AUTO_INCREMENT 는 지운 값을 다시 쓰지 않으므로 컬럼에 AUTO_INCREMENT 를 두지 않고 앱이 매긴다(`ShoeCollection.create` · `ReviewCollection.create`).
+새 신발 · 리뷰의 id 는 **DB 의 AUTO_INCREMENT** 가 매긴다(V10, 2026-11-01). 예전에는 json-server 처럼 앱이 "남아 있는 최대 id + 1"을 매겼는데,
+롤링 배포(maxSurge 1)로 Pod 가 둘 겹치는 순간 두 Pod 가 같은 id 를 골라 PK 충돌이 났다 — JVM 안의 쓰기 잠금은 Pod 하나 안에서만 줄을 세운다.
 
-- POST 본문에 `id` 가 있으면 그 id 를 쓴다. 이미 있으면 500 `{}`
-- JVM 안에서는 쓰기를 한 줄로 잠근다. Pod 가 둘 겹치는 짧은 순간(롤링)에 동시 POST 가 오면 PK 충돌이 500 으로 드러난다 — 트래픽에서 감수
+- **리뷰 — 지운 id 를 다시 쓰지 않는다**(json-server 와 다르다, 의도한 변경). 마지막 리뷰를 지우고 다시 쓰면 다음 번호다(spring-v3 W46 · W47 이 하나씩 커진다)
+- 신발 — 지우면 숨기므로(V8, 2.5) 행이 남아 예전 "숨긴 것까지 센 최대 + 1"과 같다(spring-v3 W51 의 21 이 22). INSERT 가 실패하면 그 번호는 건너뛴다
+- POST 본문에 `id` 가 있으면(신발) 그 id 를 넣는다 — 다음 번호는 그보다 커진다. 이미 있으면 500 `{}`(json-server 와 같다, 숨긴 신발의 id 도)
+- 저장 오류는 DB 제약 이름으로 가른다 — 리뷰 "한 신발에 첫 리뷰 하나"(`uk_reviews_user_first_shoe`)만 409, PK 등 그 밖은 500. 신발 세대 UNIQUE 는 409
 
 ### 1.2 terms 에 id 12 가 둘
 
