@@ -1,11 +1,12 @@
 .review-summary {
-  /* 상단 "맞춤추천"(#2a6f97) 계열 — 보라색은 사이트 색(틸)과 어긋났다(2026-10-31 사용자) */
+  /* 머스터드 · 앰버(2026-11-01 사용자 A안) — 틸의 보색이라 베스트 리뷰(옅은 틸)와 구분되고, 주황보다 차분하다. 왼쪽 진한 세로선 */
   background: linear-gradient(
     135deg,
-    rgba(42, 111, 151, 0.07),
-    rgba(42, 111, 151, 0.02)
+    rgba(196, 146, 38, 0.09),
+    rgba(196, 146, 38, 0.03)
   );
-  border: 1px solid rgba(42, 111, 151, 0.25);
+  border: 1px solid rgba(196, 146, 38, 0.3);
+  border-left: 3px solid #b8862a;
   border-radius: 4px;
   padding: 16px 18px;
   margin-bottom: 20px;
@@ -16,7 +17,7 @@
 .review-summary__label {
   font-size: 12px;
   font-weight: 700;
-  color: #2a6f97;
+  color: #8f6514;
   letter-spacing: 0.05em;
   margin: 0 0 10px;
 }
