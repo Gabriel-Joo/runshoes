@@ -1,6 +1,6 @@
 import { apiFetch } from "../auth/session";
 import { useState, useEffect, useRef, type ChangeEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import type { Shoe, SourceCode, SpecField, SpecSources } from "../types";
 import { asset } from "../api";
 import { useDebounced } from "../useDebounced";
@@ -110,6 +110,9 @@ function Row({ label, htmlFor, children, source }: { label: string; htmlFor: str
 function ShoeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  // 돌아갈 곳 — 관리 화면이 넘긴 주소(탭 · 필터 · 정렬 그대로, 2026-11-01 사용자). 주소로 바로 들어왔으면 관리 화면 처음
+  const fromState = (useLocation().state as { back?: string } | null)?.back;
+  const backTo = fromState?.startsWith("/admin") ? fromState : "/admin";
   const isEdit = Boolean(id);
   const { setNotice, isDemoAdmin } = useAuth();
 
@@ -293,7 +296,7 @@ function ShoeForm() {
       return setError(msg);
     }
     setNotice(isEdit ? "수정했어요." : "등록했어요.");
-    navigate("/admin");
+    navigate(backTo);
   };
 
   // 삭제 = 숨김(V8) — 리뷰 · 찜은 남는다
@@ -309,7 +312,7 @@ function ShoeForm() {
       return setError(msg);
     }
     setNotice(`'${model}'을(를) 숨겼어요. 숨긴 신발에서 되살릴 수 있어요.`);
-    navigate("/admin");
+    navigate(backTo);
   };
 
   const setImageAt = (i: number, v: string) => setImages((list) => list.map((x, j) => (j === i ? v : x)));
@@ -382,7 +385,7 @@ function ShoeForm() {
           {error ?? "불러오는 중…"}
         </p>
         {error && (
-          <button className="form__cancel" onClick={() => navigate("/admin")}>
+          <button className="form__cancel" onClick={() => navigate(backTo)}>
             목록으로
           </button>
         )}
@@ -624,7 +627,7 @@ function ShoeForm() {
             숨김
           </button>
         )}
-        <button className="form__cancel" onClick={() => navigate("/admin")}>
+        <button className="form__cancel" onClick={() => navigate(backTo)}>
           취소
         </button>
         <button className="form__save" onClick={save} disabled={busy}>

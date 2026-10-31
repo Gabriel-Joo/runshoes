@@ -2,7 +2,7 @@ import { API } from "../api";
 import { useState, useEffect, useMemo } from "react";
 import { useDebounced } from "../useDebounced";
 import { apiFetch } from "../auth/session";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import type { Shoe } from "../types";
 import ShoeImage from "../components/ShoeImage";
 import HideShoeConfirm from "../components/HideShoeConfirm";
@@ -37,14 +37,15 @@ const GAPS: { key: string; label: string; empty: (s: Shoe) => boolean }[] = [
   { key: "sku", label: "품번", empty: (s) => !s.sku },
 ];
 const gapsOf = (s: Shoe) => GAPS.filter((g) => g.empty(s));
-const GAP_SORTS: { key: SortKey; label: string }[] = [{ key: "gaps", label: "빈 칸 많은 순" }, ...SORTS];
+// 기본은 빈 칸 적은 순(2026-11-01 사용자 — 한 칸만 빈 신발부터 고치면 목록이 빨리 준다). 다시 누르면 많은 순
+const GAP_SORTS: { key: SortKey; label: string }[] = [{ key: "gaps", label: "빈 칸 적은 순" }, ...SORTS];
 
 function sortShoes(list: Shoe[], key: SortKey, down: boolean): Shoe[] {
   const byId = (a: Shoe, b: Shoe) => a.id - b.id;
   const ko = (a: string, b: string) => a.localeCompare(b, "ko");
   const sign = down ? 1 : -1;
   return [...list].sort((a, b) => {
-    if (key === "gaps") return sign * (gapsOf(b).length - gapsOf(a).length) || byId(a, b);
+    if (key === "gaps") return sign * (gapsOf(a).length - gapsOf(b).length) || byId(a, b);   // ↓ 적은 것부터
     if (key === "updated") {
       if (!a.updatedAt || !b.updatedAt) return a.updatedAt ? -1 : b.updatedAt ? 1 : byId(a, b);   // 고친 적 없는 것은 방향과 상관없이 뒤에, id 순
       return sign * (Date.parse(b.updatedAt) - Date.parse(a.updatedAt)) || byId(a, b);
@@ -81,11 +82,16 @@ function changeOf(shoe: Shoe): { text: string; all: string; at: string } | null 
 function Admin() {
   const navigate = useNavigate();
 
+  // 보는 자리(탭 · 필터 · 정렬 · 브랜드 · 검색)는 주소(?tab=gaps&gap=width …)에 둔다 — 수정 화면에서 저장 · 취소하면 그 주소로 돌아온다(2026-11-01 사용자)
+  const [params, setParams] = useSearchParams();
+  const location = useLocation();
+  const oneOf = <T extends string>(v: string | null, ok: readonly T[], d: T): T => (ok.includes(v as T) ? (v as T) : d);
+  const SORT_KEYS = ["updated", "id", "brand", "model"] as const;
   const [shoes, setShoes] = useState<Shoe[]>([]);
-  const [brand, setBrand] = useState("전체");
-  const [keyword, setKeyword] = useState("");
-  const [sort, setSort] = useState<SortKey>("updated");
-  const [down, setDown] = useState(true);
+  const [brand, setBrand] = useState(() => params.get("brand") ?? "전체");
+  const [keyword, setKeyword] = useState(() => params.get("q") ?? "");
+  const [sort, setSort] = useState<SortKey>(() => oneOf(params.get("sort"), SORT_KEYS, "updated"));
+  const [down, setDown] = useState(() => params.get("dir") !== "up");
   const [target, setTarget] = useState<Shoe | null>(null);
   const [purgeTarget, setPurgeTarget] = useState<Shoe | null>(null);
   const [brands, setBrands] = useState<string[]>([]);
@@ -93,11 +99,25 @@ function Admin() {
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState<Shoe[]>([]);
-  const [tab, setTab] = useState<"list" | "hidden" | "gaps">("list");
-  // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 많은 순)
-  const [gapKey, setGapKey] = useState<string | null>(null);
-  const [gapSort, setGapSort] = useState<SortKey>("gaps");
-  const [gapDown, setGapDown] = useState(true);   // 등록된 신발 · 숨긴 신발(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
+  // 등록된 신발 · 숨긴 신발 · 보완 필요(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
+  const [tab, setTab] = useState<"list" | "hidden" | "gaps">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps"] as const, "list"));
+  // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 적은 순)
+  const [gapKey, setGapKey] = useState<string | null>(() => oneOf(params.get("gap"), GAPS.map((g) => g.key), "") || null);
+  const [gapSort, setGapSort] = useState<SortKey>(() => oneOf(params.get("gsort"), ["gaps", ...SORT_KEYS] as const, "gaps"));
+  const [gapDown, setGapDown] = useState(() => params.get("gdir") !== "up");
+  useEffect(() => {
+    const p = new URLSearchParams();
+    if (tab !== "list") p.set("tab", tab);
+    if (brand !== "전체") p.set("brand", brand);
+    if (keyword) p.set("q", keyword);
+    if (sort !== "updated") p.set("sort", sort);
+    if (!down) p.set("dir", "up");
+    if (gapKey) p.set("gap", gapKey);
+    if (gapSort !== "gaps") p.set("gsort", gapSort);
+    if (!gapDown) p.set("gdir", "up");
+    setParams(p, { replace: true });
+  }, [tab, brand, keyword, sort, down, gapKey, gapSort, gapDown, setParams]);
+  const back = { back: location.pathname + location.search };   // 수정 · 등록 화면이 돌아올 주소
   const [busy, setBusy] = useState(false);
   const { setNotice, isDemoAdmin } = useAuth();
 
@@ -261,7 +281,7 @@ function Admin() {
           </button>
         </div>
         {/* 새 등록 — 탭 줄 오른쪽, 탭 묶음과 띄운다(성격이 다른 버튼, 2026-11-01 사용자) */}
-        <button className="admin__new" onClick={() => navigate("/new")}>
+        <button className="admin__new" onClick={() => navigate("/new", { state: back })}>
           + 새 러닝화 등록
         </button>
       </div>
@@ -302,7 +322,7 @@ function Admin() {
             </span>
 
             <div className="admin__actions">
-              <Link className="admin__edit" to={`/edit/${shoe.id}`}>
+              <Link className="admin__edit" to={`/edit/${shoe.id}`} state={back}>
                 수정
               </Link>
               <button className="admin__delete" onClick={() => setTarget(shoe)}>
@@ -337,7 +357,7 @@ function Admin() {
               return (
                 <li key={shoe.id}>
                   {/* 줄 전체가 수정 화면으로 — 링크라 새 탭으로도 열린다 */}
-                  <Link className="admin__row admin__row--gap" to={`/edit/${shoe.id}`}>
+                  <Link className="admin__row admin__row--gap" to={`/edit/${shoe.id}`} state={back}>
                     <div className="admin__thumb">
                       <ShoeImage src={shoe.image} alt={shoe.model} />
                     </div>
