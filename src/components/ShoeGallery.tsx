@@ -9,6 +9,16 @@ import "./ShoeGallery.css";
  * 목록은 [image, ...images] 에서 겹치는 것을 뺀 것 — 첫 장이 대표(관리 폼과 같은 규칙)
  * 화살표는 사진 칸 좌우 여백(.modal__visual padding) 안에, 썸네일 줄은 아래 — 바탕은 사진 칸(.modal__visual) 것 그대로
  */
+// 이미지 출처 — 호스트로 정한다(2026-11-01 사용자: "Image: GOAT" 처럼 호스트별). 우리가 고른 두 곳 밖(관리 화면에서 넣은 다른 주소)은 표시하지 않는다
+const CREDIT: Record<string, string> = { "images.stockx.com": "StockX", "image.goat.com": "GOAT" };
+function creditOf(src: string) {
+  try {
+    return CREDIT[new URL(src).host] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 interface ShoeGalleryProps {
   image: string;
   images?: string[];
@@ -63,6 +73,7 @@ function ShoeGallery({ image, images, alt }: ShoeGalleryProps) {
             ))}
           </div>
         </div>
+        {creditOf(list[at] ?? "") && <span className="gallery__credit">Image: {creditOf(list[at] ?? "")}</span>}
         {many && (
           <>
             <button className="gallery__arrow gallery__arrow--prev" onClick={prev} aria-label="이전 이미지">
