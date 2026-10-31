@@ -68,6 +68,7 @@ function toBody(r) {
     measuredWeight: r.measured_weight_g, measuredWeightSize: r.measured_weight_size, measuredStackHeight: r.measured_heel_mm,
     measuredDrop: r.measured_drop_mm, measuredSource: r.measured_source, measuredCount: r.measured_count,
     specSources: 'spec_sources' in r ? r.spec_sources : specSourcesOf(r),  // r.spec_sources = 관리 화면에서 고른 출처(build.mjs)
+    sku: r.sku ?? null,  // V11 — 관리 화면에서 고친 품번이 있으면 그것(build.mjs)
   };
 }
 
@@ -84,7 +85,8 @@ function send(method, url, headers, data) {
   });
 }
 async function api(method, path, body, token) {
-  const res = await send(method, BASE + path, { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body ? JSON.stringify(body) : undefined);
+  // X-Runshoes-Client: loader — 서버가 적재기의 등록 · 수정에는 수정 시각 · 바뀐 칸(V11)을 찍지 않는다(관리 화면 "최근 수정순"은 사람이 고친 것만)
+  const res = await send(method, BASE + path, { 'Content-Type': 'application/json', 'X-Runshoes-Client': 'loader', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body ? JSON.stringify(body) : undefined);
   if (res.status < 200 || res.status >= 300) throw new Error(`${method} ${path} → ${res.status} ${res.text.slice(0, 200)}`);
   return res.text ? JSON.parse(res.text) : null;
 }
@@ -112,6 +114,8 @@ const live = await api('GET', '/api/shoes');
 if (live.some((s) => s.id <= 20 && !s.lineKey)) { console.error('운영 시드에 lineKey 가 없다 — V4 가 적용되기 전이다. 멈춘다'); process.exit(2); }
 // V6 전 앱(응답에 specSources 가 없다)에 --apply 하면 출처는 버려지고 스냅숏만 바뀐다 — 멈춘다. 건조 실행은 그대로(PATCH specSources 로 보인다)
 if (APPLY && live.length && !('specSources' in live[0])) { console.error('운영 응답에 specSources 가 없다 — V6 가 적용되기 전이다. --apply 하지 않는다'); process.exit(2); }
+// V11 전 앱(응답에 sku 가 없다)에 --apply 하면 품번은 버려지고 스냅숏만 바뀐다 — 멈춘다
+if (APPLY && live.length && !('sku' in live[0])) { console.error('운영 응답에 sku 가 없다 — V11 이 적용되기 전이다. --apply 하지 않는다'); process.exit(2); }
 if (SNAP_ONLY) { fs.writeFileSync(SNAP_FILE, JSON.stringify(snapOf(live), null, 1)); console.log(`스냅숏 ${live.length}켤레 → ${SNAP_FILE.pathname}`); process.exit(0); }
 const byKey = new Map(live.filter((s) => s.lineKey && s.generation != null).map((s) => [`${s.lineKey}:${s.generation}`, s]));
 
@@ -201,13 +205,16 @@ if (APPLY) {
   const file = U(`loads/${plan.at.replace(/[:.]/g, '-')}.json`);
   fs.mkdirSync(U('loads/'), { recursive: true });
   const save = () => fs.writeFileSync(file, JSON.stringify(log, null, 1));
+  // 한 건 쓸 때마다 스냅숏에도 — 중간에 멈춰도 적재기가 쓴 값이 다음 pull-admin 에 "관리 화면 수정"으로 보이지 않게
+  //   (2026-11-01 V11 리허설: 품번 220건을 쓰고 멈춘 뒤 다시 돌리자 pull-admin 이 그 220건을 관리자 수정으로 decisions.json 에 옮겼다)
+  const snapOne = (doc) => { if (!doc?.id) return; SNAP.shoes[doc.id] = Object.fromEntries(TRACKED.map((k) => [k, doc[k] ?? null])); fs.writeFileSync(SNAP_FILE, JSON.stringify(SNAP, null, 1)); };
   save();   // 바꿀 것이 없어도 남긴다 — 끌어온 어드민 수정 기록(adminPulled)
   for (const p of plan.patch) {
     const body = Object.fromEntries(Object.entries(p.changes).map(([k, v]) => [k, v.to]));
     const before = Object.fromEntries(Object.entries(p.changes).map(([k, v]) => [k, v.from]));
-    await api('PATCH', `/api/shoes/${p.id}`, body, token); log.patched.push({ id: p.id, catalog_key: p.catalog_key, before }); save();
+    const doc = await api('PATCH', `/api/shoes/${p.id}`, body, token); log.patched.push({ id: p.id, catalog_key: p.catalog_key, before }); save(); snapOne(doc);
   }
-  for (const p of plan.post) { const s = await api('POST', '/api/shoes', p.body, token); log.created.push(s.id); save(); }
+  for (const p of plan.post) { const s = await api('POST', '/api/shoes', p.body, token); log.created.push(s.id); save(); snapOne(s); }
   console.log(`썼다: PATCH ${log.patched.length} · POST ${log.created.length} → ${file.pathname}`);
   const after = await api('GET', '/api/shoes');
   fs.writeFileSync(SNAP_FILE, JSON.stringify(snapOf(after), null, 1)); console.log(`스냅숏 ${after.length}켤레 → ${SNAP_FILE.pathname}`);
