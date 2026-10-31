@@ -309,6 +309,7 @@ export const V4_SCENARIOS = [
 // V6~V9(2026-10-30) — 스펙 출처 · 데모 관리자 · 신발 숨김 · 회원 탈퇴 · 리뷰 300자 · 가격 출처 크림. 새 기능만 담는다(기준선 spring-v6).
 // 옛 기준선(spring-v3 · v4 …)은 다시 녹화하지 않고 --allow-added 로 specSources 가 더해진 것만 허용한다.
 //   단 spring-v3 의 W51 · W52(지운 신발 id 를 다시 쓴다)는 숨김(V8)으로 달라진다 — 숨긴 행이 id 를 가지고 있어 새 신발은 22(의도한 변경)
+//   V10(2026-11-01, id 를 DB AUTO_INCREMENT 가): spring-v3 W46 · W47 도 달라진다 — W44 에서 지운 리뷰 id 를 다시 쓰지 않아 하나씩 크다(의도한 변경)
 // 시드(Flyway)에서 시작한다: 데모 관리자는 V7 이 넣은 id 32. 체험 로그인은 녹화 때 DEMO_LOGIN_ENABLED=true
 export const V6_SCENARIOS = [
   login("X00", "admin@runshoes.test", "{{adminPassword}}", "admin"),

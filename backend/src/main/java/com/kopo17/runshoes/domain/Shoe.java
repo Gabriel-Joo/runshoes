@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.type.SqlTypes;
 
 /**
- * shoes — V1__schema.sql. id 는 앱이 매긴다(json-server 처럼 max+1, AUTO_INCREMENT 없음).
+ * shoes — V1__schema.sql. id 는 DB 가 매긴다(V10 AUTO_INCREMENT) — POST 본문에 id 가 있으면 그 id(AutoIncrementOrAssigned).
  * 숨긴 신발(V8 deleted_at)은 엔티티로 읽히지 않는다 — 목록 · 상세 · existsById · 찜 · 리뷰 쓰기에서 저절로 빠진다.
  * 숨긴 행까지 봐야 하는 곳(새 id · 세대 겹침 · 숨긴 목록 · 되살리기)은 ShoeRepository 의 native 쿼리.
  */
@@ -23,6 +23,7 @@ import org.hibernate.type.SqlTypes;
 public class Shoe {
 
 	@Id
+	@AutoIncrementOrAssigned
 	private Long id;
 
 	private String brand;

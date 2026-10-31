@@ -11,7 +11,7 @@
 //   2026-10-30 사용자 — 이미지 · 라인키 · 세대 · 현행 · 성별 · 스펙 출처도 전부 끌어온다. 숨긴 신발(V8)은 hidden 판단으로 — 다시 넣지 않는다.
 //   멈추는 건 관리 화면에서 새로 넣은 신발뿐(--structure-ok 로 진행, exit 3).
 // 대상: 적재 가능 행(이미지 있음 · status ok | partial). 운영 신발과는 lineKey + generation 으로 맞춘다(V4 가 시드 20켤레에 채웠다).
-//   없으면 POST(id 는 앱이 max+1). 있으면 사실 값만 비교해 다르면 PATCH — 시드 20켤레의 요약 · 설명(운영 콘텐츠)은 사용자가 고른 것(copy.json seed_choice)만 쓴다.
+//   없으면 POST(id 는 DB 가 매긴다 — V10 AUTO_INCREMENT). 있으면 사실 값만 비교해 다르면 PATCH — 시드 20켤레의 요약 · 설명(운영 콘텐츠)은 사용자가 고른 것(copy.json seed_choice)만 쓴다.
 //   gender 는 'men'(2026-10-24 사용자: 수집한 값이 전부 남성 대표 색상 기준이다 — null 이면 세대 중복 검사도 안 걸린다).
 //   운영 행의 purpose 는 사람이 검수한 분류라 덮지 않는다(후보 목록 purpose 는 초안 — 2026-10-24 사용자). 새 행에는 초안을 그대로 넣는다.
 import fs from 'node:fs';
