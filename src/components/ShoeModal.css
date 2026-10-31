@@ -61,6 +61,15 @@
   height: auto;
   min-height: 300px;
 }
+/* 썸네일 줄(2장 이상)의 윗선을 오른쪽 설명문 첫 줄 높이에(2026-11-01 사용자) — 높이는 ShoeModal 이 재서 --stage-h 로.
+   설명문이 없거나 사진이 한 장이면 붙지 않고 위처럼 칸 전체를 쓴다. 모바일은 위아래로 쌓여 쓰지 않는다 */
+@media (min-width: 768px) {
+  .modal__visual.is-aligned .gallery__stage {
+    flex: none;
+    height: var(--stage-h);
+    min-height: 0;
+  }
+}
 .modal__visual .gallery__stage .shoeimage {
   width: 100%;
   height: 100%;
@@ -75,14 +84,14 @@
   flex-direction: column;
 }
 
-/* 구역 그라데이션 — 머리 · 리뷰(흰색 → 회색). 머리는 새 회색을 만들지 않고 리뷰와 같은 값(2026-11-01 사용자, PC · 모바일).
-   위가 흰색이라 모바일에서 위 사진 칸(흰색)과 이음매가 없다 */
-.modal__head,
-.modal__reviews {
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
-}
+/* 머리(번호 · 모델 · 브랜드)는 단색 — 리뷰 작성 칸(.review__form)과 같은 회색, 새 색을 만들지 않는다(2026-11-01 사용자, PC · 모바일) */
 .modal__head {
   padding: 32px 28px 20px;
+  background: oklch(0.975 0.002 190);
+}
+/* 리뷰 구역 그라데이션(흰색 → 회색) */
+.modal__reviews {
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
 }
 .modal__body {
   flex: 1;
@@ -230,7 +239,7 @@
   /* 사진 칸은 사진 높이만큼(700 × 500 비율) — 높이가 정해지지 않으면 사진이 위에 붙고 아래가 빈다(2026-10-31). 바탕은 흰색(위 기본값) */
   .modal__visual {
     width: 100%;
-    padding: 24px 22%;
+    padding: 24px 22% 8px;          /* 아래는 썸네일 줄이 내려온 만큼 줄인다 */
   }
   .modal__visual .gallery,
   .modal__visual .gallery__stage {
@@ -240,8 +249,13 @@
     flex: none;
     aspect-ratio: 7 / 5;
   }
+  /* 썸네일 줄을 한 줄(약 40px)쯤 아래로 — 사진과 썸네일이 위에 몰려 답답했다(2026-11-01 사용자). 한 장이면 줄이 없어 아래 여백만 준다 */
   .modal__visual .gallery__thumbs {
+    margin-top: 40px;
     margin-bottom: 0;
+  }
+  .modal__visual:not(:has(.gallery__thumbs)) {
+    padding-bottom: 24px;
   }
 
   .modal__head {

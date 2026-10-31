@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, type CSSProperties } from "react";
 import type { Shoe, Term } from "../types";
 import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
@@ -45,6 +45,27 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
     }).catch(() => {});
   }, [shoe.id, status, user?.id]);
   const findTerm = (key: string) => terms.find((t) => t.key === key);
+  // PC — 썸네일 줄 윗선을 설명문 첫 줄 높이에(2026-11-01 사용자). 사진 칸 높이 = 설명문 위치 - 썸네일 위 간격.
+  //   설명문 위치는 요약 · 스펙 · 가격을 받아 오며 바뀌니 오른쪽 정보 칸 크기가 바뀔 때마다 다시 잰다
+  const visualRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const [stageH, setStageH] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const visual = visualRef.current, info = infoRef.current;
+    if (!visual || !info) return;
+    const measure = () => {
+      const desc = info.querySelector(".modal__desc"), thumbs = visual.querySelector<HTMLElement>(".gallery__thumbs");
+      if (!desc || !thumbs || !window.matchMedia("(min-width: 768px)").matches) return setStageH(null);
+      const gap = parseFloat(getComputedStyle(thumbs).marginTop) || 0;
+      const h = Math.round(desc.getBoundingClientRect().top - visual.getBoundingClientRect().top - gap);
+      setStageH(h > 120 ? h : null);    // 너무 낮으면(설명문이 거의 맨 위) 예전처럼 칸 전체
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(info);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+  }, [shoe.id]);
   return (
     <div className="modal" onClick={onClose}>
       <div
@@ -58,12 +79,13 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
           ×
         </button>
         <div className="modal__top">
-          <div className="modal__visual">
+          <div ref={visualRef} className={`modal__visual${stageH ? " is-aligned" : ""}`}
+            style={stageH ? ({ "--stage-h": `${stageH}px` } as CSSProperties) : undefined}>
             <ShoeGallery image={shoe.image} images={shoe.images} alt={shoe.model} />
           </div>
 
-          <div className="modal__info">
-            {/* 구역: 머리(번호 · 모델 · 브랜드) 회색 그라데이션 → 본문(스펙 ~ 평점 · 가격) 흰색 → 리뷰 회색 그라데이션 */}
+          <div ref={infoRef} className="modal__info">
+            {/* 구역: 머리(번호 · 모델 · 브랜드) 회색 단색 → 본문(스펙 ~ 평점 · 가격) 흰색 → 리뷰 회색 그라데이션 */}
             <div className="modal__head">
               <p className="modal__no">
                 NO.{String(shoe.id).padStart(2, "0")} · {shoe.purpose}
