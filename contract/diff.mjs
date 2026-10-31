@@ -31,7 +31,7 @@ const normHeader = (k, v) => {
   return String(v);
 };
 
-const isDateKey = (k) => k === "createdAt" || k === "deletedAt";   // deletedAt — 숨긴 신발 목록(V8), 숨긴 시각
+const isDateKey = (k) => k === "createdAt" || k === "deletedAt" || k === "updatedAt" || k === "purgedAt";   // deletedAt — 숨긴 신발 목록(V8), 숨긴 시각. updatedAt · purgedAt — 수정 · 영구 삭제 시각(V11)
 // 시나리오의 volatile(예: ["createdAt"] · ["retryAfter"]) — 서버가 그때 정하는 값이라 형식만 본다(날짜 · 숫자)
 let volatile = new Set();
 function eq(x, y, p, diffs, key) {

@@ -1,0 +1,39 @@
+{
+  "id": "X110",
+  "plan": null,
+  "name": "영구 삭제 admin → 200 {id, reviews, likes}",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/admin/shoes/21",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 31 Oct 2026 20:33:40 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "reviews": 2,
+      "likes": 0,
+      "id": 21
+    }
+  }
+}

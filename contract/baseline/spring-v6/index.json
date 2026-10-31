@@ -315,6 +315,86 @@
       "id": "X91",
       "name": "끝 상태 — reviews 전체",
       "status": 200
+    },
+    {
+      "id": "X100",
+      "name": "품번 PATCH → 200, lastChange [sku]",
+      "status": 200
+    },
+    {
+      "id": "X101",
+      "name": "품번에 한글 → 400",
+      "status": 400
+    },
+    {
+      "id": "X102",
+      "name": "같은 값 PATCH — 바뀐 칸 없음, lastChange 그대로",
+      "status": 200
+    },
+    {
+      "id": "X103",
+      "name": "적재기 PATCH(X-Runshoes-Client: loader) — lastChange 그대로 [sku]",
+      "status": 200
+    },
+    {
+      "id": "X104",
+      "name": "두 칸 PATCH → lastChange [width, price]",
+      "status": 200
+    },
+    {
+      "id": "X105",
+      "name": "고친 적 없는 신발 — updatedAt · lastChange null",
+      "status": 200
+    },
+    {
+      "id": "X106",
+      "name": "보이는 신발 영구 삭제 → 409 not_hidden",
+      "status": 409
+    },
+    {
+      "id": "X107",
+      "name": "숨기기 → 200",
+      "status": 200
+    },
+    {
+      "id": "X108",
+      "name": "데모 관리자 영구 삭제 → 403",
+      "status": 403
+    },
+    {
+      "id": "X109",
+      "name": "USER 영구 삭제 → 403",
+      "status": 403
+    },
+    {
+      "id": "X110",
+      "name": "영구 삭제 admin → 200 {id, reviews, likes}",
+      "status": 200
+    },
+    {
+      "id": "X111",
+      "name": "다시 영구 삭제 → 404",
+      "status": 404
+    },
+    {
+      "id": "X112",
+      "name": "그 신발의 리뷰도 지워졌다",
+      "status": 200
+    },
+    {
+      "id": "X113",
+      "name": "영구 삭제 기록 admin",
+      "status": 200
+    },
+    {
+      "id": "X114",
+      "name": "영구 삭제 기록 비로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "X115",
+      "name": "숨긴 목록에서도 빠졌다",
+      "status": 200
     }
   ],
   "vars": {

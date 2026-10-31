@@ -90,6 +90,10 @@ v4 21 · v3-search 24 · v3-summary 5 · v6 60 은 그대로. 기준선은 다�
 
 **탈퇴 뒤 남은 토큰(2026-11-01)**: spring-v6 에 X78b · X78c(남은 토큰으로 내 리뷰 수정 · 삭제 → 401)를 더했다 — 이 둘만 녹화해 기준선에 넣었다(본문 `{}` 확인). v6 PASS 62 · FAIL 0, 나머지 세트는 위와 같다.
 
+**V11(2026-11-01) — 품번 · 수정 이력 · 영구 삭제**: 응답에 `sku` · `updatedAt` · `lastChange` 키가 더해졌다 — 옛 기준선은 다시 녹화하지 않고 허용 키(`V11_KEYS`)로 센다.
+spring-v6 에 X100 ~ X115(품번 · 바뀐 칸 · 적재기 제외 · 바뀐 것 없는 저장 · 영구 삭제 409/403/200/404 · 기록)를 녹화해 더했다 — `updatedAt` · `purgedAt` 은 날짜 형식만 본다(diff.mjs).
+v6 PASS 78 · v3 101/11(그대로) · v4 21 · v3-search 24 · v3-summary 5.
+
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
 계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
 

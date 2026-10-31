@@ -385,4 +385,24 @@ export const V6_SCENARIOS = [
 
   W("X90", "끝 상태 — shoes 전체(specSources 포함)", "GET", "/api/shoes", { expect: 200 }),
   W("X91", "끝 상태 — reviews 전체", "GET", "/api/reviews", { volatile: ["createdAt"], expect: 200 }),
+
+  // V11(2026-11-01) — 품번 · 수정 이력(updatedAt · lastChange) · 영구 삭제. X90 · X91 뒤에 둔다(그 기준선은 그대로)
+  //   updatedAt 은 그때 시각이라 형식만 본다. lastChange 는 값까지 — 바뀐 칸 이름 · 적재기 제외 · 바뀐 것 없는 저장이 계약이다
+  W("X100", "품번 PATCH → 200, lastChange [sku]", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { sku: "IB1873-101" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X101", "품번에 한글 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { sku: "품번" }, expect: 400 }),
+  W("X102", "같은 값 PATCH — 바뀐 칸 없음, lastChange 그대로", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { sku: "IB1873-101" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X103", "적재기 PATCH(X-Runshoes-Client: loader) — lastChange 그대로 [sku]", "PATCH", "/api/shoes/2",
+    { headers: { ...jb("admin"), "X-Runshoes-Client": "loader" }, body: { summary: "적재기가 고친 요약" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X104", "두 칸 PATCH → lastChange [width, price]", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { width: "넓음", price: 179000 }, volatile: ["updatedAt"], expect: 200 }),
+  W("X105", "고친 적 없는 신발 — updatedAt · lastChange null", "GET", "/api/shoes/3", { expect: 200 }),
+  W("X106", "보이는 신발 영구 삭제 → 409 not_hidden", "DELETE", "/api/admin/shoes/{{x6}}", { headers: bearer("admin"), expect: 409 }),
+  W("X107", "숨기기 → 200", "DELETE", "/api/shoes/{{x6}}", { headers: bearer("admin"), expect: 200 }),
+  W("X108", "데모 관리자 영구 삭제 → 403", "DELETE", "/api/admin/shoes/{{x6}}", { headers: bearer("d"), expect: 403 }),
+  W("X109", "USER 영구 삭제 → 403", "DELETE", "/api/admin/shoes/{{x6}}", { headers: bearer("u1"), expect: 403 }),
+  W("X110", "영구 삭제 admin → 200 {id, reviews, likes}", "DELETE", "/api/admin/shoes/{{x6}}", { headers: bearer("admin"), expect: 200 }),
+  W("X111", "다시 영구 삭제 → 404", "DELETE", "/api/admin/shoes/{{x6}}", { headers: bearer("admin"), expect: 404 }),
+  W("X112", "그 신발의 리뷰도 지워졌다", "GET", "/api/reviews?shoeId={{x6}}", { expect: 200 }),
+  W("X113", "영구 삭제 기록 admin", "GET", "/api/admin/shoes/purged", { headers: bearer("admin"), volatile: ["purgedAt"], expect: 200 }),
+  W("X114", "영구 삭제 기록 비로그인 → 401", "GET", "/api/admin/shoes/purged", { expect: 401 }),
+  W("X115", "숨긴 목록에서도 빠졌다", "GET", "/api/admin/shoes/hidden", { headers: bearer("admin"), volatile: ["deletedAt", "updatedAt"], expect: 200 }),
 ];
