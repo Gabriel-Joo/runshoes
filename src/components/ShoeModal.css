@@ -61,13 +61,43 @@
   height: auto;
   min-height: 300px;
 }
-/* 썸네일 줄(2장 이상)의 윗선을 오른쪽 설명문 첫 줄 높이에(2026-11-01 사용자) — 높이는 ShoeModal 이 재서 --stage-h 로.
-   설명문이 없거나 사진이 한 장이면 붙지 않고 위처럼 칸 전체를 쓴다. 모바일은 위아래로 쌓여 쓰지 않는다 */
+/* PC — 사진은 칸 위에서 고정된 자리(2026-11-01 사용자): 사진 칸(stage) 높이를 622px 로 고정해 신발 가운데가 늘 위에서 311px —
+   노바블라스트 5(1장)의 자리. 예전에는 사진 칸이 오른쪽 열 높이를 따라가 설명문이 길수록 신발이 내려갔다.
+   갤러리는 칸에 얹기만 해(absolute) 칸 높이는 오른쪽 열이 정한다. 썸네일 줄(2장 이상)은 설명문 첫 줄 높이에 — ShoeModal 이 재서
+   --thumbs-top, 설명문이 없으면 사진 바로 아래(400px). 모바일은 위아래로 쌓여 쓰지 않는다(아래 767px) */
 @media (min-width: 768px) {
-  .modal__visual.is-aligned .gallery__stage {
-    flex: none;
-    height: var(--stage-h);
+  .modal__visual {
+    position: relative;
+    min-height: 460px;              /* 사진(위 231~391) · 썸네일 줄이 칸 밖으로 나가지 않게 */
+    overflow: hidden;               /* 칸이 622px 보다 짧으면(설명문이 짧은 신발) 사진 칸 아래가 리뷰 구역을 덮지 않게 */
+  }
+  .modal__visual .gallery {
+    position: absolute;
+    top: 0;
+    left: 88px;                     /* 칸 좌우 여백과 같다 */
+    right: 88px;
+    width: auto;
+    height: auto;
     min-height: 0;
+  }
+  .modal__visual .gallery__stage {
+    flex: none;
+    height: 622px;
+    min-height: 0;
+  }
+  .modal__visual .gallery__thumbs {
+    position: absolute;
+    top: var(--thumbs-top, 400px);
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .modal__visual .gallery {
+    left: 75px;
+    right: 75px;
   }
 }
 .modal__visual .gallery__stage .shoeimage {
