@@ -80,10 +80,12 @@
   flex-direction: column;
 }
 
-/* 구역 그라데이션 — 원래 이미지 칸에 있던 것(흰색 → 회색)을 머리와 리뷰로 옮겼다 */
-.modal__head,
+/* 구역 그라데이션 — 리뷰(흰색 → 회색). 머리는 PC 에서 흰색(2026-10-31 사용자 — 사진 칸만 그라데이션), 모바일은 사진 칸에 이어 그라데이션(아래 767px) */
 .modal__reviews {
   background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
+}
+.modal__head {
+  background: #fff;
 }
 .modal__head {
   padding: 32px 28px 20px;

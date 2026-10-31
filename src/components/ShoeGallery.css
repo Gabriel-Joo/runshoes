@@ -35,7 +35,7 @@
   object-fit: contain;
 }
 
-/* 화살표 — 사진 칸의 좌우 여백 안(모달 .modal__visual 의 padding). 사진 위에 겹치지 않는다 */
+/* 화살표 — 사진 칸의 좌우 여백 안(모달 .modal__visual 의 padding), 칸 끝에서 12px(2026-10-31 사용자 "신발에 너무 가깝다"). 사진 위에 겹치지 않는다 */
 .gallery__arrow {
   position: absolute;
   top: 50%;
@@ -59,11 +59,11 @@
 }
 
 .gallery__arrow--prev {
-  left: -56px;
+  left: -76px;                 /* 여백 88 - 12 */
 }
 
 .gallery__arrow--next {
-  right: -56px;
+  right: -76px;
 }
 
 /* 썸네일 줄 — 사진 아래, 끌어서 넘긴다. 넘치면 가운데 정렬을 버리고 스크롤 */
@@ -117,15 +117,16 @@
 }
 
 @media (max-width: 1199px) {
-  .gallery__arrow--prev { left: -50px; }
-  .gallery__arrow--next { right: -50px; }
+  .gallery__arrow--prev { left: -63px; }     /* 여백 75 - 12 */
+  .gallery__arrow--next { right: -63px; }
   .gallery__thumbs { margin-left: -50px; margin-right: -50px; }
 }
 
 @media (max-width: 767px) {
-  .gallery__arrow--prev { left: -40px; }
-  .gallery__arrow--next { right: -40px; }
-  .gallery__thumbs { margin-left: -40px; margin-right: -40px; margin-bottom: 14px; }
+  /* 여백은 칸 폭의 22% = 사진 폭(56%)의 39.29% — 거기서 12px 안쪽 */
+  .gallery__arrow--prev { left: calc(-39.29% + 12px); }
+  .gallery__arrow--next { right: calc(-39.29% + 12px); }
+  .gallery__thumbs { margin-left: -40px; margin-right: -40px; margin-top: 18px; margin-bottom: 14px; }
   .gallery__thumb {
     width: 46px;
     height: 36px;
