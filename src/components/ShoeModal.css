@@ -41,12 +41,13 @@
   color: var(--text-mid);
 }
 
-/* 왼쪽 이미지 — 머리와 같은 그라데이션(흰색 → 회색, 2026-10-31 사용자 "모바일 쪽이 보기 좋다"). 신발 크기는 예전 사진과 같게:
+/* 왼쪽 이미지 — 흰색 → 회색 → 맨 아래 다시 흰색(2026-10-31 사용자 A안): 아래 리뷰 구역이 흰색으로 시작해 회색으로 끝나면 가로줄이 생긴다.
+   열 사이(머리 옆) 희미한 세로줄은 감수(스펙이 흰색이라 2단에서는 없앨 수 없다). 모바일은 아래에서 머리와 하나로 잇는다. 신발 크기는 예전 사진과 같게:
    예전에는 400px 칸에서 신발이 약 213px(53%) — StockX 는 신발이 사진 폭의 98% 라 좌우 22%씩 띄운다 */
 .modal__visual {
   width: 400px;
   flex-shrink: 0;
-  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 100%);
+  background: linear-gradient(to bottom, #fff 0%, oklch(0.93 0 0) 75%, #fff 100%);
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -230,11 +231,16 @@
     flex-direction: column;
   }
 
-  /* 사진 칸은 사진 높이만큼(700 × 500 비율) — 높이가 정해지지 않으면 사진이 위에 붙고 아래가 빈다(2026-10-31). 바탕은 흰색 그대로(아래 머리가 그라데이션) */
+  /* 사진 칸은 사진 높이만큼(700 × 500 비율) — 높이가 정해지지 않으면 사진이 위에 붙고 아래가 빈다(2026-10-31).
+     사진 칸 · 머리가 위아래로 붙으므로 그라데이션 하나로 이어지게 나눈다(2026-10-31 사용자): 사진 칸 흰색 → 0.955, 머리 0.955 → 0.93.
+     0.955 는 사진 칸이 둘을 합친 높이의 약 2/3(1장 191 · 4장 243 / 머리 115px)이라서 — 이음매 색이 같아 경계선이 없다 */
   .modal__visual {
     width: 100%;
     padding: 24px 22%;
-    background: #fff;
+    background: linear-gradient(to bottom, #fff 0%, oklch(0.955 0 0) 100%);
+  }
+  .modal__head {
+    background: linear-gradient(to bottom, oklch(0.955 0 0) 0%, oklch(0.93 0 0) 100%);
   }
   .modal__visual .gallery,
   .modal__visual .gallery__stage {
