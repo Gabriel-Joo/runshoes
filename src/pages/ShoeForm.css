@@ -392,7 +392,64 @@
   gap: 8px;
 }
 
-/* 대표 썸네일 — "대표" 표시 */
+/* 순서 — 핸들(≡)을 끌어 놓는다. 터치에서도 페이지가 아니라 줄이 움직이게 touch-action: none */
+.form__imglist {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form__imglist.is-sorting {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.form__imghandle {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 40px;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-weak);
+  cursor: grab;
+  touch-action: none;
+}
+
+.form__imghandle:hover:not(:disabled) {
+  color: var(--accent);
+}
+
+.form__imghandle:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.is-sorting .form__imghandle {
+  cursor: grabbing;
+}
+
+.form__imgrow.is-dragging {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  opacity: 0.92;
+}
+
+/* 놓일 자리 — 칸 사이 가로선 */
+.form__imgdrop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  margin-top: -1px;
+  z-index: 3;                       /* 잡은 줄(z 2)이 덮어도 보이게 */
+  background: var(--accent);
+  pointer-events: none;
+}
+
+/* 대표 썸네일 — "대표 이미지" 표시 */
 .form__mainthumb {
   display: inline-flex;
   align-items: center;
