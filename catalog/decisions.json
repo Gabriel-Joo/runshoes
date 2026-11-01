@@ -370,6 +370,13 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「Fresh Foam X midsole foam with approximately 3% bio-based content」(search summary)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "프레시폼 X 이에로 v9",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "saucony:endorphin-trainer#1": {
@@ -1589,6 +1596,17 @@
     "sources_more": [],
     "by": "user",
     "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The pros Midsole materials make it a well-balanced ride Upper mesh material is very comfortable Outsole grip is dependable Price tag for all the technology it uses The cons Toe box"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 227000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:sonicblast#1": {
@@ -4043,6 +4061,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「compression-moulded EVA foam」(search summary)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 166900,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "newbalance:1080#15": {
@@ -4851,6 +4880,17 @@
     ],
     "by": "user",
     "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): For starters, the toe box feels a bit slim, especially over time. / Even on a day when I wore the Challenger casually, the forefoot felt slim and had low volume all around. / The forefoot is a bit constricting."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 193600,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "on:cloudmonster#3": {
@@ -7078,6 +7118,26 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
+   }
+  },
+  "newbalance:hierro#8": {
+   "model": {
+    "action": "use_source",
+    "value": "프레시폼 X 이에로 v8",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 250200,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
    }
   }
  },

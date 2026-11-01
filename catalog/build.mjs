@@ -41,13 +41,23 @@ const cands = parseCsv(fs.readFileSync(path.join(ROOT, 'candidates.csv'), 'utf8'
 const stockx = fs.existsSync(path.join(WORK, 'stockx.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'stockx.json'), 'utf8')) : {};
 // 같은 모델 다른 색상(extra-images.json — 실루엣 대조를 통과한 것, docs/CATALOG_PIPELINE.md 5장)
 const EXTRA = fs.existsSync(path.join(ROOT, 'extra-images.json')) ? JSON.parse(fs.readFileSync(path.join(ROOT, 'extra-images.json'), 'utf8')).rows : {};
+// 대표 이미지 주소 → 그 상품(품번 · 제목) — KicksDB 캐시(StockX · GOAT)에서. 주소는 ? 앞만 본다(크기 인자가 다를 수 있다)
+const IMG = new Map();
+for (const d of ['local/cache/kicksdb', 'local/cache/kicksdb100', 'local/cache/goat']) {
+  const dir = path.join(ROOT, d); if (!fs.existsSync(dir)) continue;
+  for (const f of fs.readdirSync(dir)) for (const p of JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')).data ?? []) {
+    const im = p.image ?? p.image_url; if (im && p.sku && !IMG.has(im.split('?')[0].toLowerCase())) IMG.set(im.split('?')[0].toLowerCase(), { sku: p.sku, title: p.title ?? p.name });
+  }
+}
+const imageSku = (u) => (u ? IMG.get(u.split('?')[0].toLowerCase()) : undefined);
 // 사람이 화면에서 찾은 이미지 문제(2026-10-28): 박스 사진 · 자리표시 이미지 → 다른 색상으로 바꾸거나(image) 이미지 없음(none)으로. stockx.mjs 를 다시 돌려도 이것이 먼저다
 for (const [id, o] of Object.entries(JSON.parse(fs.readFileSync(path.join(ROOT, 'decisions.json'), 'utf8')).image_overrides ?? {})) {
   if (o.none) stockx[id] = { status: 'review', reason: o.reason ?? 'no_clean_image' };
   // sku · title 은 판단에 적힌 것이 있을 때만 바꾼다(다른 StockX 상품으로 바꾼 이미지). 관리 화면에서 고친 이미지(via admin)에는 없어
   //   예전에는 undefined 로 덮어 sku 가 지워졌다(2026-11-01 사용자 — sku 는 모델을 가리키고 이미지와 별개다). 없으면 StockX 조회 결과 그대로
-  //   관리 화면 판단에 품번이 없으면 그 판단이 덮은 이전 판단(previous)의 품번을 잇는다(2026-11-02: 슈퍼블라스트 2 대표를 화면에서 바꾸자 품번이 에키덴 1013A185 로 되돌아갔다)
-  else stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku ?? o.previous?.sku ?? stockx[id]?.sku, title: o.title ?? o.previous?.title ?? stockx[id]?.title, gender: 'men' };
+  //   품번은 대표 이미지 상품의 모델 번호다(2026-11-02 사용자 — 대표가 다른 계열이면 대표를 따른다: 슈퍼블라스트 2 에키덴 1013A185).
+  //   관리 화면 판단에는 품번이 없어 대표 이미지 주소로 KicksDB 캐시의 상품을 찾는다. 못 찾으면 이전 판단(previous) → StockX 조회 결과
+  else { const ix = imageSku(o.image); stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku ?? ix?.sku ?? o.previous?.sku ?? stockx[id]?.sku, title: o.title ?? ix?.title ?? o.previous?.title ?? stockx[id]?.title, gender: 'men' }; }
 }
 // 감사(audit.mjs) 결과는 파일 · 행마다 있다(<file>::<id>) — 읽을 때 그 기록에 먼저 적용한 뒤 합친다
 const audit = fs.existsSync(path.join(WORK, 'audit.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'audit.json'), 'utf8')) : {};
