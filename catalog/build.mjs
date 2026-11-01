@@ -39,6 +39,8 @@ function modelSku(brand, sku) {
 
 const cands = parseCsv(fs.readFileSync(path.join(ROOT, 'candidates.csv'), 'utf8'));
 const stockx = fs.existsSync(path.join(WORK, 'stockx.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'stockx.json'), 'utf8')) : {};
+// 같은 모델 다른 색상(extra-images.json — 실루엣 대조를 통과한 것, docs/CATALOG_PIPELINE.md 5장)
+const EXTRA = fs.existsSync(path.join(ROOT, 'extra-images.json')) ? JSON.parse(fs.readFileSync(path.join(ROOT, 'extra-images.json'), 'utf8')).rows : {};
 // 사람이 화면에서 찾은 이미지 문제(2026-10-28): 박스 사진 · 자리표시 이미지 → 다른 색상으로 바꾸거나(image) 이미지 없음(none)으로. stockx.mjs 를 다시 돌려도 이것이 먼저다
 for (const [id, o] of Object.entries(JSON.parse(fs.readFileSync(path.join(ROOT, 'decisions.json'), 'utf8')).image_overrides ?? {})) {
   if (o.none) stockx[id] = { status: 'review', reason: o.reason ?? 'no_clean_image' };
@@ -312,6 +314,11 @@ for (const c of cands) {
   const io = DEC.image_overrides?.[id];
   //   사람이 정한 여러 장(2026-10-30 — 상세 모달 갤러리 확인용 같은 모델 다른 색상)도 같다: images 가 있으면 대표 · 목록을 그대로
   if (io?.via === 'admin' || Array.isArray(io?.images)) { row.image = io.image ?? null; row.images = (io.images ?? []).map((url) => ({ url, source: io.via === 'admin' ? 'admin' : 'stockx' })); }
+  // 같은 모델 다른 색상(2026-11-02 사용자, extra-images.json) — 대표 뒤에 붙인다, 대표 포함 6장까지. 사람이 정한 목록에는 붙이지 않는다
+  else if (row.images.length && EXTRA[id]) {
+    const have = new Set(row.images.map((x) => x.url));
+    for (const x of EXTRA[id]) if (row.images.length < 6 && !have.has(x.url)) { row.images.push({ url: x.url, source: /image\.goat\.com/.test(x.url) ? 'goat' : 'stockx' }); have.add(x.url); }
+  }
   if (row.width === null) missing.width = 'not_found';
   if (row.wideAvailable === null) missing.wideAvailable = s?.missing?.wide_available ?? 'not_found';
   if (row.carbon === null) { missing.carbon = s?.missing?.carbon ?? 'not_found'; }
