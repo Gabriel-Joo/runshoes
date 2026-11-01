@@ -649,12 +649,23 @@
     "note": "사용자 decide.csv(2026-10-21): A — manual"
    },
    "price_krw": {
-    "action": "keep_db",
+    "action": "use_source",
+    "value": 239000,
+    "source": "manual",
     "price_source": "다나와",
     "price_checked_at": "2026-07-23",
-    "price_kind": null,
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-23",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    }
   },
   "hoka:clifton#10": {
@@ -860,6 +871,14 @@
     "price_kind": null,
     "by": "user",
     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 온 없음 · 온 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/on-cloudmonster-2-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The eyelets are far enough apart, and the tongue is padded enough that I could absolutely yank them tight to offset the loose toebox."
    }
   },
   "on:cloudboom-max#1": {
@@ -1026,6 +1045,14 @@
     ],
     "via": "web",
     "note": "사용자(2026-10-23) conflict-todo 판정 A: 브룩스 공식 26/18mm · 드롭 8mm(미드솔만). BITR 도 \"midsole only\" 로 26. RSG 34 는 근거 불명 | 주 출처 교체(2026-10-24 사용자 지시): Fleet Feet → believeintherun.com(같은 판단의 일치 출처)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/brooks-hyperion-max-2-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): There was lots of room in the toe box and the elf ear heel helped lock in the fit."
    }
   },
   "nike:vaporfly#3": {
@@ -1150,6 +1177,17 @@
     ],
     "via": "web",
     "note": "사용자(2026-10-23) conflict-todo 판정 A: Fleet Feet · BITR 31/21mm 일치. RSG 39 는 오류로 본다 | 주 출처 교체(2026-10-24 사용자 지시): Fleet Feet → believeintherun.com(같은 판단의 일치 출처)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "on:cloudsurfer-max#1": {
@@ -1185,6 +1223,14 @@
     ],
     "via": "web",
     "note": "사용자(2026-10-23) conflict-todo 판정 A(웹 검색): 미즈노 영국 공식자료 44.5/36.5. RSG 51 은 실측 계열"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/mizuno-neo-vista-2-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): Common complaints include a toebox that feels overly roomy and excess material in the upper."
    }
   },
   "adidas:adizero-sl#2": {
@@ -1205,6 +1251,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — 브랜드 페이지 | adidas brand page 'Adizero SL2 Wide Running Shoes' (search result title/summary) · Retailer listing 'adidas Mens Adizero SL2 Wide Running Shoes Black' (search result)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/adidas-adizero-sl-2-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): It’s just very snug and maybe even a bit too snug in the toe box."
    }
   },
   "puma:deviate-nitro#3": {
@@ -1259,6 +1313,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28): 남성 와이드 판 있음 — 브랜드 페이지"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/puma-deviate-nitro-3-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): Our top pick in best puma running shoes The pros Outsole coverage Smooth ride Do it all shoe The cons Tight around the forefoot -->"
    }
   },
   "nike:vomero#18": {
@@ -1474,6 +1536,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 38.5 heel / 30.5 forefoot, 8 mm drop · spec table 38.5/30.5, 8 mm · Stack 38.5mm heel / 30.5mm forefoot | RSG 41 matches Doctors of Running measured 41/33 (measured, not spec). RTINGS measured 38.9."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 239000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:glideride-max#1": {
@@ -1508,6 +1581,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — ASICS AU: GLIDERIDE MAX (2E WIDE), men's 1011B959, discontinued (search summary)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/asics-glideride-max-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The pros Midsole materials make it a well-balanced ride Upper mesh material is very comfortable Outsole grip is dependable Price tag for all the technology it uses The cons Toe box"
    }
   },
   "asics:sonicblast#1": {
@@ -1567,6 +1648,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): (search summary; fetch 403) 6mm drop, 39mm heel / 33mm forefoot · 39/33, 6 mm | Midsole-only wording not verifiable (Brooks page 403). RSG 38 likely near RunRepeat measured 38.5."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/brooks-ghost-max-3-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): I wasn’t, but it definitely feels extra roomy in both the heel and forefoot."
    }
   },
   "newbalance:1080#14": {
@@ -1951,6 +2040,14 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 28 heel / 24 forefoot, 4 mm, 9.7 oz (M) · 28/24, 4 mm · 28/24 men's, 4mm drop spec | Running Warehouse and Tennis Warehouse Europe say 31/27/4, the same figure as RSG. No Saucony page with a number was found. Peregrine 16 is 32/28."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/saucony-peregrine-15-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The toe box was another standout feature, offering ample space for my feet to splay naturally and relax, even with thicker socks—an absolute necessity in these frigid southern temp"
    }
   },
   "merrell:agility-peak#5": {
@@ -2220,6 +2317,14 @@
     "value": "보통",
     "source": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-sl-review/",
     "note": "사용자(2026-10-23) 발볼 판단: \"medium-width toe box\" 는 보통 — 2026-10-23 발볼을 토박스 기준으로 바꾸며 적용을 멈췄다(다시 판정)"
+   },
+   "wide_available": {
+    "action": "use_source",
+    "value": true,
+    "source": "https://stockx.com/adidas-adizero-sl-wide-lightstrike-core-black-cloud-white-carbon",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) \"아디제로 SL 1만 넣어라. StockX 와이드 상품(IE9389)이 근거다\" — KicksDB 캐시의 남성 상품 'adidas Adizero SL Wide Lightstrike Core Black Cloud White Carbon'(IE9389)"
    }
   },
   "adidas:adizero-takumi-sen#11": {
@@ -2502,6 +2607,25 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「FF Blast Max」(opened)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/asics-gel-cumulus-28-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The pros Respectable weight for a daily trainer High level of ground feel Good foot lockdown Good stability The cons Firm ride without much bounce Below average grip Narrow toe box"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 250200,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:gel-excite#11": {
@@ -2689,6 +2813,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-29, 문구 미드솔 7행): \"The FF BLAST MAX midsole foam\" (fetched; women's page, same foam) · official ASICS: \"FF BLAST MAX cushioning unit\" (search summary; fetch 403, not rechecked). The runninglabstore listing saying FF BLAST PLUS is a 404."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 250200,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:gt-4000#4": {
@@ -4635,6 +4770,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「Entresuela de SCF EVA」(opened)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 213600,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:superblast#2": {
@@ -4644,6 +4790,25 @@
     "source": "https://believeintherun.com/shoe-reviews/asics-superblast-2-first-thoughts/",
     "via": "manual",
     "note": "사용자(2026-10-23) conflict-todo 판정: BITR 45 — RSG 46 과 1mm 차이, BITR 우선 규칙대로. 더 확인하지 않는다"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/asics-superblast-2-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The fit is very similar to the original, true to size, and the toe box comes with ample room, both in width and depth."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 249000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "brooks:hyperion-elite#5": {
@@ -4675,6 +4840,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「the only information they provide about what's used in the Challenger 7 is that it's a new blend of compression-molded EVA」(search summary)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/hoka-challenger-atr-7-review/",
+    "sources_more": [
+     "https://believeintherun.com/shoe-reviews/hoka-challenger-atr-7-review/",
+     "https://believeintherun.com/shoe-reviews/hoka-challenger-atr-7-review/"
+    ],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): For starters, the toe box feels a bit slim, especially over time. / Even on a day when I wore the Challenger casually, the forefoot felt slim and had low volume all around. / The forefoot is a bit constricting."
    }
   },
   "on:cloudmonster#3": {
@@ -4769,6 +4945,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 227000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "asics:gt-4000#3": {
@@ -4991,6 +5178,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24): 「Nike used a shorter Pebax plate under the midfoot instead」(search summary) — 카본은 출처 면제 항목이라 명시 1곳으로 받는다"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "puma:fast-fwd-nitro-elite#2": {
@@ -5015,6 +5213,16 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24): 「No carbon plate, no giant foam stack, no race-day marketing language.」(search summary) — 카본은 출처 면제 항목이라 명시 1곳으로 받는다"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/nike-acg-pegasus-trail-review/",
+    "sources_more": [
+     "https://believeintherun.com/shoe-reviews/nike-acg-pegasus-trail-review/"
+    ],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): I find the toebox roomy and the heel hold is great. / The toebox isn’t narrow or shallow."
    }
   },
   "on:cloudboom-echo#2": {
@@ -6773,6 +6981,104 @@
     "by": "user",
     "note": "사용자(2026-11-02): 국내 공식몰 281g 유지. BITR 은 264g 과 9.6oz(272g)가 같은 글에서 안 맞는다 — 자기모순인 출처는 쓰지 않는다"
    }
+  },
+  "nike:zoom-fly#6": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/nike-zoom-fly-6-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): If you prefer a race-like fit, I think you’ll be happy with these, but anyone looking for a roomy toe box is going to be disappointed."
+   }
+  },
+  "adidas:terrex-agravic-speed#2": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-speed-2-review/",
+    "sources_more": [
+     "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-speed-2-review/"
+    ],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The forefoot is noticeably narrow, and on longer runs, I felt consistent rubbing along my pinky toe (similar to Reese). / However, the narrow forefoot and minimal upper protection may limit its appeal to runners who need more space or durability on technical terrain."
+   }
+  },
+  "brooks:ghost#18": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/brooks-ghost-18-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The toe box was also structurally narrow, and the combination of the two features caused multiple blisters during the long run."
+   }
+  },
+  "brooks:catamount#4": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/brooks-catamount-4-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): Also, I felt like the toe box was so constrictive, especially as I went on my run."
+   }
+  },
+  "mizuno:wave-sky#9": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/mizuno-wave-sky-9-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The toe box was so short and narrow that I would need a full size up to offer my dogs even close to enough space."
+   }
+  },
+  "mizuno:neo-accera#1": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://believeintherun.com/shoe-reviews/mizuno-neo-accera-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): This creates a cramped sensation at the very tip, where the toe protector aggressively slims down the toe box."
+   }
+  },
+  "salomon:aero-glide#3": {
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/salomon-aero-glide-3-review/",
+    "sources_more": [],
+    "by": "user",
+    "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): In terms of fit, the upper is fairly accommodating in the forefoot and heel while tapering a bit in the midfoot."
+   }
+  },
+  "asics:superblast#3": {
+   "price_krw": {
+    "action": "use_source",
+    "value": 259000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
+   }
+  },
+  "hoka:speedgoat#7": {
+   "price_krw": {
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
+   }
   }
  },
  "existing_price": {
@@ -6904,78 +7210,127 @@
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
-     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Sapphire-Black-Lime-Blast-GS.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1777412458",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-Anthracite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1775143658"
     ],
-    "skus": [
-     "IB1873-101",
-     "IB1873-001",
-     "IB1873-702",
-     "IB1873-020"
-    ],
-    "sku": "IB1873-101",
-    "title": "Nike Air Zoom Pegasus 42 White Photon Dust",
-    "via": "user",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "was": {
+     "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+     "images": [
+      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
+      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
+      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+     ]
+    }
    },
-   "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
+   "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
    "images": [
+    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
-    "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Sapphire-Black-Lime-Blast-GS.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1777412458",
     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-Anthracite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1775143658"
    ],
    "via": "admin",
    "by": "user",
-   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
    "was": {
     "image": "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
     "images": [
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-White-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971653",
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775143656",
      "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Volt-Tint-Sapphire.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771971660",
-     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438"
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Spruce-Aura-Pale-Ivory.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776892438",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Sapphire-Black-Lime-Blast-GS.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1777412458",
+     "https://images.stockx.com/images/Nike-Air-Zoom-Pegasus-42-Black-Anthracite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1775143658"
     ]
    }
   },
   "hoka:clifton#10": {
-   "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+   "previous": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746731644",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Sage-Neon-Flame.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679234"
+    ],
+    "skus": [
+     "1162030-BBLC",
+     "1162030-WWH",
+     "1162030-VLLN",
+     "1162030-SGNN"
+    ],
+    "sku": "1162030-BBLC",
+    "title": "Hoka One One Clifton 10 Black",
+    "via": "user",
+    "by": "user",
+    "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+   },
+   "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
    "images": [
+    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746731644",
-    "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Sage-Neon-Flame.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679234"
    ],
-   "skus": [
-    "1162030-BBLC",
-    "1162030-WWH",
-    "1162030-VLLN",
-    "1162030-SGNN"
-   ],
-   "sku": "1162030-BBLC",
-   "title": "Hoka One One Clifton 10 Black",
-   "via": "user",
+   "via": "admin",
    "by": "user",
-   "note": "사용자(2026-10-30): 상세 모달 갤러리(썸네일 줄 · 화살표) 확인용 — 같은 모델의 다른 색상만(남성 · 같은 스타일 코드 계열, 변형판 · 다른 모델 · 여성 · 키즈 제외). 주소는 KicksDB(StockX) 캐시, 모두 열리는 것을 확인(200 image/webp)"
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+   "was": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746738675",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1746731644",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Vermillion-Varsity-Navy.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679236",
+     "https://images.stockx.com/images/Hoka-One-One-Clifton-10-Sage-Neon-Flame.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1770679234"
+    ]
+   }
   },
   "asics:gel-kayano#32": {
-   "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+   "previous": {
+    "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+    "images": [
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Orange-Glow.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775540",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Midnight-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775522",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Black-Graphite-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775530"
+    ],
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+    "was": {
+     "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+     "images": [
+      "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479"
+     ]
+    }
+   },
+   "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
    "images": [
-    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+    "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Orange-Glow.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775540",
     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Midnight-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775522",
     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Black-Graphite-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775530"
    ],
    "via": "admin",
    "by": "user",
-   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
    "was": {
-    "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+    "image": "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
     "images": [
-     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479"
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Pure-Silver.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775542",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Sunny-Sizzle.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775592479",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-White-Orange-Glow.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775540",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Midnight-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775522",
+     "https://images.stockx.com/images/ASICS-Gel-Kayano-32-Black-Graphite-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746775530"
     ]
    }
   },
@@ -7033,10 +7388,30 @@
    }
   },
   "hoka:bondi#9": {
-   "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+   "previous": {
+    "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+    "images": [
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Black-Vermillion.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772469549",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Galactic-Grey-Stellar-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1736970527",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Sea-Moss-Eucalyptus.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1738615250",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Grassland-Oyster-Mushroom.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1748027456",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-White-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746823492"
+    ],
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+    "was": {
+     "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+     "images": [
+      "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241"
+     ]
+    }
+   },
+   "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Black-Vermillion.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772469549",
    "images": [
-    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Black-Vermillion.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772469549",
+    "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Galactic-Grey-Stellar-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1736970527",
     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Sea-Moss-Eucalyptus.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1738615250",
     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Grassland-Oyster-Mushroom.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1748027456",
@@ -7044,11 +7419,16 @@
    ],
    "via": "admin",
    "by": "user",
-   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
    "was": {
     "image": "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
     "images": [
-     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241"
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Triple-Black-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747005241",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Black-Vermillion.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1772469549",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Galactic-Grey-Stellar-Grey.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1736970527",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Sea-Moss-Eucalyptus.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1738615250",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-Grassland-Oyster-Mushroom.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1748027456",
+     "https://images.stockx.com/images/Hoka-One-One-Bondi-9-White-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1746823492"
     ]
    }
   },
@@ -7183,11 +7563,29 @@
    "was": "Nike ACG Zegama Hike Cream Light Orewood Brown (IO7854-201) — 하이킹판, 다른 모델"
   },
   "asics:superblast#2": {
-   "image": "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881",
-   "sku": "1013A142-400",
-   "title": "ASICS Superblast 2 Wave Teal Illuminate Mint",
-   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
-   "was": "ASICS Superblast 2 Ekiden Vital Green Black (1013A185-300) — 에키덴 팩(특별판)"
+   "previous": {
+    "image": "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881",
+    "sku": "1013A142-400",
+    "title": "ASICS Superblast 2 Wave Teal Illuminate Mint",
+    "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+    "was": "ASICS Superblast 2 Ekiden Vital Green Black (1013A185-300) — 에키덴 팩(특별판)"
+   },
+   "image": "https://images.stockx.com/images/ASICS-Superblast-2-Ekiden-Vital-Green-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1763027736",
+   "images": [
+    "https://images.stockx.com/images/ASICS-Superblast-2-Ekiden-Vital-Green-Black.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1763027736",
+    "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881",
+    "https://images.stockx.com/images/ASICS-Superblast-2-Blue-Fade-Edo-Purple.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1751429809",
+    "https://images.stockx.com/images/ASICS-Superblast-2-Winter-Sea-White.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1751442562"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+   "was": {
+    "image": "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881",
+    "images": [
+     "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881"
+    ]
+   }
   },
   "hoka:mafate#4": {
    "image": "https://images.stockx.com/images/Hoka-One-One-Mafate-Speed-4-Castlerock-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1730261339",
@@ -7237,6 +7635,56 @@
    "title": "adidas Terrex Agravic Speed Trail Lucid Lemon Core Black Dash Grey",
    "note": "사용자(2026-11-02) \"2018년 모델이 대표인 게 문제다 … 어느 쪽이 우리 1세대인지 확인해라\" → 스펙 출처 BITR adidas-terrex-agravic-speed-review 가 2024-06-07 · Lightstrike 이중 미드솔 · Continental 밑창(새 모델). 캐시된 KicksDB 결과의 새 모델('Terrex Agravic Speed Trail') 남성 중 순위가 앞선 것(Claude 가 사진 확인 — 밑창 LIGHTSTRIKE PRO)",
    "was": "adidas Terrex Agravic Speed Ash Grey Clear Mint (BC0455) — 2018년 옛 모델"
+  },
+  "asics:novablast#5": {
+   "image": "https://images.stockx.com/images/ASICS-Novablast-5-Greyish-Purple-Coral-Reef-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743628195",
+   "images": [
+    "https://images.stockx.com/images/ASICS-Novablast-5-Greyish-Purple-Coral-Reef-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743628195",
+    "https://images.stockx.com/images/ASICS-Novablast-5-Yamabuki-Anzu.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784661820",
+    "https://images.stockx.com/images/ASICS-Novablast-5-Gravel-White.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1765578251",
+    "https://images.stockx.com/images/ASICS-Novablast-5-Oatmeal-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1751442723",
+    "https://images.stockx.com/images/ASICS-Novablast-5-Cold-Moss-Light-Orange.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773355268",
+    "https://images.stockx.com/images/ASICS-Novablast-5-Arctic-Blue-Aegean-Blue.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775508165"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+   "was": {
+    "image": "https://images.stockx.com/images/ASICS-Novablast-5-Yamabuki-Anzu.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784661820",
+    "images": [
+     "https://images.stockx.com/images/ASICS-Novablast-5-Yamabuki-Anzu.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784661820",
+     "https://images.stockx.com/images/ASICS-Novablast-5-Gravel-White.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1765578251",
+     "https://images.stockx.com/images/ASICS-Novablast-5-Oatmeal-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1751442723",
+     "https://images.stockx.com/images/ASICS-Novablast-5-Greyish-Purple-Coral-Reef-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743628195",
+     "https://images.stockx.com/images/ASICS-Novablast-5-Cold-Moss-Light-Orange.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773355268",
+     "https://images.stockx.com/images/ASICS-Novablast-5-Arctic-Blue-Aegean-Blue.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1775508165"
+    ]
+   }
+  },
+  "adidas:ultraboost#5": {
+   "image": "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
+   "images": [
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Black-White-Iron-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1789758936",
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Cloud-White-Black-Silver-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790359641",
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Flash-Aqua.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713038",
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Purple-Burst.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713019"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+   "was": {
+    "image": "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
+    "images": [
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-Black-White-Iron-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1789758936",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-Cloud-White-Black-Silver-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790359641",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Flash-Aqua.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713038",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Purple-Burst.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713019"
+    ]
+   }
   }
  },
  "seed_only_price_meta": {
