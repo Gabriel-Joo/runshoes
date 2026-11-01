@@ -12,7 +12,7 @@ export const TRACKED = [...FACTS, 'purpose', 'summary', 'description', 'image', 
 export const snapFile = (base, host) => new URL(`./local/work/snapshot-${(host ?? new URL(base).host).replace(/[^a-z0-9.-]/gi, '_')}.json`, import.meta.url);
 
 // 스펙 출처(V6 spec_sources) — 카탈로그 sources(DB 칸 이름) → {weight:{code,url}, …}. docs/ADMIN_DEMO_DESIGN.md 6.1
-//   코드는 todo.mjs code() 와 같다: BITR · RSG · STORE · PR · MAN · DB · SX. 그 밖의 URL(fit2run · solereview 표 · 판매점 …)은 WEB.
+//   코드는 todo.mjs code() 와 같다: BITR · RSG · STORE · PR · MAN · DB · SX. 그 밖의 URL(fit2run · solereview 표 · 판매점 …)은 WEB — 사람이 직접 확인한 칸(manual_sources)이면 MAN.
 //   값이 비면 출처도 없다(2.2 — 값을 비우면 출처도 비운다). 카본은 출처 면제라 넣지 않는다
 const SPEC_SOURCE_KEYS = { weight: 'official_weight_g', drop: 'official_drop_mm', stackHeight: 'official_heel_mm', midsole: 'midsole', width: 'toebox_width', wideAvailable: 'wideAvailable' };
 export const sourceCode = (u) => !u ? null : u === 'manual' ? 'MAN' : /believeintherun/.test(u) ? 'BITR' : /runningshoesguru/.test(u) ? 'RSG'
@@ -21,7 +21,9 @@ export const sourceCode = (u) => !u ? null : u === 'manual' ? 'MAN' : /believein
 export function specSourcesOf(r) {
   const out = {};
   for (const [f, k] of Object.entries(SPEC_SOURCE_KEYS)) {
-    const u = r.sources?.[k], code = sourceCode(u);
+    const u = r.sources?.[k];
+    // WEB = Claude 가 검색해 찾은 값, MAN = 사람이 보고 넣은 값(2026-11-02 사용자) — 둘 다 주소를 적고, 가르는 것은 누가 확인했나다(build.mjs manual_sources)
+    const code = sourceCode(u) === 'WEB' && r.manual_sources?.includes(k) ? 'MAN' : sourceCode(u);
     if (r[k] === null || r[k] === undefined || !code) continue;
     out[f] = /^https?:\/\/\S+$/.test(u) && u.length <= 500 ? { code, url: u } : { code };
   }

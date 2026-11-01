@@ -17,7 +17,7 @@ export interface Shoe {
 
   price: number | null;
   // 가격 메타(V5) — 출처 · 읽은 날(YYYY-MM-DD) · 늘 "발매가"(2026-10-30 "정가"에서 통일). 출처 기록이 없으면 null(화면은 가격만)
-  priceSource?: "공식몰" | "ABC마트" | "다나와" | "크림" | "직접 확인" | null;
+  priceSource?: "공식몰" | "ABC마트" | "다나와" | "크림" | "MAN(직접 확인)" | null;
   priceCheckedAt?: string | null;
   priceKind?: "발매가" | null;
   image: string;
