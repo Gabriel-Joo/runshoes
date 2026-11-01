@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  *   다만 바뀐 지 10초 안이면 탭 둘이 동시에 refresh 한 것으로 보고 family 에 토큰을 하나 더 준다 — 새로고침 두 번에 로그아웃되지 않게.
  * 시도 제한(RateLimiter)과 활동 로그(ActivityLogger) — 실패 · 429 · 재사용 감지는 따로 커밋(logNow), 성공은 같은 트랜잭션(log).
  *   인증 이벤트의 target 은 이메일 카운팅 키(EmailKey) — 세는 데만 쓰고, 사람이 읽는 것은 user_id 다.
- * 탈퇴(V9): 로그인 · refresh · /api/me 가 막힌다. 체험 로그인(docs/ADMIN_DEMO_DESIGN.md 8.3): 시드 계정 30개 · 데모 관리자만, 비밀번호 없이.
+ * 탈퇴(V9): 로그인 · refresh · /api/me 가 막힌다. 체험 로그인(docs/04_auth.md): 시드 계정 30개 · 데모 관리자만, 비밀번호 없이.
  * 체험 계정(시드 · 데모 관리자)과 관리자는 닉네임 변경 · 탈퇴를 막는다 — 체험 카드로 들어온 누구나 시드 데이터를 바꾸거나 지울 수 있게 되므로.
  */
 @Service

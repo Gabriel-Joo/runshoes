@@ -25,7 +25,7 @@ spring:
       hibernate.jdbc.time_zone: UTC
 
 app:
-  # 로그인(docs/AUTH_DESIGN.md) — 값은 Secret runshoes-auth 에서 env 로. 기본값이 없다: JWT_SECRET 이 없으면 뜨지 않는다
+  # 로그인(docs/04_auth.md) — 값은 Secret runshoes-auth 에서 env 로. 기본값이 없다: JWT_SECRET 이 없으면 뜨지 않는다
   auth:
     jwt-secret: ${JWT_SECRET:}
     access-ttl: 15m
@@ -33,9 +33,9 @@ app:
     cookie-secure: ${AUTH_COOKIE_SECURE:true}     # 로컬 http 에서만 false
     seed-user-password: ${SEED_USER_PASSWORD:}
     admin-password: ${ADMIN_PASSWORD:}
-    # 체험 카드(시드 3 + 데모 관리자, docs/ADMIN_DEMO_DESIGN.md 8.3) — 기본 꺼짐. 끄면 GET /api/auth/demo-accounts · POST /api/auth/demo 가 404
+    # 체험 카드(시드 3 + 데모 관리자, docs/04_auth.md) — 기본 꺼짐. 끄면 GET /api/auth/demo-accounts · POST /api/auth/demo 가 404
     demo-login-enabled: ${DEMO_LOGIN_ENABLED:false}
-  # 로그인 시도 제한 · 활동 로그(docs/AUTH_RATELIMIT_DESIGN.md)
+  # 로그인 시도 제한 · 활동 로그(docs/04_auth.md)
   ratelimit:
     login-account: 5        # 같은 계정(이메일) 15분에 실패 5번 → 마지막 실패에서 15분
     login-ip: 20            # 같은 IP 15분에 실패 20번

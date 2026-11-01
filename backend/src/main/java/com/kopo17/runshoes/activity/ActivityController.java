@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * POST /api/activity — 화면이 알려 주는 조회(docs/AUTH_RATELIMIT_DESIGN.md 3절). 로그인한 사람만(401 은 SecurityConfig).
+ * POST /api/activity — 화면이 알려 주는 조회(docs/04_auth.md). 로그인한 사람만(401 은 SecurityConfig).
  * {type:"shoe.view", shoeId} — 같은 사람 · 같은 신발은 30분에 한 번만 남긴다. {type:"compare.view", shoeIds:[…]} — 2~3개, 같은 조합은 30분에 한 번.
  * 언제나 204(남겼는지 말하지 않는다). 없는 신발 404, 모르는 type · 모양 400 — 본문은 {}.
  */

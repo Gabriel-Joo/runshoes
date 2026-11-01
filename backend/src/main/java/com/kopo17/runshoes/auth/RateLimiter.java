@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * 로그인 · 가입 시도 제한 — Redis 없이 activity_logs 를 센다(Pod 가 여럿이어도 같은 수를 본다). docs/AUTH_RATELIMIT_DESIGN.md 1 · 2 · 7절.
+ * 로그인 · 가입 시도 제한 — Redis 없이 activity_logs 를 센다(Pod 가 여럿이어도 같은 수를 본다). docs/04_auth.md.
  * 로그인: 최근 창(15분) 안의 실패 — 계정(이메일 키)은 마지막 성공 뒤의 것만(성공하면 리셋), IP 는 전부. 넘으면 마지막 실패에서 창만큼 막는다.
  *   잠긴 동안에는 맞는 비밀번호여도 같은 429 — 비밀번호를 검사하기 전에 센다(BCrypt 도 돌리지 않는다). 없는 이메일도 같은 기준.
  *   막힌 시도(auth.login.blocked)는 실패로 세지 않는다 — 두드릴수록 잠금이 길어지지 않게.

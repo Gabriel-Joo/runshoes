@@ -12,7 +12,7 @@ export const TRACKED = [...FACTS, 'purpose', 'summary', 'description', 'image', 
 // 스냅숏 파일 — 적재 직후의 운영 값(호스트마다 하나). 이것과 지금 운영 값이 다른 칸 = 관리 화면에서 고친 칸
 export const snapFile = (base, host) => new URL(`./local/work/snapshot-${(host ?? new URL(base).host).replace(/[^a-z0-9.-]/gi, '_')}.json`, import.meta.url);
 
-// 스펙 출처(V6 spec_sources) — 카탈로그 sources(DB 칸 이름) → {weight:{code,url}, …}. docs/ADMIN_DEMO_DESIGN.md 6.1
+// 스펙 출처(V6 spec_sources) — 카탈로그 sources(DB 칸 이름) → {weight:{code,url}, …}. docs/03_admin.md
 //   코드는 todo.mjs code() 와 같다: BITR · RSG · STORE · PR · MAN · DB · SX. 그 밖의 URL(fit2run · solereview 표 · 판매점 …)은 WEB — 사람이 직접 확인한 칸(manual_sources)이면 MAN.
 //   값이 비면 출처도 없다(2.2 — 값을 비우면 출처도 비운다). 카본은 출처 면제라 넣지 않는다
 const SPEC_SOURCE_KEYS = { weight: 'official_weight_g', drop: 'official_drop_mm', stackHeight: 'official_heel_mm', midsole: 'midsole', width: 'toebox_width', wideAvailable: 'wideAvailable' };

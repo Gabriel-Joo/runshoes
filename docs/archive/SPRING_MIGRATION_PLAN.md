@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [05_api_contract.md](../05_api_contract.md)(계약) · [06_deployment.md](../06_deployment.md)(배포) · [07_database.md](../07_database.md)(스키마) — 이 문서는 2026-09-22 의 전환 계획서다
+
 # RUNSHOES — Spring Boot 3 + MySQL 8 전환 계획
 
 > **✅ 2026-10-21 전환 완료 — 이 문서는 계획 기록이다.** 실행 결과와 계획에서 달라진 점은 [HISTORY.md](HISTORY.md) 4장,

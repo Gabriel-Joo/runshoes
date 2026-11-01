@@ -34,7 +34,7 @@ class ActivityCleanup {
 		long deleted = purge(AUTH, props.retentionAuth()) + purge(OTHER, props.retentionOther());
 		long rows = jdbc.queryForObject("SELECT COUNT(*) FROM activity_logs", Long.class);
 		if (rows > props.warnRows()) {
-			log.warn("activity_logs 가 커졌다 — {}행(경고선 {}). 지난 정리에서 {}행 지움. docs/AUTH_RATELIMIT_DESIGN.md 6절", rows, props.warnRows(), deleted);
+			log.warn("activity_logs 가 커졌다 — {}행(경고선 {}). 지난 정리에서 {}행 지움. docs/04_auth.md", rows, props.warnRows(), deleted);
 		} else {
 			log.info("activity_logs 정리 — {}행 지움, {}행 남음", deleted, rows);
 		}

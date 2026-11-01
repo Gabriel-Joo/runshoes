@@ -7,8 +7,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 /**
  * 요청한 사람 — access token 의 sub · role. 로그인하지 않았으면 ANONYMOUS.
- * 쓰기의 401 은 SecurityConfig 가 먼저 막는다(대상이 있는지 보기 전에). 컬렉션은 그 뒤 404 → 403 순으로 본다(docs/AUTH_DESIGN.md 2절).
- * 데모 관리자(DEMO_ADMIN, V7)는 관리 화면을 보기만 — 신발 쓰기 · 리뷰 · 찜은 403 {code:"demo_admin"}(docs/ADMIN_DEMO_DESIGN.md 8.2).
+ * 쓰기의 401 은 SecurityConfig 가 먼저 막는다(대상이 있는지 보기 전에). 컬렉션은 그 뒤 404 → 403 순으로 본다(docs/04_auth.md).
+ * 데모 관리자(DEMO_ADMIN, V7)는 관리 화면을 보기만 — 신발 쓰기 · 리뷰 · 찜은 403 {code:"demo_admin"}(docs/03_admin.md).
  */
 record Viewer(Long userId, String role) {
 

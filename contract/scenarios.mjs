@@ -1,5 +1,5 @@
 // API 계약 시나리오 — Node(json-server) 기준선을 녹화하고, Spring 구현 뒤 같은 순서로 다시 돌려 diff 한다.
-// docs/SPRING_MIGRATION_PLAN.md Phase 2 의 시나리오 1~14 를 그대로 펼쳤다(번호는 이 파일의 id, plan 은 계획서 번호).
+// docs/archive/SPRING_MIGRATION_PLAN.md Phase 2 의 시나리오 1~14 를 그대로 펼쳤다(번호는 이 파일의 id, plan 은 계획서 번호).
 //
 // - 순서가 곧 상태다. 시드(db.json, sha256 0bccadd4…)에서 시작해 위에서부터 차례로 보낸다 — 앞의 쓰기가 뒤의 응답을 정한다
 // - {{이름}} 은 앞 단계 capture 로 잡은 값(예: POST 로 생긴 id)
@@ -148,7 +148,7 @@ export const SEARCH_SCENARIOS = [
   S("Q24", "관리 — 브랜드 칩 목록 /api/brands(id 순 첫 등장)", "/api/brands"),
 ];
 
-// ---- V3(로그인) 뒤 계약 — 기준선 contract/baseline/spring-v3(Spring 녹화). docs/AUTH_DESIGN.md
+// ---- V3(로그인) 뒤 계약 — 기준선 contract/baseline/spring-v3(Spring 녹화). docs/04_auth.md
 // Node 기준선(SCENARIOS)은 이력으로 둔다 — 쓰기에 토큰이 필요해져 그대로는 돌지 않는다.
 // R: 위의 읽기 01~26 그대로(비로그인) · W: 쓰기(30~53 의 흐름을 계정으로, 401 · 403 · 405 · 409 를 끼워) · A: 인증
 // expect 는 그 단계의 상태코드 — record.mjs 가 다르면 표시하고 exit 1. volatile: 서버가 그때 정하는 값(createdAt)은 형식만 본다
@@ -250,7 +250,7 @@ export const AUTH_SCENARIOS = [
     { headers: { Origin: "https://evil.example", "Access-Control-Request-Method": "POST" }, expect: 204 }),
   W("A26", "바꾼 비밀번호로 로그인 → 200(성공하면 그 계정의 실패는 처음부터 센다)", "POST", "/api/auth/login", { headers: json, body: { email: "contract@runshoes.test", password: "contract456" }, capture: { c: "body.accessToken" }, expect: 200 }),
 
-  // 시도 제한(3단계, docs/AUTH_RATELIMIT_DESIGN.md) — 같은 계정 15분에 실패 5번이면 맞는 비밀번호도 429. 없는 이메일도 같다.
+  // 시도 제한(3단계, docs/04_auth.md) — 같은 계정 15분에 실패 5번이면 맞는 비밀번호도 429. 없는 이메일도 같다.
   // 녹화기는 한 IP(127.0.0.1)라 IP 기준(20번)은 이 녹화에서 넘지 않는다 — 실패는 모두 13번
   ...[27, 28, 29, 30, 31].map((n, i) => W(`A${n}`, `계약 계정 틀림 ${i + 1}번째 → 401`, "POST", "/api/auth/login",
     { headers: json, body: { email: "contract@runshoes.test", password: `wrongpass${i}` }, expect: 401 })),

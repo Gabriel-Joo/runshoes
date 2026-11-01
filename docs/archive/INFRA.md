@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [06_deployment.md](../06_deployment.md)
+
 # RUNSHOES — 인프라 · CI/CD
 
 > **push 한 번으로 빌드부터 배포까지**

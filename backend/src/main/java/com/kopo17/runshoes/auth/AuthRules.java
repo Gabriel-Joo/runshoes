@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * 가입 · 로그인 · 회원 정보 수정의 입력 규칙과 메시지(docs/AUTH_DESIGN.md 3절). 프런트도 같은 규칙으로 먼저 본다 — 정답은 여기.
+ * 가입 · 로그인 · 회원 정보 수정의 입력 규칙과 메시지(docs/04_auth.md). 프런트도 같은 규칙으로 먼저 본다 — 정답은 여기.
  */
 final class AuthRules {
 

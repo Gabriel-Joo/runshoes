@@ -1,7 +1,7 @@
 # contract — API 응답 기준선 (Spring 전환 Phase 0)
 
 Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 녹화해 두고, Spring 구현 뒤 같은 시나리오를 다시 돌려 비교한다.
-계획: [docs/SPRING_MIGRATION_PLAN.md](../docs/SPRING_MIGRATION_PLAN.md) Phase 0·2.
+계획: [docs/archive/SPRING_MIGRATION_PLAN.md](../docs/archive/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
 scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건)
@@ -12,7 +12,7 @@ mock-ollama.mjs   고정 응답 Ollama(:3109) — 호출 수 · 실패 모드 ·
 baseline/node/          운영 Node 앱 녹화(2026-10-18, 시드 db.json 에서 시작)
 baseline/node-summary/  요약 녹화 — 로컬 server.cjs(같은 커밋) + mock-ollama
 baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Spring(2026-10-21, 시드 직후)이 기준선. 굳히기 전 시드로 따로 계산한 기대값과 24건 모두 맞췄다
-baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/API_CONTRACT.md 2.2)
+baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/05_api_contract.md 1-4)
 baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
 baseline/spring-v4/         V4(세대 구조) 새 기능만 21건 — 옛 기준선은 다시 녹화하지 않고 diff --allow-added 로 V4 키 추가만 허용(2026-10-24). V5 키(priceSource · priceCheckedAt · priceKind)도 같은 방식(2026-10-29)
 baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다
@@ -85,7 +85,7 @@ spring-v3 를 굳히기 전 검산: R 26건은 Node 기준선에 의도한 변�
 W · A 는 단계마다 서버가 센 값(평점 · 찜 수 · 공감 수 · cascade · id max+1 · 쿠키 속성)을 따로 확인했다. 검색은 Q15(비로그인 `liked=true` → `[]`)만 달라졌다 — 의도한 변경.
 
 **V10(2026-11-01) — id 를 DB 가 매긴다**: spring-v3 는 PASS 101 · FAIL 11. 그전의 FAIL 9(가입 계정 id 32 → 33 여섯 건 · 신발 21 → 22 세 건)에
-**W46 · W47 두 건이 더해졌다** — W44 에서 지운 리뷰 id(106)를 다시 쓰지 않아 107 · 108(의도한 변경, [docs/API_CONTRACT.md](../docs/API_CONTRACT.md) 1.1).
+**W46 · W47 두 건이 더해졌다** — W44 에서 지운 리뷰 id(106)를 다시 쓰지 않아 107 · 108(의도한 변경, [docs/05_api_contract.md](../docs/05_api_contract.md) 1.1).
 v4 21 · v3-search 24 · v3-summary 5 · v6 60 은 그대로. 기준선은 다시 녹화하지 않는다(W51 때와 같이 차이를 여기 적는다).
 
 **탈퇴 뒤 남은 토큰(2026-11-01)**: spring-v6 에 X78b · X78c(남은 토큰으로 내 리뷰 수정 · 삭제 → 401)를 더했다 — 이 둘만 녹화해 기준선에 넣었다(본문 `{}` 확인). v6 PASS 62 · FAIL 0, 나머지 세트는 위와 같다.
@@ -99,7 +99,7 @@ v6 PASS 78 · v3 101/11(그대로) · v4 21 · v3-search 24 · v3-summary 5.
 v6 PASS 85 · FAIL 0.
 
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
-계약을 왜 이렇게 맞췄는지는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
+계약을 왜 이렇게 맞췄는지는 [docs/05_api_contract.md](../docs/05_api_contract.md).
 
 ## 녹화에서 확인한 것 — 계획서와 다른 점
 

@@ -1,7 +1,7 @@
 import { API } from "../api";
 
 /**
- * 로그인 상태 — access token 은 이 모듈의 변수(메모리)에만 둔다. localStorage 에 두지 않는다(docs/AUTH_DESIGN.md 1절).
+ * 로그인 상태 — access token 은 이 모듈의 변수(메모리)에만 둔다. localStorage 에 두지 않는다(docs/04_auth.md).
  * refresh token 은 HttpOnly 쿠키(Path=/api/auth)라 JS 가 읽지 못한다 — 새로고침하면 refresh() 로 access token 을 다시 받는다.
  */
 export interface User {

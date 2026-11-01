@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [03_admin.md](../03_admin.md)(관리 화면) · [04_auth.md](../04_auth.md)(체험 계정 · 탈퇴) · [02_screens.md](../02_screens.md)(마이페이지 · 로그인 화면)
+
 # RUNSHOES — 관리 화면 보강 · 데모 계정 설계안
 
 상태: **로컬 구현 · 시험 끝, 운영 미반영**(2026-10-30). 결정 10절 · 12절, 배포는 infra 리포 `apps/runshoes/runbooks/admin-demo-v6-v9.md`. API 는 docs/API_CONTRACT.md 2.5.

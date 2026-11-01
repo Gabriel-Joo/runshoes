@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [02b_design_system.md](../02b_design_system.md)
+
 # Handoff: RUNSHOES 목록 화면 (표본 전시실 컨셉)
 
 ## Overview
