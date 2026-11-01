@@ -872,12 +872,23 @@
     "weight_basis": "US_M9"
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-23",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 온 없음 · 온 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-23",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 온 없음 · 온 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    },
    "width": {
     "action": "use_source",
@@ -962,11 +973,20 @@
   "newbalance:880#15": {
    "weight_g": {
     "action": "use_source",
-    "value": 303,
-    "source": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
-    "via": "manual",
-    "note": "사용자(2026-10-23) conflict-todo 판정 B: B 값. 300 vs 303",
-    "weight_basis": "unknown"
+    "value": 299,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)",
+    "previous": {
+     "action": "use_source",
+     "value": 303,
+     "source": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+     "via": "manual",
+     "note": "사용자(2026-10-23) conflict-todo 판정 B: B 값. 300 vs 303",
+     "weight_basis": "unknown"
+    }
    },
    "stack_heel_mm": {
     "action": "use_source",
@@ -1007,8 +1027,8 @@
       "code": "MAN"
      },
      "weight": {
-      "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
-      "code": "RSG"
+      "url": "https://www.newbalance.com/pd/fresh-foam-x-880v15/M880V15-48603.html",
+      "code": "MAN"
      },
      "midsole": {
       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
@@ -1024,7 +1044,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://kream.co.kr/products/894462",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+       "code": "RSG"
+      },
+      "midsole": {
+       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+       "code": "RSG"
+      },
+      "stackHeight": {
+       "url": "https://www.roadtrailrun.com/2025/01/new-balance-fresh-foam-x-880-v15-multi.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "DB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+    }
    }
   },
   "puma:magmax-nitro#1": {
@@ -1111,12 +1162,63 @@
     "note": "사용자(2026-10-23): 아식스 공식값 43.5/35.5. 이전 판단(BITR 44)을 취소한다 — 0.5 차이지만 공식값이 우선"
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-23",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-23",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아식스 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://blog.naver.com/eunioni/223860959115",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-nimbus-27-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://blog.naver.com/eunioni/223860959115",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-nimbus-27-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-nimbus-27-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://findmyfootwear.com/asics-gel-nimbus-27-vs-asics-gel-cumulus-27-stacked-vs-sprightly/",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://www.runningshoesguru.com/reviews/road/asics-gel-nimbus-27-review/",
+      "code": "RSG"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "on:cloudboom-strike#1": {
@@ -7745,6 +7847,13 @@
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Purple-Burst.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713019"
     ]
    }
+  },
+  "adidas:duramo-sl#1": {
+   "image": "https://images.stockx.com/images/adidas-Duramo-SL-Halo-Silver-Cloud-White-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120598",
+   "sku": "IE9689",
+   "title": "adidas Duramo SL Halo Silver Cloud White Grey",
+   "note": "사용자(2026-11-02) \"대표를 2023년판 남성 상품으로, 색상도 2023년판 남성만\" — 스펙 출처(adidas US IF9483 Duramo SL)가 2023년 재출시판. StockX 가 2020년판(FV · FY · G58 · GV)과 2023년판(ID · IE · IF)을 같은 이름으로 올리고 SL 2(IF9396, 뒤꿈치 DURAMO SL2)도 섞여 있어, 뒤꿈치 표기 \"DURAMO SL\"를 사진으로 확인한 2023년판 남성 중 순위가 앞선 것(IF9396 은 SL 2 라 뺐다)",
+   "was": "adidas Duramo SL Black White (FV8786) — 2020년판"
   }
  },
  "seed_only_price_meta": {
