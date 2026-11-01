@@ -405,4 +405,15 @@ export const V6_SCENARIOS = [
   W("X113", "영구 삭제 기록 admin", "GET", "/api/admin/shoes/purged", { headers: bearer("admin"), volatile: ["purgedAt"], expect: 200 }),
   W("X114", "영구 삭제 기록 비로그인 → 401", "GET", "/api/admin/shoes/purged", { expect: 401 }),
   W("X115", "숨긴 목록에서도 빠졌다", "GET", "/api/admin/shoes/hidden", { headers: bearer("admin"), volatile: ["deletedAt", "updatedAt"], expect: 200 }),
+
+  // V12(2026-11-02) — 와이드 범위(wideScope domestic · overseas)와 출처 NOTFOUND(검색 결과 없음, 와이드 모델 출처에만)
+  W("X116", "와이드 국외에만 PATCH → 200, lastChange [wideScope](신발 2 는 이미 와이드 있음)", "PATCH", "/api/shoes/2",
+    { headers: jb("admin"), body: { wideAvailable: true, wideScope: "overseas" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X117", "와이드 범위에 모르는 값 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { wideScope: "abroad" }, expect: 400 }),
+  W("X118", "와이드 없음 + 출처 NOTFOUND → 200, wideScope null", "PATCH", "/api/shoes/2",
+    { headers: jb("admin"), body: { wideAvailable: false, wideScope: null, specSources: { wideAvailable: { code: "NOTFOUND" } } }, volatile: ["updatedAt"], expect: 200 }),
+  W("X119", "NOTFOUND 를 무게 출처에 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { specSources: { weight: { code: "NOTFOUND" } } }, expect: 400 }),
+  W("X120", "모르는 출처 코드 → 400(받는 코드 아홉을 알린다)", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { specSources: { width: { code: "XYZ" } } }, expect: 400 }),
+  W("X121", "데모 관리자 wideScope PATCH → 403", "PATCH", "/api/shoes/2", { headers: jb("d"), body: { wideScope: "domestic" }, expect: 403 }),
+  W("X122", "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)", "GET", "/api/shoes/2", { expect: 200 }),
 ];

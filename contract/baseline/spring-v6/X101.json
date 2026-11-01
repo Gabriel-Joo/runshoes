@@ -29,11 +29,11 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 31 Oct 2026 20:33:39 GMT",
+      "date": "Sun, 01 Nov 2026 22:59:59 GMT",
       "connection": "close"
     },
     "body": {
-      "message": "품번은 영문 · 숫자 · 하이픈 50자까지예요(예: 1011C284-400)",
+      "message": "품번은 영문 · 숫자와 - . / 로 50자까지예요(예: 1011C284-400)",
       "code": "invalid"
     }
   }

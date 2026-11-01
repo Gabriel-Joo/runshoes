@@ -395,6 +395,41 @@
       "id": "X115",
       "name": "숨긴 목록에서도 빠졌다",
       "status": 200
+    },
+    {
+      "id": "X116",
+      "name": "와이드 국외에만 PATCH → 200, lastChange [wideScope](신발 2 는 이미 와이드 있음)",
+      "status": 200
+    },
+    {
+      "id": "X117",
+      "name": "와이드 범위에 모르는 값 → 400",
+      "status": 400
+    },
+    {
+      "id": "X118",
+      "name": "와이드 없음 + 출처 NOTFOUND → 200, wideScope null",
+      "status": 200
+    },
+    {
+      "id": "X119",
+      "name": "NOTFOUND 를 무게 출처에 → 400",
+      "status": 400
+    },
+    {
+      "id": "X120",
+      "name": "모르는 출처 코드 → 400(받는 코드 아홉을 알린다)",
+      "status": 400
+    },
+    {
+      "id": "X121",
+      "name": "데모 관리자 wideScope PATCH → 403",
+      "status": 403
+    },
+    {
+      "id": "X122",
+      "name": "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)",
+      "status": 200
     }
   ],
   "vars": {
