@@ -3646,6 +3646,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+   },
+   "drop_mm": {
+    "action": "use_source",
+    "value": 10,
+    "source": "https://www.nike.com/t/revolution-8-mens-road-running-shoes-U0b8oy8S",
+    "sources_more": [
+     "https://www.nike.com/gb/t/revolution-8-mens-road-running-shoes-scdpZh"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Weight: Approx. 292g/10.3oz (Men's US 10) Heel-to-toe drop: 10mm' | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS · RunRepeat 실측뿐이라 비움"
    }
   },
   "nike:rival-fly#3": {
@@ -4016,6 +4027,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳(+1곳 일치): 「a thick stack of Cushlon 3.0 foam」(opened)"
+   },
+   "drop_mm": {
+    "action": "use_source",
+    "value": 10,
+    "source": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-GYVSurvY",
+    "sources_more": [
+     "https://www.nike.com/pt/en/t/winflo-12-mens-road-running-shoes-GgxSvlS6/HV9272-002"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Heel-to-toe drop: 10mm' 나이키 지역 페이지 공통 | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS 실측뿐이라 비움"
    }
   },
   "nike:winflo#11": {
@@ -4784,6 +4806,19 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
+   },
+   "drop_mm": {
+    "action": "use_source",
+    "value": 6,
+    "source": "https://www.asics.com/ca/en-ca/glideride-max-2-1011c156-300",
+    "sources_more": [
+     "https://www.asics.com/gb/en-gb/glideride--max-2/p/1011C156-300.html",
+     "https://www.therunnersshop.com/products/asics-glideride-max-2-mens",
+     "https://www.blacktoerunning.com/products/asics-mens-glideride-max-2"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ASICS CA 'Heel Drop: 6 mm'(1011C156-300) · UK · AU 같은 값 · 소매점 2곳 6 mm | 브랜드 페이지"
    }
   },
   "nike:revolution#7": {
@@ -5529,6 +5564,41 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): 요약이 '여러 소매점' 319g UK8.5, 6mm, heel 35/forefoot 29 라고 묶어 말함 — 어느 도메인이 어느 값인지 요약에서 개별 확인 안 됨(소매점 URL 은 결과 목록 기준, 약한 근거). Finish Line 11.3oz(=320g). adidas 공식 페이지 미발견. RunRepeat 'Adidas lists 6 mm' 는 근거 제외."
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 319,
+    "source": "https://www.adidas.com/bh/en/galaxy-7-running-shoes/ID8754.html",
+    "sources_more": [
+     "https://www.adidas.co.uk/galaxy-7-running-shoes/ID8754.html",
+     "https://www.adidas.de/en/galaxy-7-running-shoes/ID8754.html"
+    ],
+    "via": "web",
+    "by": "claude",
+    "weight_basis": "US_M9",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): adidas ID8754(우리 품번) 'Weight: 319 g (size UK 8.5)' — UK 8.5 = US M9 | ID8768 278g UK5.5 는 다른 품번 | adidas 는 sources.yaml unknown 이라 검색 결과만"
+   },
+   "drop_mm": {
+    "action": "use_source",
+    "value": 6,
+    "source": "https://www.adidas.com/bh/en/galaxy-7-running-shoes/ID8754.html",
+    "sources_more": [
+     "https://www.adidas.co.uk/galaxy-7-running-shoes/ID8754.html"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ID8754 'Midsole drop: 6 mm (heel 35 mm / forefoot 29 mm)'"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 35,
+    "source": "https://www.adidas.com/bh/en/galaxy-7-running-shoes/ID8754.html",
+    "sources_more": [
+     "https://www.adidas.co.uk/galaxy-7-running-shoes/ID8754.html"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ID8754 heel 35 mm / forefoot 29 mm | 34/28 은 ID8768(작은 사이즈 · 다른 품번)"
    }
   },
   "adidas:galaxy#6": {
@@ -6612,6 +6682,97 @@
      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음(노바블라스트 5 TR 은 다른 판) · 아식스 국내몰 검색은 6 만. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
     }
    }
+  },
+  "asics:gel-contend#10": {
+   "drop_mm": {
+    "action": "use_source",
+    "value": 8,
+    "source": "https://www.asics.com/us/en-us/gel-contend-10/p/ANA_1011C249-003.html",
+    "sources_more": [
+     "https://www.asics.com/ca/en-ca/gel-contend-10-1011c249-003",
+     "https://www.asics.com/au/en-au/gel-contend-10/p/AOP_1011C249-002.html"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ASICS US · CA · AU 남성 1011C249 Heel Drop 8 mm · 317 g(국내몰 무게와 같음) | 1012C013(284g)은 다른 품번이라 안 씀 | 브랜드 페이지"
+   }
+  },
+  "asics:gt-2000#15": {
+   "drop_mm": {
+    "action": "use_source",
+    "value": 8,
+    "source": "https://www.asics.com/us/en-us/gt-2000-15/p/ANA_1011C235-401.html",
+    "sources_more": [
+     "https://www.asics.com/ca/en-ca/gt-2000-15-1011c235-401",
+     "https://www.fleetfeet.com/products/mens-asics-gt-2000-v15",
+     "https://www.roadrunnersports.com/product/49926/mens-asics-gt2000-15"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ASICS US · CA · AU Heel Drop 8 mm · 소매점 2곳 8 mm | solereview GTX 페이지 근거를 대신한다 | 브랜드 페이지"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 38,
+    "source": "https://www.asics.com/nz/en-nz/gt-2000-15-mens-1011c235-003",
+    "sources_more": [
+     "https://www.asics.com/us/en-us/blog/gt-2000-everything-you-need-to-know/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자(2026-11-02): 38/30 — 브랜드 우선. 아식스 NZ '38-30mm' · US 비교표 'M 30 – 38 mm' | Fleet Feet · Road Runner Sports 37/29, Confluence 40/32 는 안 씀"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "FF Blast Max",
+    "source": "https://www.asics.com/us/en-us/gt-2000-15/p/ANA_1011C235-401.html",
+    "sources_more": [
+     "https://www.asics.com/ca/en-ca/gt-2000-15-1011c235-003"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 아식스 US 'softer FF BLAST MAX midsole' | solereview GTX 판 근거를 대신한다 | 국내몰은 미드솔 · 아웃솔 칸이 바뀌어 있어 안 씀"
+   }
+  },
+  "nike:downshifter#14": {
+   "weight_g": {
+    "action": "clear",
+    "by": "user",
+    "note": "사용자(2026-11-02): 나이키 공시 358g(Men's US 10)은 실측 303~315g보다 40g 넘게 무겁다 — 다른 사이즈 기준으로 보인다. 사이즈 기준을 확인할 수 없으면 비운다"
+   },
+   "drop_mm": {
+    "action": "use_source",
+    "value": 10,
+    "source": "https://www.nike.com/t/downshifter-14-mens-road-running-shoe-wrouoOtz",
+    "sources_more": [
+     "https://www.nike.com/gb/t/downshifter-14-mens-road-running-shoe-iNaf9EJh"
+    ],
+    "via": "web",
+    "by": "claude",
+    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Heel-to-toe drop: 10mm' 지역 페이지 공통 | 나이키는 검색 결과만"
+   }
+  },
+  "asics:sonicblast#2": {
+   "weight_g": {
+    "action": "use_source",
+    "value": 241,
+    "source": "https://believeintherun.com/shoe-reviews/asics-sonicblast-2-review/",
+    "sources_more": [],
+    "weight_basis": "US_M9",
+    "by": "user",
+    "note": "사용자(2026-11-02): 241g — M9 명시 + 8.5oz 와 맞음 | 국내 공식몰 242(사이즈 불명) · fit2run 245(사이즈 불명)"
+   }
+  },
+  "salomon:genesis#2": {
+   "weight_g": {
+    "action": "use_source",
+    "value": 281,
+    "source": "https://salomon.co.kr/products/l45474200",
+    "sources_more": [],
+    "weight_basis": "unknown",
+    "by": "user",
+    "note": "사용자(2026-11-02): 국내 공식몰 281g 유지. BITR 은 264g 과 9.6oz(272g)가 같은 글에서 안 맞는다 — 자기모순인 출처는 쓰지 않는다"
+   }
   }
  },
  "existing_price": {
@@ -6997,6 +7158,22 @@
    "source": "goat",
    "by": "user",
    "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외) · 품번은 GOAT 1000541D699 에서 브룩스 형식(모델 6자리 · 1D 발볼 · 699 색상)대로 모델 번호만"
+  },
+  "asics:gt-2000#15": {
+   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/361/original/1011C235800.png.png",
+   "sku": "1011C235",
+   "title": "ASICS GT 2000 15 'Energy Orange Orange Glow'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙)"
+  },
+  "asics:sonicblast#2": {
+   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/370/original/1011C244100.png.png",
+   "sku": "1011C244",
+   "title": "ASICS Sonicblast 2 'White Stadium Orange'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙) · 남성 일반판은 이 한 가지뿐"
   }
  },
  "seed_only_price_meta": {
