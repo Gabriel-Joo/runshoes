@@ -7174,6 +7174,62 @@
    "source": "goat",
    "by": "claude",
    "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙) · 남성 일반판은 이 한 가지뿐"
+  },
+  "nike:acg-zegama#1": {
+   "image": "https://images.stockx.com/images/Nike-ZoomX-ACG-Zegama-Cream-Light-Orewood-Brown.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776437634",
+   "sku": "HV8113-200",
+   "title": "Nike ZoomX ACG Zegama Cream Light Orewood Brown",
+   "note": "사용자(2026-11-02) \"하이킹판(IO7854-201)이 들어가 있다. 러닝용 제가마 사진으로 바꿔라. 캐시에 있으면 그걸\" → 캐시된 KicksDB 결과(검색어 'Nike ACG Zegama')의 러닝용 남성 HV8113 중 순위가 가장 앞선 것(rank 7181, Claude 가 사진 확인)",
+   "was": "Nike ACG Zegama Hike Cream Light Orewood Brown (IO7854-201) — 하이킹판, 다른 모델"
+  },
+  "asics:superblast#2": {
+   "image": "https://images.stockx.com/images/ASICS-Superblast-2-Wave-Teal-Illuminate-Mint-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1739912881",
+   "sku": "1013A142-400",
+   "title": "ASICS Superblast 2 Wave Teal Illuminate Mint",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "ASICS Superblast 2 Ekiden Vital Green Black (1013A185-300) — 에키덴 팩(특별판)"
+  },
+  "hoka:mafate#4": {
+   "image": "https://images.stockx.com/images/Hoka-One-One-Mafate-Speed-4-Castlerock-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1730261339",
+   "sku": "1129930-CKBC",
+   "title": "Hoka One One Mafate Speed 4 Castlerock Black",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "Hoka One One Mafate Speed 4 Lite Charcoal Grey Jade (1168450-CJD) — Mafate Speed 4 Lite — 라이트판, 다른 모델"
+  },
+  "saucony:endorphin-azura#1": {
+   "image": "https://images.stockx.com/images/Saucony-Endorphin-Azura-Triple-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1791926007",
+   "sku": "S101329-1044",
+   "title": "Saucony Endorphin Azura Triple Black",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "Saucony Endorphin Azura Sydney (S101329-1047) — Sydney — 도시 한정판"
+  },
+  "brooks:adrenaline-gts#25": {
+   "image": "https://images.stockx.com/images/Brooks-Adrenaline-GTS-25-Green-Moonlight-Phantom.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1768107009",
+   "sku": "110454-1D-438",
+   "title": "Brooks Adrenaline GTS 25 Green Moonlight Phantom",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "Brooks Adrenaline GTS 25 25th Anniversary Edition Silver (110454-1D-184) — 25th Anniversary Edition — 기념판"
+  },
+  "on:cloudboom-strike#2": {
+   "image": "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168",
+   "sku": "3UG30052929",
+   "title": "On Running Cloudboom Strike 2 White Lime",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "On Running Cloudboom Strike 2 LS White Lime (3UG30022929) — LS(LightSpray)판 — 다른 모델"
+  },
+  "mizuno:wave-rider#29": {
+   "image": "https://images.stockx.com/images/Mizuno-Wave-Rider-29-Estate-Blue-White-Lighning-Yellow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1779817164",
+   "sku": "J1GC250353",
+   "title": "Mizuno Wave Rider 29 Estate Blue White Lighning Yellow",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "Mizuno Wave Rider 29 Amsterdam Black All Aboard High Risk Red (J1GC256201) — Amsterdam — 도시 한정판"
+  },
+  "salomon:aero-glide#3": {
+   "image": "https://images.stockx.com/images/Salomon-Aero-Glide-3-Black-Black-Ftw-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1777749171",
+   "sku": "L47866000",
+   "title": "Salomon Aero Glide 3 Black Black Ftw Silver",
+   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+   "was": "Salomon Aero Glide 3 GRVL Phantom Black Black (L47869300) — GRVL — 그래블판, 다른 모델"
   }
  },
  "seed_only_price_meta": {
