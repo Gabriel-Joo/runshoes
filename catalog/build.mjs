@@ -92,6 +92,14 @@ function priceMeta(url, note) {
   return { source: null, checked_at: null, kind: null };
 }
 const specs = new Map();
+// 작은 무게 차이 정리(아래 병합) — 순위: US M9(_weightBasis 없음) 0 → 다른 사이즈 2 → 사이즈 불명 4, 국내 공식몰(sources.yaml 호스트)이면 1 앞선다
+const STORE_HOSTS = new Set([...fs.readFileSync(path.join(ROOT, 'sources.yaml'), 'utf8').matchAll(/^\s*-?\s*host:\s*([^\s#]+)/gm)].map((m) => m[1]));
+const smallWeightGap = (a, b) => Math.abs(a - b) <= 5 || Math.abs(a - b) / Math.max(a, b) <= 0.02;
+const weightRank = (r) => {
+  const base = r._weightBasis === 'unknown' ? 4 : r._weightBasis ? 2 : 0;
+  let host = null; try { host = new URL(r.sources?.weight_g).host; } catch { /* 출처 없음 */ }
+  return base - (STORE_HOSTS.has(host) ? 1 : 0);
+};
 for (const f of fs.existsSync(WORK) ? fs.readdirSync(WORK).filter((x) => /^specs-.*\.jsonl$/.test(x)) : []) {
   for (const line of fs.readFileSync(path.join(WORK, f), 'utf8').split('\n')) {
     if (!line.trim()) continue;
@@ -109,6 +117,12 @@ for (const f of fs.existsSync(WORK) ? fs.readdirSync(WORK).filter((x) => /^specs
       if (prev[k] === undefined || prev[k] === null) { prev[k] = s[k]; (prev.sources ??= {})[k] = s.sources?.[k]; if (prev.missing) delete prev.missing[k]; if (k === 'weight_g') { if (s._weightBasis) prev._weightBasis = s._weightBasis; else delete prev._weightBasis; } }  // 무게 사이즈 판정(감사)도 값과 함께 옮긴다(2026-10-24: 공식몰 '사이즈 불명' 값이 M9 로 붙던 것)
       // 와이드: 증명되지 않은 false(공식몰 확인이 아닌 것)는 페이지 근거가 있는 true 에 진다 — 충돌이 아니다
       else if (k === 'wide_available' && prev[k] === false && s[k] === true && !prev._wideProven) { prev[k] = true; prev.sources[k] = s.sources?.[k]; }  // 증명되지 않은 false 는 페이지 근거가 있는 true 에 진다
+      // 무게만: 2% 또는 5g 이내 차이는 우선순위로 고른다(2026-11-02 사용자) — M9 → 다른 사이즈 → 사이즈 불명, 같으면 국내 공식몰. 진 값은 weight_notes 에 남긴다
+      else if (k === 'weight_g' && prev[k] !== s[k] && smallWeightGap(prev[k], s[k]) && weightRank(s) !== weightRank(prev)) {
+        const win = weightRank(s) < weightRank(prev) ? s : prev, lose = win === s ? prev : s;
+        (prev.weight_notes ??= []).push(`${lose[k]} (${lose.sources?.[k]}) — ${win[k]} 에 졌다(작은 차이 · 우선순위)`);
+        if (win === s) { prev[k] = s[k]; prev.sources[k] = s.sources?.[k]; if (s._weightBasis) prev._weightBasis = s._weightBasis; else delete prev._weightBasis; }
+      }
       else if (prev[k] !== s[k]) (prev.conflicts ??= []).push(`${k}: ${prev[k]} vs ${s[k]} (${s.sources?.[k]})`);
       else if (k === 'weight_g' && prev._weightBasis === 'unknown' && s._weightBasis !== 'unknown' && s.sources?.[k]) { prev.sources[k] = s.sources[k]; delete prev._weightBasis; }  // 같은 값을 US M9 출처가 확인
     }
