@@ -2407,34 +2407,34 @@
   ],
   "adidas:duramo-sl#1": [
    {
-    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Royal-Blue-Cloud-White-Core-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747691752",
-    "sku": "FW8678",
-    "title": "adidas Duramo SL Royal Blue Cloud White Core Black",
-    "iou": 0.814
-   },
-   {
-    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Core-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120656",
-    "sku": "G58108",
-    "title": "adidas Duramo SL Core Black",
-    "iou": 0.809
-   },
-   {
-    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Lucid-Blue-Zero-Metalic-Impact-Orange.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1747691790",
-    "sku": "IH8214",
-    "title": "adidas Duramo SL Lucid Blue Zero Metalic Impact Orange",
-    "iou": 0.82
-   },
-   {
-    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Halo-Silver-Cloud-White-Grey.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120598",
-    "sku": "IE9689",
-    "title": "adidas Duramo SL Halo Silver Cloud White Grey",
-    "iou": 0.845
-   },
-   {
-    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Cloud-White-Aurora-Met-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1727720426",
+    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Cloud-White-Aurora-Met-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1727720426",
     "sku": "IF1201",
     "title": "adidas Duramo SL Cloud White Aurora Met. Solar Red",
-    "iou": 0.841
+    "iou": 0.975
+   },
+   {
+    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Core-Black-Cloud-White.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120945",
+    "sku": "IE7261",
+    "title": "adidas Duramo SL Core Black Cloud White",
+    "iou": 0.944
+   },
+   {
+    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Core-Black-Cloud-White-Carbon.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120475",
+    "sku": "ID9849",
+    "title": "adidas Duramo SL Core Black Cloud White Carbon",
+    "iou": 0.959
+   },
+   {
+    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Cloud-White-Core-Black-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120766",
+    "sku": "IE7262",
+    "title": "adidas Duramo SL Cloud White Core Black Grey",
+    "iou": 0.961
+   },
+   {
+    "url": "https://images.stockx.com/images/adidas-Duramo-SL-Lucid-Lemon-Core-Black-Wonder-Blue.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1717120659",
+    "sku": "IF7256",
+    "title": "adidas Duramo SL Lucid Lemon Core Black Wonder Blue",
+    "iou": 0.963
    }
   ],
   "adidas:duramo-speed#2": [
