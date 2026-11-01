@@ -286,6 +286,14 @@ StockX의 `rank` · `weekly_orders`는 쓰지 않는다. 러닝화는 주간 거
 
 > **GOAT 추가(2026-11-01 사용자):** StockX 에 없는 세대만 KicksDB `v3/goat` 의 `image.goat.com` 원본(1000×1000 PNG, 측면 · 앞코 오른쪽 · 흰 바탕 — 외부 Referer 200, `access-control-allow-origin: *`)을 핫링크한다. 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외), `decisions.json image_overrides` 에 `source: "goat"`. 크기 인자가 없어 원본 그대로 — 정사각에 신발이 가로 약 85% 라 StockX(98%)보다 작게 보인다. **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX" · "Image: GOAT"(`ShoeGallery` creditOf). 여성용 · 변형 색상은 쓰지 않는다(신발 모양이 다를 수 있다), 국내 공식몰 사진도 쓰지 않는다(사용자)
 
+> **같은 모델 다른 색상(2026-11-02 사용자):** 대표 이미지 뒤에 같은 모델의 다른 색상을 붙인다(대표 포함 6장까지). 대표는 그대로 두고, 관리 화면에서 고친 신발(`via: admin` · `images`)에는 붙이지 않는다. 결과는 `catalog/extra-images.json`(켤레별 URL · 품번 · 제목 · IoU), `build.mjs` 가 붙인다.
+> - **1단계 후보**(`colors-plan.mjs`, KicksDB 캐시만 — 5장 미만 131켤레는 같은 검색어 limit 100 으로 한 번 더 물었다): 남성만, 수집기 `judge`(같은 라인 · 세대), 자리표시 이미지 제외. 품번 모델 부분이 같아야 한다 — 형식이 있는 브랜드(아식스 · 나이키 · 호카 · 브룩스 · 사우코니 · 푸마 · 알트라 · 언더아머 + 온 앞 7자 · 미즈노 앞 8자). 아디다스 · 뉴발란스 · 살로몬 · 머렐은 색상마다 번호가 따로라 제목으로만 본다(사용자).
+> - **낱말 제외**(모델 이름 · 대표 제목에 있는 낱말은 예외): 변형판(GRVL · Hike · Mid · Max · GTS · ATR · Low · Lightspray · LS · Evo · Ultra · Elite · Plus · Trail · Lite · Speed · Pro · SL · X · SC · 모델 이름에 없는 `+`), 특별판(Edition · Limited · SE · Collection · Premium · QS · Olympic · Lunar · Year of the · L'Art · Ekiden · Edo · Vaporous · 도시 이름 — Tokyo · Paris · Hong Kong …), 콜라보(Satisfy · Bape · White Mountaineering …). 애매하면 버린다 — 색 이름(Speed Blue · Black Lunar)도 빠진다.
+> - **2단계 실루엣 대조**(`silhouette.py`, 이미지 CDN 만 · 메모리에서만): 흰 바탕과 다른 픽셀로 윤곽을 뽑아 128×64 로 맞추고 대표와 IoU. **0.80 이상 · 박스 모양 아님**(윤곽이 외곽 사각형을 90% 넘게 채우면 박스 사진)이면 통과. 가로세로 비율은 보지 않는다(크롭 차이). 밝기도 보지 않는다 — 표본 298쌍에서 상관 0.14. 샘플을 보며 0.90 → 0.80 으로 내렸다(0.85 · 0.80 제외 샘플이 거의 같은 모델 — 사용자). 윤곽이 같은 특별판은 이 단계가 못 잡으니 낱말이 거른다.
+> - **결과(2026-11-02):** 238켤레 955장(대표 포함 6장 147켤레). GT-2000 15 는 GOAT 4색. 운영 PATCH 238(이미지 칸만, 수정 이력 없음).
+> - **대표 점검**도 같이 했다 — 대표 제목에 변형 · 특별판 낱말이 있거나 품번 계열이 같은 세대 대부분과 다른 것: ACG 제가마 1(하이킹판) · 슈퍼블라스트 2(에키덴) · 마파테 4(Speed 4 Lite) · 엔돌핀 아주라(Sydney) · 아드레날린 GTS 25(25주년판) · 클라우드붐 스트라이크 2(LS) · 웨이브 라이더 29(Amsterdam) · 에어로 글라이드 3(GRVL) · 아그라빅 스피드 1(2018년 옛 모델 — 스펙 출처 BITR 2024-06 리뷰가 새 모델)을 같은 세대 남성 일반판으로 바꿨다(`image_overrides` 의 `was`).
+> - KicksDB 요청은 `local/work/kicksdb-usage.log` 에 남긴다(시각 · 엔드포인트 · 검색어 · `X-Quota-Current`, 키 값 없음). 헤더에 리셋 날짜가 없고 달력 월로 리셋되지 않았다(11-01 UTC 뒤에도 848) — 남은 몫은 비상용 · 새 현행 세대 대표에 먼저 쓴다(사용자).
+
 **시험 결과(2026-10-21, 20/20):**
 - 20장 모두 네 귀퉁이가 **`#FFFFFF`**다. 배경 인자를 빼도 원본 사진이 흰 배경이다.
 - 모두 측면 사진이고 **앞코가 오른쪽**이다(사용자 육안 확인).
