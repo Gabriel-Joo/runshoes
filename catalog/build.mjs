@@ -46,7 +46,8 @@ for (const [id, o] of Object.entries(JSON.parse(fs.readFileSync(path.join(ROOT, 
   if (o.none) stockx[id] = { status: 'review', reason: o.reason ?? 'no_clean_image' };
   // sku · title 은 판단에 적힌 것이 있을 때만 바꾼다(다른 StockX 상품으로 바꾼 이미지). 관리 화면에서 고친 이미지(via admin)에는 없어
   //   예전에는 undefined 로 덮어 sku 가 지워졌다(2026-11-01 사용자 — sku 는 모델을 가리키고 이미지와 별개다). 없으면 StockX 조회 결과 그대로
-  else stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku ?? stockx[id]?.sku, title: o.title ?? stockx[id]?.title, gender: 'men' };
+  //   관리 화면 판단에 품번이 없으면 그 판단이 덮은 이전 판단(previous)의 품번을 잇는다(2026-11-02: 슈퍼블라스트 2 대표를 화면에서 바꾸자 품번이 에키덴 1013A185 로 되돌아갔다)
+  else stockx[id] = { ...(stockx[id] ?? {}), status: 'ok', reason: undefined, image: o.image, sku: o.sku ?? o.previous?.sku ?? stockx[id]?.sku, title: o.title ?? o.previous?.title ?? stockx[id]?.title, gender: 'men' };
 }
 // 감사(audit.mjs) 결과는 파일 · 행마다 있다(<file>::<id>) — 읽을 때 그 기록에 먼저 적용한 뒤 합친다
 const audit = fs.existsSync(path.join(WORK, 'audit.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'audit.json'), 'utf8')) : {};
