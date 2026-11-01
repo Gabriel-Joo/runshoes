@@ -1,0 +1,44 @@
+{
+  "id": "X120",
+  "plan": null,
+  "name": "모르는 출처 코드 → 400(받는 코드 아홉을 알린다)",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/2",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "specSources": {
+        "width": {
+          "code": "XYZ"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 01 Nov 2026 22:59:59 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "specSources.width.code 는 BITR · RSG · STORE · PR · WEB · MAN · DB · SX · NOTFOUND 중 하나",
+      "code": "invalid"
+    }
+  }
+}

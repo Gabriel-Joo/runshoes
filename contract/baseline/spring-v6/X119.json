@@ -1,0 +1,44 @@
+{
+  "id": "X119",
+  "plan": null,
+  "name": "NOTFOUND 를 무게 출처에 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/2",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "specSources": {
+        "weight": {
+          "code": "NOTFOUND"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 01 Nov 2026 22:59:59 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "검색 결과 없음(NOTFOUND)은 와이드 모델 출처에만 쓴다(weight)",
+      "code": "invalid"
+    }
+  }
+}
