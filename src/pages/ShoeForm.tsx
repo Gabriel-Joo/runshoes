@@ -16,10 +16,11 @@ const WIDTHS = ["좁음", "보통", "넓음"];
 const WEIGHT_SIZES = ["M9", "M9.5", "M10", "M10.5", "M8.5"];
 const GENDERS: [string, string][] = [["men", "남성"], ["women", "여성"], ["unisex", "공용"]];
 // 스펙 출처 — 고를 수 있는 것. DB · SX 는 기존 값에만 회색으로 보인다(고를 수 없다)
-const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(국내 공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서)"], ["MAN", "MAN(직접 확인)"]];
+//   WEB · MAN 은 둘 다 주소를 적는다 — 가르는 것은 누가 확인했나(2026-11-02 사용자): WEB = Claude 가 검색해 찾은 값, MAN = 관리자가 직접 보고 넣은 값
+const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(국내 공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서 · Claude 검색)"], ["MAN", "MAN(직접 확인 · 관리자)"]];
 const LEGACY_CODES: Record<string, string> = { DB: "DB(기존 값)", SX: "SX(StockX)" };
 // 가격 출처 — 종류는 늘 '발매가'(2026-10-30 '정가'에서 통일). 기존 '다나와'는 회색으로만
-const PRICE_SOURCES = ["공식몰", "ABC마트", "크림", "직접 확인"];   // 직접 확인 — 공식몰에서 내려간 모델을 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인(2026-11-01)
+const PRICE_SOURCES = ["공식몰", "ABC마트", "크림", "MAN(직접 확인)"];   // 판매처 이름 셋 + MAN(직접 확인) — 공식몰에서 내려간 모델을 관리자가 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인(2026-11-01, 이름은 11-02 스펙 출처와 맞춤)
 // 이미지 — 목록 하나, 칸 하나에 주소 하나, 첫 번째가 대표(2026-10-30 사용자). 6개까지(서버도 400).
 //   저장: images = 빈 칸을 뺀 목록, image = 그 첫 번째(1번이 비면 다음 것이 대표, 다 비면 이미지 없음 ""). DB 는 그대로(images[0] = image)
 const MAX_IMAGES = 6;
@@ -56,7 +57,7 @@ function Thumb({ src }: { src: string }) {
   );
 }
 
-/** 출처 드롭다운 — WEB · MAN 을 고르면 주소 칸이 나온다(WEB 은 필수) */
+/** 출처 드롭다운 — WEB · MAN 을 고르면 주소 칸이 나온다(둘 다 필수 — 예전에 주소 없이 넣은 MAN 은 그대로 둘 수 있다) */
 function SourcePicker({ id, value, onChange }: { id: string; value: Source; onChange: (s: Source) => void }) {
   const legacy = value.code && LEGACY_CODES[value.code];
   return (
@@ -87,7 +88,7 @@ function SourcePicker({ id, value, onChange }: { id: string; value: Source; onCh
           inputMode="url"
           value={value.url}
           onChange={(e) => onChange({ ...value, url: e.target.value })}
-          placeholder={value.code === "WEB" ? "https://… (필수)" : "https://… (본 화면 주소, 선택)"}
+          placeholder={value.code === "WEB" ? "https://… (찾은 문서 주소, 필수)" : "https://… (직접 본 화면 주소, 필수)"}
         />
       )}
     </div>
@@ -219,8 +220,10 @@ function ShoeForm() {
     for (const f of SPEC_FIELDS) {
       const s = sources[f];
       if (s.code === "WEB" && !/^https?:\/\/\S+$/.test(s.url.trim())) return `${LABEL[f]} 출처가 WEB 이면 주소(https://…)를 넣어 주세요.`;
-      if (s.code === "MAN" && s.url.trim() && !/^https?:\/\/\S+$/.test(s.url.trim())) return `${LABEL[f]} 출처 주소는 https:// 로 시작해야 해요.`;
       const was = loaded?.specSources?.[f]?.code;
+      // 예전에 주소 없이 넣은 MAN(11칸)은 그대로 저장된다 — 새로 고른 MAN 만 주소가 필수다
+      const legacyMan = was === "MAN" && !loaded?.specSources?.[f]?.url && !s.url.trim();
+      if (s.code === "MAN" && !legacyMan && !/^https?:\/\/\S+$/.test(s.url.trim())) return `${LABEL[f]} 출처가 MAN 이면 직접 본 화면의 주소(https://…)를 넣어 주세요.`;
       if (was && LEGACY_CODES[was] && !s.code && specValue[f] !== null) return `${LABEL[f]} 값을 바꿨어요 — 새 출처를 골라 주세요(${LEGACY_CODES[was]}는 고를 수 없어요).`;
     }
     if (price && priceSource && !priceCheckedAt) return "가격을 확인한 날을 넣어 주세요.";
@@ -467,6 +470,7 @@ function ShoeForm() {
       </div>
 
       <h3 className="form__section">스펙</h3>
+      <p className="form__hint">출처의 WEB(웹 문서)은 Claude가 검색해서 찾은 값, MAN(직접 확인)은 관리자가 직접 보고 넣은 값이에요. 둘 다 주소를 적어요 — 가르는 것은 누가 확인했나예요.</p>
       <div className="form__rows">
         <Row label="중량" htmlFor="f-weight" source={<SourcePicker id="s-weight" value={sources.weight} onChange={(s) => setSource("weight", s)} />}>
           <span className="form__unit">

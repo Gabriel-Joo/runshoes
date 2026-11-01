@@ -1,6 +1,6 @@
 // 사람이 채울 작업 파일 하나(2026-10-21): 신발 하나 = 한 줄(line_key + generation). 출처는 약자 코드, 실제 URL 은 todo-sources.csv
-//   코드(2026-10-23): BITR believeintherun · RSG runningshoesguru · STORE 브랜드 국내 공식몰 · PR 보도자료 · WEB 사람이 웹 검색(Claude)으로 찾음(URL 있음)
-//                     · MAN 사람이 직접 확인 · DB 기존 DB(다나와 입력) · SX StockX. solereview 는 소스에서 뺐다(사람 판단에 남은 것만 SOLE)
+//   코드(2026-10-23): BITR believeintherun · RSG runningshoesguru · STORE 브랜드 국내 공식몰 · PR 보도자료 · WEB 웹 문서 — Claude 가 검색해 찾은 값(URL 있음)
+//                     · MAN 직접 확인 — 사람이 보고 넣은 값(URL 을 적는다, 2026-11-02 사용자: 둘을 가르는 것은 누가 확인했나) · DB 기존 DB(다나와 입력) · SX StockX. solereview 는 소스에서 뺐다(사람 판단에 남은 것만 SOLE)
 //   WEB 과 MAN 은 decisions.json 의 via('web' | 'manual')로 가른다. WEB 의 URL 은 사람이 찾은 것이라 fetch 로 다시 읽지 않는다(차단 호스트일 수도 있다)
 //   입력 칸(맨 뒤): '<필드> 입력' 에 값, '<필드> 입력출처' 에 'WEB <URL>' 또는 'MAN'(URL 이 있으면 'MAN <URL>'). 무게는 '무게 사이즈'(M9 · M10 · W7.5 …, 모르면 비움 = 기준불명)
 //   값은 shoes.jsonl 의 공시값(official_weight_g · official_drop_mm · official_heel_mm)이다

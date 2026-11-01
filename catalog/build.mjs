@@ -235,6 +235,8 @@ for (const [id, f] of Object.entries(DEC.rows)) if (f.wide_available?.action ===
 //   official_weight_size: 'M9' · 'M10.5' …, 출처가 사이즈를 밝히지 않으면 null. official_spec_size(스택 · 드롭 기준 사이즈)는 제조사가 밝히지 않아 null — M9 라고 단정하지 않는다
 //   _review · _missing 의 낱말(weight · drop · stackHeight)은 안쪽 진단용으로 그대로 둔다
 const SRC_DB = { weight: 'official_weight_g', drop: 'official_drop_mm', stackHeight: 'official_heel_mm', width: 'toebox_width' };
+// 판단 칸 이름(decisions.json) → 행 sources 칸 이름 — 직접 확인(MAN) 표시용
+const MANUAL_KEY = { weight_g: 'official_weight_g', drop_mm: 'official_drop_mm', stack_heel_mm: 'official_heel_mm', midsole: 'midsole', width: 'toebox_width', wide_available: 'wideAvailable' };
 //   측정값은 사람이 decisions.json 에 적은 것만(measured_weight_g: {value, size, source}) — 공식값과 측정값이 다를 때 둘 다 둔다(2026-10-23 사용자).
 //   어느 쪽을 화면에 쓸지는 비교 페이지에서 정한다
 function toDb(row) {
@@ -307,6 +309,9 @@ for (const c of cands) {
   for (const f of ['line_key', 'generation', 'gender']) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[f] = d.value; }
   //   스펙 출처(V6) — 관리 화면에서 고른 것(pull-admin.mjs spec_sources). 없으면 적재기가 sources 에서 만든다(live-fields.mjs specSourcesOf)
   if (DEC.rows[id]?.spec_sources?.action === 'use_source') row.spec_sources = DEC.rows[id].spec_sources.value;
+  //   사람이 직접 보고 넣은 판단(via manual)의 칸 — 출처가 웹 주소여도 MAN(직접 확인)이다(2026-11-02 사용자: WEB = Claude 가 검색해 찾은 값, MAN = 사람이 보고 넣은 값)
+  const man = Object.entries(DEC.rows[id] ?? {}).filter(([k, d]) => d?.action === 'use_source' && d.via === 'manual' && MANUAL_KEY[k]).map(([k]) => MANUAL_KEY[k]);
+  if (man.length) row.manual_sources = man;
   //   품번(V11) — 관리 화면에서 고친 것(pull-admin.mjs sku). 없으면 StockX 조회 결과
   if (DEC.rows[id]?.sku?.action === 'use_source') row.sku = DEC.rows[id].sku.value;
   else if (DEC.rows[id]?.sku?.action === 'clear') row.sku = null;
