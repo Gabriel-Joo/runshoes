@@ -325,6 +325,9 @@ for (const c of cands) {
   //   품번(V11) — 관리 화면에서 고친 것(pull-admin.mjs sku). 없으면 StockX 조회 결과
   if (DEC.rows[id]?.sku?.action === 'use_source') row.sku = DEC.rows[id].sku.value;
   else if (DEC.rows[id]?.sku?.action === 'clear') row.sku = null;
+  //   와이드가 어디에 나오나(V12, 2026-11-02 사용자) — 관리 화면 값(wide_scope) → 재조사 판단의 scope. 와이드가 있을 때만(없음 · 정보 없음이면 null)
+  const ws = DEC.rows[id]?.wide_scope;
+  row.wideScope = row.wideAvailable !== true ? null : ws?.action === 'use_source' ? ws.value : ws?.action === 'clear' ? null : DEC.rows[id]?.wide_available?.scope ?? null;
   row.catalog_key = `${row.line_key}:${row.generation}`;
   // 관리 화면에서 고친 대표 · 추가 이미지(pull-admin.mjs) — 둘 다 그대로 낸다(대표가 추가 목록의 첫 장이 아닐 수 있다)
   const io = DEC.image_overrides?.[id];

@@ -98,6 +98,10 @@ public class Shoe {
 	@Column(name = "wide_available")
 	private Boolean wideAvailable;
 
+	/** 와이드가 있을 때 어디에 나오나 — domestic · overseas(V12). 없음 · 정보 없음이면 null */
+	@Column(name = "wide_scope")
+	private String wideScope;
+
 	private Boolean carbon;
 	private Double price;
 
@@ -197,6 +201,8 @@ public class Shoe {
 	public void setWidth(String width) { this.width = width; this.legacyWidth = width; }
 	public Boolean getWideAvailable() { return wideAvailable; }
 	public void setWideAvailable(Boolean wideAvailable) { this.wideAvailable = wideAvailable; }
+	public String getWideScope() { return wideScope; }
+	public void setWideScope(String wideScope) { this.wideScope = wideScope; }
 	public Boolean getCarbon() { return carbon; }
 	public void setCarbon(Boolean carbon) { this.carbon = carbon; }
 	public Double getPrice() { return price; }

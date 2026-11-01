@@ -68,6 +68,7 @@ function toBody(r) {
     measuredWeight: r.measured_weight_g, measuredWeightSize: r.measured_weight_size, measuredStackHeight: r.measured_heel_mm,
     measuredDrop: r.measured_drop_mm, measuredSource: r.measured_source, measuredCount: r.measured_count,
     specSources: 'spec_sources' in r ? r.spec_sources : specSourcesOf(r),  // r.spec_sources = 관리 화면에서 고른 출처(build.mjs)
+    wideScope: r.wideScope ?? null,  // V12 — 와이드가 있을 때만 domestic · overseas(build.mjs)
     sku: r.sku ?? null,  // V11 — 관리 화면에서 고친 품번이 있으면 그것(build.mjs)
   };
 }
