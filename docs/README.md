@@ -1,6 +1,6 @@
 # docs/
 
-> 상태: 새 구조로 옮기는 중(2026-11-02). 영역 문서 01a ~ 08 작성(08 은 설계안), 상위 문서(requirements · overview · HISTORY)는 아직 뼈대. 옛 문서는 새 문서가 내용을 넘겨받을 때 `archive/`로 간다 — 지금까지 CATALOG_PIPELINE · API_CONTRACT · DEPLOY · INFRA · SPRING_MIGRATION_PLAN · AUTH_DESIGN · AUTH_RATELIMIT_DESIGN · ADMIN_DEMO_DESIGN · design-prompt · design-handoff · COMPARE_DESIGN. 남은 옛 문서는 HISTORY.md 하나(타임라인으로 바꾼다).
+> 상태: 새 구조로 옮김(2026-11-02). 상위 문서(requirements · overview · HISTORY)와 영역 문서 01a ~ 08 작성(08 은 설계안). 옛 문서 12개는 `archive/` — CATALOG_PIPELINE · API_CONTRACT · DEPLOY · INFRA · SPRING_MIGRATION_PLAN · AUTH_DESIGN · AUTH_RATELIMIT_DESIGN · ADMIN_DEMO_DESIGN · design-prompt · design-handoff · COMPARE_DESIGN · HISTORY(옛 이야기판). 와이드 재조사 결과가 나오면 01a 1-7 을 채운다.
 
 이 폴더는 RUNSHOES 의 설계 문서다. **진실의 원천은 코드다** — 문서는 코드 · 마이그레이션 · 카탈로그 데이터를 읽고 거꾸로 쓴다(역문서화). 코드와 문서가 다르면 코드가 맞고, 문서를 고친다.
 
