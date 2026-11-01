@@ -13,6 +13,8 @@ export interface Shoe {
   // 근거가 없으면 null — 화면은 "정보 없음"(칸을 숨기지 않는다). 기본값('보통' · false)으로 메우지 않는다
   width: string | null;
   wideAvailable: boolean | null;
+  /** 와이드가 있을 때 어디에 나오나(V12) — domestic 국내 · overseas 해외에만. 없음 · 정보 없음 · 예전 값이면 null */
+  wideScope?: "domestic" | "overseas" | null;
   carbon: boolean | null;
 
   price: number | null;
@@ -47,7 +49,7 @@ export interface Shoe {
 }
 
 /** 스펙 출처 코드 — 화면에서 고르는 것(BITR … MAN)과 기존 값에만 보이는 것(DB · SX) */
-export type SourceCode = "BITR" | "RSG" | "STORE" | "PR" | "WEB" | "MAN" | "DB" | "SX";
+export type SourceCode = "BITR" | "RSG" | "STORE" | "PR" | "WEB" | "MAN" | "DB" | "SX" | "NOTFOUND";   // NOTFOUND = 검색 결과 없음(와이드만)
 export type SpecField = "weight" | "drop" | "stackHeight" | "midsole" | "width" | "wideAvailable";
 export type SpecSources = Partial<Record<SpecField, { code: SourceCode; url?: string }>>;
 

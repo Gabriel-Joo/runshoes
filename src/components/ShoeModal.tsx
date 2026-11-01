@@ -4,7 +4,7 @@ import TermTooltip from "./TermTooltip";
 import ReviewSection from "./ReviewSection";
 import ShoeGallery from "./ShoeGallery";
 import ReviewSummary from "./ReviewSummary";
-import { text, withUnit, yesNo } from "../utils/display";
+import { text, wideLabel, withUnit, yesNo } from "../utils/display";
 import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
 import "./ShoeModal.css";
@@ -143,7 +143,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
               </div>
               <div>
                 <dt>와이드 모델</dt>
-                <dd>{yesNo(shoe.wideAvailable)}</dd>
+                <dd>{wideLabel(shoe)}</dd>
               </div>
               <div>
                 <dt>

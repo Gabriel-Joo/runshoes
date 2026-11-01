@@ -9,12 +9,13 @@ import java.util.Set;
  * 스펙 출처(V6 spec_sources) — {"weight":{"code":"BITR","url":"https://…"}, …}. docs/ADMIN_DEMO_DESIGN.md 2.1 · 6.1.
  * 칸: weight · drop · stackHeight · midsole · width · wideAvailable(카본 플레이트는 출처 면제). 다른 칸은 400.
  * 코드: BITR · RSG · STORE · PR · WEB · MAN — 관리 화면이 고른다. DB · SX 는 적재기가 기존 값에만 단다(화면 선택지에는 없다).
+ * NOTFOUND(검색 결과 없음) — 와이드 모델만. 다섯 단계를 다 찾아도 안 나와 "없음"으로 둔 근거(2026-11-02 사용자).
  * url: WEB 은 필수, 나머지는 선택. http(s) 만, 500자까지. 빈 객체 · null 칸은 출처 없음으로 본다(키를 뺀다).
  */
 final class SpecSources {
 
 	static final List<String> FIELDS = List.of("weight", "drop", "stackHeight", "midsole", "width", "wideAvailable");
-	static final Set<String> CODES = Set.of("BITR", "RSG", "STORE", "PR", "WEB", "MAN", "DB", "SX");
+	static final Set<String> CODES = Set.of("BITR", "RSG", "STORE", "PR", "WEB", "MAN", "DB", "SX", "NOTFOUND");   // NOTFOUND = 검색 결과 없음(와이드 "없음", 2026-11-02)
 
 	private SpecSources() {}
 
@@ -37,6 +38,7 @@ final class SpecSources {
 				s.put("url", u);
 			}
 			if (c.equals("WEB") && !s.containsKey("url")) throw ApiException.invalid("출처가 WEB 이면 주소를 넣어 주세요(" + field + ")");
+			if (c.equals("NOTFOUND") && !field.equals("wideAvailable")) throw ApiException.invalid("검색 결과 없음(NOTFOUND)은 와이드 모델 출처에만 쓴다(" + field + ")");
 			out.put(field, s);
 		}
 		return out.isEmpty() ? null : out;

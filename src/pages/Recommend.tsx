@@ -225,7 +225,7 @@ function Recommend() {
         reasons.push({ hit: true, text: "발볼이 넓게 나온 모델이에요" });
       } else if (shoe.wideAvailable) {
         score += 20;
-        reasons.push({ hit: true, text: "와이드 모델이 따로 있어요" });
+        reasons.push({ hit: true, text: shoe.wideScope === "overseas" ? "와이드 모델이 해외에만 있어요" : "와이드 모델이 따로 있어요" });
       } else {
         // 모르는 값을 "보통" · "없어요"로 말하지 않는다(null = 정보 없음)
         const w = shoe.width === null ? "발볼 정보가 없고" : `발볼은 ${shoe.width}이고`;
