@@ -290,6 +290,7 @@ class ShoeCollection implements DocCollection {
 		d.put("stackHeight", s.getStackHeight());
 		d.put("width", s.getWidth());
 		d.put("wideAvailable", s.getWideAvailable());
+		d.put("wideScope", s.getWideScope());
 		d.put("carbon", s.getCarbon());
 		d.put("price", s.getPrice());
 		d.put("image", s.getImage());
@@ -331,6 +332,8 @@ class ShoeCollection implements DocCollection {
 	// 다나와 = 시드 가격 중 ABC · 공식몰에 없는 것(사용자가 넣은 값, 2026-10-29). 크림 = 발매가(2026-10-29).
 	// MAN(직접 확인) = 공식몰에서 내려간 모델을 관리자가 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인한 발매가(2026-11-01, 이름은 2026-11-02 스펙 출처 MAN 과 맞춤 — 운영에 "직접 확인" 값은 없었다)
 	private static final java.util.Set<String> PRICE_SOURCES = java.util.Set.of("공식몰", "ABC마트", "다나와", "크림", "MAN(직접 확인)");
+	// 와이드가 어디에 나오나(V12, 2026-11-02 사용자) — domestic 국내 · overseas 해외에만. 와이드 없음 · 정보 없음이면 null
+	private static final java.util.Set<String> WIDE_SCOPES = java.util.Set.of("domestic", "overseas");
 	private static final java.util.Set<String> PRICE_KINDS = java.util.Set.of("발매가");   // 2026-10-30 사용자 — "정가"를 "발매가"로 통일(크림 발매가 · 공식몰 · ABC마트 정가 모두)
 
 	/** 품번(V11) — 영문 · 숫자와 - . / 공백, 50자까지. 온은 점(71.98674), 미즈노는 두 품번을 / 로(411448-RBUN / U1GD241751) — 카탈로그 실제 값. 빈 칸은 없음(null) */
@@ -391,6 +394,7 @@ class ShoeCollection implements DocCollection {
 				case "stackHeight" -> s.setStackHeight(Values.dbl(k, v));
 				case "width" -> s.setWidth(Values.str(k, v));
 				case "wideAvailable" -> s.setWideAvailable(Values.bool(k, v));
+				case "wideScope" -> s.setWideScope(oneOf(k, v, WIDE_SCOPES));
 				case "carbon" -> s.setCarbon(Values.bool(k, v));
 				case "price" -> s.setPrice(Values.dbl(k, v));
 				case "image" -> s.setImage(Values.str(k, v));
