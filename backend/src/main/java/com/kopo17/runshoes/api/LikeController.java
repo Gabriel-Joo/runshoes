@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 찜 · 리뷰 공감 — PUT 은 켠다, DELETE 는 끈다(몇 번 보내도 같다). 응답 {liked, likeCount} — 숫자는 서버가 센다(예전에는 프런트가 계산해 PATCH 했다).
  * 로그인해야 한다(401 — SecurityConfig). 없는 신발 · 리뷰는 404(숨긴 신발 · 그 리뷰도). 내 리뷰에는 공감할 수 없다(403).
  * 데모 관리자는 403 demo_admin(V7) — 끄는 쪽(DELETE)도 막는다(읽기 전용). 탈퇴한 사람의 남은 토큰(15분)은 401.
- * json-server 계약 밖(docs/AUTH_DESIGN.md 2절).
+ * json-server 계약 밖(docs/04_auth.md).
  */
 @RestController
 @RequestMapping("/api")

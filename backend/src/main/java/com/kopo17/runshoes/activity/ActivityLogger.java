@@ -19,7 +19,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * activity_logs 에 한 줄 — 인증 이력 · 리뷰 · 찜 쓰기 · 조회(docs/AUTH_RATELIMIT_DESIGN.md 3 · 4절).
+ * activity_logs 에 한 줄 — 인증 이력 · 리뷰 · 찜 쓰기 · 조회(docs/04_auth.md).
  * log: 부른 쪽 트랜잭션 안에서 — 롤백된 일의 기록은 남지 않는다.
  * logNow: 따로 커밋 — 401 · 429 로 끝나는 요청(로그인 실패 · 시도 제한 · refresh 재사용)의 기록이 사라지면 시도 제한이 세지 못한다.
  * IP · User-Agent 는 인증 이벤트(auth.* · user.*)에만. 쓰기 · 조회에는 남기지 않는다. request_id 는 ingress 의 X-Request-ID(없으면 새로)

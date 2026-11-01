@@ -1,4 +1,4 @@
-// 적재기 — shoes.jsonl → 관리자 API(docs/CATALOG_PIPELINE.md 7장). 기본은 건조 실행(읽기만): 무엇을 POST · PATCH 할지 계획만 낸다.
+// 적재기 — shoes.jsonl → 관리자 API(docs/01c_catalog_loader.md). 기본은 건조 실행(읽기만): 무엇을 POST · PATCH 할지 계획만 낸다.
 //   node load.mjs [--base http://127.0.0.1:3200] [--host <Host 헤더>] [--only <catalog_key,…>] [--limit N]
 //   운영은 MetalLB VIP 로 — --base http://192.168.122.240 --host runshoes.ronanlab.dev(fetch 는 Host 를 못 바꿔 node:http 로 보낸다)
 //   ADMIN_EMAIL=… ADMIN_PASSWORD=… node load.mjs --apply      # 쓴다 — 넣은 id 와 바꾸기 전 값을 loads/<시각>.json 에

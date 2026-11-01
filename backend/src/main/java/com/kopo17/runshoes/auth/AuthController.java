@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * /api/auth — 가입 · 로그인 · refresh · 로그아웃. json-server 계약 밖(docs/AUTH_DESIGN.md).
+ * /api/auth — 가입 · 로그인 · refresh · 로그아웃. json-server 계약 밖(docs/04_auth.md).
  * 응답: {accessToken, tokenType, expiresIn, user} + refresh 쿠키(HttpOnly · Secure · SameSite=Strict · Path=/api/auth).
  * CSRF: 쿠키가 붙는 곳은 여기뿐 — POST 는 Origin 이 오면 같은 호스트여야 한다(Sec-Fetch-Site: cross-site 도 거절). CORS 는 ApiHeadersFilter 가 주지 않는다.
  */
@@ -77,7 +77,7 @@ class AuthController {
 
 	record DemoBody(Long id) {}
 
-	/** 체험 카드 — 시드 계정 3개(무작위) + 데모 관리자(docs/ADMIN_DEMO_DESIGN.md 8.3). DEMO_LOGIN_ENABLED 가 꺼져 있으면 404 */
+	/** 체험 카드 — 시드 계정 3개(무작위) + 데모 관리자(docs/04_auth.md). DEMO_LOGIN_ENABLED 가 꺼져 있으면 404 */
 	@GetMapping("/demo-accounts")
 	java.util.List<Map<String, Object>> demoAccounts() {
 		return auth.demoAccounts();

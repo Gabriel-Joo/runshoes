@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [05_api_contract.md](../05_api_contract.md) · 스키마 쪽 이유는 [07_database.md](../07_database.md)
+
 # RUNSHOES — API 계약과 설계 근거
 
 RUNSHOES 의 REST API(`/api/shoes`, `/api/reviews`, `/api/terms`)는 **이미 프런트와 맞물려 돌던 API 의 응답을 바이트 수준까지 재현**하도록 만들었다.

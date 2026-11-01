@@ -26,8 +26,8 @@ React · TypeScript 프런트와 Spring Boot · MySQL 백엔드로 만든 러닝
 > **문서 안내**
 >
 > - 이 문서: 애플리케이션 (기획 · 요건 · 데이터 설계 · 화면 · 설계)
-> - [docs/INFRA.md](docs/INFRA.md): 쿠버네티스 · GitOps CI/CD
-> - [docs/API_CONTRACT.md](docs/API_CONTRACT.md): API 계약과 설계 근거 (id 매기기 · 타입 · 헤더가 왜 이런 모양인지)
+> - [docs/06_deployment.md](docs/06_deployment.md): 쿠버네티스 · GitOps CI/CD
+> - [docs/05_api_contract.md](docs/05_api_contract.md): API 계약과 설계 근거 (id 매기기 · 타입 · 헤더가 왜 이런 모양인지)
 > - [docs/HISTORY.md](docs/HISTORY.md): 구축 · 전환 기록 (자체 클러스터 이주, 터널 무중단 전환, 계약 녹화로 검증한 백엔드 전환, 트러블슈팅)
 > - [backend/README.md](backend/README.md) · [contract/README.md](contract/README.md): 백엔드 개발 · 계약 검증
 
@@ -151,7 +151,7 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 
 ### ⑥ 서버 연결
 
-- [x] REST API 서버와 연결 — 과제 요건은 json-server. 같은 API 계약을 **Spring Boot + MySQL**로 구현했다([API_CONTRACT](docs/API_CONTRACT.md))
+- [x] REST API 서버와 연결 — 과제 요건은 json-server. 같은 API 계약을 **Spring Boot + MySQL**로 구현했다([05_api_contract](docs/05_api_contract.md))
 - [x] Vite 개발 서버와 API 서버 **동시** 실행
 - [x] 데이터 = 항목(`shoes`) + 리뷰(`reviews`, `shoeId`로 항목별 구분)
 - [x] 쓰기 후 다시 불러오기 (re-fetch)
@@ -174,7 +174,7 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 - [x] 리뷰를 쓰는 중 로그인이 끝나도 쓰던 내용을 남겨 두고, 다시 로그인하면 같은 신발 모달로 돌아온다
 - [x] 로그인 시도 제한 — 같은 계정 15분 실패 5번 · 같은 IP 20번이면 429(잠긴 동안에는 맞는 비밀번호도), 가입은 같은 IP 1시간 10건. 화면은 남은 시간 동안 버튼을 끈다
 - [x] 활동 로그 — 인증 · 리뷰 · 찜 쓰기 · 신발 조회를 DB 에 남긴다(인증 90일 · 나머지 180일, 매일 정리). 챗봇이 읽을 것
-- 설계와 근거: [docs/AUTH_DESIGN.md](docs/AUTH_DESIGN.md) · API 동작: [API_CONTRACT](docs/API_CONTRACT.md) 2.2
+- 설계와 근거: [docs/04_auth.md](docs/04_auth.md) · API 동작: [05_api_contract](docs/05_api_contract.md) 1-4
 
 ### 요건 외 추가 구현
 
@@ -198,7 +198,7 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 ## 4. 데이터 설계
 
 > 아래는 API가 주고받는 JSON 필드다. 저장은 MySQL 테이블(`backend/src/main/resources/db/migration/` V1 스키마 · V3 계정, 컬럼은 snake_case).
-> 숫자 스펙이 `DOUBLE`, id가 `max+1`, terms id가 겹치는 등 스키마의 특이한 선택은 [API_CONTRACT](docs/API_CONTRACT.md) 1장.
+> 숫자 스펙이 `DOUBLE`, id가 `max+1`, terms id가 겹치는 등 스키마의 특이한 선택은 [05_api_contract](docs/05_api_contract.md) 1-3.
 
 ### shoes
 
@@ -237,7 +237,7 @@ docker compose down -v && docker compose up -d   # 빈 DB — 백엔드를 다�
 
 - **`liked`와 `likeCount`를 분리한 이유**
   `liked`는 요청한 사람이 찜했는지(계정별 — `likes` 테이블, 비로그인은 false), `likeCount`는 총 몇 명이 찜했는지(정렬용, 서버가 센다).
-  리뷰의 "도움이 돼요"도 같다(`review_likes`). 설계: [docs/AUTH_DESIGN.md](docs/AUTH_DESIGN.md)
+  리뷰의 "도움이 돼요"도 같다(`review_likes`). 설계: [docs/04_auth.md](docs/04_auth.md)
 
 - **`image` → `images[]`로 바꾼 이유**
   모달에서 뒤꿈치·밑창·측면 등 여러 각도를 보여주기 위해 배열로 확장했다.
@@ -484,7 +484,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 - Ollama 연동: Pod가 VM 사설망으로 GPU 호스트의 Ollama에 바로 붙는다 — `OLLAMA_URL=http://192.168.122.1:11434`
 - 외부 노출: 클러스터 공용 **Cloudflare Tunnel**(cloudflared, `cloudflared` 네임스페이스) → https://runshoes.ronanlab.dev
 
-자세한 내용은 [docs/INFRA.md](docs/INFRA.md).
+자세한 내용은 [docs/06_deployment.md](docs/06_deployment.md).
 
 ---
 
@@ -504,7 +504,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 | 챗봇          | 파이썬 웹소켓 챗봇 → 사이드카 컨테이너 배포 (`/ws/chat`)             |
 | 인프라        | Cloudflare Tunnel로 사이트 외부 노출, Ollama는 사설망 직접 연결     |
 | 리뷰 요약     | Ollama(gemma4 8B)로 긍정·아쉬운 점 요약 (K8s 프로덕션 동작)        |
-| 로그인        | 가입 · 로그인(JWT) · 계정별 찜 · 공감, 내 리뷰만 수정, 관리 화면은 admin (→ docs/AUTH_DESIGN.md) |
+| 로그인        | 가입 · 로그인(JWT) · 계정별 찜 · 공감, 내 리뷰만 수정, 관리 화면은 admin (→ docs/04_auth.md) |
 
 ### 예정
 
@@ -522,7 +522,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 인프라 직무를 목표로, 기능은 로그인까지 완결한 뒤 힘을 인프라 쪽에 싣는다.
 
-1. **로그인** — 계정 · 권한 · 화면 · 시도 제한 · 활동 로그까지 했다. 챗봇 연결이 남았다(docs/AUTH_DESIGN.md)
+1. **로그인** — 계정 · 권한 · 화면 · 시도 제한 · 활동 로그까지 했다. 챗봇 연결이 남았다(docs/04_auth.md)
 2. **인프라 심화** — Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 · MySQL 백업
 3. **확장 아이디어** — 비교(레이더 차트) · 러닝 앱(React Native) · 게임화
 
@@ -597,7 +597,7 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 ## 12. 데이터 계층과 무중단 배포 — 설계
 
-> "왜 이 구조인가"를 정리한 설계 문서다. API의 세부 모양(id · 타입 · 헤더)이 왜 그런지는 [docs/API_CONTRACT.md](docs/API_CONTRACT.md).
+> "왜 이 구조인가"를 정리한 설계 문서다. API의 세부 모양(id · 타입 · 헤더)이 왜 그런지는 [docs/05_api_contract.md](docs/05_api_contract.md).
 
 ### 12.1 왜 파일 저장소가 아니라 MySQL인가
 

@@ -12,7 +12,7 @@ import "./ShoeForm.css";
 const PURPOSES = ["조깅·회복주", "템포·인터벌", "LSD·장거리", "레이스", "트레일"];
 const STABILITIES = ["중립화", "안정화"];
 const WIDTHS = ["좁음", "보통", "넓음"];
-// 중량 기준 사이즈 — 운영 값이 정확히 이 다섯 + 불명(NULL)이다(docs/ADMIN_DEMO_DESIGN.md 2.1)
+// 중량 기준 사이즈 — 운영 값이 정확히 이 다섯 + 불명(NULL)이다(docs/03_admin.md)
 const WEIGHT_SIZES = ["M9", "M9.5", "M10", "M10.5", "M8.5"];
 const GENDERS: [string, string][] = [["men", "남성"], ["women", "여성"], ["unisex", "공용"]];
 // 스펙 출처 — 고를 수 있는 것. DB · SX 는 기존 값에만 회색으로 보인다(고를 수 없다)

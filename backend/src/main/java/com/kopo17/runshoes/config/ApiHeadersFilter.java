@@ -34,7 +34,7 @@ public class ApiHeadersFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws ServletException, IOException {
 		String path = req.getRequestURI().substring(req.getContextPath().length());
-		// /api/auth — refresh 쿠키가 붙는 곳. 다른 출처에 열지 않는다(ACAO 없음 · credentials 없음, preflight 는 204 만) — docs/AUTH_DESIGN.md
+		// /api/auth — refresh 쿠키가 붙는 곳. 다른 출처에 열지 않는다(ACAO 없음 · credentials 없음, preflight 는 204 만) — docs/04_auth.md
 		if (path.startsWith("/api/auth/")) {
 			res.setHeader("Cache-Control", "no-store");
 			if ("OPTIONS".equals(req.getMethod())) {

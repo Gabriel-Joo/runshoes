@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 /**
  * 429 뒤 기다리는 시간 — 서버가 준 retryAfter(초) 동안 버튼을 끄고, 문구의 "N분"을 남은 시간으로 줄여 보인다.
- * 브라우저에 저장하지 않는다 — 새로고침하면 서버가 다시 알려 준다(docs/AUTH_RATELIMIT_DESIGN.md 5절)
+ * 브라우저에 저장하지 않는다 — 새로고침하면 서버가 다시 알려 준다(docs/04_auth.md)
  */
 export function useCooldown() {
   const [until, setUntil] = useState<number | null>(null);

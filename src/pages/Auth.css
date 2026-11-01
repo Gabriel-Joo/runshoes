@@ -157,7 +157,7 @@
   color: var(--accent);
 }
 
-/* 체험 카드(docs/ADMIN_DEMO_DESIGN.md 8.4) */
+/* 체험 카드(docs/04_auth.md) */
 /* 체험 영역은 로그인 칸(440px)보다 넓게 — 카드 5장이 한 줄에 들어가게(2026-10-30). 가운데 정렬은 그대로 */
 .auth__demo {
   position: relative;
