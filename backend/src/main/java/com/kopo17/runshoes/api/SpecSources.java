@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 스펙 출처(V6 spec_sources) — {"weight":{"code":"BITR","url":"https://…"}, …}. docs/ADMIN_DEMO_DESIGN.md 2.1 · 6.1.
+ * 스펙 출처(V6 spec_sources) — {"weight":{"code":"BITR","url":"https://…"}, …}. docs/03_admin.md
  * 칸: weight · drop · stackHeight · midsole · width · wideAvailable(카본 플레이트는 출처 면제). 다른 칸은 400.
  * 코드: BITR · RSG · STORE · PR · WEB · MAN — 관리 화면이 고른다. DB · SX 는 적재기가 기존 값에만 단다(화면 선택지에는 없다).
  * NOTFOUND(검색 결과 없음) — 와이드 모델만. 다섯 단계를 다 찾아도 안 나와 "없음"으로 둔 근거(2026-11-02 사용자).

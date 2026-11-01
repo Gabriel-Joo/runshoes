@@ -1,3 +1,5 @@
+> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [06_deployment.md](../06_deployment.md) — 이 문서는 학교 환경(웹 터미널 · vcluster) 시절의 배포 절차다
+
 # 배포 가이드 — 폴리텍 aisw-lab 웹 터미널
 
 Vite + React + json-server 프로젝트를 교내 배포판(`aisw-apps.kopoctc.kr`)에 올리는 절차.

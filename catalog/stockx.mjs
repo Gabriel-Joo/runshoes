@@ -1,4 +1,4 @@
-// candidates.csv 의 세대마다 KicksDB(StockX) 에서 대표 이미지를 찾는다 — 규칙은 docs/CATALOG_PIPELINE.md 3.4.
+// candidates.csv 의 세대마다 KicksDB(StockX) 에서 대표 이미지를 찾는다 — 규칙은 docs/01b_catalog_images.md 1-2.
 //   node catalog/stockx.mjs [--only <line_key>] [--limit N]
 //   키: KICKSDB_KEY_FILE(한 줄, 권한 600) — git · 로그에 남기지 않는다. 응답은 catalog/local/cache/kicksdb/ 에 두고 다시 묻지 않는다.
 //   결과: catalog/local/work/stockx.json — { "<line_key>#<generation>": { status, image, sku, slug, title, gender, matched, reason } }

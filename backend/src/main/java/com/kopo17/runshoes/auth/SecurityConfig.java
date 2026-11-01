@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * 인증은 Bearer access token(JWT HS256, 15분) 하나 — 세션 · CSRF 토큰 · 폼 로그인은 쓰지 않는다(docs/AUTH_DESIGN.md).
+ * 인증은 Bearer access token(JWT HS256, 15분) 하나 — 세션 · CSRF 토큰 · 폼 로그인은 쓰지 않는다(docs/04_auth.md).
  * refresh 는 쿠키(/api/auth 한정)라 CSRF 대상이 /api/auth 뿐이다 — SameSite=Strict + Origin 확인(AuthController) + CORS 제외(ApiHeadersFilter).
  *
  * 응답 헤더(CORS · Cache-Control)는 계약대로 ApiHeadersFilter 가 Security 보다 먼저 붙인다 — Security 의 Cache-Control 은 끈다

@@ -1,5 +1,5 @@
 // candidates.csv + local/work/stockx.json + local/work/specs-*.jsonl → shoes.jsonl, 그리고 집계.
-//   node catalog/build.mjs        — 규칙은 docs/CATALOG_PIPELINE.md 6장(표기 · 중간 포맷 · status)
+//   node catalog/build.mjs        — 규칙은 docs/01a_catalog_sources.md 1-1(적재 조건 · status) — 옛 표기 · 중간 포맷은 docs/archive/CATALOG_PIPELINE.md 6장
 // 스펙 파일 한 줄: { line_key, generation, exists: true|false|null, line_en_official?, weight_g, drop_mm, stack_heel_mm, midsole,
 //                   carbon, wide_available, price_krw, sources: { 필드: URL }, conflicts?: [..], note? }
 import fs from 'node:fs';
@@ -39,7 +39,7 @@ function modelSku(brand, sku) {
 
 const cands = parseCsv(fs.readFileSync(path.join(ROOT, 'candidates.csv'), 'utf8'));
 const stockx = fs.existsSync(path.join(WORK, 'stockx.json')) ? JSON.parse(fs.readFileSync(path.join(WORK, 'stockx.json'), 'utf8')) : {};
-// 같은 모델 다른 색상(extra-images.json — 실루엣 대조를 통과한 것, docs/CATALOG_PIPELINE.md 5장)
+// 같은 모델 다른 색상(extra-images.json — 실루엣 대조를 통과한 것, docs/01b_catalog_images.md 1-4)
 const EXTRA = fs.existsSync(path.join(ROOT, 'extra-images.json')) ? JSON.parse(fs.readFileSync(path.join(ROOT, 'extra-images.json'), 'utf8')).rows : {};
 // 대표 이미지 주소 → 그 상품(품번 · 제목) — KicksDB 캐시(StockX · GOAT)에서. 주소는 ? 앞만 본다(크기 인자가 다를 수 있다)
 const IMG = new Map();

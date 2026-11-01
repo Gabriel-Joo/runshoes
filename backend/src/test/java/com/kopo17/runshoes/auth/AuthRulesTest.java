@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-/** 입력 규칙과 메시지 — docs/AUTH_DESIGN.md 3절 표와 같아야 한다 */
+/** 입력 규칙과 메시지 — docs/04_auth.md 1-2 와 같아야 한다 */
 class AuthRulesTest {
 
 	private static String message(Executable e) {

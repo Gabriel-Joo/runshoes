@@ -1,4 +1,4 @@
-# RUNSHOES 앱 — React(Vite) 빌드물 + Spring Boot API 한 컨테이너(:3000). docs/SPRING_MIGRATION_PLAN.md Phase 4.
+# RUNSHOES 앱 — React(Vite) 빌드물 + Spring Boot API 한 컨테이너(:3000). docs/archive/SPRING_MIGRATION_PLAN.md Phase 4.
 # 데이터는 MySQL(SPRING_DATASOURCE_*), 스키마·시드는 Flyway 가 기동 때 적용한다 — 이미지에 db.json 이 없다.
 # 챗봇은 따로(Dockerfile.chatbot, 사이드카). 이미지 이름 · 포트는 Node 때와 같다 — Service · Ingress · Jenkins sed 를 바꾸지 않는다.
 #

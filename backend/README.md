@@ -1,6 +1,6 @@
 # backend — RUNSHOES API (Spring Boot 3.5 · Java 21 · MySQL 8)
 
-RUNSHOES 의 REST API 와 React 빌드물 서빙. **계약의 정답은 `contract/baseline/node`(녹화한 응답)** — [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
+RUNSHOES 의 REST API 와 React 빌드물 서빙. **계약의 정답은 `contract/baseline/node`(녹화한 응답)** — [docs/05_api_contract.md](../docs/05_api_contract.md).
 
 ```
 domain/   Shoe · Review · Term + 리포지토리(스키마는 Flyway — db/migration/V1, 시드 V2 는 scripts/gen-seed-sql.mjs 생성물)
@@ -71,4 +71,4 @@ ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은
 
 API 는 json-server 의 모양을 녹화한 응답(`contract/baseline/node`)대로 재현하고, 그 위에 로그인 뒤의 권한 · 사용자별 값이 얹혀 있다(기준선 `contract/baseline/spring-v3`) —
 id 를 max+1 로 매기고, terms 의 id 12 중복을 그대로 두고, 숫자 스펙이 DOUBLE 인 것 등.
-같게 한 것 · 일부러 다르게 둔 것과 그 이유는 [docs/API_CONTRACT.md](../docs/API_CONTRACT.md).
+같게 한 것 · 일부러 다르게 둔 것과 그 이유는 [docs/05_api_contract.md](../docs/05_api_contract.md).

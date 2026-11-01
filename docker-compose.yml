@@ -1,4 +1,4 @@
-# 로컬 개발용 MySQL — Spring 백엔드(backend/)가 붙는다. docs/SPRING_MIGRATION_PLAN.md Phase 1.
+# 로컬 개발용 MySQL — Spring 백엔드(backend/)가 붙는다. docs/archive/SPRING_MIGRATION_PLAN.md Phase 1.
 #   docker compose up -d      → 127.0.0.1:3307 (이 호스트의 3306 은 다른 프로젝트 MySQL 이 쓴다)
 #   docker compose down -v    → 데이터까지 지운다(Flyway 가 다음 부팅에 V1·V2 를 다시 적용한다)
 # 설정은 클러스터 계획(Phase 5.2)과 같다 — 버전 고정, utf8mb4, UTC, performance_schema 끔.

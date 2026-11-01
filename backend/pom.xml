@@ -35,7 +35,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-    <!-- 로그인(docs/AUTH_DESIGN.md) — JWT 발급 · 검증은 resource-server 의 Nimbus(HS256), 비밀번호는 BCrypt -->
+    <!-- 로그인(docs/04_auth.md) — JWT 발급 · 검증은 resource-server 의 Nimbus(HS256), 비밀번호는 BCrypt -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>

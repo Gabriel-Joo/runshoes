@@ -3,7 +3,7 @@
 //   node contract/diff.mjs contract/baseline/node contract/run/spring
 //   node contract/diff.mjs --read-only contract/baseline/node contract/run/prod   (읽기 시나리오 id 30 미만 · Q 만)
 //
-// 정규화(실질 동등 허용) — docs/SPRING_MIGRATION_PLAN.md Phase 2:
+// 정규화(실질 동등 허용) — docs/archive/SPRING_MIGRATION_PLAN.md Phase 2:
 //   createdAt 은 Date.parse 등가, 숫자는 1e-9, liked 부재 = false, 4 ≡ 4.0(JSON 숫자라 원래 같다)
 //   객체 키 순서는 보지 않는다. 배열은 순서까지 본다(정렬 동점의 id 순이 계약이다)
 // 헤더는 계약에 드는 것만 본다. Location 은 경로만(호스트·스킴은 붙는 길에 따라 바뀐다). Content-Type 은 미디어 타입만
