@@ -42,3 +42,6 @@ catalog/loads/
 
 # 비밀 값(텔레그램 봇 토큰 등) — 커밋하지 않는다. GitHub 미러가 있다
 .env*
+
+# Claude Code 로컬 설정(이 기계의 권한 허용 규칙 등) — 사람마다 다르다, 커밋하지 않는다
+.claude/settings.local.json
