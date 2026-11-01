@@ -30,7 +30,7 @@ final class SpecSources {
 			if (!(e.getValue() instanceof Map<?, ?> src)) throw ApiException.invalid("specSources." + field + " 는 {code, url} 이어야 한다");
 			Object code = src.get("code"), url = src.get("url");
 			if (code == null && (url == null || "".equals(url))) continue;
-			if (!(code instanceof String c) || !CODES.contains(c)) throw ApiException.invalid("specSources." + field + ".code 는 BITR · RSG · STORE · PR · WEB · MAN 중 하나");
+			if (!(code instanceof String c) || !CODES.contains(c)) throw ApiException.invalid("specSources." + field + ".code 는 BITR · RSG · STORE · PR · WEB · MAN · DB · SX · NOTFOUND 중 하나");
 			Map<String, String> s = new LinkedHashMap<>();
 			s.put("code", c);
 			if (url != null && !"".equals(url)) {

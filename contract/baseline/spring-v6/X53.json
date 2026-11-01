@@ -33,11 +33,11 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Thu, 29 Oct 2026 20:24:53 GMT",
+      "date": "Sun, 01 Nov 2026 22:59:59 GMT",
       "connection": "close"
     },
     "body": {
-      "message": "specSources.drop.code 는 BITR · RSG · STORE · PR · WEB · MAN 중 하나",
+      "message": "specSources.drop.code 는 BITR · RSG · STORE · PR · WEB · MAN · DB · SX · NOTFOUND 중 하나",
       "code": "invalid"
     }
   }
