@@ -70,6 +70,13 @@ function key() {
   return fs.readFileSync(f, 'utf8').trim();
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// KicksDB 요청 기록(2026-11-02 사용자) — 헤더 X-Quota-Current 는 늦게 반영되고 리셋 날짜가 없어 우리가 센다. 키 값은 남기지 않는다
+//   한 줄: 시각(UTC) \t 엔드포인트 \t 검색어 \t X-Quota-Current
+const USAGE_LOG = path.join(ROOT, 'local/work/kicksdb-usage.log');
+export function logUsage(endpoint, q, quota) {
+  fs.mkdirSync(path.dirname(USAGE_LOG), { recursive: true });
+  fs.appendFileSync(USAGE_LOG, `${new Date().toISOString()}\t${endpoint}\t${String(q).replace(/[\t\n]/g, ' ')}\t${quota ?? ''}\n`);
+}
 let lastCall = 0;
 async function search(q, k) {
   const file = path.join(CACHE, crypto.createHash('sha1').update(q).digest('hex') + '.json');
@@ -82,7 +89,25 @@ async function search(q, k) {
   if (!res.ok) throw new Error(`KicksDB ${res.status}`);
   const body = await res.json();
   const out = { q, at: new Date().toISOString(), quota: res.headers.get('x-quota-current'), data: body.data ?? [] };
+  logUsage('stockx', q, out.quota);
   fs.mkdirSync(CACHE, { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(out));
+  return out;
+}
+// GOAT 검색(2026-11-01 사용자 허용 — StockX 에 없는 세대만). 캐시 · 간격 · 기록은 StockX 와 같다
+const GOAT_CACHE = path.join(ROOT, 'local/cache/goat');
+export async function goatSearch(q, limit = 50) {
+  const file = path.join(GOAT_CACHE, crypto.createHash('sha1').update(`${q}|${limit}`).digest('hex') + '.json');
+  if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, 'utf8'));
+  const wait = lastCall + GAP_MS - Date.now();
+  if (wait > 0) await sleep(wait);
+  lastCall = Date.now();
+  const res = await fetch(`https://api.kicks.dev/v3/goat/products?${new URLSearchParams({ query: q, limit: String(limit) })}`, { headers: { Authorization: `Bearer ${key()}` } });
+  if (res.status === 429) throw new Error('KicksDB 429 — 한도');
+  if (!res.ok) throw new Error(`KicksDB ${res.status}`);
+  const out = { q, limit, at: new Date().toISOString(), quota: res.headers.get('x-quota-current'), data: (await res.json()).data ?? [] };
+  logUsage('goat', q, out.quota);
+  fs.mkdirSync(GOAT_CACHE, { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out));
   return out;
 }
