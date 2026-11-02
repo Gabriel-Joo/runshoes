@@ -1,0 +1,40 @@
+{
+  "id": "X126",
+  "plan": null,
+  "name": "영어 이름 101자 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "PATCH",
+    "path": "/api/shoes/2",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "modelEn": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Mon, 02 Nov 2026 23:55:26 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "code": "invalid",
+      "message": "영어 이름은 100자까지예요"
+    }
+  }
+}

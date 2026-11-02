@@ -123,6 +123,8 @@ function ShoeForm() {
   const [loaded, setLoaded] = useState<Shoe | null>(null);
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+  const [modelEn, setModelEn] = useState("");
+  const [modelAlias, setModelAlias] = useState("");
   const [purpose, setPurpose] = useState(PURPOSES[0]);
   const [stability, setStability] = useState(STABILITIES[0]);
   const [lineKey, setLineKey] = useState("");
@@ -157,6 +159,8 @@ function ShoeForm() {
         setLoaded(shoe);
         setBrand(shoe.brand);
         setModel(shoe.model);
+        setModelEn(shoe.modelEn ?? "");
+        setModelAlias(shoe.modelAlias ?? "");
         setPurpose(shoe.purpose);
         setStability(shoe.stability);
         setLineKey(shoe.lineKey ?? "");
@@ -247,6 +251,8 @@ function ShoeForm() {
     return {
       brand: brand.trim(),
       model: model.trim(),
+      modelEn: modelEn.trim() || null,
+      modelAlias: modelAlias.trim() || null,
       purpose,
       stability,
       lineKey: lineKey.trim() || null,
@@ -417,6 +423,16 @@ function ShoeForm() {
         <label className="form__field">
           <span>모델명</span>
           <input value={model} onChange={(e) => setModel(e.target.value)} />
+        </label>
+        {/* 영어 이름 · 검색용 다른 표기(V13) — 영어 이름은 카드 · 상세에 작게, 다른 표기는 검색에만 */}
+        <label className="form__field">
+          <span>영어 이름</span>
+          <input value={modelEn} onChange={(e) => setModelEn(e.target.value)} maxLength={100} placeholder="FuelCell SuperComp Elite v6" spellCheck={false} />
+        </label>
+        <label className="form__field">
+          <span>검색용 다른 표기</span>
+          <input value={modelAlias} onChange={(e) => setModelAlias(e.target.value)} maxLength={255} placeholder="SC Elite v6, 퓨어셀" spellCheck={false} />
+          <small className="form__hint">쉼표로 나눈다 · 화면에는 보이지 않고 검색에만 쓴다</small>
         </label>
         <label className="form__field">
           <span>용도</span>

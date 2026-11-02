@@ -102,6 +102,12 @@ public class Shoe {
 	@Column(name = "wide_scope")
 	private String wideScope;
 
+	/** 영어 이름(V13) — 공식몰 상품명의 전체 이름 · 검색용 다른 표기(쉼표로 나눈다, 화면에 보이지 않는다) */
+	@Column(name = "model_en")
+	private String modelEn;
+	@Column(name = "model_alias")
+	private String modelAlias;
+
 	private Boolean carbon;
 	private Double price;
 
@@ -203,6 +209,10 @@ public class Shoe {
 	public void setWideAvailable(Boolean wideAvailable) { this.wideAvailable = wideAvailable; }
 	public String getWideScope() { return wideScope; }
 	public void setWideScope(String wideScope) { this.wideScope = wideScope; }
+	public String getModelEn() { return modelEn; }
+	public void setModelEn(String modelEn) { this.modelEn = modelEn; }
+	public String getModelAlias() { return modelAlias; }
+	public void setModelAlias(String modelAlias) { this.modelAlias = modelAlias; }
 	public Boolean getCarbon() { return carbon; }
 	public void setCarbon(Boolean carbon) { this.carbon = carbon; }
 	public Double getPrice() { return price; }

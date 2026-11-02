@@ -57,9 +57,9 @@ class ShoeCollection implements DocCollection {
 	@Override
 	public String name() { return "shoes"; }
 
-	/** 홈 · 등록·관리의 검색창 — 브랜드와 모델명 */
+	/** 홈 · 등록·관리의 검색창 — 브랜드 · 모델명 · 영어 이름 · 검색용 다른 표기(V13) */
 	@Override
-	public List<String> searchFields() { return List.of("brand", "model"); }
+	public List<String> searchFields() { return List.of("brand", "model", "modelEn", "modelAlias"); }
 
 	/** 브랜드 목록(처음 나온 순서 = id 순) — 등록·관리의 브랜드 칩. 검색 결과와 상관없이 전부 */
 	@Transactional(readOnly = true)
@@ -324,6 +324,9 @@ class ShoeCollection implements DocCollection {
 		d.put("sku", s.getSku());
 		d.put("updatedAt", s.getUpdatedAt() == null ? null : Values.formatCreatedAt(s.getUpdatedAt()));
 		d.put("lastChange", s.getLastChange());
+		// V13 — 영어 이름 · 검색용 다른 표기. 같은 방식으로 맨 뒤에
+		d.put("modelEn", s.getModelEn());
+		d.put("modelAlias", s.getModelAlias());
 		return d;
 	}
 
@@ -341,6 +344,15 @@ class ShoeCollection implements DocCollection {
 		if (v == null || v.isBlank()) return null;
 		String t = v.trim();
 		if (!t.matches("[A-Za-z0-9./ -]{1,50}")) throw ApiException.invalid("품번은 영문 · 숫자와 - . / 로 50자까지예요(예: 1011C284-400)");
+		return t;
+	}
+
+	/** 영어 이름 · 다른 표기(V13) — 앞뒤 공백을 떼고 길이만 본다(열 길이). 빈 칸은 없음(null) */
+	private static String text(String field, Object v, int max, String label) {
+		String x = Values.str(field, v);
+		if (x == null || x.isBlank()) return null;
+		String t = x.trim();
+		if (t.length() > max) throw ApiException.invalid(label + "은 " + max + "자까지예요");
 		return t;
 	}
 
@@ -418,6 +430,8 @@ class ShoeCollection implements DocCollection {
 				case "priceKind" -> s.setPriceKind(oneOf(k, v, PRICE_KINDS));
 				case "specSources" -> s.setSpecSources(SpecSources.parse(v));
 				case "sku" -> s.setSku(sku(Values.str(k, v)));
+				case "modelEn" -> s.setModelEn(text(k, v, 100, "영어 이름"));
+				case "modelAlias" -> s.setModelAlias(text(k, v, 255, "검색용 다른 표기"));
 				default -> { }
 			}
 		});

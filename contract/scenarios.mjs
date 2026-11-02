@@ -415,5 +415,15 @@ export const V6_SCENARIOS = [
   W("X119", "NOTFOUND 를 무게 출처에 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { specSources: { weight: { code: "NOTFOUND" } } }, expect: 400 }),
   W("X120", "모르는 출처 코드 → 400(받는 코드 아홉을 알린다)", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { specSources: { width: { code: "XYZ" } } }, expect: 400 }),
   W("X121", "데모 관리자 wideScope PATCH → 403", "PATCH", "/api/shoes/2", { headers: jb("d"), body: { wideScope: "domestic" }, expect: 403 }),
-  W("X122", "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)", "GET", "/api/shoes/2", { expect: 200 }),
+  W("X122", "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)", "GET", "/api/shoes/2", { volatile: ["updatedAt"], expect: 200 }),
+
+  // V13(2026-11-03) — 영어 이름(modelEn) · 검색용 다른 표기(modelAlias). 검색(search)이 둘 다 본다
+  W("X123", "영어 이름 · 다른 표기 PATCH → 200, lastChange [modelEn, modelAlias]", "PATCH", "/api/shoes/2",
+    { headers: jb("admin"), body: { modelEn: "FuelCell SuperComp Pacer v2", modelAlias: "SC Pacer v2, 퓨어셀" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X124", "다른 표기로 검색 — 퓨어셀 → shoe 2", "GET", "/api/shoes?search=%ED%93%A8%EC%96%B4%EC%85%80", { expect: 200 }),
+  W("X125", "영어 이름으로 검색 — supercomp pacer → shoe 2", "GET", "/api/shoes?search=supercomp%20pacer", { expect: 200 }),
+  W("X126", "영어 이름 101자 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { modelEn: "A".repeat(101) }, expect: 400 }),
+  W("X127", "데모 관리자 modelEn PATCH → 403", "PATCH", "/api/shoes/2", { headers: jb("d"), body: { modelEn: "x" }, expect: 403 }),
+  W("X128", "빈 다른 표기 → null 로 저장", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { modelAlias: "  " }, volatile: ["updatedAt"], expect: 200 }),
+  W("X129", "끝 상태 — shoe 2(modelEn 있음 · modelAlias null)", "GET", "/api/shoes/2", { volatile: ["updatedAt"], expect: 200 }),
 ];

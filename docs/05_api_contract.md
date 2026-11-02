@@ -38,7 +38,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 
 - 헤더는 Spring CORS 지원 대신 필터 하나(`ApiHeadersFilter`)가 만든다 — 204 · Origin 이 없을 때 `*` 같은 모양이 Spring 기본과 다르다.
 - 목록 쿼리는 SQL 이 아니라 메모리에서 한다(`ListQuery`) — JS 문자열 비교 · lodash 정렬을 SQL 로 흉내 내는 것보다 정확하다.
-- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model 에서 낱말마다 AND, 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 관리 화면의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`.
+- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model · modelEn · modelAlias(V13)에서 낱말마다 AND, 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 관리 화면의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`.
 
 #### 1-3. 데이터 표현
 
@@ -70,6 +70,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | V6 | `specSources` — `{"weight":{"code":"BITR","url":"…"}, …}` | 코드 BITR · RSG · STORE · PR · WEB · MAN · DB · SX · NOTFOUND. WEB 은 url 필수, NOTFOUND 는 `wideAvailable` 에만 |
 | V11 | `sku` · `updatedAt` · `lastChange` | 품번은 영문 · 숫자 · `- . /` · 공백 50자 |
 | V12 | `wideScope` | `domestic` · `overseas` |
+| V13 | `modelEn` · `modelAlias` | 100자 · 255자까지, 빈 칸은 null. 검색이 두 칸도 본다 |
 
 - 추가 이미지 `images` 는 6장까지.
 - 적재기의 요청(`X-Runshoes-Client: loader`)은 `updatedAt` · `lastChange` 를 찍지 않는다. 바뀐 칸이 없는 저장도 찍지 않는다.
