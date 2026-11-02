@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { parseCsv } from './stockx.mjs';
+import { specSourcesOf } from './live-fields.mjs';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const WORK = path.join(ROOT, 'local/work');
@@ -318,10 +319,16 @@ for (const c of cands) {
   //   라인키 · 세대 · 성별(2026-10-30 사용자 — 관리 화면 수정은 전부 반영) — 운영 행을 찾는 키(catalog_key)가 바뀐다. 성별은 판단이 있을 때만 행에 둔다(없으면 적재기가 men)
   for (const f of ['line_key', 'generation', 'gender']) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[f] = d.value; }
   //   스펙 출처(V6) — 관리 화면에서 고른 것(pull-admin.mjs spec_sources). 없으면 적재기가 sources 에서 만든다(live-fields.mjs specSourcesOf)
-  if (DEC.rows[id]?.spec_sources?.action === 'use_source') row.spec_sources = DEC.rows[id].spec_sources.value;
   //   사람이 직접 보고 넣은 판단(via manual)의 칸 — 출처가 웹 주소여도 MAN(직접 확인)이다(2026-11-02 사용자: WEB = Claude 가 검색해 찾은 값, MAN = 사람이 보고 넣은 값)
   const man = Object.entries(DEC.rows[id] ?? {}).filter(([k, d]) => d?.action === 'use_source' && d.via === 'manual' && MANUAL_KEY[k]).map(([k]) => MANUAL_KEY[k]);
   if (man.length) row.manual_sources = man;
+  //   스펙 출처(V6) — 관리 화면에서 고른 것(pull-admin.mjs spec_sources). 없으면 적재기가 sources 에서 만든다(live-fields.mjs specSourcesOf)
+  //   와이드 칸만은 와이드 판단(wide_available)을 따른다(2026-11-02 사용자) — 다른 칸을 저장할 때 묶음째 끌려온 옛 출처가 남지 않게. 와이드 판단이 관리 화면 것(via admin)이면 고른 그대로
+  if (DEC.rows[id]?.spec_sources?.action === 'use_source') {
+    const { wideAvailable: picked, ...rest } = DEC.rows[id].spec_sources.value ?? {};
+    const w = DEC.rows[id]?.wide_available?.via === 'admin' ? picked : specSourcesOf(row)?.wideAvailable;
+    row.spec_sources = w ? { ...rest, wideAvailable: w } : Object.keys(rest).length ? rest : null;
+  }
   //   품번(V11) — 관리 화면에서 고친 것(pull-admin.mjs sku). 없으면 StockX 조회 결과
   if (DEC.rows[id]?.sku?.action === 'use_source') row.sku = DEC.rows[id].sku.value;
   else if (DEC.rows[id]?.sku?.action === 'clear') row.sku = null;
