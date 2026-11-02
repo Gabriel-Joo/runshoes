@@ -5,6 +5,7 @@ export const FACTS = ['brand', 'model', 'stability', 'midsole', 'weight', 'drop'
   'priceSource', 'priceCheckedAt', 'priceKind',  // V5 가격 메타
   'specSources',  // V6 스펙 출처 — 카탈로그 sources 에서 만든다(specSourcesOf)
   'wideScope',  // V12 와이드가 국내 · 국외 어디에 나오나(build.mjs — wide_available 판단의 scope · 관리 화면 wide_scope)
+  'modelEn', 'modelAlias',  // V13 영어 이름 · 검색용 다른 표기(build.mjs — names.mjs 규칙, 관리 화면에서 고치면 판단)
   'sku'];  // V11 품번 — StockX 조회 결과(build.mjs), 관리 화면에서 고치면 판단(pull-admin)
 // 스냅숏 · 가져오기가 보는 칸 — 사실 값 + 사람이 화면에서 고칠 수 있는 칸(용도 · 문구 · 이미지)
 export const TRACKED = [...FACTS, 'purpose', 'summary', 'description', 'image', 'images'];

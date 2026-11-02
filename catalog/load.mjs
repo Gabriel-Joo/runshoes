@@ -70,6 +70,7 @@ function toBody(r) {
     specSources: 'spec_sources' in r ? r.spec_sources : specSourcesOf(r),  // r.spec_sources = 관리 화면에서 고른 출처(build.mjs)
     wideScope: r.wideScope ?? null,  // V12 — 와이드가 있을 때만 domestic · overseas(build.mjs)
     sku: r.sku ?? null,  // V11 — 관리 화면에서 고친 품번이 있으면 그것(build.mjs)
+    modelEn: r.model_en ?? null, modelAlias: r.model_alias ?? null,  // V13 — names.mjs 규칙, 관리 화면에서 고친 것이 먼저(build.mjs)
   };
 }
 
@@ -117,6 +118,8 @@ if (live.some((s) => s.id <= 20 && !s.lineKey)) { console.error('운영 시드�
 if (APPLY && live.length && !('specSources' in live[0])) { console.error('운영 응답에 specSources 가 없다 — V6 가 적용되기 전이다. --apply 하지 않는다'); process.exit(2); }
 // V11 전 앱(응답에 sku 가 없다)에 --apply 하면 품번은 버려지고 스냅숏만 바뀐다 — 멈춘다
 if (APPLY && live.length && !('sku' in live[0])) { console.error('운영 응답에 sku 가 없다 — V11 이 적용되기 전이다. --apply 하지 않는다'); process.exit(2); }
+// 영어 이름(V13) — 옛 앱은 modelEn · modelAlias 를 모르고 무시한다. 적용 전이면 쓰지 않는다
+if (APPLY && live.length && !('modelEn' in live[0])) { console.error('운영 응답에 modelEn 이 없다 — V13 이 적용되기 전이다. --apply 하지 않는다'); process.exit(2); }
 if (SNAP_ONLY) { fs.writeFileSync(SNAP_FILE, JSON.stringify(snapOf(live), null, 1)); console.log(`스냅숏 ${live.length}켤레 → ${SNAP_FILE.pathname}`); process.exit(0); }
 const byKey = new Map(live.filter((s) => s.lineKey && s.generation != null).map((s) => [`${s.lineKey}:${s.generation}`, s]));
 
