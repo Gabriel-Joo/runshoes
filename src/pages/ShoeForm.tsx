@@ -19,8 +19,6 @@ const GENDERS: [string, string][] = [["men", "남성"], ["women", "여성"], ["u
 //   WEB · MAN 은 둘 다 주소를 적는다 — 가르는 것은 누가 확인했나(2026-11-02 사용자): WEB = Claude 가 검색해 찾은 값, MAN = 관리자가 직접 보고 넣은 값
 const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(국내 공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서 · Claude 검색)"], ["MAN", "MAN(직접 확인 · 관리자)"]];
 const LEGACY_CODES: Record<string, string> = { DB: "DB(기존 값)", SX: "SX(StockX)" };
-// 와이드 모델에만 — 다섯 단계(KicksDB · 국내 공식몰 · ABC마트 · 리뷰 · 웹)를 다 찾아도 안 나와 "없음"으로 둔 근거(2026-11-02 사용자)
-const WIDE_CODES: [SourceCode, string][] = [["NOTFOUND", "검색 결과 없음"]];
 // 가격 출처 — 종류는 늘 '발매가'(2026-10-30 '정가'에서 통일). 기존 '다나와'는 회색으로만
 const PRICE_SOURCES = ["공식몰", "ABC마트", "크림", "MAN(직접 확인)"];   // 판매처 이름 셋 + MAN(직접 확인) — 공식몰에서 내려간 모델을 관리자가 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인(2026-11-01, 이름은 11-02 스펙 출처와 맞춤)
 // 이미지 — 목록 하나, 칸 하나에 주소 하나, 첫 번째가 대표(2026-10-30 사용자). 6개까지(서버도 400).
@@ -63,7 +61,7 @@ function Thumb({ src }: { src: string }) {
 }
 
 /** 출처 드롭다운 — WEB · MAN 을 고르면 주소 칸이 나온다(둘 다 필수 — 예전에 주소 없이 넣은 MAN 은 그대로 둘 수 있다) */
-function SourcePicker({ id, value, onChange, extra = [] }: { id: string; value: Source; onChange: (s: Source) => void; extra?: [SourceCode, string][] }) {
+function SourcePicker({ id, value, onChange }: { id: string; value: Source; onChange: (s: Source) => void }) {
   const legacy = value.code && LEGACY_CODES[value.code];
   return (
     <div className="form__source">
@@ -80,7 +78,7 @@ function SourcePicker({ id, value, onChange, extra = [] }: { id: string; value: 
             {legacy}
           </option>
         )}
-        {[...CODES, ...extra].map(([c, label]) => (
+        {CODES.map(([c, label]) => (
           <option key={c} value={c}>
             {label}
           </option>
@@ -221,8 +219,6 @@ function ShoeForm() {
   /** 저장 전 검사 — 화면 문구. 출처 형식은 서버도 400 을 낸다. 와이드 "없음"의 출처는 여기서만 본다(서버가 막으면 json-server 계약이 깨진다) */
   const check = (): string | null => {
     if (!brand.trim() || !model.trim()) return "브랜드와 모델명은 필수입니다.";
-    if (wide === "false" && !sources.wideAvailable.code) return '와이드 모델 "없음"은 출처가 필요해요 — 다 찾아도 안 나왔으면 "검색 결과 없음"을 고르세요.';
-    if (sources.wideAvailable.code === "NOTFOUND" && wide !== "false") return '"검색 결과 없음"은 와이드 모델이 "없음"일 때만 고를 수 있어요.';
     for (const f of SPEC_FIELDS) {
       const s = sources[f];
       if (s.code === "WEB" && !/^https?:\/\/\S+$/.test(s.url.trim())) return `${LABEL[f]} 출처가 WEB 이면 주소(https://…)를 넣어 주세요.`;
@@ -242,6 +238,8 @@ function ShoeForm() {
     const specSources: SpecSources = {};
     for (const f of SPEC_FIELDS) {
       const s = sources[f];
+      // 와이드 "없음"은 출처 면제(화면에 출처를 보이지 않는다, 2026-11-02 사용자) — 데이터에는 남긴다: 불러온 출처 그대로, 새로 "없음"으로 바꿨으면 NOTFOUND(검색 결과 없음)
+      if (f === "wideAvailable" && wide === "false") { specSources[f] = s.code ? (s.url.trim() ? { code: s.code, url: s.url.trim() } : { code: s.code }) : { code: "NOTFOUND" }; continue; }
       if (!s.code || specValue[f] === null) continue;   // 값이 없으면 출처도 없다
       specSources[f] = s.url.trim() ? { code: s.code, url: s.url.trim() } : { code: s.code };
     }
@@ -518,7 +516,7 @@ function ShoeForm() {
             <option value="">정보 없음</option>
           </select>
         </Row>
-        <Row label="와이드 모델" htmlFor="f-wide" source={<SourcePicker id="s-wide" value={sources.wideAvailable} onChange={(s) => setSource("wideAvailable", s)} extra={WIDE_CODES} />}>
+        <Row label="와이드 모델" htmlFor="f-wide" source={wide === "false" ? undefined : <SourcePicker id="s-wide" value={sources.wideAvailable} onChange={(s) => setSource("wideAvailable", s)} />}>
           <select id="f-wide" value={wide} onChange={(e) => changeSpec("wideAvailable", (v) => setWide(v as Wide), e.target.value)}>
             <option value="domestic">있음(국내)</option>
             <option value="overseas">국외에만 있음</option>
@@ -526,7 +524,7 @@ function ShoeForm() {
             <option value="false">없음</option>
             <option value="">정보 없음</option>
           </select>
-          {wide === "false" && !sources.wideAvailable.code && <span className="form__need">없음은 출처가 필요해요(못 찾았으면 "검색 결과 없음")</span>}
+          {wide === "false" && <span className="form__exempt">출처 면제</span>}
         </Row>
         <Row label="카본 플레이트" htmlFor="f-carbon">
           <select id="f-carbon" value={carbon} onChange={(e) => setCarbon(e.target.value as Tri)}>
