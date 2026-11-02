@@ -22,10 +22,19 @@
   pointer-events: none;
 }
 
+/* 휴대폰은 사진 뒤로 보내 가린다(2026-11-03 사용자: PC 처럼 가린다, 지우지 않는다) — 사진이 덮는다.
+   GOAT 사진은 바탕이 투명해 비치므로 사진에 흰 바탕(사진 칸과 같은 색)을 깐다 */
 @media (max-width: 767px) {
+  .gallery__stage {
+    isolation: isolate;
+  }
+  .gallery__stage .shoeimage {
+    background: #fff;
+  }
   .gallery__credit {
     top: auto;
     bottom: 0;
+    z-index: -1;
   }
 }
 
