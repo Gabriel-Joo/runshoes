@@ -11,7 +11,7 @@
 - **StockX** — KicksDB(`api.kicks.dev v3/stockx`) 검색 결과의 이미지 주소. 흰 바탕 · 측면 · 앞코 오른쪽 · 같은 크롭(신발이 가로의 97~99.7%)이라 300켤레가 한 줄에 놓여도 통일된다.
 - **GOAT** — StockX 에 없는 세대만(2026-11-01 사용자). `image.goat.com` 원본(1000×1000 PNG). 남성 · 공용 기본 색상만.
 - **저장하지 않는다.** DB 의 `image` · `images` 에는 주소만 들어간다. 크기는 imgix 인자(`w` · `h` · `dpr`)로 화면이 정한다. 기준 주소: `fit=fill&bg=FFFFFF&trim=color&w=700&h=500&dpr=2&fm=webp&q=90`.
-- **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX" · "Image: GOAT"(`ShoeGallery creditOf` — 주소의 호스트로 판단, 칸이 따로 없다).
+- **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX" · "Image: GOAT"(`ShoeGallery creditOf` — 주소의 호스트로 판단, 칸이 따로 없다). 화면에서는 가려 둔다(2026-11-03 사용자, 지우지 않는다) — PC 는 사진 칸을 30px 올려 칸 위로 나가고, 휴대폰은 사진 뒤에 놓인다.
 - 국내 공식몰 사진 · 여성용 · 변형 색상은 쓰지 않는다(신발 모양이 다를 수 있다).
 
 #### 1-2. 대표 이미지 고르기(`stockx.mjs`)
