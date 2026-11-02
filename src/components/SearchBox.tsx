@@ -6,7 +6,7 @@ interface SearchBoxProps {
   placeholder?: string;
 }
 
-/** 홈 · 등록·관리 공용 검색창 — 서버의 search(브랜드 · 모델명, 낱말 AND)로 찾는다 */
+/** 홈 · 등록·관리 공용 검색창 — 서버의 search(브랜드 · 모델명 · 영어 이름 · 검색용 다른 표기(V13), 낱말 AND)로 찾는다 */
 function SearchBox({ value, onChange, placeholder = "브랜드·모델 검색" }: SearchBoxProps) {
   return (
     <div className="search">

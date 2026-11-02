@@ -82,4 +82,6 @@ V6_KEYS=specSources
 V11_KEYS=sku,updatedAt,lastChange
 # V12 키 — 와이드가 국내 · 국외 어디에 나오나(2026-11-02). 시드에서는 null
 V12_KEYS=wideScope
-node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS,$V11_KEYS,$V12_KEYS" "contract/baseline/$BASE" "$OUT"
+# V13 키 — 영어 이름 · 검색용 다른 표기(2026-11-03). 시드에서는 null
+V13_KEYS=modelEn,modelAlias
+node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS,$V11_KEYS,$V12_KEYS,$V13_KEYS" "contract/baseline/$BASE" "$OUT"

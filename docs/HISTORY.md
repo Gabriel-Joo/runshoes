@@ -48,3 +48,4 @@ React + json-server 과제로 시작해(2026-07), 학교 클러스터 → 자체
 | 10 | 11-01 | `v10-auto-increment.md` |
 | 11 | 11-01 | `v11-admin-history.md` |
 | 12 | 11-02 | `v12-wide-scope.md` |
+| 13 | (배포 전) | `v13-model-en.md` |
