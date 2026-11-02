@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { parseCsv } from './stockx.mjs';
 import { specSourcesOf } from './live-fields.mjs';
+import { namesOf } from './names.mjs';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const WORK = path.join(ROOT, 'local/work');
@@ -335,6 +336,10 @@ for (const c of cands) {
   //   와이드가 어디에 나오나(V12, 2026-11-02 사용자) — 관리 화면 값(wide_scope) → 재조사 판단의 scope. 와이드가 있을 때만(없음 · 정보 없음이면 null)
   const ws = DEC.rows[id]?.wide_scope;
   row.wideScope = row.wideAvailable !== true ? null : ws?.action === 'use_source' ? ws.value : ws?.action === 'clear' ? null : DEC.rows[id]?.wide_available?.scope ?? null;
+  //   영어 이름 · 검색용 다른 표기(V13, 2026-11-03 사용자) — names.mjs 규칙(KicksDB 상품명 · line_en · R1~R5). 관리 화면에서 고친 것(pull-admin model_en · model_alias)이 먼저다
+  //   모델명이 관리 화면에서 바뀌었으면 바뀐 이름으로 만든다(위 판단 덮어쓰기 뒤)
+  { const n = namesOf(row, c.line_en); row.model_en = n.model_en; row.model_en_source = n.model_en_source; row.model_alias = n.model_alias; row.alias_rules = n.alias_rules; }
+  for (const f of ['model_en', 'model_alias']) { const d = DEC.rows[id]?.[f]; if (d?.action === 'use_source') row[f] = d.value; else if (d?.action === 'clear') row[f] = null; }
   row.catalog_key = `${row.line_key}:${row.generation}`;
   // 관리 화면에서 고친 대표 · 추가 이미지(pull-admin.mjs) — 둘 다 그대로 낸다(대표가 추가 목록의 첫 장이 아닐 수 있다)
   const io = DEC.image_overrides?.[id];
