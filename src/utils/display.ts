@@ -5,7 +5,6 @@ export const withUnit = (v: number | null | undefined, unit: string) => (v === n
 export const text = (v: string | null | undefined) => (v === null || v === undefined || v === "" ? NONE : v);
 // 있음 · 없음 · 정보 없음 — false 와 null 을 섞지 않는다(없다고 확인한 것과 모르는 것은 다르다)
 export const yesNo = (v: boolean | null | undefined) => (v === true ? "있음" : v === false ? "없음" : NONE);
-/** 와이드 모델 넷(2026-11-02) — 있음 · 국외에만 있음 · 없음 · 정보 없음. 다 찾아도 안 나온 "없음"은 그렇게 적는다 */
-export const wideLabel = (s: { wideAvailable: boolean | null; wideScope?: string | null; specSources?: { wideAvailable?: { code?: string } } | null }) =>
-  s.wideAvailable === true ? (s.wideScope === "overseas" ? "국외에만 있음" : "있음")
-  : s.wideAvailable === false ? (s.specSources?.wideAvailable?.code === "NOTFOUND" ? "없음(검색 결과 없음)" : "없음") : NONE;
+/** 와이드 모델 넷(2026-11-02) — 있음 · 국외에만 있음 · 없음 · 정보 없음. "없음"에는 출처를 붙이지 않는다(검색 결과 없음은 작업 과정 — 2026-11-02 사용자) */
+export const wideLabel = (s: { wideAvailable: boolean | null; wideScope?: string | null }) =>
+  s.wideAvailable === true ? (s.wideScope === "overseas" ? "국외에만 있음" : "있음") : s.wideAvailable === false ? "없음" : NONE;
