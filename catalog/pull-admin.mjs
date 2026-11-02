@@ -169,6 +169,12 @@ for (const s of live) {
         `${key} wideScope ${JSON.stringify(was.wideScope)} → ${JSON.stringify(s.wideScope)}`, { key, field: k, from: was.wideScope ?? null, to: s.wideScope ?? null, file: 'decisions.json' });
       continue;
     }
+    if (k === 'modelEn' || k === 'modelAlias') {   // V13 영어 이름 · 검색용 다른 표기 — 관리 화면 값이 규칙(names.mjs)보다 먼저다(build.mjs)
+      const f = k === 'modelEn' ? 'model_en' : 'model_alias';
+      moved(put(id, f, s[k] == null ? { action: 'clear', by: 'user', via: 'admin', note } : { action: 'use_source', value: s[k], via: 'admin', by: 'user', note }),
+        `${key} ${k} ${JSON.stringify(was[k])} → ${JSON.stringify(s[k])}`, { key, field: k, from: was[k] ?? null, to: s[k] ?? null, file: 'decisions.json' });
+      continue;
+    }
     if (k === 'sku') {   // V11 품번 — 관리 화면 값이 StockX 조회 결과보다 먼저다(build.mjs)
       moved(put(id, 'sku', s.sku == null ? { action: 'clear', by: 'user', via: 'admin', note } : { action: 'use_source', value: s.sku, via: 'admin', by: 'user', note }),
         `${key} sku ${JSON.stringify(was.sku)} → ${JSON.stringify(s.sku)}`, { key, field: k, from: was.sku ?? null, to: s.sku ?? null, file: 'decisions.json' });
