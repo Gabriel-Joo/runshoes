@@ -177,11 +177,19 @@ for (const s of live) {
     if (k === 'specSources') {
       moved(put(id, 'spec_sources', { action: 'use_source', value: s.specSources ?? null, via: 'admin', by: 'user', note }),
         `${key} specSources ${JSON.stringify(was.specSources)} → ${JSON.stringify(s.specSources)}`, { key, field: k, from: was.specSources ?? null, to: s.specSources ?? null, file: 'decisions.json' });
+      //   와이드 출처만 고쳤다(값은 그대로) — 와이드 판단으로도 옮긴다. 빌드가 묶음의 와이드 칸을 와이드 판단에서 다시 만들기 때문이다(build.mjs, 2026-11-02 사용자). 값까지 고쳤으면 아래 SPEC 이 옮긴다
+      const wa = was.specSources?.wideAvailable, wb = s.specSources?.wideAvailable;
+      if (!changed.includes('wideAvailable') && s.wideAvailable != null && canon(wa ?? null) !== canon(wb ?? null)) {
+        const src = wb?.url ?? (wb?.code === 'NOTFOUND' ? 'notfound' : wb?.code ? 'manual' : null);
+        moved(put(id, 'wide_available', { action: 'use_source', value: s.wideAvailable, scope: s.wideScope ?? null, source: src, via: 'admin', by: 'user', note }),
+          `${key} 와이드 출처 ${JSON.stringify(wa ?? null)} → ${JSON.stringify(wb ?? null)}`, { key, field: 'specSources.wideAvailable', from: wa ?? null, to: wb ?? null, file: 'decisions.json' });
+      }
       continue;
     }
     if (SPEC[k]) {
       const sk = SPEC_FIELD[k], url = s.specSources?.[sk]?.url;   // 관리 화면에서 고른 출처 주소가 있으면 그것이 근거다(없으면 manual = MAN)
-      moved(put(id, SPEC[k], s[k] == null ? { action: 'clear', by: 'user', via: 'admin', note } : { action: 'use_source', value: s[k], source: url ?? 'manual', via: 'admin', by: 'user', note }),
+      //   와이드는 범위(V12)도 함께 담는다 — 판단을 새로 쓰면 build.mjs 가 범위를 이 판단의 scope 에서 읽는다(관리 화면 범위 수정은 wide_scope 로 따로 옮겨진다)
+      moved(put(id, SPEC[k], s[k] == null ? { action: 'clear', by: 'user', via: 'admin', note } : { action: 'use_source', value: s[k], ...(k === 'wideAvailable' ? { scope: s.wideScope ?? null } : {}), source: url ?? 'manual', via: 'admin', by: 'user', note }),
         `${key} ${k} ${JSON.stringify(was[k])} → ${JSON.stringify(s[k])}`, { key, field: k, from: was[k] ?? null, to: s[k] ?? null, file: 'decisions.json' });
       continue;
     }
