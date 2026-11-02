@@ -80,10 +80,13 @@
     height: auto;
     min-height: 0;
   }
+  /* 사진 칸을 30px 올린다(2026-11-03 사용자) — 화살표 · 신발 가운데(칸 위에서 281px)가 오른쪽 스펙표의 스택하이트 아래 구분선에 온다
+     (요약이 있는 신발 기준, 요약이 없으면 구분선이 34px 위). 칸 위 출처 표기(Image: StockX)는 칸 밖으로 나가 가려진다(지우지 않는다) */
   .modal__visual .gallery__stage {
     flex: none;
     height: 622px;
     min-height: 0;
+    margin-top: -30px;
   }
   .modal__visual .gallery__thumbs {
     position: absolute;
