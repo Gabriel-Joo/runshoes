@@ -115,6 +115,16 @@
   line-height: 1.25;                /* 좁은 폭에서 긴 모델명이 두 줄이 될 때 */
 }
 
+/* 영어 이름(V13) — 모델명 아래 아주 작게, 한 줄(길면 …) */
+.card__model-en {
+  margin-top: 1px;
+  font-size: calc(10px * var(--text-scale));   /* 브랜드(12px)보다 작게 — 둘이 같은 크기면 이름 줄이 둘로 보인다 */
+  color: var(--text-weak);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .card__brand {
   margin-top: 2px;
   font-size: calc(var(--fs-card-brand) * var(--text-scale));

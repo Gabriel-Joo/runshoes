@@ -44,6 +44,10 @@ export interface Shoe {
   deletedAt?: string;
   // V11 — 품번(모델 번호, 색상 코드 뺌 — 색상이 번호에 붙은 브랜드는 그대로) · 관리자가 마지막으로 고친 때 · 그때 바뀐 칸 이름(API 이름, created · hidden · restored 도). 고친 적 없으면 null
   sku?: string | null;
+  /** 영어 이름(V13) — 공식몰 상품명의 전체 이름. 화면에 모델명 아래 작게 */
+  modelEn?: string | null;
+  /** 검색용 다른 표기(V13) — 쉼표로 나눈다. 화면에 보이지 않는다 */
+  modelAlias?: string | null;
   updatedAt?: string | null;
   lastChange?: string[] | null;
 }

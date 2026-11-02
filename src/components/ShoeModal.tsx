@@ -90,6 +90,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 NO.{String(shoe.id).padStart(2, "0")} · {shoe.purpose}
               </p>
               <h2 className="modal__model">{shoe.model}</h2>
+              {shoe.modelEn && <p className="modal__model-en">{shoe.modelEn}</p>}
               <p className="modal__brand">{shoe.brand}</p>
             </div>
 

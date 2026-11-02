@@ -101,6 +101,18 @@ class ListQueryTest {
 	}
 
 	@Test
+	void search_는_영어_이름과_다른_표기에서도_찾는다() {   // V13 — 신발 검색 필드(ShoeCollection.searchFields)
+		List<Map<String, Object>> v13 = List.of(
+				doc("id", 1L, "brand", "뉴발란스", "model", "슈퍼컴프 페이서 v2", "modelEn", "FuelCell SuperComp Pacer v2", "modelAlias", "SC Pacer v2, 퓨어셀"),
+				doc("id", 2L, "brand", "아식스", "model", "젤 카야노 32", "modelEn", null, "modelAlias", null));
+		List<String> f = new ShoeCollection(null, null, null, null, null, null).searchFields();
+		assertEquals(List.of(1L), ids(ListQuery.apply(v13, q("search", "SC 페이서"), f)));
+		assertEquals(List.of(1L), ids(ListQuery.apply(v13, q("search", "퓨어셀"), f)));
+		assertEquals(List.of(1L), ids(ListQuery.apply(v13, q("search", "supercomp pacer"), f)));
+		assertEquals(List.of(2L), ids(ListQuery.apply(v13, q("search", "카야노"), f)));   // 비어 있는 칸은 건너뛴다
+	}
+
+	@Test
 	void search_는_필터_정렬_limit_과_같이_돈다() {
 		ListQuery.Result r = ListQuery.apply(named, q("search", "나이키", "purpose", "조깅·회복주"), BM);
 		assertEquals(List.of(2L), ids(r));

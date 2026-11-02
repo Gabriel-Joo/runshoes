@@ -63,6 +63,7 @@ const FIELD_LABEL: Record<string, string> = {
   isCurrent: "현행", gender: "성별", weightSize: "중량 기준 사이즈", specSize: "스펙 기준 사이즈", measuredWeight: "실측 중량",
   measuredWeightSize: "실측 사이즈", measuredStackHeight: "실측 스택", measuredDrop: "실측 드롭", measuredSource: "실측 출처",
   measuredCount: "실측 수", priceSource: "가격 출처", priceCheckedAt: "가격 출처", priceKind: "가격 출처", specSources: "스펙 출처", sku: "품번",
+  wideScope: "와이드 모델", modelEn: "영어 이름", modelAlias: "검색용 다른 표기",
 };
 const EVENT_LABEL: Record<string, string> = { created: "신규 등록", hidden: "숨김", restored: "되살림" };
 

@@ -4,6 +4,9 @@
   "name": "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)",
   "contract": true,
   "expect": 200,
+  "volatile": [
+    "updatedAt"
+  ],
   "request": {
     "method": "GET",
     "path": "/api/shoes/2",
@@ -24,7 +27,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sun, 01 Nov 2026 23:00:00 GMT",
+      "date": "Mon, 02 Nov 2026 23:55:26 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -76,12 +79,14 @@
         }
       },
       "sku": "IB1873-101",
-      "updatedAt": "2026-11-01T22:59:59.963Z",
+      "updatedAt": "2026-11-02T23:55:26.623Z",
       "lastChange": [
         "wideAvailable",
         "wideScope",
         "specSources"
-      ]
+      ],
+      "modelEn": null,
+      "modelAlias": null
     }
   }
 }
