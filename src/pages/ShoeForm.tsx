@@ -491,7 +491,11 @@ function ShoeForm() {
       </div>
 
       <h3 className="form__section">스펙</h3>
-      <p className="form__hint">출처의 WEB(웹 문서)은 Claude가 검색해서 찾은 값, MAN(직접 확인)은 관리자가 직접 보고 넣은 값이에요. 둘 다 주소를 적어요 — 가르는 것은 누가 확인했나예요.</p>
+      <p className="form__lead">
+        출처의 WEB(웹 문서)은 Claude가 검색해서 찾은 값, MAN(직접 확인)은 관리자가 직접 보고 넣은 값이에요.
+        <br />
+        둘 다 주소를 적어요 — 가르는 것은 누가 확인했나예요.
+      </p>
       <div className="form__rows">
         <Row label="중량" htmlFor="f-weight" source={<SourcePicker id="s-weight" value={sources.weight} onChange={(s) => setSource("weight", s)} />}>
           <span className="form__unit">
