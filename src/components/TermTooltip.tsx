@@ -31,6 +31,16 @@ function TermTooltip({ term, openTerm, onToggle }: TermTooltipProps) {
         <span className="tooltip__box" onClick={(e) => e.stopPropagation()}>
           <strong className="tooltip__name">{term.name}</strong>
           <span className="tooltip__desc">{term.description}</span>
+          {term.values && (
+            <span className="tooltip__values">
+              {term.values.map(([value, desc]) => (
+                <span key={value} className="tooltip__value">
+                  <b>{value}</b>
+                  <span>{desc}</span>
+                </span>
+              ))}
+            </span>
+          )}
         </span>
       )}
     </span>

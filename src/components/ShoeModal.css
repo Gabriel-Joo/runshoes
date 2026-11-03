@@ -158,6 +158,7 @@
 .modal__summary {
   margin-top: 14px;
   font-size: 14px;
+  font-weight: 700;                 /* 굵게 — 크기는 그대로(2026-11-03 사용자) */
   color: var(--accent);
 }
 
@@ -232,18 +233,18 @@
   color: var(--text-weak);
 }
 
+/* "발매가 199,000원" — 평점 줄(.modal__rating)과 같은 크기: 글자 14px, 숫자 22px. 숫자 색은 평점(강조색)과 달리 본문색 */
 .modal__price {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-mid);
   white-space: nowrap;
 }
 
-/* 정가 출처 · 읽은 날(V5) — 가격 옆에 작게: "ABC마트 2026/10/28 기준" */
-.modal__price-basis {
-  margin-left: 6px;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--text-weak);
+.modal__price strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-strong);
 }
 
 /* 모바일 */
