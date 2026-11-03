@@ -1033,6 +1033,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사「호카(HOKA) (남성) 클리프톤 10 와이드 - 화이트:화이트 / 1162032-WWH 199,000원」. novelship 에 1162032 를 여성으로 적은 결과가 있으나 무신사 상품명은 (남성)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-clifton-10-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "code": "RSG"
+     },
+     "weight": {
+      "url": "https://www.hoka.com/en/us/mens-everyday-running-gear/clifton-10/1162030.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-clifton-10-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.hoka.com/en/us/clifton-10-how-it-compares/",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://www.musinsa.com/products/5298348",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "hoka:bondi#9": {
@@ -1961,6 +2000,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 와이드 상품 페이지 없음. Portland Running 은 'Width: D (men's standard)', RTINGS 는 'Wide Sizing Available: No' — 없다는 쪽."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 329000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "on:cloudrunner#2": {
@@ -5160,6 +5210,25 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24): 「Plate: None.」(opened) — 카본은 출처 면제 항목이라 명시 1곳으로 받는다"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 207200,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "hoka:clifton-pro#1": {
@@ -6561,6 +6630,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내는 SSG 일반형(1141491-CGEP)만. 해외는 와이드 상품 페이지 없고 사이트 공통 폭 안내('EE for men's')만 보임."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 213900,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "on:cloudflow#4": {
@@ -8615,6 +8695,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Portland Running 'D width', Running Warehouse 도 D 만. RunRepeat 는 2E 가 없었다고 함(리뷰라 참고만). REI 사이즈표의 '14 Wide'는 공통 사이즈표라 제외."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 339000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "newbalance:860#14": {
@@ -11889,6 +11980,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse·sportsshoes D 폭만. Doctors of Running 은 좁은 토박스(리뷰)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 336000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "hoka:rocket-x#3": {
@@ -11906,6 +12008,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: 무신사·롯데ON 모두 공용(레귤러)만 보이고 와이드는 마하 X 3 와이드뿐. 해외: motirunning 페이지에 'Wide — Men: 2E / Women: D' 문구가 있으나 사이트 공통 폭 안내로 보여 근거로 쓰지 않음. 와이드 상품 페이지는 찾지 못함."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 299000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "hoka:rocket-x#2": {
@@ -11923,6 +12036,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내·해외 모두 와이드 상품 페이지 없음. 해외 결과는 '2E is wide' 같은 사이트 공통 폭 안내와 '발볼 넓은 사람에게 좁다'는 리뷰뿐."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 299000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-02",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "newbalance:supercomp-elite#6": {
@@ -11986,6 +12110,56 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Running Warehouse lists 2E sizes alongside standard D widths(검색 요약). 국내: 이마트몰(SSG) 검색 페이지에 '퓨어셀 SC 페이서 v2 (2E) (MFCRRCH2)'가 보이나 판매자 불명이라 쓰지 않음. 공식몰 목록 페이지(cIdx=1380)가 결과에 떴지만 내용이 안 보여 쓰지 않음. 해외: newbalance.com 'MFCRR9HZ-2E' 주소도 결과에 있음(공식몰, 다른 검색에서 확인). kicksonfire 는 발매 정보 사이트라 제외."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 269000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/new-balance-fuelcell-supercomp-pacer-v2-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "code": "BITR"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/new-balance-fuelcell-supercomp-pacer-v2-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/new-balance-fuelcell-supercomp-pacer-v2-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/new-balance-fuelcell-supercomp-pacer-v2-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://www.runningwarehouse.com/New_Balance_FuelCell_SuperComp_Pacer_v2/descpage-N2SCPM3.html",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "newbalance:rebel#4": {
@@ -12074,6 +12248,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 뉴발란스 코리아 공식몰「발로스 V1 (남성, 2E)」. 국내는 공식몰 · 롯데백화점(롯데온) '[뉴발란스]남성 프레쉬폼x 발로스 V1 [2E] (NBPFFF702R/MBALCE1)'. 해외는 GOAT(리셀) 'Balos V1 2E Wide MBALCE12E' 만 보였고 소매점 2E 는 못 찾음(fit2run 은 Regular 만)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "프레시폼 X 발로스 v1",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 259000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "newbalance:860#15": {
@@ -13500,6 +13692,23 @@
      "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-2-Trail-Blue-Dash-Grey-Lime-Burst.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771436636",
      "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-2-Trail-Black-Carbon-Ray-Blue.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771436621",
      "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-2-Trail-White-Black-Semi-Impact-Orange.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773682191"
+    ]
+   }
+  },
+  "newbalance:balos#1": {
+   "image": "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Relic-Brown-Blue-Oasis.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1723055796",
+   "images": [
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Relic-Brown-Blue-Oasis.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1723055796",
+    "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Urgent-Red-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1753993449"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)",
+   "was": {
+    "image": "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Urgent-Red-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1753993449",
+    "images": [
+     "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Urgent-Red-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1753993449",
+     "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Relic-Brown-Blue-Oasis.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1723055796"
     ]
    }
   }
