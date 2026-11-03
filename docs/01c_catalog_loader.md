@@ -15,7 +15,7 @@ candidates.csv ─ 수집기들(local/work/specs-*.jsonl · fit2run · ABC마트
 build.mjs ← decisions.json(사람 판단) · copy.json(요약 · 설명) · extra-images.json(색상) · KicksDB 캐시(대표 이미지 · 품번)
      │
      ▼
-shoes.jsonl(407행, 상태 ok · partial 만 적재 대상 301) ─ load.mjs ─ 관리자 API(/api/shoes) ─ 운영 DB
+shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 302) ─ load.mjs ─ 관리자 API(/api/shoes) ─ 운영 DB
 ```
 
 - **적재 경로는 앱의 관리자 API 다.** DB 에 직접 쓰지 않는다 — 앱 검증(값 범위 · 출처 형식 · 품번 형식)을 그대로 탄다.
