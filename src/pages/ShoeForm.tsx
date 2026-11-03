@@ -427,11 +427,11 @@ function ShoeForm() {
         {/* 영어 이름 · 검색용 다른 표기(V13) — 영어 이름은 카드 · 상세에 작게, 다른 표기는 검색에만 */}
         <label className="form__field">
           <span>영어 이름</span>
-          <input value={modelEn} onChange={(e) => setModelEn(e.target.value)} maxLength={100} placeholder="FuelCell SuperComp Elite v6" spellCheck={false} />
+          <input value={modelEn} onChange={(e) => setModelEn(e.target.value)} maxLength={100} placeholder="예: FuelCell SuperComp Elite v6" spellCheck={false} />
         </label>
         <label className="form__field">
           <span>검색용 다른 표기</span>
-          <input value={modelAlias} onChange={(e) => setModelAlias(e.target.value)} maxLength={255} placeholder="SC Elite v6, 퓨어셀" spellCheck={false} />
+          <input value={modelAlias} onChange={(e) => setModelAlias(e.target.value)} maxLength={255} placeholder="예: SC Elite v6, 퓨어셀" spellCheck={false} />
           <small className="form__hint">쉼표로 나눈다 · 화면에는 보이지 않고 검색에만 쓴다</small>
         </label>
         <label className="form__field">
@@ -460,7 +460,7 @@ function ShoeForm() {
       <div className="form__gen">
         <label className="form__field form__field--linekey">
           <span>라인키</span>
-          <input value={lineKey} onChange={(e) => setLineKey(e.target.value)} placeholder="asics:gel-kayano" spellCheck={false} />
+          <input value={lineKey} onChange={(e) => setLineKey(e.target.value)} placeholder="예: asics:gel-kayano" spellCheck={false} />
         </label>
         <label className="form__field form__field--short">
           <span>세대</span>
@@ -485,8 +485,8 @@ function ShoeForm() {
             아디다스 · 온처럼 색상이 번호 안에 붙은 브랜드는 그 번호 그대로. 입력 검사는 그대로(하이픈 · 점 · / 허용) */}
         <label className="form__field form__field--sku">
           <span>품번</span>
-          <input value={sku} onChange={(e) => setSku(e.target.value)} placeholder="1011C284" spellCheck={false} autoCapitalize="characters" />
-          <small className="form__hint">예: 1011C284 (색상 코드는 빼고 모델 번호만)</small>
+          <input value={sku} onChange={(e) => setSku(e.target.value)} placeholder="예: 1011C284" spellCheck={false} autoCapitalize="characters" />
+          <small className="form__hint">색상 코드는 빼고 모델 번호만</small>
         </label>
       </div>
 
@@ -634,7 +634,7 @@ function ShoeForm() {
       <div className="form__grid">
         <label className="form__field form__field--wide">
           <span>한 줄 요약</span>
-          <input value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="○○한 분에게" />
+          <input value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="예: ○○한 분에게" />
         </label>
         <label className="form__field form__field--wide">
           <span>상세 설명</span>
