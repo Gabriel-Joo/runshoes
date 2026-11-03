@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02) — https://runshoes.ronanlab.dev . 신발 302켤레 · 리뷰 104건 · 마이그레이션 V12. 원천: 영역 문서 01a ~ 08 · README(옛 2 · 5 · 6 · 9절)
+> 상태: 운영에서 쓰는 중(2026-11-03) — https://runshoes.ronanlab.dev . 신발 303켤레 · 리뷰 104건 · 마이그레이션 V13. 원천: 영역 문서 01a ~ 08 · README(옛 2 · 5 · 6 · 9절)
 
 #### 0. 한 줄 요약
 
@@ -43,7 +43,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 #### 2. 데이터 흐름
 
 ```
-① 카탈로그   candidates.csv(407행) ─ 수집기 · KicksDB 이미지 ─ decisions.json(사람 판단) ─ build.mjs ─ shoes.jsonl(적재 대상 301)
+① 카탈로그   candidates.csv(408행) ─ 수집기 · KicksDB 이미지 ─ decisions.json(사람 판단) ─ build.mjs ─ shoes.jsonl(적재 대상 302)
 ② 적재      load.mjs — 건조 실행 → 관리 화면 수정 먼저 가져오기 → 관리자 API 로 POST · PATCH(scripts/load-prod.sh --apply)
 ③ API       Spring Boot — 검증(값 범위 · 출처 형식 · 품번) → MySQL. 평점 · 찜 수 · 작성자는 서버가 정한다
 ④ 화면      목록 · 검색 · 정렬은 서버가, 화면은 받은 것을 그린다. 없는 값은 "정보 없음"
@@ -70,7 +70,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 
 #### 4. 남은 한계
 
-- **리뷰가 시드 20켤레에만 있다.** 302켤레 중 282켤레가 리뷰 0 이라 랭킹 · 추천 동점 처리 · 비교의 평점 축이 사실상 그 20켤레의 일이다.
+- **리뷰가 시드 20켤레에만 있다.** 303켤레 중 283켤레가 리뷰 0 이라 랭킹 · 추천 동점 처리 · 비교의 평점 축이 사실상 그 20켤레의 일이다.
 - **빈 칸이 많다.** 발볼 191 · 가격 154켤레가 정보 없음. 와이드는 재조사를 마쳐 4켤레만 비었다(`01a_catalog_sources.md` 1-7).
 - **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만(`06_deployment.md` 4절).
 - **옛 칸이 남아 있다.** `weight` · `drop_mm` · `stack_height` · `width` · `liked`(`07_database.md` 4절).
