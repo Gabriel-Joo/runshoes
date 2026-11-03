@@ -105,6 +105,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. gearuptofit 이 'X-wide 까지' 라고 쓰지만 상품 근거 없음. Running Warehouse 는 D 만"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.youtube.com/watch?v=Dh82XnsGLsA&t=394s",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.youtube.com/watch?v=Dh82XnsGLsA&t=394s",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.nike.com/ch/en/t/vaporfly-4-road-racing-shoes-Mh3I4bFo/II7203-100",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://therunningchannel.com/first-look-nike-vaporfly-4/",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "salomon:speedcross#6": {
@@ -935,22 +974,27 @@
     "note": "사용자 decide.csv(2026-10-21): A — manual"
    },
    "price_krw": {
-    "action": "use_source",
-    "value": 239000,
-    "source": "manual",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-23",
-    "price_kind": "발매가",
-    "via": "admin",
+    "action": "clear",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+    "note": "사용자(2026-11-03) \"공식몰 209,000원으로 바꾸고 출처는 공식몰로. adidas.co.kr 이 약관 미확인이라 못 열면 가격을 비우고 보고해라\" — adidas.co.kr 은 sources.yaml mode unknown(약관을 못 읽음)이라 열지 않았다 → 비운다. 239,000(다나와)은 허용 출처가 아니고 다나와의 울트라부스트 5 GTX(JQ2955) 출시가와 같다. 웹 검색 요약에는 공식몰 울트라부스트 5 정상가 209,000(JH9633 · ID8811) — 페이지를 열지 않아 쓰지 않는다",
     "previous": {
-     "action": "keep_db",
+     "action": "use_source",
+     "value": 239000,
+     "source": "manual",
      "price_source": "다나와",
      "price_checked_at": "2026-07-23",
-     "price_kind": null,
+     "price_kind": "발매가",
+     "via": "admin",
      "by": "user",
-     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+     "previous": {
+      "action": "keep_db",
+      "price_source": "다나와",
+      "price_checked_at": "2026-07-23",
+      "price_kind": null,
+      "by": "user",
+      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+     }
     }
    },
    "wide_available": {
@@ -1675,6 +1719,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공식몰 남성 하이페리온 2 는 MEDIUM 만. 해외는 공통 폭 안내표(2E)와 폭 선택기만 보여 모델별 2E 확인 못 함."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "nike:vaporfly#3": {
@@ -2681,6 +2736,46 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: GEL-CUMULUS 27 (2E WIDE) 1011B981. 국내는 GS SHOP 일반 폭(블랙/콘크리트)만 보임. 해외 공식은 단종 표시"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.youtube.com/watch?v=EFE-CNLnAqA&t=52s",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-cumulus-27-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.youtube.com/watch?v=EFE-CNLnAqA&t=52s",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-cumulus-27-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-gel-cumulus-27-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.fit2run.com/products/asics-gel-cumulus-27-atc-mens",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://www.asics.com/au/en-au/gel-cumulus-27-2e-wide/p/AOP_1011B981-022.html",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "asics:glideride-max#1": {
@@ -12544,6 +12639,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공식몰 남성 글리세린 맥스 그레이 (MEDIUM) 등 MEDIUM 만. 와이드로 나온 것은 글리세린 21 · GTS 22 (다른 모델)."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 239000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-03",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
    }
   },
   "brooks:glycerin-flex#1": {
@@ -13709,6 +13815,30 @@
     "images": [
      "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Urgent-Red-Grey.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1753993449",
      "https://images.stockx.com/images/New-Balance-Fresh-Foam-Balos-v1-Relic-Brown-Blue-Oasis.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1723055796"
+    ]
+   }
+  },
+  "brooks:hyperion#2": {
+   "image": "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Gold-Pink.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922756",
+   "images": [
+    "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Gold-Pink.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922756",
+    "https://images.stockx.com/images/Brooks-Hyperion-2-Alloy-Bright-White-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922875",
+    "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Ebony-Primer-Grey.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922834",
+    "https://images.stockx.com/images/Brooks-Hyperion-2-Colony-Blue-Navy-Nightlife.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922837",
+    "https://images.stockx.com/images/Brooks-Hyperion-2-White-Elfin-Patina.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922758"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)",
+   "was": {
+    "image": "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Gold-Pink.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922756",
+    "images": [
+     "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Gold-Pink.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922756",
+     "https://images.stockx.com/images/Brooks-Hyperion-2-Alloy-Bright-White-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922875",
+     "https://images.stockx.com/images/Brooks-Hyperion-2-Black-Ebony-Primer-Grey.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922834",
+     "https://images.stockx.com/images/Brooks-Hyperion-2-Illusion-Coral-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922824",
+     "https://images.stockx.com/images/Brooks-Hyperion-2-Colony-Blue-Navy-Nightlife.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922837",
+     "https://images.stockx.com/images/Brooks-Hyperion-2-White-Elfin-Patina.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922758"
     ]
    }
   }
