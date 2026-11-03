@@ -68,6 +68,9 @@ shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 301) ─ load.mjs ─
    | R3 다른 영어 표기 | 영어 이름과 다른 `line_en`, 하이픈을 띄운 형태 | 0 |
    | R4 약자 한글 읽기 | X→엑스 · SL→에스엘 · GTS→지티에스 · S/LAB→에스랩 … | 39 |
    | R5 나이키 옛 표기 | KicksDB 상품명에만 있는 Next% · ZoomX · Air Zoom — 영어 그대로와 한글(줌X 베이퍼플라이 넥스트% 4) | 16 |
+   | R6 브랜드 기술명 | 영어 이름 · KicksDB 상품명에는 있고 한글 이름에는 없는 FuelCell · Fresh Foam · Flow · ZoomX · Air Zoom 을 붙인 형태(퓨얼셀 · 퓨어셀 슈퍼컴프 엘리트 v6) | 14 |
+
+   합계 112켤레 · 174개(2026-11-03).
 
 #### 1-4. 운영 적재 — `scripts/load-prod.sh`
 

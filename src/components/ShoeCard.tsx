@@ -52,7 +52,6 @@ function ShoeCard({
         NO.{String(index + 1).padStart(2, "0")} · {shoe.purpose}
       </p>
       <h3 className="card__model">{shoe.model}</h3>
-      {shoe.modelEn && <p className="card__model-en">{shoe.modelEn}</p>}
       <p className="card__brand">{shoe.brand}</p>
 
       <p className="card__summary">{shoe.summary}</p>

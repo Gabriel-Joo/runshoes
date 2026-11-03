@@ -149,13 +149,6 @@
   font-weight: 800;
 }
 
-/* 영어 이름(V13) — 모델명 아래 아주 작게(브랜드 자리는 아니다) */
-.modal__model-en {
-  margin-top: 2px;
-  font-size: 11px;                  /* 브랜드(13px)보다 작게 */
-  color: var(--text-weak);
-}
-
 .modal__brand {
   margin-top: 3px;
   font-size: 13px;

@@ -34,7 +34,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 묶음 | 칸 | 들어온 때 |
 |---|---|---|
 | 식별 | `id` · `brand` · `model` · `line_key` · `generation` · `gender` · `is_current` · `sku` | V1 · V4 · V11 |
-| 영어 이름 | `model_en`(화면에 작게) · `model_alias`(검색용 다른 표기, 쉼표로 나눈다 — 화면에 보이지 않는다) | V13 |
+| 영어 이름 | `model_en`(상세 모달 브랜드 줄에) · `model_alias`(검색용 다른 표기, 쉼표로 나눈다 — 화면에 보이지 않는다) | V13 |
 | 분류 | `purpose` · `stability` · `midsole` · `carbon` | V1 |
 | 공시 스펙 | `official_weight_g` · `official_weight_size` · `official_heel_mm` · `official_drop_mm` · `official_spec_size` | V4 |
 | 실측 스펙 | `measured_weight_g` · `measured_weight_size` · `measured_heel_mm` · `measured_drop_mm` · `measured_source` · `measured_count` | V4 |
@@ -72,7 +72,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 10 | auto increment ids | 리뷰 · 신발 id 를 DB 가 매긴다 | 2026-11-01 |
 | 11 | admin history | `sku` · `updated_at` · `last_change` · `shoe_purges` | 2026-11-01 |
 | 12 | wide scope | `wide_scope`(domestic · overseas) | 2026-11-02 |
-| 13 | model en | `model_en` · `model_alias` | (배포 전) |
+| 13 | model en | `model_en` · `model_alias` | 2026-11-03 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md`)에 있다. 절차는 `06_deployment.md`.
 
