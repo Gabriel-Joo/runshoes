@@ -211,6 +211,15 @@
   margin-top: 16px;
 }
 
+/* 구역 머리 바로 아래 안내문(스펙) — 이미지 구역의 "이미지 경로 (…)" 줄과 같은 글씨 · 자리(2026-11-03 사용자):
+   머리에서 16px(.form__grid 와 같다), 아래 칸과 7px(.form__field gap 과 같다) */
+.form__lead {
+  margin: 16px 0 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
 /* 세대 — 한 줄 */
 .form__gen {
   display: grid;
