@@ -90,8 +90,8 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 NO.{String(shoe.id).padStart(2, "0")} · {shoe.purpose}
               </p>
               <h2 className="modal__model">{shoe.model}</h2>
-              {shoe.modelEn && <p className="modal__model-en">{shoe.modelEn}</p>}
-              <p className="modal__brand">{shoe.brand}</p>
+              {/* 영어 이름(V13)은 브랜드 줄에 가운뎃점으로 — 같은 크기 · 색(2026-11-03 사용자). 없으면 브랜드만 */}
+              <p className="modal__brand">{shoe.modelEn ? `${shoe.brand} · ${shoe.modelEn}` : shoe.brand}</p>
             </div>
 
             <div className="modal__body">
