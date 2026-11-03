@@ -13704,25 +13704,23 @@
    "image": "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
    "images": [
     "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
-    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
-    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Black-White-Iron-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1789758936",
-    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Cloud-White-Black-Silver-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790359641",
-    "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Flash-Aqua.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713038",
-    "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Purple-Burst.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713019"
+    "https://images.stockx.com/images/adidas-Ultra-Boost-5-Black-White-Iron-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1789758936"
    ],
-   "via": "admin",
-   "by": "user",
-   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
+   "via": "claude",
+   "by": "claude",
+   "note": "사용자(2026-11-03) \"갤러리는 대표 ID8818 + JH9633 두 장만 남겨라. 나머지는 5인지 5X인지 확인이 안 된다. 네가 판단으로 넣어라\" — ID8818(White Solar Red)은 adidas.com/kw ultraboost-5-shoes/ID8818, JH9633(Black White Iron Metallic)은 adidas.co.kr 울트라부스트-5/JH9633(웹 검색 결과 제목). 뺀 넷: KJ3586 · KI8559(품번 못 찾음), KJ3584(시세 사이트 하나), KJ3588(adidas.com.tr 은 5 지만 Bike24 여성용 · UK 5.5 무게)",
    "was": {
-    "image": "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
+    "image": "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
     "images": [
-     "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Solar-Red.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1778706483",
+     "https://images.stockx.com/images/adidas-Ultra-Boost-5-Hi-Res-Yellow-Blue-Tint-Halo-Silver.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713024",
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-Black-White-Iron-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1789758936",
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-Cloud-White-Black-Silver-Metallic.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790359641",
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Flash-Aqua.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713038",
      "https://images.stockx.com/images/adidas-Ultra-Boost-5-White-Halo-Silver-Purple-Burst.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1790713019"
-    ]
+    ],
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
    }
   },
   "adidas:duramo-sl#1": {
