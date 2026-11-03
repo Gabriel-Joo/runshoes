@@ -9,6 +9,22 @@ import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
 import "./ShoeModal.css";
 
+// 와이드 모델 ⓘ — 값 넷(V12)을 다 설명한다(2026-11-03 사용자 문구). terms 테이블은 읽기 전용이라(TermCollection) 화면이 직접 가진다
+const WIDE_TERM: Term = {
+  id: 0,
+  key: "wideAvailable",
+  name: "와이드 모델",
+  short: "넓은 폭(2E·4E) 버전이 따로 나오는지",
+  description: "그 신발의 넓은 폭(2E·4E) 버전이 따로 나오는지를 뜻합니다.",
+  // 값 이름은 칸에 보이는 값(wideLabel)과 같게 — 말투는 다른 용어처럼 "~입니다"(2026-11-03 사용자)
+  values: [
+    ["있음", "국내에서 살 수 있습니다."],
+    ["국외에만 있음", "해외에는 나오지만 국내 정식 판매는 확인되지 않았습니다. 병행수입으로는 구할 수 있습니다."],
+    ["없음", "찾아봤지만 넓은 폭 버전이 없습니다."],
+    ["정보 없음", "아직 확인하지 못했습니다."],
+  ],
+};
+
 interface ShoeModalProps {
   shoe: Shoe;
   terms: Term[];
@@ -143,7 +159,14 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 <dd>{text(shoe.width)}</dd>
               </div>
               <div>
-                <dt>와이드 모델</dt>
+                <dt>
+                  와이드 모델
+                  <TermTooltip
+                    term={WIDE_TERM}
+                    openTerm={openTerm}
+                    onToggle={setOpenTerm}
+                  />
+                </dt>
                 <dd>{wideLabel(shoe)}</dd>
               </div>
               <div>
@@ -187,14 +210,14 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
               <span className="modal__rating">
                 평점 <strong>{shoe.rating.toFixed(1)}</strong>점
               </span>
+              {/* "발매가 199,000원" — 평점 줄과 같은 꼴(글자 · 숫자 크기). 출처 · 읽은 날은 관리 화면에만(2026-11-03 사용자 — 그 곳에서 지금 그 값에 파는 것처럼 보였다) */}
               <span className="modal__price">
-                {shoe.price === null
-                  ? "가격 정보 없음"
-                  : `${shoe.price.toLocaleString()}원`}
-                {shoe.price !== null && shoe.priceSource && shoe.priceCheckedAt && (
-                  <small className="modal__price-basis">
-                    {shoe.priceSource} {shoe.priceCheckedAt.replace(/-/g, "/")} 기준
-                  </small>
+                {shoe.price === null ? (
+                  "가격 정보 없음"
+                ) : (
+                  <>
+                    {shoe.priceKind ?? "발매가"} <strong>{shoe.price.toLocaleString()}</strong>원
+                  </>
                 )}
               </span>
             </div>

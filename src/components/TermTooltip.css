@@ -49,3 +49,22 @@
     max-width: min(280px, calc(100vw - 140px));
   }
 }
+
+/* 값마다 한 줄(와이드 모델) — 값 이름은 굵게, 설명은 그 아래 */
+.tooltip__values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.tooltip__value {
+  display: flex;
+  flex-direction: column;
+}
+
+.tooltip__value b {
+  font-weight: 700;
+  color: oklch(0.96 0 0);
+}

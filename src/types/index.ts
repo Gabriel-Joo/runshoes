@@ -80,4 +80,6 @@ export interface Term {
   name: string;
   short: string;
   description: string;
+  /** 값마다 한 줄 설명 — 화면이 직접 가진 용어만(와이드 모델). API 의 terms 에는 없다 */
+  values?: [string, string][];
 }
