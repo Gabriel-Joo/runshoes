@@ -9,12 +9,14 @@
 //     R3 다른 영어 표기 영어 이름과 다른 line_en · 하이픈을 띄운 형태(Gel-Kayano → Gel Kayano — 하이픈은 공백 무시로 못 찾는다)
 //     R4 약자 한글 읽기 한글 이름 안의 영문 약자(X · SL · GTS · S/LAB …)를 한글로(로켓 X → 로켓 엑스)
 //     R5 나이키 옛 표기 KicksDB 상품명에만 있는 Next% · ZoomX · Air Zoom — 영어 그대로와 한글 읽기(베이퍼플라이 넥스트% 4, 2026-11-03 사용자 제안)
-//     R6 브랜드 기술명  영어 이름 · KicksDB 상품명에는 있고 한글 이름에는 없는 기술명(FuelCell · Fresh Foam · Flow · ZoomX · Air Zoom)을 붙인 형태 —
-//                       퓨얼셀 · 퓨어셀 슈퍼컴프 엘리트 v6(2026-11-03 사용자: FuelCell 라인인 걸 알고 검색한다)
+//     R6 브랜드 기술명  영어 이름 · KicksDB 상품명에는 있고 한글 이름에는 없는 기술명(FuelCell · Fresh Foam · Flow · ZoomX · Air Zoom · Air)을 붙인 형태 —
+//                       퓨얼셀 · 퓨어셀 슈퍼컴프 엘리트 v6(2026-11-03 사용자: FuelCell 라인인 걸 알고 검색한다).
+//                       라인 단위 — 한 라인의 어느 세대에서든 기술명이 확인되면 그 라인의 모든 세대에 준다(1080 v14 → v15, 2026-11-03 사용자)
 //   근거는 엄격하지 않다(검색용 — 틀려도 검색이 안 될 뿐, 화면에 보이지 않는다). 규칙과 수는 docs/01c 1-8
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { parseCsv } from './stockx.mjs';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
 const R1 = { 퓨얼셀: ['퓨어셀'], 프레시폼: ['프레쉬폼', '후레쉬폼'], 젤: ['겔'], 엔돌핀: ['엔도르핀'], 페가수스: ['페가서스'], 클리프톤: ['클리프턴', '클립톤'],
@@ -25,10 +27,17 @@ const R4 = { X: '엑스', SL: '에스엘', GTS: '지티에스', 'S/LAB': '에스
 const R5 = { 'next%': '넥스트%', zoomx: '줌X', air: '에어', zoom: '줌' };
 // 긴 것부터(Fresh Foam X 를 Fresh Foam 보다 먼저) — 한글은 첫 표기가 우리 표기, 나머지는 오독
 const R6 = [['Fresh Foam X', ['프레시폼 X', '프레쉬폼 X', '후레쉬폼 X']], ['Fresh Foam', ['프레시폼', '프레쉬폼', '후레쉬폼']], ['FuelCell', ['퓨얼셀', '퓨어셀']],
-  ['Air Zoom', ['에어 줌']], ['ZoomX', ['줌X']], ['Flow', ['플로우']]];
+  ['Air Zoom', ['에어 줌']], ['Air', ['에어']], ['ZoomX', ['줌X']], ['Flow', ['플로우']]];   // Air — 나이키 Air Winflo(윈플로 11 · 12 를 맞춘다)
 const BRAND = /^(New Balance|ASICS|Hoka One One|Hoka|Nike|adidas|On Running|On|Under Armour|Puma|Saucony|Brooks|Mizuno|Salomon|Altra|Merrell)\s+(UA\s+)?/i;
 const norm = (s) => s.toLowerCase().replace(/[\s-]+/g, '');
 const words = (s) => s.toLowerCase().replace(/-/g, ' ').split(/\s+/).filter(Boolean);
+
+// 글에 든 R6 기술명(긴 것부터 — Fresh Foam X 를 찾았으면 Fresh Foam 으로 다시 세지 않는다)
+function techOf(text) {
+  const out = []; let left = text;
+  for (const [t] of R6) { const re = new RegExp(`\\b${t}\\b`, 'gi'); if (re.test(left)) { out.push(t); left = left.replace(re, ' '); } }
+  return out;
+}
 
 // 받아 둔 자료 — 처음 부를 때 한 번 읽는다
 let IDX = null;
@@ -60,12 +69,20 @@ function index() {
       }
     }
   }
-  return (IDX = { sx, bySlug, sc });
+  // R6 라인 단위 — 라인마다 세대들의 line_en · KicksDB 상품명에서 찾은 기술명
+  const lineTech = new Map();
+  for (const c of parseCsv(fs.readFileSync(path.join(ROOT, 'candidates.csv'), 'utf8').replace(/^\uFEFF/, ''))) {
+    if (!c.line_key) continue;
+    const slug = sx[`${c.line_key}#${c.generation}`]?.slug, raw = slug ? bySlug.get(slug) : null;
+    const found = techOf(`${c.line_en ?? ''} ${raw ? raw.replace(BRAND, '') : ''}`);
+    if (found.length) lineTech.set(c.line_key, [...new Set([...(lineTech.get(c.line_key) ?? []), ...found])]);
+  }
+  return (IDX = { sx, bySlug, sc, lineTech });
 }
 
 /** 행(build.mjs 의 row — brand · model · line_key · generation)과 line_en → { model_en, model_en_source, model_alias, alias_rules } */
 export function namesOf(row, lineEn) {
-  const { sx, bySlug, sc } = index();
+  const { sx, bySlug, sc, lineTech } = index();
   const id = `${row.line_key}#${row.generation}`, nike = row.line_key.startsWith('nike:');
   const slug = sx[id]?.slug ?? null, raw = slug ? bySlug.get(slug) ?? null : null;
   const sxName = raw ? raw.replace(BRAND, '').trim() : null;
@@ -103,12 +120,13 @@ export function namesOf(row, lineEn) {
     add([...before, ...kw].join(' '), 'R5');
     if (mid.length && before.length) add([...ko.slice(0, -1), ...mid, ko.at(-1)].join(' '), 'R5');   // 앞 낱말 없이 — 베이퍼플라이 넥스트% 4
   }
-  // R6 — 기술명이 영어 이름이나 KicksDB 상품명(영어 이름으로 쓰지 않은 것도)에 있는데 한글 이름에 없으면
-  { const src = `${en ?? ''} ${sxName ?? ''}`; let left = src;
-    for (const [t, kos] of R6) {
-      const re = new RegExp(`\\b${t}\\b`, 'i'); if (!re.test(left)) continue;
-      left = left.replace(new RegExp(re.source, 'gi'), ' ');   // Fresh Foam X 를 찾았으면 Fresh Foam 으로 다시 세지 않는다
+  // R6 — 기술명이 영어 이름 · KicksDB 상품명(영어 이름으로 쓰지 않은 것도) · 같은 라인 다른 세대에 있는데 한글 이름에 없으면
+  { const own = techOf(`${en ?? ''} ${sxName ?? ''}`), line = lineTech.get(row.line_key) ?? [];
+    const ts = R6.filter(([t]) => own.includes(t) || line.includes(t));
+    for (const [t, kos] of ts) {
+      if (ts.some(([u]) => u !== t && u.startsWith(t))) continue;   // Fresh Foam X 가 있으면 Fresh Foam 은 따로 붙이지 않는다
       if (kos.some((k) => row.model.includes(k.split(' ')[0]))) continue;
+      const re = new RegExp(`\\b${t}\\b`, 'i');
       if (en && !re.test(en)) add(`${t} ${en}`, 'R6');
       for (const k of kos) add(`${k} ${row.model}`, 'R6');
     } }
