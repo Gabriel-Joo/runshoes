@@ -50,6 +50,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 와이드 없음. Running Warehouse D 폭만, 리뷰(runtothefinish) 'not available in wide'. 국내 'W' 는 여성용. 와이드는 보스턴 12(H03613) 세대에만 있음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.adidas.co.kr/%EC%95%84%EB%94%94%EC%A0%9C%EB%A1%9C-%EB%B3%B4%EC%8A%A4%ED%84%B4-13/KH5603.html",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://www.adidas.co.kr/%EC%95%84%EB%94%94%EC%A0%9C%EB%A1%9C-%EB%B3%B4%EC%8A%A4%ED%84%B4-13/KH5603.html",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-boston-13-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-boston-13-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:vaporfly#4": {
@@ -191,12 +230,23 @@
     "note": "Claude 웹 검색(2026-10-23): 32/22 → 10 mm drop · 10mm drop | Every source says 10."
    },
    "price_krw": {
-    "action": "keep_db",
-    "price_source": "다나와",
-    "price_checked_at": "2026-07-23",
-    "price_kind": null,
+    "action": "use_source",
+    "value": 194400,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 살로몬 없음 · 살로몬 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-23",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 살로몬 없음 · 살로몬 국내몰 검색 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -215,6 +265,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: SPEEDCROSS 6 WIDE MEN'S. 국내: '스피드크로스 6 와이드 [블랙] 남성 L41744000' 이 SSG · 롯데ON 검색 결과에 보이나 판매자 불명, 무신사는 스냅(사용자 게시물)뿐이고 개별 상품 페이지 주소 없음, 공식몰에서는 찾지 못함 — 국내는 비움. 해외: 살로몬 NZ · AU 공식몰 남성 와이드 상품 페이지(+12mm 앞발 볼륨), Cotswold · Backcountry 등도 있음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.musinsa.com/review/38966352?gf=A",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://www.musinsa.com/review/38966352?gf=A",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.salomon.com/en-ca/product/speedcross-6-lg9212",
+      "code": "WEB"
+     },
+     "midsole": {
+      "code": "DB"
+     },
+     "stackHeight": {
+      "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://salomon.co.nz/products/speedcross-6-wide-mens",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "asics:gel-kayano#32": {
@@ -5981,15 +6070,24 @@
   "asics:novablast#6": {
    "weight_g": {
     "action": "use_source",
-    "value": 249,
-    "source": "https://www.marathonsports.com/products/asics-mens-novablast-6",
-    "sources_more": [
-     "https://www.fleetfeet.com/products/mens-asics-novablast-6"
-    ],
-    "via": "web",
-    "by": "claude",
-    "weight_basis": "unknown",
-    "note": "사용자(2026-10-23): 공식값(사이즈 불명)과 BITR 값을 둘 다 둔다 — BITR 269(M10.5)는 measured_weight_g. 8.8 oz (M), 7.7 oz (W) · 8.8 oz | 주 출처 교체(2026-10-24 사용자 지시): Fleet Feet → www.marathonsports.com(같은 판단의 일치 출처)"
+    "value": 253,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)",
+    "previous": {
+     "action": "use_source",
+     "value": 249,
+     "source": "https://www.marathonsports.com/products/asics-mens-novablast-6",
+     "sources_more": [
+      "https://www.fleetfeet.com/products/mens-asics-novablast-6"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "unknown",
+     "note": "사용자(2026-10-23): 공식값(사이즈 불명)과 BITR 값을 둘 다 둔다 — BITR 269(M10.5)는 measured_weight_g. 8.8 oz (M), 7.7 oz (W) · 8.8 oz | 주 출처 교체(2026-10-24 사용자 지시): Fleet Feet → www.marathonsports.com(같은 판단의 일치 출처)"
+    }
    },
    "measured_weight_g": {
     "value": 269,
@@ -6017,6 +6115,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 아식스 공식 온라인스토어「노바블라스트 6(2E) 남성 신발, 179,000원, 1011C242」. 무신사에도 '노바블라스트 6 남성 와이드 1011C242-002'. 공식몰은 품절 표시"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.youtube.com/watch?v=8nUs2PF2aWQ&t=163s",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-novablast-6-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.youtube.com/watch?v=8nUs2PF2aWQ&t=163s",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-novablast-6-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-novablast-6-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://asics.co.kr/p/AKR_112630211-002",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "hoka:gaviota#6": {
@@ -6765,6 +6902,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 소매점이 'Standard (D) width for men's' 만 표기. Altitude Sports 'Cloudflow Wide' 는 3세대라 근거 아님."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "on:cloudflyer#5": {
@@ -8059,6 +8207,46 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사「아식스(ASICS) 매직 스피드 4 맨 와이드 - 화이트:블랙 / 1011B873-101」. GS SHOP '[아식스 본사]매직 스피드 4(2E)' 도 보임. 국내 검색은 매직 스피드 5 와 공용"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.asics.co.kr/p/19685?srsltid=AYCX9vKv2-E1yOufAbpGUycm-OTaPTrnuvD5evjV0e1dePskTSMxfrSn",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-magic-speed-4-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.asics.co.kr/p/19685?srsltid=AYCX9vKv2-E1yOufAbpGUycm-OTaPTrnuvD5evjV0e1dePskTSMxfrSn",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.asics.co.kr/p/AKR_112511102-751",
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://www.runningshoesguru.com/reviews/road/asics-magic-speed-4-review/",
+      "code": "RSG"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-magic-speed-4-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://www.musinsa.com/products/4814783",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "hoka:mach#7": {
@@ -11513,6 +11701,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse 는 D 만, OpticsPlanet Medium, Gear Up to Fit 'standard width only'. 국내는 캐터마운트 4 자체가 거의 안 나옴."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "mizuno:wave-sky#9": {
@@ -11766,6 +11965,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 판매처 폭 표(사이즈 가이드)만 보이고 와이드 상품은 없음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.youtube.com/watch?v=RYhR5XdkG28&t=423s",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metaspeed-edge-tokyo-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.youtube.com/watch?v=RYhR5XdkG28&t=423s",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metaspeed-edge-tokyo-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metaspeed-edge-tokyo-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metaspeed-edge-tokyo-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "asics:metaspeed-ray#1": {
@@ -11802,6 +12040,56 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse·Sportsshoes 모두 D 폭. Passion for Sports 'Width Standard Wide' 는 표준 폭 표기로 보임"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.reddit.com/r/indianrunners/comments/1qapn7u/asics_noosa_tri_16_first_run/?tl=ko",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 242800,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-noosa-tri-16-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.reddit.com/r/indianrunners/comments/1qapn7u/asics_noosa_tri_16_first_run/?tl=ko",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-noosa-tri-16-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-noosa-tri-16-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-noosa-tri-16-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "asics:noosa-tri#15": {
@@ -12725,6 +13013,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse · Running Room 'D width'. The Running Company 의 '2E Wide' 는 사이트 공통 폭 안내. 리뷰 '넓은 발에 편하다' 는 착화감 표현."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "on:cloudswift#3": {
@@ -12796,6 +13095,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse 도 D 만. 로드 Cloudsurfer Wide 는 다른 모델"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "mizuno:wave-rebellion-pro#2": {
@@ -13206,10 +13516,18 @@
    "note": "StockX 에 다른 상품이 없다(2026-10-28)"
   },
   "brooks:ghost-max#4": {
-   "none": true,
-   "reason": "no_clean_image",
-   "was": "박스 사진",
-   "note": "StockX 에 다른 상품이 없다(2026-10-28)"
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/591/original/1104961D004.png.png?action=crop&width=700",
+   "sku": "110496",
+   "title": "Brooks Ghost Max 4 'Black Folkstone Open Air'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 순위가 가장 앞선 남성 일반판(2E · 4E 와이드 제외). 이전 판단(StockX 는 박스 사진뿐이라 이미지 없음)은 previous · 품번은 GOAT 1104961D004 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\"",
+   "previous": {
+    "none": true,
+    "reason": "no_clean_image",
+    "was": "박스 사진",
+    "note": "StockX 에 다른 상품이 없다(2026-10-28)"
+   }
   },
   "brooks:revel#9": {
    "none": true,
@@ -13563,36 +13881,40 @@
    }
   },
   "mizuno:wave-rider#30": {
-   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/808/277/original/J1GM262058.png.png",
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/808/277/original/J1GM262058.png.png?action=crop&width=700",
    "sku": "J1GM262058",
    "title": "Mizuno Wave Rider 30 'Green Black'",
    "source": "goat",
    "by": "user",
-   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외)"
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외) · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\"",
+   "was": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/808/277/original/J1GM262058.png.png"
   },
   "brooks:hyperion-elite#6": {
-   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/335/original/1000541D699.png.png",
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/335/original/1000541D699.png.png?action=crop&width=700",
    "sku": "100054",
    "title": "Brooks Hyperion Elite 6 'Tigerlily Red White'",
    "source": "goat",
    "by": "user",
-   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외) · 품번은 GOAT 1000541D699 에서 브룩스 형식(모델 6자리 · 1D 발볼 · 699 색상)대로 모델 번호만"
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-01 사용자 GOAT 허용(출처 표기는 호스트별 \"Image: GOAT\"). 남성 · 공용 기본 색상만(슈퍼 와이드 · 여성 · 특별판 제외) · 품번은 GOAT 1000541D699 에서 브룩스 형식(모델 6자리 · 1D 발볼 · 699 색상)대로 모델 번호만 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\"",
+   "was": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/335/original/1000541D699.png.png"
   },
   "asics:gt-2000#15": {
-   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/361/original/1011C235800.png.png",
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/361/original/1011C235800.png.png?action=crop&width=700",
    "sku": "1011C235",
    "title": "ASICS GT 2000 15 'Energy Orange Orange Glow'",
    "source": "goat",
    "by": "claude",
-   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙)"
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙) · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\"",
+   "was": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/361/original/1011C235800.png.png"
   },
   "asics:sonicblast#2": {
-   "image": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/370/original/1011C244100.png.png",
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/370/original/1011C244100.png.png?action=crop&width=700",
    "sku": "1011C244",
    "title": "ASICS Sonicblast 2 'White Stadium Orange'",
    "source": "goat",
    "by": "claude",
-   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙) · 남성 일반판은 이 한 가지뿐"
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다. 2026-11-02 사용자 \"GOAT 이미지 찾아봐라 — 남성 기본 색상만\". 검색 결과 순위가 가장 앞선 남성 일반판(여성 · GS · 와이드 · GTX 제외, 3장 4번 대표 색상 규칙) · 남성 일반판은 이 한 가지뿐 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\"",
+   "was": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/370/original/1011C244100.png.png"
   },
   "nike:acg-zegama#1": {
    "image": "https://images.stockx.com/images/Nike-ZoomX-ACG-Zegama-Cream-Light-Orewood-Brown.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1776437634",
@@ -13839,6 +14161,54 @@
      "https://images.stockx.com/images/Brooks-Hyperion-2-White-Elfin-Patina.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1743922758"
     ]
    }
+  },
+  "asics:metafuji-trail#2": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/417/original/1013A178750.png.png?action=crop&width=700",
+   "sku": "1013A178",
+   "title": "ASICS Metafuji Trail 2 'Illuminate Yellow Dark Aubergine'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 남성 일반판은 이 하나뿐 · 품번은 GOAT 1013A178750 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "newbalance:supercomp-trail#2": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/115/294/975/original/MTRX5C9.png.png?action=crop&width=700",
+   "sku": "MTRX5C9",
+   "title": "New Balance FuelCell SuperComp Trail v2 'Alkaline Green'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 남성 일반판은 이 하나뿐 · 품번은 GOAT MTRX5C9 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "saucony:guide#19": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/117/855/973/original/S210581_2043.png.png?action=crop&width=700",
+   "sku": "S21058",
+   "title": "Saucony Guide 19 'Vintage Gum Brun Clair'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 남성 일반판은 이 하나뿐(와이드 · 여성 제외) · 품번은 GOAT S210581 43 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "mizuno:neo-vista#3": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/808/284/original/J1GS261099.png.png?action=crop&width=700",
+   "sku": "J1GS261099",
+   "title": "Mizuno Neo Vista 3 'Grey Black'",
+   "source": "goat",
+   "by": "claude",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 남성 일반판은 이 하나뿐 · 품번은 GOAT J1GS261099 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "newbalance:more#6": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/112/036/345/original/MMORLF6.png.png?action=crop&width=700",
+   "sku": "MMORLF6",
+   "title": "New Balance Fresh Foam X More v6 'Mineral Garter Snake'",
+   "source": "goat",
+   "by": "user",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". 순위 1위(사용자 지정) · 품번은 GOAT MMORLF6 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "saucony:kinvara#16": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/112/468/222/original/S21020_231.png.png?action=crop&width=700",
+   "sku": "S21020",
+   "title": "Saucony Kinvara 16 'White Citron'",
+   "source": "goat",
+   "by": "user",
+   "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". \"White Citron\"(사용자 지정 — 순위 1위 \"Mutant\"는 특별판 이름일 수 있어 평범한 색) · 품번은 GOAT S21020 231 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
   }
  },
  "seed_only_price_meta": {

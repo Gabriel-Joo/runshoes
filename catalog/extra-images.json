@@ -6183,25 +6183,25 @@
   ],
   "asics:gt-2000#15": [
    {
-    "url": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/359/original/1011C235201.png.png",
+    "url": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/359/original/1011C235201.png.png?action=crop&width=700",
     "sku": "1011C235201",
     "title": "ASICS GT 2000 15 'Birch Cream'",
     "iou": 0.975
    },
    {
-    "url": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/356/original/1011C235002.png.png",
+    "url": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/356/original/1011C235002.png.png?action=crop&width=700",
     "sku": "1011C235002",
     "title": "ASICS GT 2000 15 'Black Energy Aqua'",
     "iou": 0.963
    },
    {
-    "url": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/358/original/1011C235200.png.png",
+    "url": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/358/original/1011C235200.png.png?action=crop&width=700",
     "sku": "1011C235200",
     "title": "ASICS GT 2000 15 'Birch Khaki Green'",
     "iou": 0.974
    },
    {
-    "url": "https://image.goat.com/1000/attachments/product_template_pictures/images/118/807/360/original/1011C235750.png.png",
+    "url": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/118/807/360/original/1011C235750.png.png?action=crop&width=700",
     "sku": "1011C235750",
     "title": "ASICS GT 2000 15 'Illuminate Yellow Foggy Teal'",
     "iou": 0.957
