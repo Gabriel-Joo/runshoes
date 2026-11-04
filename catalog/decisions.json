@@ -854,8 +854,17 @@
    "weight_g": {
     "action": "use_source",
     "value": 325,
-    "source": "https://www.runningshoesguru.com/reviews/road/nike-pegasus-premium-review/",
-    "note": "사용자 decide.csv(2026-10-21): A — B는 US M10.5 기준이라 제외"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M10",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T20:49Z 뒤 · 가져온 날 2026-11-05)",
+    "previous": {
+     "action": "use_source",
+     "value": 325,
+     "source": "https://www.runningshoesguru.com/reviews/road/nike-pegasus-premium-review/",
+     "note": "사용자 decide.csv(2026-10-21): A — B는 US M10.5 기준이라 제외"
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -871,6 +880,44 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 리뷰에 'need a wide version' — 와이드 없음으로 보임"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.threads.com/@klaus_running/post/DFsHfu_P_fi",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T20:49Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-premium-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.threads.com/@klaus_running/post/DFsHfu_P_fi",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-premium-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-premium-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T20:49Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:alphafly#4": {
