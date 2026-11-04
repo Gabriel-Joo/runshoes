@@ -656,6 +656,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 써코니코리아 남성 엔돌핀 트레이너 '발볼너비: M(일반)'. 해외 Running Warehouse · SportsShoes 는 D 폭만."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.doctorsofrunning.com/2024/12/saucony-endorphin-trainer-review-2025.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "salomon:slab-pulsar#4": {
@@ -1110,27 +1119,19 @@
     "note": "사용자 decide.csv(2026-10-21): A — manual"
    },
    "price_krw": {
-    "action": "clear",
+    "action": "use_source",
+    "value": 209000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-11-03) \"공식몰 209,000원으로 바꾸고 출처는 공식몰로. adidas.co.kr 이 약관 미확인이라 못 열면 가격을 비우고 보고해라\" — adidas.co.kr 은 sources.yaml mode unknown(약관을 못 읽음)이라 열지 않았다 → 비운다. 239,000(다나와)은 허용 출처가 아니고 다나와의 울트라부스트 5 GTX(JQ2955) 출시가와 같다. 웹 검색 요약에는 공식몰 울트라부스트 5 정상가 209,000(JH9633 · ID8811) — 페이지를 열지 않아 쓰지 않는다",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)",
     "previous": {
-     "action": "use_source",
-     "value": 239000,
-     "source": "manual",
-     "price_source": "다나와",
-     "price_checked_at": "2026-07-23",
-     "price_kind": "발매가",
-     "via": "admin",
+     "action": "clear",
      "by": "user",
-     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)",
-     "previous": {
-      "action": "keep_db",
-      "price_source": "다나와",
-      "price_checked_at": "2026-07-23",
-      "price_kind": null,
-      "by": "user",
-      "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록 없음 · 아디다스 국내몰은 수집처 mode unknown. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
-     }
+     "note": "사용자(2026-11-03) \"공식몰 209,000원으로 바꾸고 출처는 공식몰로. adidas.co.kr 이 약관 미확인이라 못 열면 가격을 비우고 보고해라\" — adidas.co.kr 은 sources.yaml mode unknown(약관을 못 읽음)이라 열지 않았다 → 비운다. 239,000(다나와)은 허용 출처가 아니고 다나와의 울트라부스트 5 GTX(JQ2955) 출시가와 같다. 웹 검색 요약에는 공식몰 울트라부스트 5 정상가 209,000(JH9633 · ID8811) — 페이지를 열지 않아 쓰지 않는다"
     }
    },
    "wide_available": {
@@ -1149,6 +1150,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Zappos·Foot Locker 남성 Ultraboost 5 는 D (Medium) 폭만. Supersports VN 의 폭 메뉴는 사이트 공통 필터라 근거 아님. 5X·Strung 은 다른 변형"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://findmyfootwear.com/adidas-ultraboost-5-review-a-welcome-boost/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "hoka:clifton#10": {
@@ -1548,6 +1558,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Room 'D width', UK 소매점 'Shoe Width - D'. 'wide-foot friendly' 는 리뷰 표현. Wide 상품 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2025/09/on-cloudboom-max-review-2025.html",
+    "sources_more": [
+     "https://weartesters.com/on-cloudboom-max-performance-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "mizuno:wave-rebellion-pro#3": {
@@ -2281,6 +2302,17 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — 브랜드 페이지 | brand product page (search result): Cloudsurfer Max Wide, men's, SKU 3MF3080 · listing title: On Cloudsurfer Max Wide Men's Running Shoes"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://weartesters.com/on-cloudsurfer-max-performance-review",
+    "sources_more": [
+     "https://www.sportplus.sg/post/on-cloudsurfer-max-review-endurance-athlete-tested"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "mizuno:neo-vista#2": {
@@ -2513,6 +2545,17 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: 'Nike Vomero 18 - breit (2E)' · search summary: men's wide running shoe listing · search summary: Nike men's Vomero 18 Wide"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.alastairrunning.com/nike-vomero-18-review/",
+    "sources_more": [
+     "https://gearuptofit.com/review/nike-vomero-18/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "asics:gel-nimbus#28": {
@@ -3521,6 +3564,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내 공식몰 목록 문구「격순 평가순 1 개 상품 -30% 1 색상 포에버런 나이트로 2 와이드 ForeverRun NITRO 2 WIDE 139,300 원 199,000 원 (0) 간략히 보기 푸마 홈 뉴스레」"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.runningshoesguru.com/reviews/road/puma-foreverrun-nitro-2-review/",
+    "sources_more": [
+     "https://techsmart.co.za/lifestyle/outdoor/Puma-ForeverRun-NITRO-2-running-shoes.html",
+     "https://www.womenstuff.co.za/puma-foreverrun-nitro-2-review-a-true-stability-shoe-for-beginners-long-runs"
+    ],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 리뷰 본문(RSG). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "puma:magnify-nitro#2": {
@@ -3918,6 +3973,26 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 와이드 없음. Running Warehouse · sportsshoes D 폭. passasports 'Width Standard Wide' 는 모호해 쓰지 않음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-adios-9-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 리뷰 본문(RSG). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "adidas:adizero-adios-pro-evo#3": {
@@ -3969,6 +4044,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 와이드 없음. 리뷰에서 Width Options Standard 뿐. 국내 검색은 에보 2 · 3 한 번으로 함께 봄(공식몰 와이드 표기는 SL2 와이드뿐)."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runtothefinish.com/adios-pro-evo-3-preview/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "adidas:adizero-adios-pro-evo#2": {
@@ -5963,6 +6047,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 결과의 와이드는 포에버런 나이트로 2 와이드(다른 모델). 해외 puma.com · 소매점 결과 어디에도 폭 옵션 언급 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.doctorsofrunning.com/2023/05/puma-liberate-nitro-2-review-2023.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "puma:voyage-nitro#3": {
@@ -6252,6 +6345,18 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.marathonsports.com/blog/hoka-gaviota-6-review-max-cushion-meets-max-support",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/hoka-gaviota-6-review-2026/",
+     "https://mountaineerjourney.com/blog/hoka-gaviota-6-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "hoka:gaviota#5": {
@@ -6702,6 +6807,28 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://weartesters.com/nike-streakfly-2-performance-review/",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/nike-streakfly-2-review-2025/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 239000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:structure#26": {
@@ -7271,6 +7398,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: PUMA MEN'S MAGMAX NITRO 2 WIDE $179.95 (품절). 해외 근거는 소매점 한 곳뿐이고 품절. 푸마 공식몰 와이드 품번은 확인 못 함"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2026/05/puma-magmax-nitro-2-review-2026.html",
+    "sources_more": [
+     "https://gearuptofit.com/?p=86778"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "nike:winflo#12": {
@@ -7378,6 +7516,17 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 119000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:zoom-fly#5": {
@@ -7586,6 +7735,26 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사 상품 페이지「NBPFFS155I / 퓨어셀 프로펠 V5 (남성 2E) (IVORY) (품절)」. Running Warehouse(NB5PRM5)도 2E 사이즈 목록. eBay·GOAT·kicksonfire 는 제외."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/new-balance-fuelcell-propel-v5-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 리뷰 본문(RSG). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 169000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "newbalance:propel#4": {
@@ -7675,6 +7844,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 공식몰 목록 요약이 다른 모델과 섞임 · 무신사 목록뿐 — 해외: mens new balance supercomp rebel v1 wide mrebx9s5 2e. 애매: 국내 근거는 공식몰 목록 페이지의 검색 요약이며, 요약 문장이 레벨 V5 와 섞여 있음. 무신사 검색 목록에도 'SC Rebel V1(남성, 2E)' NBPFGF720I·G·T·K 가 보이나 개별 상품 페이지 주소가 없어 그것만으로는 쓰지 않음. 두 가지가 같은 방향이라 found=true 로 둠 — 엄격히 보려면 false. 해외 Pace Athletic 주소의 품번 MREBX9S5 가 카탈로그 sku 와 같음. Running Warehouse 도 2E 'SC Rebel v1'. | 확실하지 않으면 국내로 넣지 않는다(2026-11-02 사용자 기준): 공식몰 목록 요약이 레벨 V5 와 섞여 SC 레벨 V1 의 2E 인지 확실하지 않음, 무신사는 목록뿐 → 국외에만 있음(Pace Athletic MREBX9S5-2E)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.doctorsofrunning.com/new-balance-supercomp-rebel-review/",
+    "sources_more": [
+     "https://www.thesize15runner.com/2026/10/12/new-balance-sc-rebel-v1-review-super-trainer-or-super-shoe/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "hoka:mafate#5": {
@@ -7705,6 +7885,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내는 일반형(1168722-CMNTB)만. 해외 Running Warehouse·Portland Running·Running Room 모두 D 폭만. thetrail.co 의 'EE for men's' 는 사이트 공통 안내라 제외."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://trailrunner.com/trail-news/trail-runners-shoe-review-hoka-mafate-5/",
+    "sources_more": [
+     "https://runningnw.com/2025/10/10/hoka-mafate-5-review/",
+     "https://www.treelinereview.com/gearreviews/hoka-mafate-5-trail-running-shoes-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "on:cloudflyer#4": {
@@ -7818,6 +8010,17 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — 브랜드 페이지 | brand product page (search result): Cloudsurfer Next Wide, men's, SKU 3ME3019"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.doctorsofrunning.com/2025/02/on-cloudsurfer-next-review-2025.html",
+    "sources_more": [
+     "https://www.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/on-cloudsurfer-next"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "on:cloudsurfer-trail#2": {
@@ -8057,6 +8260,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 해외 'Saucony Men's Tempus Wide'(Sport Chek · The Running Well Store) 는 세대 표기가 없어 1세대일 가능성 — 안 씀. Running Warehouse 템퍼스 2 는 D 폭만. 블로그(NextGait) 는 'Tempus 2 Wide 확인 못 함' 이라 했으나 블로그라 근거로 안 씀."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/saucony-tempus-2",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/2024/10/saucony-tempus-2-review-2024.html",
+     "https://runtothefinish.com/saucony-tempus-2-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "saucony:triumph#23": {
@@ -8160,6 +8375,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Cloudgo Wide (mens) — on.com/en-ca; Men's On Cloudgo Wide (Selig·Chiappetta·Running Lab 등). 해외는 별도 상품 Cloudgo Wide(남성). 국내 공식·정식 판매처 검색 결과에서는 못 찾음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://trailandkale.com/on-cloudgo-review/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "on:cloudvista#1": {
@@ -8325,6 +8549,29 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: Men's Hoka Mach 7 Wide (2E), SKU 1171905 · search summary: men's Mach 7 wide listing"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.weeviews.com/reviews/4379/mach-7",
+    "sources_more": [
+     "https://runtothefinish.com/hoka-mach-7-review/",
+     "https://www.alastairrunning.com/hoka-mach-7-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 194400,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "hoka:skyflow#1": {
@@ -8533,6 +8780,17 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — 브랜드 페이지 | brand product page (search result): Cloudmonster 3 Wide, men's · listing title: On Cloudmonster 3 Wide Men's Running Shoes"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://theruntesters.com/on-cloudmonster-3-review",
+    "sources_more": [
+     "https://www.alastairrunning.com/on-cloudmonster-3-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "altra:provision#8": {
@@ -8554,6 +8812,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 애매. 요약에 '검은색 색상에 Narrow · Regular · Wide · Extra Wide 선택지가 있는 목록'이 있다고 했으나 어느 소매점인지 불명, 리뷰 사이트(doctorsofrunning 추정)의 '와이드 버전 고르라'는 조언뿐. 'Provision 8 Wide' 전용 상품 페이지는 나오지 않음. 확실하지 않아 비워 둠. 국내 결과 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2023/12/altra-provision-8-review-2023.html",
+    "sources_more": [
+     "https://www.garagegymreviews.com/altra-provision-8-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "saucony:ride#18": {
@@ -8661,6 +8930,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. asics.com/nz 의 '남성 표준 D, 와이드 2E, 4E' 는 일반 폭 안내 문구라 근거로 보지 않음. Running Warehouse · Zappos · ASICS US 는 D/Standard 만"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 179000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "brooks:cascadia-elite#1": {
@@ -8724,6 +9004,26 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/new-balance-fuelcell-supercomp-trainer-v3-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 리뷰 본문(RSG). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 249000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "altra:paradigm#7": {
@@ -8834,6 +9134,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): ASICS CA 'Heel Drop: 6 mm'(1011C156-300) · UK · AU 같은 값 · 소매점 2곳 6 mm | 브랜드 페이지"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://runtothefinish.com/asics-glideride-max-2-review/",
+    "sources_more": [
+     "https://flawlessshoereviews.com/asics-shoes/asics-glideride-max-2-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "nike:revolution#7": {
@@ -8906,6 +9217,17 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-24): 「The plastic plate provides stability, a smooth roll, and a springboard for the foam.」(opened) — 카본은 출처 면제 항목이라 명시 1곳으로 받는다"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://flawlessshoereviews.com/new-balance/new-balance-fresh-foam-x-vongo-v6-review/",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/2023/10/new-balance-fresh-foam-x-vongo-v6.html"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "newbalance:more-trail#3": {
@@ -9069,6 +9391,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사「NBPFFS109B / 프레쉬폼x 860 V14 (남성 2E) (안정화) (BLACK)」. 29CM · 뉴발란스 코리아 공식몰에도 남성 2E"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 251700,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "mizuno:wave-rider#29": {
@@ -10293,6 +10626,15 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-28): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runtothefinish.com/new-balance-fresh-foam-680v9-your-budget-daily-trainer/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "newbalance:680#8": {
@@ -11229,6 +11571,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. runtothefinish '와이드 없음', Bike24 'regular' 폭. 국내 공식몰 6006030 일반만."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.marathons.com/en/lifestyle/under-armour-velociti-distance-review-and-verdict_282w",
+    "sources_more": [
+     "https://runtothefinish.com/under-armour-velociti-distance-review/",
+     "https://runoregonblog.com/2026/03/06/under-armour-velociti-distance-built-for-the-long-haul/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "underarmour:velociti-pace#1": {
@@ -11841,6 +12195,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: 공식몰 · 무신사에 '에어로 글라이드 3 W'(여성) 만, 신발폭 Standard. 해외: Gazelle 'Regular Width', Running Warehouse 폭 D 만."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 215000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T20:55Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "asics:superblast#3": {
@@ -11994,6 +12359,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공식몰 '남여공용' 단일 폭. 리뷰의 착화감 언급만 있음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/asics-metaspeed-sky-tokyo",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "asics:metaspeed-edge-tokyo#1": {
@@ -12069,6 +12443,26 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 검색은 도쿄 시리즈와 공용(레이 공식몰 페이지가 함께 나옴, 와이드 없음). RTINGS 'Wide Sizing Available: No'"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.marathonsports.com/blog/asics-metaspeed-ray-review",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 439000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "asics:noosa-tri#16": {
@@ -12308,6 +12702,26 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 공식몰·무신사에 아그라빅 와이드 표기 없음(GTX 는 변형이라 제외). 해외: Running Warehouse Ultra 2 'Men's Shoe Widths: D' 만. '넓은 토박스'는 착화감"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningwarehouse.com/reviews/adidas-shoe-reviews/adidas-terrex-agravic-speed-ultra-2.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 289000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "adidas:terrex-agravic-speed-ultra#1": {
@@ -12393,6 +12807,28 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 공식몰·무신사에 아그라빅 와이드 표기 없음(GTX 는 변형이라 제외). 해외: Running Warehouse·sportsshoes D, Bike24 regular"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.holdwclub.com/gear/adidas-terrex-agravic-tt-our-review",
+    "sources_more": [
+     "https://www.runningwarehouse.com/reviews/adidas-shoe-reviews/adidas-terrex-agravic-TT.html"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 209000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "hoka:skyward-x#2": {
@@ -12499,6 +12935,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 뉴발란스 국내 공식몰(nbkorea.com)「New Balance Korea - SC Elite V6 (남성, 2E)」. Running Warehouse(N6SCEM4)도 2E 사이즈 목록."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runtothefinish.com/new-balance-supercomp-elite-v6-review/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "newbalance:supercomp-elite#5": {
@@ -12716,6 +13161,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내 공식몰 목록 문구「, D) (안정화) 189,000원 3 Color 리뷰 196 BEST 860 V15 (남성, 2E) (안정화) 189,000원 3 Color 리뷰 192 860 V」"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/new-balance-fresh-foam-x-860-v15-review/",
+    "sources_more": [
+     "https://www.rtings.com/running-shoes/reviews/new-balance/fresh-foam-x-860v15"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "newbalance:supercomp-trail#1": {
@@ -12834,6 +13290,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 써코니코리아 스타일 메뉴의 일반/와이드/엑스트라와이드 구분은 사이트 공통 필터라 근거 아님. 해외 SportsShoes 'Shoe Width - D'. Marathon Sports 의 'wide all-around fit' 은 착화감 표현이라 안 씀."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.runningwarehouse.com/reviews/saucony-shoe-reviews/saucony-paramount-max.html",
+    "sources_more": [
+     "https://theruntesters.com/saucony-paramount-max-review-from-three-runners/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
    }
   },
   "saucony:ride#19": {
@@ -13003,6 +13470,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공식몰 '남성 글리세린 플렉스 화이트 (MEDIUM)'만. Running Warehouse · Foot Locker 는 D 만. 2E 로 나온 것은 글리세린 21 · GTS 22 · 23 (다른 모델)."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.manhattanrunningco.com/blog/brooks-glycerin-flex-review",
+    "sources_more": [
+     "https://www.womensrunning.co.uk/?p=56090"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "brooks:ghost-trail#1": {
@@ -13043,6 +13521,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 스트라이크 2 는 unisex 판매. RTINGS 비교표의 'Wide Sizing Available' 줄은 어느 신발 값인지 알 수 없어 쓰지 않음(리뷰 사이트이기도 함)."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/?p=11856",
+    "sources_more": [
+     "https://runtothefinish.com/on-cloudboom-strike-2-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "on:cloudeclipse#1": {
@@ -13107,6 +13596,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse 표준 D 만. 'very roomy, wide toe box' 는 리뷰 착화감 표현."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://believeintherun.com/shoe-reviews/on-cloudultra-pro-review/",
+    "sources_more": [
+     "https://meta-endurance.com/on-cloudultra-pro-review/"
+    ],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "on:cloudultra#3": {
@@ -13125,6 +13625,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 애매: Shoe Clinic NZ 상품명은 'Mens (D)', 2E·4E 는 일반 사이즈표로 보임. on.com 여성 wide 페이지에 걸린 정황뿐(여성 와이드 가능성). gearuptofit '좁은 폭~X-wide'는 템플릿 문구라 근거로 안 씀"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/on-cloudultra-3-review/",
+    "sources_more": [
+     "https://paceofjoy.blogspot.com/2025/09/test-template.html"
+    ],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 리뷰 본문(BITR). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "on:cloudsurfer-trail#1": {
@@ -13191,6 +13702,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Wave Rider 30 Men's Running Shoes (2E Width). 국내 출시 기사(한국미즈노)는 있으나 와이드 국내 판매처는 못 찾음. SW(4E)는 대만 여성 상품만 보임"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://theruntesters.com/running-shoes/mizuno-wave-rider-30-review/",
+    "sources_more": [
+     "https://www.run4it.com/blogs/journal/mizuno-wave-rider-30-running-shoes-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "mizuno:neo-zen#2": {
@@ -13209,6 +13731,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: 네오 젠 2 일반 상품(공용 J1GC262832 등)만 보이고 와이드 표기 상품 없음. 해외: Road Runner Sports · Zappos 등 상품 페이지에 폭 선택기는 있으나 검색 요약에 2E 옵션이 보이지 않음 — 확실하지 않아 비움."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2026/02/mizuno-neo-zen-2-review-2026.html",
+    "sources_more": [
+     "https://meta-endurance.com/?p=33991"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "salomon:slab-phantasm#3": {
@@ -13227,6 +13760,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: 공식몰에 판타즘 3 · 3 SC 만, 미국 공식몰 폭 Regular. 해외: 와이드 판 없음, 살로몬 와이드 모델 목록에도 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2026/04/salomon-slab-phantasm-3-review-2026.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "salomon:slab-phantasm#2": {
@@ -13286,6 +13828,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 푸마 국내 공식몰「디비에이트 나이트로 4 와이드 Deviate NITRO 4 WIDE (312901)」. 여성 와이드(312902)는 따로 있음 — 312901 이 남성. 무신사 개별 상품 페이지(https://www.musinsa.com/products/6103927, 31290103)도 있음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/?p=1149",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "puma:deviate-nitro-elite#4": {
@@ -13304,6 +13855,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 · 해외 모두 엘리트 4 와이드 없음. 검색에 나온 와이드는 디비에이트 나이트로 4 와이드(비 엘리트) — 다른 모델이라 근거 아님."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.doctorsofrunning.com/2026/03/puma-deviate-nitro-elite-4-review-2026.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "puma:fast-r-nitro-elite#3": {
@@ -13422,6 +13982,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 애매. REI 리뷰어가 '와이드를 주문했는데 미디엄이 왔다'고 쓴 것뿐(리뷰 문구, 상품 폭 옵션 아님). Running Warehouse 는 D 폭만 · 'Wide toe box fit' 은 착화감 표현. 와이드 상품 페이지 없음. 국내는 SSG 검색 요약에 비아 올림퍼스 2 이름만."
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 221200,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T20:55Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "altra:vanish-carbon#2": {
@@ -13457,6 +14028,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. RTINGS '남녀 모두 와이드 없음'. 국내 공식몰은 엘리트 3 일반(유니섹스)만."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.doctorsofrunning.com/2026/04/under-armour-velociti-elite-3-review.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
    }
   },
   "underarmour:infinite-elite#1": {
@@ -13536,11 +14116,31 @@
  },
  "image_overrides": {
   "newbalance:supercomp-trainer#3": {
+   "previous": {
+    "image": "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Urgent-Red-Sea-Salt-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049634",
+    "sku": "MRCXY4",
+    "title": "New Balance FuelCell SuperComp Trainer v3 Urgent Red Sea Salt Black",
+    "note": "사용자(2026-10-28) 화면에서 찾은 문제 → 다른 색상(Claude 가 사진을 보고 신발 단독 사진을 골랐다)",
+    "was": "자리표시 이미지"
+   },
    "image": "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Urgent-Red-Sea-Salt-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049634",
-   "sku": "MRCXY4",
-   "title": "New Balance FuelCell SuperComp Trainer v3 Urgent Red Sea Salt Black",
-   "note": "사용자(2026-10-28) 화면에서 찾은 문제 → 다른 색상(Claude 가 사진을 보고 신발 단독 사진을 골랐다)",
-   "was": "자리표시 이미지"
+   "images": [
+    "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Urgent-Red-Sea-Salt-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049634",
+    "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Black-Bleached-Lime-Glo.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1749673911",
+    "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Angora-Hot-Mango.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1737575977",
+    "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Fairweather-Blue-Glint-Blue.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1793132669"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)",
+   "was": {
+    "image": "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Urgent-Red-Sea-Salt-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049634",
+    "images": [
+     "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Urgent-Red-Sea-Salt-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1752049634",
+     "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Black-Bleached-Lime-Glo.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1749673911",
+     "https://images.stockx.com/images/New-Balance-FuelCell-SuperComp-Trainer-v3-Angora-Hot-Mango.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1737575977"
+    ]
+   }
   },
   "nike:rival-fly#3": {
    "image": "https://images.stockx.com/images/Nike-Air-Zoom-Rival-Fly-3-Barely-Volt-Photon-Dust.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1646384587",
@@ -14256,6 +14856,65 @@
    "source": "goat",
    "by": "user",
    "note": "GOAT(KicksDB v3/goat) 이미지 — StockX 에 없다(또는 여성용 · 박스 사진뿐). 2026-11-05 사용자 \"GOAT 에서 찾아봐라 — 남성 기본 색상만\" · \"7장 넣어라\". \"White Citron\"(사용자 지정 — 순위 1위 \"Mutant\"는 특별판 이름일 수 있어 평범한 색) · 품번은 GOAT S21020 231 에서 운영 형식(같은 라인 이전 세대)대로 · 주소는 GOAT transform(action=crop&width=700) — 바깥 여백을 잘라 신발이 가로 98%(StockX 99%와 같다), 2026-11-05 사용자 \"사진 크기를 StockX 에 맞춰라\""
+  },
+  "asics:metaspeed-ray#1": {
+   "image": "https://images.stockx.com/images/ASICS-Metaspeed-Ray-Green-Gecko-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1762417455",
+   "images": [
+    "https://images.stockx.com/images/ASICS-Metaspeed-Ray-Green-Gecko-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1762417455",
+    "https://images.stockx.com/images/ASICS-Metaspeed-Ray-White-Flash-Red-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1756242486",
+    "https://images.stockx.com/images/ASICS-Metaspeed-Sky-Paris-Safety-Yellow.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1720643259"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)",
+   "was": {
+    "image": "https://images.stockx.com/images/ASICS-Metaspeed-Ray-Green-Gecko-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1762417455",
+    "images": [
+     "https://images.stockx.com/images/ASICS-Metaspeed-Ray-Green-Gecko-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1762417455",
+     "https://images.stockx.com/images/ASICS-Metaspeed-Ray-White-Flash-Red-Product.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1756242486"
+    ]
+   }
+  },
+  "adidas:terrex-agravic-speed-ultra#2": {
+   "image": "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Blue-White-Lime-Burst.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371493",
+   "images": [
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Blue-White-Lime-Burst.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371493",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Black-Lucid-Ray-Blue.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371474",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-2-Trail-White-Black-Semi-Impact-Orange.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1773682191",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-2-Trail-Black-Carbon-Ray-Blue.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1771436621"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)",
+   "was": {
+    "image": "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Blue-White-Lime-Burst.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371493",
+    "images": [
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Blue-White-Lime-Burst.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371493",
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-Speed-Ultra-2-Trail-Black-Lucid-Ray-Blue.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1771371474"
+    ]
+   }
+  },
+  "adidas:terrex-agravic-tt#1": {
+   "image": "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Off-White-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492768",
+   "images": [
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Off-White-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492768",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Trail-White-Black-Impact-Orange.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1769549894",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Grey-Two-White.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773180561",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Triple-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773180563",
+    "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Aurora-Coffee.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492764"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)",
+   "was": {
+    "image": "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Aurora-Coffee.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492764",
+    "images": [
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Aurora-Coffee.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492764",
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Billys-Off-White-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1772492768",
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Triple-Black.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773180563",
+     "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Grey-Two-White.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773180561"
+    ]
+   }
   }
  },
  "seed_only_price_meta": {
