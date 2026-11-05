@@ -15,7 +15,7 @@ const RANGE = { weight: [80, 400], drop: [0, 14], stackHeight: [10, 65], price: 
 // 가격 하한 1만 원(2026-10-28 사용자 — 범위는 0원 · 1원 같은 오류를 거르는 것이지 싼 입문화를 빼는 게 아니다. 상한 60만 원 유지)
 // 2026-10-21 사용자: 무게 80~400(아디오스 프로 에보 3 95g대) · 드롭 0~14(알트라 0) · 스택 10~65(맥시멀 61mm 웨이브 레벨리온 프로 3, 레이싱 플랫은 20mm 아래도 있다)
 // 모델명: 한글 · 숫자 · 공백 · 가운뎃점이 기본, 라틴 낱말은 허용 목록만(6.1) — 5X 는 울트라부스트 5X(2026-11-03)
-const LATIN_OK = new Set(['X', 'GTS', 'GT-1000', 'GT-2000', 'GT-4000', 'ACG', 'AMP', 'BYD', 'SL', 'ST', 'TR', 'TT', 'S/LAB', 'XA', '3D', 'V9', 'VIA', 'X1', '160X', '5X', 'TR3', 'XX', 'R', 'FWD', 'AC']);
+const LATIN_OK = new Set(['X', 'GTS', 'GT-1000', 'GT-2000', 'GT-4000', 'ACG', 'AMP', 'BYD', 'SL', 'ST', 'TR', 'TT', 'S/LAB', 'XA', '3D', 'V9', 'VIA', 'X1', '160X', '5X', 'TR3', 'XX', 'R', 'FWD', 'AC', 'ATR', 'SC']);
 function modelOk(m) {
   return m.split(' ').every((t) => /^[가-힣·]+$/.test(t) || /^V\d+$/.test(t) || /^v?\d+(\.\d+)?\+?$/.test(t) || LATIN_OK.has(t));
 }
