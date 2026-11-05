@@ -206,6 +206,7 @@ for (const [id, fields] of Object.entries(BASE ? {} : OVR)) {
   const existing = s._file?.startsWith('db.json');
   for (const [f, o] of Object.entries(fields)) {
     const k = SPECK[f];
+    if (f === 'width' && DEC.rows[id]?.width) continue;  // 발볼은 사람 판단(decisions)이 먼저 — 기존 행의 clear 를 width.csv 값이 다시 채우지 않게(2026-11-05 스피드고트 6)
     if (existing && s[k] != null) continue;
     s[k] = o.value; s.sources ??= {};
     if (o.source) s.sources[k] = o.source; else delete s.sources[k];
