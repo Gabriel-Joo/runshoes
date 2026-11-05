@@ -515,8 +515,8 @@
       "code": "BITR"
      },
      "width": {
-      "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
-      "code": "BITR"
+      "url": "https://m.blog.naver.com/inee0623/223598123839",
+      "code": "MAN"
      },
      "weight": {
       "url": "https://runningwikii.com/entry/nike-alphafly3/",
@@ -537,12 +537,52 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+       "code": "BITR"
+      },
+      "weight": {
+       "url": "https://runningwikii.com/entry/nike-alphafly3/",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://runningwikii.com/entry/nike-alphafly3/",
+       "code": "MAN"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "url": "https://runningwikii.com/entry/nike-alphafly3/",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
+    }
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://m.blog.naver.com/inee0623/223598123839",
+    "via": "admin",
     "by": "user",
-    "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "clear",
+     "by": "user",
+     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    }
    }
   },
   "newbalance:rebel#5": {
@@ -1073,6 +1113,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.youtube.com/watch?v=yO96Z1maYjQ",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://marathonhandbook.com/nike-alphafly-4/",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://www.youtube.com/watch?v=yO96Z1maYjQ",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.nike.com/t/alphafly-4-mens-road-racing-shoes-lw5UiD4C",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://marathonhandbook.com/nike-alphafly-4/",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://marathonhandbook.com/nike-alphafly-4/",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adizero-prime-x-strung#2": {
@@ -1111,6 +1190,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/adidas-adizero-prime-x-2-strung",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-prime-x-2-strung-review/",
+      "code": "RSG"
+     },
+     "width": {
+      "url": "https://runrepeat.com/adidas-adizero-prime-x-2-strung",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.adidas.co.uk/adizero-prime-x-2-strung/ID0267.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x-2-strung-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-prime-x-2-strung-review/",
+      "code": "RSG"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:supernova-rise#3": {
@@ -1474,12 +1592,23 @@
     "weight_basis": "US_M9.5"
    },
    "price_krw": {
-    "action": "keep_db",
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
     "price_source": "다나와",
     "price_checked_at": "2026-07-23",
-    "price_kind": null,
+    "price_kind": "발매가",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "keep_db",
+     "price_source": "다나와",
+     "price_checked_at": "2026-07-23",
+     "price_kind": null,
+     "by": "user",
+     "note": "사용자(2026-10-29) \"ABC · 공식몰 둘 다 없으면 내 값을 두되 출처를 다나와로\" — ABC 목록에 호카 없음 · 호카 한국 공식 온라인몰 없음. 날짜는 이 값이 db.json 에 들어간 커밋 날짜(git blame), 사용자가 다나와를 본 날은 기록이 없다. 종류는 정가인지 기록이 없어 비운다"
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -1501,9 +1630,49 @@
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사 상품 페이지「(남성) 스피드고트 6 와이드 - 셔벗:비트 루트 / 1147830-SRBT」. SSG 의 1147830-SMY 는 해외직구라 제외. 해외 GOAT·eBay 는 리셀이라 제외. GTX 와이드는 변형판이라 제외."
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/hoka-speedgoat-6",
+    "via": "admin",
     "by": "user",
-    "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "clear",
+     "by": "user",
+     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    }
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/hoka-speedgoat-6",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.hoka.com/en/md/speedgoat-6.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://www.musinsa.com/products/4144200",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "newbalance:supercomp-pacer#1": {
@@ -3118,6 +3287,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/adidas-adizero-adios-pro-5",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-adios-pro-5-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/adidas-adizero-adios-pro-5",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://hiconsumption.com/style/adidas-adizero-adios-pro-5/",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-adios-pro-5-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-adios-pro-5-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:vomero-plus#1": {
@@ -3410,16 +3618,16 @@
     }
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/asics-glideride-max",
+    "via": "admin",
     "by": "user",
-    "note": "사용자(2026-11-05) 발볼 비움 — RSG \"move a half size up because the toe box area seem to fit really tight\" 는 사이즈와 섞여 빼면 좁음 1(sixminutemile) · 넓음 1(Fleet Feet) · 보통 1(DOR). 01a 1-6",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
     "previous": {
-     "action": "use_source",
-     "value": "좁음",
-     "source": "https://www.runningshoesguru.com/reviews/road/asics-glideride-max-review/",
-     "sources_more": [],
+     "action": "clear",
      "by": "user",
-     "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The pros Midsole materials make it a well-balanced ride Upper mesh material is very comfortable Outsole grip is dependable Price tag for all the technology it uses The cons Toe box"
+     "note": "사용자(2026-11-05) 발볼 비움 — RSG \"move a half size up because the toe box area seem to fit really tight\" 는 사이즈와 섞여 빼면 좁음 1(sixminutemile) · 넓음 1(Fleet Feet) · 보통 1(DOR). 01a 1-6"
     }
    },
    "price_krw": {
@@ -3432,6 +3640,38 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-glideride-max-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/asics-glideride-max",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.asics.com/us/en-us/glideride-max/p/ANA_1011B891-001.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-glideride-max-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.roadtrailrun.com/2024/10/asics-glideride-max-review-4-comparisons.html",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://www.asics.com/au/en-au/glideride-max-2e-wide/p/AOP_1011B959-200.html",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "asics:sonicblast#1": {
@@ -4602,6 +4842,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 39,
+    "source": "https://runrepeat.com/adidas-adizero-adios-pro-evo-3",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.roadrunnersports.com/blog/adidas-adizero-adios-pro-evo-3/",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runtothefinish.com/adios-pro-evo-3-preview/",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://hiconsumption.com/style/adidas-adizero-adios-pro-evo-3/",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://www.roadrunnersports.com/blog/adidas-adizero-adios-pro-evo-3/",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/adidas-adizero-adios-pro-evo-3",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adizero-adios-pro-evo#2": {
@@ -4675,6 +4954,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/adidas-adizero-adios-pro-evo-2",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/adidas-adizero-adios-pro-evo-2",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.adidas.ca/en/adizero-adios-pro-evo-2-shoes/JR7259.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adizero-boston#12": {
@@ -4701,25 +5019,25 @@
     "note": "사용자(2026-10-23) conflict-todo 판정: RSG 37/30/6 유지 — 아디다스 페이지끼리 38/31/7 과 37/30.5/6.5 로 달라 판정 불가. 힐 · 드롭은 그대로 두고 포어풋 불일치 플래그만 남긴다"
    },
    "wide_available": {
-    "action": "clear",
+    "action": "use_source",
+    "value": true,
+    "scope": "overseas",
+    "source": "manual",
+    "via": "admin",
     "by": "user",
-    "queries": [
-     "ABC마트 · 그랜드스테이지: 아디제로 보스턴 12 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r3-a: 아디제로 보스턴 12 와이드 (allowed_domains=[adidas.co.kr, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com])",
-     "웹 r3-a: adidas Adizero Boston 12 men's wide",
-     "웹 r3-a: 아디제로 보스턴 12 와이드 H03613 (allowed_domains=[adidas.co.kr, adidas.com.my, adidas.com, adidas.co.jp, musinsa.com, ssg.com])"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 같은 품번의 와이드 핏 설명뿐",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
     "previous": {
-     "action": "use_source",
-     "value": true,
-     "source": "https://www.adidas.com.my/en/adizero-boston-12-shoes/H03613.html",
-     "sources_more": [],
-     "via": "web",
-     "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
+     "action": "clear",
+     "by": "user",
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 아디제로 보스턴 12 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r3-a: 아디제로 보스턴 12 와이드 (allowed_domains=[adidas.co.kr, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com])",
+      "웹 r3-a: adidas Adizero Boston 12 men's wide",
+      "웹 r3-a: 아디제로 보스턴 12 와이드 H03613 (allowed_domains=[adidas.co.kr, adidas.com.my, adidas.com, adidas.co.jp, musinsa.com, ssg.com])"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 같은 품번의 와이드 핏 설명뿐"
     }
    },
    "width": {
@@ -4763,11 +5081,49 @@
      "stackHeight": {
       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-boston-12-review/",
       "code": "RSG"
+     },
+     "wideAvailable": {
+      "code": "STORE"
      }
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-boston-12-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://blog.naver.com/whdwl2440/223564134848",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://runnr.com.ph/collections/road/products/id4234",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-boston-12-review/",
+       "code": "RSG"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-boston-12-review/",
+       "code": "RSG"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    }
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "overseas",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adizero-sl#1": {
@@ -5200,6 +5556,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/nike-acg-zegama-trail",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/nike-acg-zegama-trail",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.nike.com/t/nike-acg-zegama-R6m2RvQq",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:downshifter#13": {
@@ -5410,16 +5805,16 @@
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「FF Blast Max」(opened)"
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/asics-gel-cumulus-28",
+    "via": "admin",
     "by": "user",
-    "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
     "previous": {
-     "action": "use_source",
-     "value": "좁음",
-     "source": "https://www.runningshoesguru.com/reviews/road/asics-gel-cumulus-28-review/",
-     "sources_more": [],
+     "action": "clear",
      "by": "user",
-     "note": "사용자(2026-11-02) 승인 — 리뷰 본문 토박스 서술(확신 높음 19개, local/width-2026-11-02.csv): The pros Respectable weight for a daily trainer High level of ground feel Good foot lockdown Good stability The cons Firm ride without much bounce Below average grip Narrow toe box"
+     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
     }
    },
    "price_krw": {
@@ -5432,6 +5827,38 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.fit2run.com/products/asics-gel-cumulus-28-mens",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/asics-gel-cumulus-28",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.asics.com/us/en-us/gel-cumulus-28/p/ANA_1011C143-002.html",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://www.wildfiresports.com.au/asics-gel-cumulus-28-d-mens-shoes",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://www.runningshoesguru.com/reviews/road/asics-gel-cumulus-28-review/",
+      "code": "RSG"
+     },
+     "wideAvailable": {
+      "url": "https://prrunandwalk.com/products/mens-asics-gel-cumulus-28-wide-2e-1011c147-404",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "asics:gel-excite#11": {
@@ -7897,6 +8324,46 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「ReactX foam underfoot and higher stack height for stability and support.」(opened)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/nike-structure-26",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.fit2run.com/products/nike-structure-26-mens",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/nike-structure-26",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.nike.com/t/model/HJ1102-300",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://www.zappos.com/p/mens-nike-structure-26/product/10020704",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://www.runningshoesguru.com/reviews/road/nike-structure-26-review/",
+      "code": "RSG"
+     },
+     "wideAvailable": {
+      "url": "https://www.nike.com/kr/t/스트럭처-26-남성-로드-러닝화엑스트라-와이드-R840oocT",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:structure#25": {
@@ -8001,9 +8468,49 @@
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T21:05Z 뒤 · 가져온 날 2026-11-01)"
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://runrepeat.com/nike-vomero-17",
+    "via": "admin",
     "by": "user",
-    "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "clear",
+     "by": "user",
+     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    }
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-vomero-17-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/nike-vomero-17",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.marathonsports.com/products/nike-mens-vomero-17",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-vomero-17-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-vomero-17-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://nike.com/t/vomero-17-mens-road-running-shoes-extra-wide-4x7CMp/FN1139-101",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "hoka:torrent#4": {
@@ -8540,6 +9047,73 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Heel-to-toe drop: 10mm' 나이키 지역 페이지 공통 | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS 실측뿐이라 비움"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 40,
+    "source": "https://runrepeat.com/nike-winflo-12",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/nike-winflo-12",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 139000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-GYVSurvY",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/nike-winflo-12",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.nike.com/sg/t/winflo-12-mens-road-running-shoes-oyoVF2mm/HV9272-401",
+      "code": "WEB"
+     },
+     "midsole": {
+      "url": "https://www.footlocker.co.uk/product/model/nike-winflo-12-men-shoes/210662.html",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/nike-winflo-12",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-wide-GYVSurvY/II7229-400",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:winflo#11": {
@@ -8615,11 +9189,19 @@
    },
    "width": {
     "action": "use_source",
-    "value": "보통",
-    "source": "https://www.youtube.com/watch?v=jeGahb9kHl8",
+    "value": "좁음",
+    "source": "https://runrepeat.com/nike-winflo-11",
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": "보통",
+     "source": "https://www.youtube.com/watch?v=jeGahb9kHl8",
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+    }
    },
    "spec_sources": {
     "action": "use_source",
@@ -8629,7 +9211,7 @@
       "code": "RSG"
      },
      "width": {
-      "url": "https://www.youtube.com/watch?v=jeGahb9kHl8",
+      "url": "https://runrepeat.com/nike-winflo-11",
       "code": "MAN"
      },
      "weight": {
@@ -8639,6 +9221,10 @@
       "url": "https://www.runningshoesguru.com/reviews/road/nike-winflo-11-review/",
       "code": "RSG"
      },
+     "stackHeight": {
+      "url": "https://runrepeat.com/nike-winflo-11",
+      "code": "MAN"
+     },
      "wideAvailable": {
       "url": "https://nike.com/hr/t/wio-11-road-running-shoes-qrjdkS/FQ8937-001",
       "code": "WEB"
@@ -8646,7 +9232,42 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/nike-winflo-11-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://www.youtube.com/watch?v=jeGahb9kHl8",
+       "code": "MAN"
+      },
+      "weight": {
+       "code": "STORE"
+      },
+      "midsole": {
+       "url": "https://www.runningshoesguru.com/reviews/road/nike-winflo-11-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "url": "https://nike.com/hr/t/wio-11-road-running-shoes-qrjdkS/FQ8937-001",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+    }
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 35,
+    "source": "https://runrepeat.com/nike-winflo-11",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:zoom-fly#5": {
@@ -11487,14 +12108,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 271,
-    "source": "https://www.asics.com/ca/en-ca/gel-pulse-17-1011c153-403",
-    "sources_more": [
-     "https://www.publiclands.com/p/asics-mens-gel-pulse-17-running-shoes-25asimrunnglpls17cqhc/25asimrunnglpls17cqhc"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS CA: 8 mm, 271g(~9.5oz); Public Lands 271g/9.6oz. 힐 38mm 은 21run 1곳 → null. 미드솔: Zappos·Outnorth 'FF BLAST and GEL' vs shop4runners 'AMPLIFOAM+' 불일치 → null. RunRepeat 실측 11.5mm 제외.",
-    "weight_basis": "unknown"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": 271,
+     "source": "https://www.asics.com/ca/en-ca/gel-pulse-17-1011c153-403",
+     "sources_more": [
+      "https://www.publiclands.com/p/asics-mens-gel-pulse-17-running-shoes-25asimrunnglpls17cqhc/25asimrunnglpls17cqhc"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS CA: 8 mm, 271g(~9.5oz); Public Lands 271g/9.6oz. 힐 38mm 은 21run 1곳 → null. 미드솔: Zappos·Outnorth 'FF BLAST and GEL' vs shop4runners 'AMPLIFOAM+' 불일치 → null. RunRepeat 실측 11.5mm 제외.",
+     "weight_basis": "unknown"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -11506,17 +12136,92 @@
     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS CA: 8 mm, 271g(~9.5oz); Public Lands 271g/9.6oz. 힐 38mm 은 21run 1곳 → null. 미드솔: Zappos·Outnorth 'FF BLAST and GEL' vs shop4runners 'AMPLIFOAM+' 불일치 → null. RunRepeat 실측 11.5mm 제외."
    },
    "wide_available": {
-    "action": "clear",
+    "action": "use_source",
+    "value": true,
+    "scope": "overseas",
+    "source": "https://www.asics.com/us/en-us/gel-pulse-17-wide/p/ANA_1011C157-001.html",
+    "via": "admin",
     "by": "user",
-    "queries": [
-     "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 젤 펄스 17 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r2-a: 아식스 젤 펄스 와이드 (allowed_domains: 국내 판매처)",
-     "웹 r2-a: ASICS Gel-Pulse 17 men's wide 2E"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 발매 정보 사이트 · 리셀뿐"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "clear",
+     "by": "user",
+     "queries": [
+      "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 젤 펄스 17 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r2-a: 아식스 젤 펄스 와이드 (allowed_domains: 국내 판매처)",
+      "웹 r2-a: ASICS Gel-Pulse 17 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 발매 정보 사이트 · 리셀뿐"
+    }
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "FF BLAST + Rearfoot GEL",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 41.5,
+    "source": "https://runrepeat.com/asics-gel-pulse-17",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/asics-gel-pulse-17",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.asics.com/ca/en-ca/gel-pulse-17-1011c153-403",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/asics-gel-pulse-17",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/asics-gel-pulse-17",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.asics.com/us/en-us/gel-pulse-17-wide/p/ANA_1011C157-001.html",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "overseas",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "asics:gel-pulse#16": {
@@ -14432,9 +15137,47 @@
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02)"
    },
    "width": {
-    "action": "clear",
+    "action": "use_source",
+    "value": "좁음",
+    "source": "manual",
+    "via": "admin",
     "by": "user",
-    "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "clear",
+     "by": "user",
+     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+    }
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-megablast-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "code": "RSG"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-megablast-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-megablast-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-megablast-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "asics:metaspeed-sky-tokyo#1": {
@@ -14692,6 +15435,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/asics-metafuji-trail",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metafuji-trail-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/asics-metafuji-trail",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metafuji-trail-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metafuji-trail-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/asics-metafuji-trail-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adizero-takumi-sen#10": {
@@ -14804,6 +15586,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/adidas-adizero-prime-x-3-strung",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x3-strung-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/adidas-adizero-prime-x-3-strung",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x3-strung-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x3-strung-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x3-strung-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:adistar#4": {
@@ -14953,6 +15774,45 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/adidas-terrex-agravic-4",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-4-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/adidas-terrex-agravic-4",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-4-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-4-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/adidas-terrex-agravic-4-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:terrex-agravic#3": {
