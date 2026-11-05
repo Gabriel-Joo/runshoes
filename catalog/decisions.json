@@ -573,6 +573,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내 공식몰 목록 문구「여성, D) 219,000원 8 Color 리뷰 291 SOLD OUT 레벨 V5 (남성, 2E) 219,000원 6 Color 리뷰 1,051 SC Rebel 」"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "레벨 v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Rebel v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 레벨 v5, 퓨얼셀 레벨 v5, FuelCell Rebel v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:hierro#9": {
@@ -620,10 +638,28 @@
    },
    "model": {
     "action": "use_source",
-    "value": "프레시폼 X 이에로 v9",
-    "via": "admin",
+    "value": "이에로 v9",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에",
+    "previous": {
+     "action": "use_source",
+     "value": "프레시폼 X 이에로 v9",
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+    }
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Hierro v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 이에로 v9, 후레쉬폼 X 이에로 v9, 프레시폼 X 히에로 v9, 프레시폼 엑스 이에로 v9, 프레시폼 X 이에로 v9, Fresh Foam X Hierro v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "saucony:endorphin-trainer#1": {
@@ -1446,6 +1482,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fleet Feet's listing shows a \"Wide 2E\" width option(검색 요약). 국내 결과에 페이서 1세대가 나오지 않음. 해외: Zappos 원조 모델(product/9601529)도 D·EE 두 폭(검색 요약). GOAT 'supercomp pacer 2e wide (MFCRRCE-2E)'는 리셀이라 제외. 근거가 모두 검색 요약이라 Fleet Feet 페이지 한 번 확인 권함."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 페이서 v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Pacer v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 슈퍼컴프 페이서 v1, 퓨얼셀 슈퍼컴프 페이서 v1, FuelCell SuperComp Pacer v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:more-trail#2": {
@@ -1471,6 +1525,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fresh Foam X More Trail v2 Wide Running Shoe - Men's (상품 주소, 품절 표시). 국내: v3 · 모어 V4 2E 만 나오고 v2 2E 는 없음. 해외: GOAT 'More Trail v2 2E Wide (MTMORCT2-2E)' 는 리셀이라 안 씀. The Running Company 'More Trail (2E Wide)' 는 세대 표기가 없어 안 씀. Altitude Sports 는 실제 소매점이나 검색 결과 제목이 'New Balance' 뿐이라 주소(slug) 로만 확인."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "모어 트레일 v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "More Trail v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 모어 트레일 v2, 후레쉬폼 X 모어 트레일 v2, 프레시폼 엑스 모어 트레일 v2, 프레시폼 X 모어 트레일 v2, Fresh Foam X More Trail v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "on:cloudmonster#2": {
@@ -1807,6 +1879,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 뉴발란스 코리아 공식몰「880 V15 (남성, 2E)」. 무신사 · 29CM 에도 남성 2E 있음. GORE-TEX 2E 는 변형판이라 근거로 쓰지 않음"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "880 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "880 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 880 v15, 후레쉬폼 X 880 v15, 프레시폼 엑스 880 v15, 프레시폼 X 880 v15, Fresh Foam X 880 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "puma:magmax-nitro#1": {
@@ -1925,6 +2015,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 토박스가 넓어졌다는 설명뿐(착화감 표현), 와이드 상품 없음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://trailandkale.com/nike-vaporfly-3-review/",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/?p=601"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "nike:structure-plus#1": {
@@ -2313,6 +2414,17 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:24Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "mizuno:neo-vista#2": {
@@ -2704,6 +2816,35 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 'W' 표기는 여성용. fit2run 은 D 만"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://weartesters.com/nike-react-infinity-run-3-performance-review/",
+    "sources_more": [
+     "https://runrepeat.com/nike-react-infinity-run-flyknit-3"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 5번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "리액트 인피니티 런 플라이니트 3",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 3세대 정식 이름은 React Infinity Run Flyknit 3 (StockX · RunRepeat · WearTesters). InfinityRN 은 4세대(ReactX InfinityRN 4)부터 — 4세대와 구분"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "React Infinity Run Flyknit 3",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 위와 같음"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "인피니티런 3, InfinityRN 3, 인피니티 런 3",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 옛 표기로도 찾히게"
    }
   },
   "adidas:adizero-adios-pro#5": {
@@ -3432,6 +3573,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 품번 1129930 은 '마파테 스피드 4'로 보고 검색. 국내는 일반형(무신사 3417926)·라이트 버전뿐. 해외는 D(standard) 목록뿐이고 리뷰에 '와이드가 없다'는 말이 있음. REI 사이즈표 'Wide' 는 공통표라 제외."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "마파테 스피드 4",
+    "by": "user",
+    "note": "사용자(2026-11-05) — \"마파테 스피드 4로 바꿔라 — 라인키와 세대는 그대로 두고 이름만\". 대표 이미지 · 스펙 출처(BITR Mafate Speed 4 Review) · KicksDB 모두 Mafate Speed 4. 2015년의 옛 Mafate 4 와 다른 신발"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Mafate Speed 4",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 위와 같음"
    }
   },
   "hoka:skyward-x#1": {
@@ -3944,6 +4097,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 결과의 W 는 여성용 표기. 해외 Champs 'D - Medium' 만"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://rundreamachieve.com/adidas-adistar-3/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "adidas:adizero-adios#9": {
@@ -4674,6 +4836,28 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 SSG 검색 결과 페이지(판매자 불명) — 해외: InfinityRN 4 Men's Road Running Shoes (Extra Wide) FN0881-001. 국내 근거는 SSG 검색 결과 페이지(개별 상품 판매자는 확인 못 함). 무신사의 'W' 는 여성용(DR2670)이라 와이드 아님. 해외는 nike.com · Hibbett 'Men's Wide' | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 SSG 검색 결과 페이지(판매자 불명) → 국외에만 있음(해외 근거 https://www.nike.com/jp/en/t/infinityrn-4-mens-road-running-shoes-extra-wide-Ssbjln/FN0881-001)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.gearist.com/nike-reactx-infinityrn-4-review/",
+    "sources_more": [
+     "https://www.clien.net/service/board/use/18234614"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 5번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:24Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:interact-run#1": {
@@ -4744,6 +4928,15 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/asics-gel-contend-9",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "asics:gel-cumulus#28": {
@@ -4931,6 +5124,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 아식스 공식 온라인스토어「젤 카야노 33(2E) 남성 신발 199,000원, 1011C227」. 무신사에 남성 엑스트라 와이드(1011C229)도 있음. 공식몰은 대부분 품절 표시"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.doctorsofrunning.com/asics-gel-kayano-33-review-2026/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 3번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "asics:gel-slowcush#1": {
@@ -5100,6 +5302,17 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T18:45Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.doctorsofrunning.com/2025/08/asics-gt-2000-14-review-2025.html",
+    "sources_more": [
+     "https://www.runningwarehouse.com/reviews/ASICS-shoe-reviews/asics-gt-2000-14.html"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "asics:gt-4000#4": {
@@ -5442,6 +5655,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Hoka Mens Arahi 8 Wide 2E Black/White 1168710. 국내: 무신사 '(남성) 아라히 8 와이드 1168710-BKSK·BWHT 199,000원' 이 검색 요약에 나오지만 주소는 검색·브랜드 목록 페이지뿐 → 쓰지 않음. GS샵은 판매자 불명. 다시 확인하면 국내 있음 가능성 높음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://findmyfootwear.com/hoka-arahi-8-review-surprise-stability-hit/",
+    "sources_more": [
+     "https://www.runningwarehouse.com/reviews/HOKA-Shoe-Reviews/hoka-arahi-8.html"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 5번(판단 요청). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "hoka:cielo-x1#3": {
@@ -6401,6 +6625,29 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: men's Gaviota 5, widths D (Regular), 2E (Wide); wide style 1134234 · search summary: 'Hoka One One Gaviota 5 Herren 9,5 2E Weite'"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://runninglabstore.com/blogs/news/hoka-gaviota-5",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/2023/09/hoka-gaviota-5-review-2023.html",
+     "https://www.fleetfeet.com/blog/shoe-review-hoka-gaviota-5"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 229000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:30Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "hoka:mach#6": {
@@ -6747,6 +6994,15 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Weight: Approx. 292g/10.3oz (Men's US 10) Heel-to-toe drop: 10mm' | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS · RunRepeat 실측뿐이라 비움"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/nike-revolution-8",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "nike:rival-fly#3": {
@@ -6777,6 +7033,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. catch.com.au 의 'Zoom Rival Fly Wide Fit' 은 이름이 다른 이전 모델(1세대)이라 근거 아님. Gazelle 은 Regular (D)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://geeksonfeet.com/shoegeeks/nike-rivalfly-review/",
+    "sources_more": [
+     "https://runandsmile.net/nike-rival-fly-3-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "nike:streakfly#2": {
@@ -6912,6 +7179,28 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Nike Structure 25 Men's Road Running Shoes (Extra Wide) DZ3488. 국내 nike.com/kr 은 일반 핏(품절)만 보임"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.doctorsofrunning.com/2023/11/nike-structure-25-review-2023.html",
+    "sources_more": [
+     "https://rundreamachieve.com/nike-structure-25/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 149000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:24Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "nike:vomero#17": {
@@ -7140,6 +7429,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 'Wide platform' 은 밑창 설명. on.com 에 'Cloudflyer Wide'(2021 다른 세대)만 있고 Cloudflyer 5 Wide 는 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/es/on-cloudflyer-5",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정) — RunRepeat 문장은 측정값이 아니라 체감 서술이라 1곳으로 센다(사용자 판단), 실측 mm 과 반대가 아니다. 인용은 local/width-2026-11-05-c.csv"
    }
   },
   "nike:downshifter#12": {
@@ -7164,6 +7462,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 신세계몰 검색 요약(판매자 · 해외직구 여부 불명) — 해외: Nike Downshifter 12 Men's Road Running Shoes (Extra Wide). 국내 근거는 신세계몰 검색 결과 요약에서 본 것(판매자 불명확, 해외직구 여부 확인 못 함) — 애매. 미국 nike.com 은 품절 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 신세계몰 검색 요약(판매자 · 해외직구 여부 불명) → 국외에만 있음(해외 근거 https://www.nike.com/t/downshifter-12-mens-road-running-shoes-extra-wide-hnRmTP/DM0919-002)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/nike-downshifter-12-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 RSG 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "hoka:rincon#4": {
@@ -7642,6 +7949,15 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「a reconfigured carbon plate that guides the foot through each stride」(search summary)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/asics-magic-speed-5",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정) — RunRepeat 문장은 측정값이 아니라 체감 서술이라 1곳으로 센다(사용자 판단), 실측 mm 과 반대가 아니다. 인용은 local/width-2026-11-05-c.csv"
    }
   },
   "asics:trabuco-max#5": {
@@ -7755,6 +8071,24 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "프로펠 v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Propel v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 프로펠 v5, 퓨얼셀 프로펠 v5, FuelCell Propel v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:propel#4": {
@@ -7805,6 +8139,24 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "model": {
+    "action": "use_source",
+    "value": "프로펠 v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Propel v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 프로펠 v4, 퓨얼셀 프로펠 v4, FuelCell Propel v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:supercomp-rebel#1": {
@@ -7855,6 +8207,24 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 레벨 v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Rebel v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "슈퍼컴프 레벨 v1, SuperComp Rebel v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "hoka:mafate#5": {
@@ -8229,6 +8599,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 써코니코리아 프로 5 BLACK/SHOCK '발볼 너비 M(일반)'. Running Warehouse 는 D 폭만. 검색에 나온 와이드는 엔돌핀 스피드 5 와이드(다른 모델)."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.alastairrunning.com/saucony-endorphin-pro-5-review/",
+    "sources_more": [
+     "https://runningnw.com/2026/02/10/saucony-endorphin-pro-5-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 5번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "saucony:tempus#2": {
@@ -8691,6 +9072,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공식몰 '[OUTLET]남녀공용 하이페리온 엘리트 5핑크(MEDIUM)' — 사이즈 W235~W250 의 W 는 여성 사이즈 표기로 보이며 폭 아님. 해외 소매점은 D 만, 2E 는 공통 폭 안내표뿐."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runningshoesguru.com/reviews/road/brooks-hyperion-elite-5-review/",
+    "sources_more": [
+     "https://believeintherun.com/shoe-reviews/brooks-hyperion-elite-5-review/"
+    ],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 RSG 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "hoka:challenger#7": {
@@ -8751,6 +9143,18 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "챌린저 ATR 7",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 호카가 7세대까지 ATR 을 붙였다 — BITR \"Hoka Challenger ATR 7 Review\" · RSG 본문 \"The Hoka Challenger ATR 7\" · KicksDB 20 중 19 \"Challenger ATR 7\". 8세대부터 \"Challenger 8\""
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Challenger ATR 7",
+    "by": "user",
+    "note": "사용자(2026-11-05) — 위와 같음"
    }
   },
   "on:cloudmonster#3": {
@@ -9024,6 +9428,24 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 트레이너 v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Trainer v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 슈퍼컴프 트레이너 v3, 퓨얼셀 슈퍼컴프 트레이너 v3, FuelCell SuperComp Trainer v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "altra:paradigm#7": {
@@ -9174,6 +9596,15 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.runningshoesguru.com/reviews/road/nike-revolution-7-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 RSG 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "newbalance:vongo#6": {
@@ -9228,6 +9659,24 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "봉고 v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Vongo v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 봉고 v6, 후레쉬폼 X 봉고 v6, 프레시폼 엑스 봉고 v6, 프레시폼 X 봉고 v6, Fresh Foam X Vongo v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:more-trail#3": {
@@ -9279,6 +9728,35 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳(+1곳 일치): 「Fresh Foam X midsole foam with approximately 3% bio-based content delivers NB's most cushioned Fresh Foam experience」(search summary)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.womensrunning.co.uk/gear/new-balance-fresh-foam-x-trail-more-v3-review/",
+    "sources_more": [
+     "https://betterweekend.co.kr/news/83136"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 1번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "모어 트레일 v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "More Trail v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 모어 트레일 v3, 후레쉬폼 X 모어 트레일 v3, 프레시폼 엑스 모어 트레일 v3, 프레시폼 X 모어 트레일 v3, Fresh Foam X More Trail v3",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "altra:lone-peak#9": {
@@ -9402,6 +9880,24 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-04T21:25Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "860 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "860 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 860 v14, 후레쉬폼 X 860 v14, 프레시폼 엑스 860 v14, 프레시폼 X 860 v14, Fresh Foam X 860 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "mizuno:wave-rider#29": {
@@ -9716,6 +10212,15 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-28): 남성 와이드 판 있음 — 브랜드 페이지"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.runrepeat.com/asics-versablast-4",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 2번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "asics:versablast#3": {
@@ -9829,6 +10334,15 @@
      "by": "claude",
      "note": "Claude 웹 검색(2026-10-28): 남성 와이드 판 있음 — 2곳 일치"
     }
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/asics-gel-pulse-16",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "asics:jolt#5": {
@@ -10028,6 +10542,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Kohl's 사이즈표의 XW 칸은 일반 안내(이 상품에 없을 수 있음이라 명시)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://longermiles.com/shoe-news/nike-quest-5-review",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "adidas:supernova-ease#1": {
@@ -10323,6 +10846,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 듀라모 스피드 와이드는 없음. 검색에 나온 Duramo 10 Wide·Duramo SL 2 Wide 는 다른 모델"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://mrfever.co.kr/34",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 3번(판단 요청). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "adidas:galaxy#7": {
@@ -10539,6 +11071,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 사용자 기준: 브랜드 국내 공식몰 목록 · 검색 문구 — 사용자 결정으로 유지 — 국내: 뉴발란스 코리아 공식몰「아리쉬 V4 (남성, 2E) 109,000원」. SSG 에도 NBPFCF718X 프레쉬폼 아리쉬 V4 (남성, 2E). Tiralux 2E 는 변형판이라 근거로 쓰지 않음 | 사용자 결정(2026-11-02): 브랜드 국내 공식몰은 목록 · 검색 문구만으로도 있음(국내) — 직영이 확실하다"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "아리시 v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Arishi v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 아리시 v4, 후레쉬폼 아리시 v4, 프레시폼 아리시 v4, Fresh Foam Arishi v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:arishi#3": {
@@ -10635,6 +11185,24 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "680 v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "680 v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 680 v9, 후레쉬폼 680 v9, 프레시폼 680 v9, Fresh Foam 680 v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:680#8": {
@@ -11047,6 +11615,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 결과 무관. 해외는 사이즈표 일반 안내뿐, Running Warehouse 는 D 만"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.foroatletismo.com/zapatillas/asics-fuji-lite-6/",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 3번(판단 요청). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "asics:trabuco-terra#2": {
@@ -11520,6 +12097,12 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: men's Wide version $59.99 · 'available in Wide (2E) and X-Wide (4E)'. 해외 근거는 Shoe Show Mega 상품 페이지(요약 문구). eBay(M460RK4 4E 등)는 리셀이라 쓰지 않음, Kohl's 사이즈표 문구도 쓰지 않음. 국내는 nbkorea 에 460 v4 2E 페이지 없음, SSG 는 W460LB4(여성) 검색 목록뿐."
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "460 v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "underarmour:velociti-distance#1": {
@@ -11774,6 +12357,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: 520v9 Men's Running Shoes (2E Width) - AW26. 국내는 검색 요약에 SSG '프레쉬폼 x 520 v9 (2E) (M520LK9)' 가 언급됐으나 상품 주소 · 판매자 확인 안 됨(검색 목록 페이지뿐) → 근거로 쓰지 않음. nbkorea 에서는 520 v9 2E 페이지가 안 나옴. 해외는 Sportsshoes 2E 상품 페이지 다수, DSW Canada 'Extra Wide Width' 도 있음. eBay 는 쓰지 않음."
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "520 v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레시폼 520 v9, 프레쉬폼 520 v9, 후레쉬폼 520 v9, Fresh Foam 520 v9",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "saucony:tide#2": {
@@ -11920,6 +12515,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 무신사 검색 요약 문구뿐(상품 주소 없음, 브랜드 목록 주소) — 해외: GT-2000 15 (2E WIDE) — ASICS AU / Running Warehouse 2E 8.0~14.0. 국내 근거는 무신사 검색 요약에 나온 상품명(1011C234, 엑스트라 와이드=4E 계열)이고 상품 페이지 주소는 결과에 없었다. 해외 2E 는 1011C236 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 무신사 검색 요약 문구뿐(상품 주소 없음, 브랜드 목록 주소) → 국외에만 있음(해외 근거 https://www.asics.com/au/en-au/gt-2000-15-2e-wide/p/AOP_1011C236-003.html)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.doctorsofrunning.com/?p=12273",
+    "sources_more": [
+     "https://runrepeat.com/asics-gt-2000-15"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 1번(3차). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "nike:downshifter#14": {
@@ -12270,10 +12876,16 @@
   "newbalance:hierro#8": {
    "model": {
     "action": "use_source",
-    "value": "프레시폼 X 이에로 v8",
-    "via": "admin",
+    "value": "이에로 v8",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에",
+    "previous": {
+     "action": "use_source",
+     "value": "프레시폼 X 이에로 v8",
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:20Z 뒤 · 가져온 날 2026-11-02)"
+    }
    },
    "price_krw": {
     "action": "use_source",
@@ -12302,6 +12914,18 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Mens New Balance Fresh Foam X Hierro v8 (2E Wide). 국내: SSG 검색 페이지 요약에 '신세계백화점 뉴발란스 남성 프레쉬폼x 이에로 V8 (2E) (NBPFES415Y/MTHIERY8)' 가 보이나 검색 페이지뿐이고, 판매자도 백화점 입점(브랜드 직영 확인 안 됨)이라 안 씀. 국내 2E 가 있었을 가능성은 높음 — 확인 필요."
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Hierro v8",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 이에로 v8, 후레쉬폼 X 이에로 v8, 프레시폼 X 히에로 v8, 프레시폼 엑스 이에로 v8, 프레시폼 X 이에로 v8, Fresh Foam X Hierro v8",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "salomon:ultra-glide#4": {
@@ -12312,6 +12936,15 @@
     "via": "manual",
     "source": "https://salomon.co.kr/products/l49216200",
     "note": "사용자 결정(2026-11-02): 있음(국내). 공식몰 상품 페이지 L49216200 — 태그 남성 · 여성(남녀공용), 사이즈 220~310. 남녀공용 와이드도 근거로 인정. 2026-11-02 국내 단계 공식몰 목록에도 같은 와이드 상품"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/es/salomon-ultra-glide-4",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정) — RunRepeat 문장은 측정값이 아니라 체감 서술이라 1곳으로 센다(사용자 판단), 실측 mm 과 반대가 아니다. 인용은 local/width-2026-11-05-c.csv"
    }
   },
   "asics:megablast#1": {
@@ -12549,6 +13182,15 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 판매처 결과 없음(KREAM 리셀만). 해외는 D(표준) 표기만 보이고 2E 상품 없음"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://longermiles.com/asics-reviews/asics-noosa-tri-15-review",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(판단 요청). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
    }
   },
   "asics:metafuji-trail#1": {
@@ -12739,6 +13381,28 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내 공식몰·무신사에 아그라빅 와이드 표기 없음(GTX 는 변형이라 제외). 해외: Running Warehouse 초대 Speed Ultra 'Men's Shoe Widths: D' 만"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://www.irunfar.com/adidas-terrex-agravic-speed-ultra-review",
+    "sources_more": [
+     "https://www.outdoorgearlab.com/reviews/shoes-and-boots/trail-running-shoes-womens/adidas-terrex-agravic-speed-ultra-womens"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 5번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 279000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:30Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "adidas:terrex-agravic-speed#1": {
@@ -12944,6 +13608,24 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 엘리트 v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Elite v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨얼셀 슈퍼컴프 엘리트 v6, 퓨어셀 슈퍼컴프 엘리트 v6, 슈퍼컴프 엘리트 v6, FuelCell SuperComp Elite v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:supercomp-elite#5": {
@@ -12966,6 +13648,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 뉴발란스 국내 공식몰(nbkorea.com) 목록 페이지「SC 엘리트 V5 (레이싱화) — 남성 2E 옵션 319,000원(검색 요약)」. 국내 근거는 공식몰 목록 페이지의 검색 요약(2E 319,000원 · D 349,000원). GS SHOP 'SC 엘리트 v5 2E 와이드(MRCELLR5)'는 판매자 불명이라 쓰지 않음. 해외는 21run 'mrcellr52e', Pace Athletic 도 있음."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 엘리트 v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Elite v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨얼셀 슈퍼컴프 엘리트 v5, 퓨어셀 슈퍼컴프 엘리트 v5, 슈퍼컴프 엘리트 v5, FuelCell SuperComp Elite v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:supercomp-pacer#2": {
@@ -13035,6 +13735,24 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 페이서 v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Pacer v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 슈퍼컴프 페이서 v2, 퓨얼셀 슈퍼컴프 페이서 v2, FuelCell SuperComp Pacer v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:rebel#4": {
@@ -13057,6 +13775,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사 상품 페이지「NBPFFS153I / 퓨어셀 레벨 V4 (남성 2E) (IVORY)」. Running Warehouse 도 2E 사이즈 목록(검색 요약). kicksonfire 2E 페이지는 발매 정보 사이트라 제외. SSG 판매분은 판매자 불명이라 쓰지 않음."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "레벨 v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Rebel v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 레벨 v4, 퓨얼셀 레벨 v4, FuelCell Rebel v4",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:more#5": {
@@ -13080,6 +13816,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사「NBPFFS104Z / 프레쉬폼 x 모어 V5 (남성 2E) (BLACK)」"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "모어 v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "More v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 모어 v5, 후레쉬폼 X 모어 v5, 프레시폼 엑스 모어 v5, 프레시폼 X 모어 v5, Fresh Foam X More v5",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:880#14": {
@@ -13102,6 +13856,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 사용자 기준: 브랜드 국내 공식몰 목록 · 검색 문구 — 사용자 결정으로 유지 — 국내: 뉴발란스 코리아 공식몰「880 V14 (남성, 2E) SOLD OUT」. 국내 공식몰 상품은 품절 표시. SSG/신세계몰에도 '프레쉬폼 x 880 v14 (2E) (M880M14)' 있으나 판매자 불명. 이마트몰 2E 는 고어텍스(변형판) | 사용자 결정(2026-11-02): 브랜드 국내 공식몰은 목록 · 검색 문구만으로도 있음(국내) — 직영이 확실하다"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "880 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "880 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 880 v14, 후레쉬폼 X 880 v14, 프레시폼 엑스 880 v14, 프레시폼 X 880 v14, Fresh Foam X 880 v14",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:balos#1": {
@@ -13126,10 +13898,16 @@
    },
    "model": {
     "action": "use_source",
-    "value": "프레시폼 X 발로스 v1",
-    "via": "admin",
+    "value": "발로스 v1",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에",
+    "previous": {
+     "action": "use_source",
+     "value": "프레시폼 X 발로스 v1",
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+    }
    },
    "price_krw": {
     "action": "use_source",
@@ -13141,6 +13919,18 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "Balos v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 발로스 v1, 후레쉬폼 X 발로스 v1, 프레시폼 엑스 발로스 v1, 프레시폼 X 발로스 v1, Fresh Foam X Balos",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:860#15": {
@@ -13172,6 +13962,24 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 1차 50켤레), 웹 1곳 + 실측 사이트가 같은 방향. 인용 · 반대 근거는 local/width-2026-11-05-a.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "860 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "860 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 860 v15, 후레쉬폼 X 860 v15, 프레시폼 엑스 860 v15, 프레시폼 X 860 v15, Fresh Foam X 860 v15",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
    }
   },
   "newbalance:supercomp-trail#1": {
@@ -13190,6 +13998,24 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: nbkorea 트레일 목록에 'SC 트레일 V2 (남성,2E)' 가 있다는 요약 — 다른 세대(v2). 해외: Running Warehouse 2E 는 SuperComp Trail v2(N2SCTM0). v1 의 2E 는 확인 못 함."
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 트레일 v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Trail v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 슈퍼컴프 트레일 v1, 퓨얼셀 슈퍼컴프 트레일 v1, FuelCell SuperComp Trail v1",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   },
   "saucony:endorphin-elite#3": {
@@ -13272,6 +14098,17 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 써코니코리아 공식몰(saucony.co.kr) 남성 트라이엄프 목록「남성 트라이엄프 24 와이드 TRIPLE BLACK」. 공식몰 목록 문구로 확인(개별 상품 주소는 못 얻음). 무신사 남성 와이드(S101894-1002) 는 상품 주소가 결과에 없어 안 씀. 카탈로그 품번 S100997 과 와이드 품번은 다름."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://theruntesters.com/running-shoes/saucony-triumph-24-review/",
+    "sources_more": [
+     "https://www.fleetfeet.com/blog/saucony-triumph-24-review-introducing-incredilux"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 1번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
    }
   },
   "saucony:paramount-max#1": {
@@ -13532,6 +14369,17 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 웹 비실측 2곳 이상 일치. 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 329000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:30Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "on:cloudeclipse#1": {
@@ -14011,6 +14859,26 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse 남성 D 폭만, Altra 'Slim FootShape' 핏. 국내는 GS 브랜드관에 일반(AL0A85PC102)만."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/altra-vanish-carbon-2-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 BITR 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 289000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-05",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:30Z 뒤 · 가져온 날 2026-11-05)"
    }
   },
   "underarmour:velociti-elite#3": {
@@ -14054,6 +14922,105 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 베트남 Supersports 페이지에 'Narrow, Regular, Wide, X-Wide' 가 보이나 사이트 공통 필터로 보이며 실제 폭 상품이 아니라 근거 아님. 국내는 무신사 3027189-002 일반만."
+   }
+  },
+  "saucony:guide#19": {
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://believeintherun.com/shoe-reviews/saucony-guide-19-review/",
+    "sources_more": [],
+    "via": "review",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 BITR 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   }
+  },
+  "adidas:ultraboost-5x#1": {
+   "width": {
+    "action": "use_source",
+    "value": "넓음",
+    "source": "https://trailandkale.com/adidas-ultraboost-5x-review/",
+    "sources_more": [
+     "https://runrepeat.com/adidas-ultraboost-5-x"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 5번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   }
+  },
+  "asics:metafuji-trail#2": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://runrepeat.com/asics-metafuji-trail-2",
+    "sources_more": [
+     "https://bettertrail.com/outdoor-gear/asics-metafuji-trail-2-trail-running-shoe-review"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   }
+  },
+  "newbalance:supercomp-trail#2": {
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "https://www.journaldutrail.com/le-test-terrain-des-new-balance-supercomp-trail-v2.html",
+    "sources_more": [],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 3번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "model": {
+    "action": "use_source",
+    "value": "SC 트레일 v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "SC Trail v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "퓨어셀 슈퍼컴프 트레일 v2, 퓨얼셀 슈퍼컴프 트레일 v2, FuelCell SuperComp Trail v2",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰 상품명으로 확인(10-21~23 캐시). 뗀 이름은 검색용 다른 표기에"
+   }
+  },
+  "mizuno:neo-vista#3": {
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/mizuno-neo-vista-3",
+    "sources_more": [
+     "https://www.doctorsofrunning.com/mizuno-neo-vista-3-review/"
+    ],
+    "via": "web",
+    "by": "user",
+    "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 5번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   }
+  },
+  "newbalance:more#6": {
+   "model": {
+    "action": "use_source",
+    "value": "모어 v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_en": {
+    "action": "use_source",
+    "value": "More v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "model_alias": {
+    "action": "use_source",
+    "value": "프레쉬폼 X 모어 v6, 후레쉬폼 X 모어 v6, 프레시폼 엑스 모어 v6, 프레시폼 X 모어 v6, Fresh Foam X More v6",
+    "by": "user",
+    "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
    }
   }
  },
@@ -14617,11 +15584,28 @@
    "was": "Brooks Adrenaline GTS 25 25th Anniversary Edition Silver (110454-1D-184) — 25th Anniversary Edition — 기념판"
   },
   "on:cloudboom-strike#2": {
+   "previous": {
+    "image": "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168",
+    "sku": "3UG30052929",
+    "title": "On Running Cloudboom Strike 2 White Lime",
+    "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
+    "was": "On Running Cloudboom Strike 2 LS White Lime (3UG30022929) — LS(LightSpray)판 — 다른 모델"
+   },
    "image": "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168",
-   "sku": "3UG30052929",
-   "title": "On Running Cloudboom Strike 2 White Lime",
-   "note": "사용자(2026-11-02) 대표 이미지 점검 7켤레 승인 \"제가마와 같은 방식으로 바꿔라\" → 캐시된 KicksDB 결과에서 같은 세대 남성 일반판(특별판 · 변형판 · 애매한 색 제외) 중 순위가 앞선 것(Claude 가 사진 확인)",
-   "was": "On Running Cloudboom Strike 2 LS White Lime (3UG30022929) — LS(LightSpray)판 — 다른 모델"
+   "images": [
+    "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168",
+    "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-Verdite-Aconite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1784748233",
+    "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-Aconite-Verdite.jpg?fit=fill&bg=FFFFFF&w=576&h=384&q=60&dpr=1&trim=color&updated_at=1785786942"
+   ],
+   "via": "admin",
+   "by": "user",
+   "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:30Z 뒤 · 가져온 날 2026-11-05)",
+   "was": {
+    "image": "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168",
+    "images": [
+     "https://images.stockx.com/images/On-Running-Cloudboom-Strike-2-White-Lime.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1784748168"
+    ]
+   }
   },
   "mizuno:wave-rider#29": {
    "image": "https://images.stockx.com/images/Mizuno-Wave-Rider-29-Estate-Blue-White-Lighning-Yellow.jpg?fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1779817164",
@@ -14915,6 +15899,18 @@
      "https://images.stockx.com/images/adidas-Terrex-Agravic-TT-Grey-Two-White.jpg?fit=fill&bg=FFFFFF&w=140&h=100&fm=webp&auto=compress&q=90&dpr=2&trim=color&updated_at=1773180561"
     ]
    }
+  },
+  "newbalance:supercomp-pacer#1": {
+   "image": "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/077/571/987/original/MFCRRCE.png.png?action=crop&width=700",
+   "images": [
+    "https://image.goat.com/transform/v1/attachments/product_template_pictures/images/077/571/987/original/MFCRRCE.png.png?action=crop&width=700"
+   ],
+   "sku": "MFCRRCE",
+   "title": "New Balance FuelCell SuperComp Pacer 'Electric Red Magenta Pop'",
+   "source": "goat",
+   "by": "user",
+   "note": "사용자(2026-11-05) \"Pacer LE(한정판)를 일반판 남성 사진으로 바꿔라\" — StockX 에는 LE 판만 있어 GOAT(KicksDB v3/goat, 1건) 순위 1위 남성 일반판(와이드 · 여성 · v2 제외). 추가 색상도 LE 뿐이라 이 한 장만. 주소는 GOAT transform(action=crop&width=700)",
+   "was": "New Balance FuelCell SuperComp Pacer LE White Green Blue (MFCRRLW)"
   }
  },
  "seed_only_price_meta": {
