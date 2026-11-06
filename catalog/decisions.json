@@ -8143,15 +8143,24 @@
   "mizuno:wave-inspire#22": {
    "weight_g": {
     "action": "use_source",
-    "value": 293,
-    "source": "https://jpn.mizuno.com/ec/disp/attgrp/J1GC2644/",
-    "sources_more": [
-     "https://emea.mizuno.com/eu/en/wave-inspire-22/J1GC264454.html"
-    ],
-    "via": "web",
-    "by": "claude",
+    "value": 295,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
     "weight_basis": "US_M9",
-    "note": "Claude 웹 검색(2026-10-23, weight-todo): 質量 約293g（27.0cm片方） (search summary; page 503 on fetch) · Weight(g): 293g (search summary, no size) | 27.0cm = US M9. EMEA men's Black/White pages say 250g (fetched; matches the women's 24.5cm figure, likely listing error). RW 281g (excluded), Road Runner Sports"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": 293,
+     "source": "https://jpn.mizuno.com/ec/disp/attgrp/J1GC2644/",
+     "sources_more": [
+      "https://emea.mizuno.com/eu/en/wave-inspire-22/J1GC264454.html"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "US_M9",
+     "note": "Claude 웹 검색(2026-10-23, weight-todo): 質量 約293g（27.0cm片方） (search summary; page 503 on fetch) · Weight(g): 293g (search summary, no size) | 27.0cm = US M9. EMEA men's Black/White pages say 250g (fetched; matches the women's 24.5cm figure, likely listing error). RW 281g (excluded), Road Runner Sports"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -8183,6 +8192,66 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내 공식몰 목록 문구「250 255 260 265 270 275 280 285 290 295 WAVE INSPIRE 22 SW J1GC264551 135,200원 169,000원 20% 1 ABOUT 」"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "Mizuno Enerzy NXT",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 38.5,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/mizuno-wave-inspire-22",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://runrepeat.com/mizuno-wave-inspire-22",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "code": "STORE"
+     },
+     "wideAvailable": {
+      "url": "https://kor.mizuno.com/product/search.html?keyword=%EC%9B%A8%EC%9D%B4%EB%B8%8C%20%EC%9D%B8%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%96%B4%2022",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "mizuno:wave-inspire#21": {
@@ -8720,16 +8789,25 @@
   "underarmour:infinite-elite#2": {
    "weight_g": {
     "action": "use_source",
-    "value": 289,
-    "source": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
-    "sources_more": [
-     "https://www.sportsshoes.com/product/und9487/infinite-elite-2-men's-running-shoes",
-     "https://www.roadtrailrun.com/2025/03/under-armour-ua-infinite-elite-2-multi.html"
-    ],
-    "via": "web",
-    "by": "claude",
+    "value": 290,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
     "weight_basis": "unknown",
-    "note": "Claude 웹 검색(2026-10-23, weight-todo): Weight: 10.2 oz, no size (fetched) · 289g (search summary) · spec men's 10.2 oz / 289g; sample 283 g US8.5 (search summary) | 10.2 oz = 289 g. RTR sample 283 g US8.5 measured; i-Run 274 g outlier."
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": 289,
+     "source": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
+     "sources_more": [
+      "https://www.sportsshoes.com/product/und9487/infinite-elite-2-men's-running-shoes",
+      "https://www.roadtrailrun.com/2025/03/under-armour-ua-infinite-elite-2-multi.html"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "unknown",
+     "note": "Claude 웹 검색(2026-10-23, weight-todo): Weight: 10.2 oz, no size (fetched) · 289g (search summary) · spec men's 10.2 oz / 289g; sample 283 g US8.5 (search summary) | 10.2 oz = 289 g. RTR sample 283 g US8.5 measured; i-Run 274 g outlier."
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -8777,6 +8855,53 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. runtothefinish '와이드 없음', Sportsshoes D 폭. 국내 공식몰 3028169 레귤러 핏."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/under-armour-infinite-elite-2",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/under-armour-infinite-elite-2",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://runtothefinish.com/ua-infinite-elite-2-review/",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://endurance.biz/2025/industry-news/going-long-under-armour-launches-infinite-elite-2-run-shoe/",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "asics:novablast#6": {
@@ -16523,12 +16648,21 @@
    "weight_g": {
     "action": "use_source",
     "value": 317,
-    "source": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
-    "sources_more": [],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지 (다른 값 299 gooutdoors.co.uk — 공식값 유지): 「Weight: 317 g」(search summary)",
-    "weight_basis": "unknown"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": 317,
+     "source": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
+     "sources_more": [],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지 (다른 값 299 gooutdoors.co.uk — 공식값 유지): 「Weight: 317 g」(search summary)",
+     "weight_basis": "unknown"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -16564,6 +16698,49 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Sportsshoes D 폭만. 국내 ABC마트 · SSG(KJ1737) 일반만."
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "Cloudfoam EVA Foam",
+    "source": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
+      "code": "MAN"
+     },
+     "stackHeight": {
+      "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "adidas:supernova-ease#2": {
