@@ -17,7 +17,7 @@ const WEIGHT_SIZES = ["M9", "M9.5", "M10", "M10.5", "M8.5"];
 const GENDERS: [string, string][] = [["men", "남성"], ["women", "여성"], ["unisex", "공용"]];
 // 스펙 출처 — 고를 수 있는 것. DB · SX 는 기존 값에만 회색으로 보인다(고를 수 없다)
 //   WEB · MAN 은 둘 다 주소를 적는다 — 가르는 것은 누가 확인했나(2026-11-02 사용자): WEB = Claude 가 검색해 찾은 값, MAN = 관리자가 직접 보고 넣은 값
-const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(국내 공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서 · Claude 검색)"], ["MAN", "MAN(직접 확인 · 관리자)"]];
+const CODES: [SourceCode, string][] = [["BITR", "BITR"], ["RSG", "RSG"], ["STORE", "STORE(공식몰)"], ["PR", "PR(보도자료)"], ["WEB", "WEB(웹 문서 · Claude 검색)"], ["MAN", "MAN(직접 확인 · 관리자)"]];
 const LEGACY_CODES: Record<string, string> = { DB: "DB(기존 값)", SX: "SX(StockX)" };
 // 가격 출처 — 종류는 늘 '발매가'(2026-10-30 '정가'에서 통일). 기존 '다나와'는 회색으로만
 const PRICE_SOURCES = ["공식몰", "ABC마트", "크림", "MAN(직접 확인)"];   // 판매처 이름 셋 + MAN(직접 확인) — 공식몰에서 내려간 모델을 관리자가 다른 자료(블로그의 공식몰 화면 캡처 등)로 확인(2026-11-01, 이름은 11-02 스펙 출처와 맞춤)
