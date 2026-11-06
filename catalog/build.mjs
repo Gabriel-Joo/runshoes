@@ -146,6 +146,7 @@ for (const f of fs.existsSync(WORK) ? fs.readdirSync(WORK).filter((x) => /^specs
 }
 
 // 기존 20켤레: 값은 DB 시드(db.json = V2, 운영과 같다 — 다나와를 보며 손으로 채운 값)에서 온다. 다시 수집하지 않는다
+const KR_MALL = /^https?:\/\/(?:www\.|m\.)?(?:asics\.co\.kr|nbkorea\.com|saucony\.co\.kr|brooksrunning\.co\.kr|kor\.mizuno\.com|salomon\.co\.kr|kr\.puma\.com|altra\.co\.kr|merrellkorea\.co\.kr)\//;  // 01a 1-2 국내 공식몰
 const basisM9 = new Set();  // 사람이 US M9 실측 출처로 확정한 무게
 const decBasis = new Map();  // 사람이 적은 무게 측정 사이즈(decisions.json weight_basis — 'US_M9' · 'US_M10' · 'unknown'). 노트 추정보다 먼저다(2026-10-23)
 for (const [id, f] of Object.entries(DEC.rows)) if (f.weight_g?.action === 'use_source' && f.weight_g.weight_basis) decBasis.set(id, f.weight_g.weight_basis);
@@ -310,6 +311,8 @@ for (const c of cands) {
   if (row.weight !== null) {
     const ws = row.sources.weight ?? '';
     row.weight_basis = decBasis.get(id) ?? (basisM9.has(id) ? 'US_M9' : s?._weightBasis ? s._weightBasis : !/^https?:\/\//.test(ws) ? 'unknown' : 'US_M9');
+    // 국내 공식몰에 사이즈 표기가 없으면 M9(270mm)로 본다(2026-11-06 사용자, 01a 1-3 · 2-7). 사람이 적은 측정 사이즈(decBasis)는 그대로 둔다
+    if (row.weight_basis === 'unknown' && !decBasis.has(id) && KR_MALL.test(ws)) row.weight_basis = 'US_M9';
   }
   if (row.price !== null) { const m = priceMeta(src.price, s?.note); row.price_source = m.source; row.price_checked_at = m.checked_at; row.price_kind = m.kind; }
   // 시드 가격 중 ABC · 공식몰에 없는 것 — 사용자가 다나와에서 넣은 값(2026-10-29 사용자: 값은 두고 출처를 "다나와"로). 날짜는 db.json 에 들어간 커밋 날짜
