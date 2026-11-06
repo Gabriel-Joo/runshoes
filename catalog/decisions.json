@@ -64,11 +64,11 @@
     "value": {
      "drop": {
       "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://www.adidas.co.kr/%EC%95%84%EB%94%94%EC%A0%9C%EB%A1%9C-%EB%B3%B4%EC%8A%A4%ED%84%B4-13/KH5603.html",
-      "code": "MAN"
+      "code": "STORE"
      },
      "weight": {
       "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-boston-13-review/",
@@ -80,7 +80,7 @@
      },
      "stackHeight": {
       "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "code": "NOTFOUND"
@@ -88,7 +88,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://www.adidas.co.kr/%EC%95%84%EB%94%94%EC%A0%9C%EB%A1%9C-%EB%B3%B4%EC%8A%A4%ED%84%B4-13/KH5603.html",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-boston-13-review/",
+       "code": "BITR"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/adidas-adizero-boston-13-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://www.adidas.com/qa/en/adizero-boston-13-shoes/JS4933.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    }
    }
   },
   "nike:vaporfly#4": {
@@ -166,7 +197,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/ch/en/t/vaporfly-4-road-racing-shoes-Mh3I4bFo/II7203-100",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
@@ -182,7 +213,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://www.youtube.com/watch?v=Dh82XnsGLsA&t=394s",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/ch/en/t/vaporfly-4-road-racing-shoes-Mh3I4bFo/II7203-100",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-vaporfly-4-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://therunningchannel.com/first-look-nike-vaporfly-4/",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T00:26Z 뒤 · 가져온 날 2026-11-03)"
+    }
    }
   },
   "salomon:speedcross#6": {
@@ -289,7 +351,7 @@
     "value": {
      "drop": {
       "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://www.musinsa.com/review/38966352?gf=A",
@@ -297,14 +359,14 @@
      },
      "weight": {
       "url": "https://www.salomon.com/en-ca/product/speedcross-6-lg9212",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "code": "DB"
      },
      "stackHeight": {
       "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "url": "https://salomon.co.nz/products/speedcross-6-wide-mens",
@@ -313,7 +375,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://www.musinsa.com/review/38966352?gf=A",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.salomon.com/en-ca/product/speedcross-6-lg9212",
+       "code": "WEB"
+      },
+      "midsole": {
+       "code": "DB"
+      },
+      "stackHeight": {
+       "url": "https://www.salomon.com/en-us/product/speedcross-6-lg9212/L41737900",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://salomon.co.nz/products/speedcross-6-wide-mens",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    }
    }
   },
   "asics:gel-kayano#32": {
@@ -1197,7 +1290,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/t/alphafly-4-mens-road-racing-shoes-lw5UiD4C",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://marathonhandbook.com/nike-alphafly-4/",
@@ -1213,7 +1306,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://marathonhandbook.com/nike-alphafly-4/",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://www.youtube.com/watch?v=yO96Z1maYjQ",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/t/alphafly-4-mens-road-racing-shoes-lw5UiD4C",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://marathonhandbook.com/nike-alphafly-4/",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://marathonhandbook.com/nike-alphafly-4/",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "adidas:adizero-prime-x-strung#2": {
@@ -1274,7 +1398,7 @@
      },
      "weight": {
       "url": "https://www.adidas.co.uk/adizero-prime-x-2-strung/ID0267.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x-2-strung-review/",
@@ -1290,7 +1414,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-prime-x-2-strung-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://runrepeat.com/adidas-adizero-prime-x-2-strung",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.adidas.co.uk/adizero-prime-x-2-strung/ID0267.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/adidas-prime-x-2-strung-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-prime-x-2-strung-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "adidas:supernova-rise#3": {
@@ -1520,7 +1675,7 @@
      },
      "weight": {
       "url": "https://www.hoka.com/en/us/mens-everyday-running-gear/clifton-10/1162030.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/hoka-clifton-10-review/",
@@ -1537,7 +1692,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-clifton-10-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "code": "RSG"
+      },
+      "weight": {
+       "url": "https://www.hoka.com/en/us/mens-everyday-running-gear/clifton-10/1162030.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-clifton-10-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://www.hoka.com/en/us/clifton-10-how-it-compares/",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://www.musinsa.com/products/5298348",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+    }
    }
   },
   "hoka:bondi#9": {
@@ -1611,7 +1797,7 @@
      },
      "weight": {
       "url": "https://www.hoka.com/en/us/mens-everyday-running-shoes/bondi-9/1162011.html?dwvar_1162011_color=MVR&dwvar_1162011_size=9&dwvar_1162011_width=Regular",
-      "code": "MAN"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.treelinereview.com/gearreviews/hoka-bondi-9-road-running-shoes-review",
@@ -1627,7 +1813,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-bondi-9-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://www.runningshoesguru.com/reviews/road/hoka-bondi-9-review/",
+       "code": "RSG"
+      },
+      "weight": {
+       "url": "https://www.hoka.com/en/us/mens-everyday-running-shoes/bondi-9/1162011.html?dwvar_1162011_color=MVR&dwvar_1162011_size=9&dwvar_1162011_width=Regular",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://www.treelinereview.com/gearreviews/hoka-bondi-9-road-running-shoes-review",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "code": "WEB",
+       "url": "https://prrunandwalk.com/collections/mens-wide/products/mens-hoka-bondi-9-wide-2e-1162013-flck"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -1741,7 +1958,7 @@
      },
      "weight": {
       "url": "https://www.hoka.com/en/md/speedgoat-6.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
@@ -1758,7 +1975,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://runrepeat.com/hoka-speedgoat-6",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.hoka.com/en/md/speedgoat-6.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/hoka-speedgoat-6-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "url": "https://www.musinsa.com/products/4144200",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "newbalance:supercomp-pacer#1": {
@@ -2155,7 +2404,7 @@
      },
      "weight": {
       "url": "https://www.newbalance.com/pd/fresh-foam-x-880v15/M880V15-48603.html",
-      "code": "MAN"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
@@ -2172,7 +2421,7 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
     "previous": {
      "action": "use_source",
      "value": {
@@ -2185,8 +2434,8 @@
        "code": "MAN"
       },
       "weight": {
-       "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
-       "code": "RSG"
+       "url": "https://www.newbalance.com/pd/fresh-foam-x-880v15/M880V15-48603.html",
+       "code": "MAN"
       },
       "midsole": {
        "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
@@ -2197,12 +2446,44 @@
        "code": "WEB"
       },
       "wideAvailable": {
-       "code": "DB"
+       "code": "STORE",
+       "url": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBPFGS107T&colCode=19"
       }
      },
      "via": "admin",
      "by": "user",
-     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T20:36Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)",
+     "previous": {
+      "action": "use_source",
+      "value": {
+       "drop": {
+        "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+        "code": "RSG"
+       },
+       "width": {
+        "url": "https://kream.co.kr/products/894462",
+        "code": "MAN"
+       },
+       "weight": {
+        "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+        "code": "RSG"
+       },
+       "midsole": {
+        "url": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v15-review/",
+        "code": "RSG"
+       },
+       "stackHeight": {
+        "url": "https://www.roadtrailrun.com/2025/01/new-balance-fresh-foam-x-880-v15-multi.html",
+        "code": "WEB"
+       },
+       "wideAvailable": {
+        "code": "DB"
+       }
+      },
+      "via": "admin",
+      "by": "user",
+      "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-29T22:27Z 뒤 · 가져온 날 2026-11-01)"
+     }
     }
    },
    "wide_available": {
@@ -3825,7 +4106,7 @@
      },
      "weight": {
       "url": "https://www.asics.com/us/en-us/glideride-max/p/ANA_1011B891-001.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/asics-glideride-max-review/",
@@ -3842,7 +4123,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/asics-glideride-max-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://runrepeat.com/asics-glideride-max",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.asics.com/us/en-us/glideride-max/p/ANA_1011B891-001.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/asics-glideride-max-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://www.roadtrailrun.com/2024/10/asics-glideride-max-review-4-comparisons.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://www.asics.com/au/en-au/glideride-max-2e-wide/p/AOP_1011B959-200.html",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "asics:sonicblast#1": {
@@ -4334,7 +4647,7 @@
      },
      "stackHeight": {
       "url": "https://www.hoka.com/en/se/mach-x-2.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "url": "https://kream.co.kr/products/496019?base_product_id=402207",
@@ -4343,7 +4656,36 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "code": "STORE"
+      },
+      "width": {
+       "url": "https://runrepeat.com/hoka-mach-x-2",
+       "code": "MAN"
+      },
+      "weight": {
+       "code": "STORE"
+      },
+      "midsole": {
+       "code": "STORE"
+      },
+      "stackHeight": {
+       "url": "https://www.hoka.com/en/se/mach-x-2.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://kream.co.kr/products/496019?base_product_id=402207",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -5248,7 +5590,7 @@
      },
      "weight": {
       "url": "https://www.adidas.ca/en/adizero-adios-pro-evo-2-shoes/JR7259.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
@@ -5264,7 +5606,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://runrepeat.com/adidas-adizero-adios-pro-evo-2",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.adidas.ca/en/adizero-adios-pro-evo-2-shoes/JR7259.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/articles/adidas-adizero-adios-pro-evo-2-first-look-thoughts",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "adidas:adizero-boston#12": {
@@ -5471,7 +5844,7 @@
      },
      "weight": {
       "url": "https://www.adidas.com.au/men-race-eva",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-sl-review/",
@@ -5488,7 +5861,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-sl-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://www.youtube.com/watch?v=xxq7ZpS_oeU&t=114s",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.adidas.com.au/men-race-eva",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-sl-review/",
+       "code": "RSG"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-adizero-sl-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "url": "https://stockx.com/adidas-adizero-sl-wide-lightstrike-core-black-cloud-white-carbon",
+       "code": "SX"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02)"
+    }
    }
   },
   "adidas:adizero-takumi-sen#11": {
@@ -5757,7 +6162,7 @@
      },
      "weight": {
       "url": "https://www.adidas.com.sg/supernova-rise-2-running-shoes/JS1888.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.rei.com/product/242183",
@@ -5774,7 +6179,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-supernova-rise-2-review/",
+       "code": "RSG"
+      },
+      "width": {
+       "url": "https://blog.naver.com/happypanchok/224107111123",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.adidas.com.sg/supernova-rise-2-running-shoes/JS1888.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.rei.com/product/242183",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/adidas-supernova-rise-2-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "code": "WEB",
+       "url": "https://www.backcountry.com/adidas-supernova-rise-2-wide-running-shoe-mens"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    }
    }
   },
   "adidas:supernova-solution#2": {
@@ -5925,7 +6362,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/t/nike-acg-zegama-R6m2RvQq",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
@@ -5941,7 +6378,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://runrepeat.com/nike-acg-zegama-trail",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/t/nike-acg-zegama-R6m2RvQq",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-acg-zegama-trail-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "nike:downshifter#13": {
@@ -6198,7 +6666,7 @@
      },
      "weight": {
       "url": "https://www.asics.com/us/en-us/gel-cumulus-28/p/ANA_1011C143-002.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.wildfiresports.com.au/asics-gel-cumulus-28-d-mens-shoes",
@@ -6215,7 +6683,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.fit2run.com/products/asics-gel-cumulus-28-mens",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/asics-gel-cumulus-28",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.asics.com/us/en-us/gel-cumulus-28/p/ANA_1011C143-002.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.wildfiresports.com.au/asics-gel-cumulus-28-d-mens-shoes",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/asics-gel-cumulus-28-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "url": "https://prrunandwalk.com/products/mens-asics-gel-cumulus-28-wide-2e-1011c147-404",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "asics:gel-excite#11": {
@@ -7539,7 +8039,7 @@
      },
      "midsole": {
       "url": "https://emea.mizuno.com/eu/de-lu/wave-horizon-9/J1GC262602.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
@@ -7552,7 +8052,35 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.roadrunnersports.com/product/49847/mens-mizuno-wave-horizon-9?cc=002",
+       "code": "WEB"
+      },
+      "weight": {
+       "url": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://emea.mizuno.com/eu/de-lu/wave-horizon-9/J1GC262602.html",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "url": "https://onyourmark-running.com/product/%EC%9B%A8%EC%9D%B4%EB%B8%8C-%ED%98%B8%EB%9D%BC%EC%9D%B4%EC%A6%8C-9-%EC%8A%88%ED%8D%BC%EC%99%80%EC%9D%B4%EB%93%9Cj1gc263102/4412/",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -8723,7 +9251,7 @@
      },
      "weight": {
       "url": "https://nike.com/t/pegasus-41-mens-road-running-shoes-R6tpoXaD/HV5975-102",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-41-review/",
@@ -8740,7 +9268,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-41-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://www.youtube.com/watch?v=j1gGhDBIZRk&t=152s",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://nike.com/t/pegasus-41-mens-road-running-shoes-R6tpoXaD/HV5975-102",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-41-review/",
+       "code": "BITR"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-41-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "code": "WEB",
+       "url": "https://www.nike.com/t/pegasus-41-mens-road-running-shoes-extra-wide-LMhfRGdO/FN4932-002"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-01T22:30Z 뒤 · 가져온 날 2026-11-02) | 와이드 칸만 와이드 판단(재조사 2026-11-02)에 맞춤 — 다른 칸 저장 때 묶음째 끌려온 옛 출처(2026-11-02 사용자)"
+    }
    }
   },
   "nike:pegasus-plus#1": {
@@ -9108,7 +9668,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/t/model/HJ1102-300",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.zappos.com/p/mens-nike-structure-26/product/10020704",
@@ -9125,7 +9685,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.fit2run.com/products/nike-structure-26-mens",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/nike-structure-26",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/t/model/HJ1102-300",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.zappos.com/p/mens-nike-structure-26/product/10020704",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://www.runningshoesguru.com/reviews/road/nike-structure-26-review/",
+       "code": "RSG"
+      },
+      "wideAvailable": {
+       "url": "https://www.nike.com/kr/t/스트럭처-26-남성-로드-러닝화엑스트라-와이드-R840oocT",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "nike:structure#25": {
@@ -9896,7 +10488,7 @@
     "value": {
      "drop": {
       "url": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-GYVSurvY",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runrepeat.com/nike-winflo-12",
@@ -9904,7 +10496,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/sg/t/winflo-12-mens-road-running-shoes-oyoVF2mm/HV9272-401",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.footlocker.co.uk/product/model/nike-winflo-12-men-shoes/210662.html",
@@ -9921,7 +10513,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-GYVSurvY",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/nike-winflo-12",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/sg/t/winflo-12-mens-road-running-shoes-oyoVF2mm/HV9272-401",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.footlocker.co.uk/product/model/nike-winflo-12-men-shoes/210662.html",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://runrepeat.com/nike-winflo-12",
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "url": "https://www.nike.com/t/winflo-12-mens-road-running-shoes-wide-GYVSurvY/II7229-400",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "nike:winflo#11": {
@@ -10655,11 +11279,11 @@
      },
      "weight": {
       "url": "https://m.nbkorea.com/collection/SCREBELV1.action",
-      "code": "MAN"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://m.nbkorea.com/collection/SCREBELV1.action",
-      "code": "MAN"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://believeintherun.com/shoe-reviews/new-balance-supercomp-rebel-v1-review/",
@@ -10667,12 +11291,44 @@
      },
      "wideAvailable": {
       "url": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBPFGF720G&colCode=15",
-      "code": "WEB"
+      "code": "STORE"
      }
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/new-balance-supercomp-rebel-v1-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://www.doctorsofrunning.com/new-balance-supercomp-rebel-review/",
+       "code": "WEB"
+      },
+      "weight": {
+       "url": "https://m.nbkorea.com/collection/SCREBELV1.action",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://m.nbkorea.com/collection/SCREBELV1.action",
+       "code": "MAN"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/new-balance-supercomp-rebel-v1-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "url": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBPFGF720G&colCode=15",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -11595,7 +12251,7 @@
      },
      "width": {
       "url": "https://www.asics.co.kr/p/19685?srsltid=AYCX9vKv2-E1yOufAbpGUycm-OTaPTrnuvD5evjV0e1dePskTSMxfrSn",
-      "code": "MAN"
+      "code": "STORE"
      },
      "weight": {
       "url": "https://www.asics.co.kr/p/AKR_112511102-751",
@@ -11616,7 +12272,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://believeintherun.com/shoe-reviews/asics-magic-speed-4-review/",
+       "code": "BITR"
+      },
+      "width": {
+       "url": "https://www.asics.co.kr/p/19685?srsltid=AYCX9vKv2-E1yOufAbpGUycm-OTaPTrnuvD5evjV0e1dePskTSMxfrSn",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.asics.co.kr/p/AKR_112511102-751",
+       "code": "STORE"
+      },
+      "midsole": {
+       "url": "https://www.runningshoesguru.com/reviews/road/asics-magic-speed-4-review/",
+       "code": "RSG"
+      },
+      "stackHeight": {
+       "url": "https://believeintherun.com/shoe-reviews/asics-magic-speed-4-review/",
+       "code": "BITR"
+      },
+      "wideAvailable": {
+       "url": "https://www.musinsa.com/products/4814783",
+       "code": "WEB"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-03T03:14Z 뒤 · 가져온 날 2026-11-05)"
+    }
    }
   },
   "hoka:mach#7": {
@@ -12534,7 +13222,7 @@
     "value": {
      "drop": {
       "url": "https://www.asics.com/ca/en-ca/glideride-max-2-1011c156-300",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runtothefinish.com/asics-glideride-max-2-review/",
@@ -12558,7 +13246,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.asics.com/ca/en-ca/glideride-max-2-1011c156-300",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runtothefinish.com/asics-glideride-max-2-review/",
+       "code": "WEB"
+      },
+      "weight": {
+       "url": "https://www.asics.co.kr/p/AKR_112610214-300",
+       "code": "STORE"
+      },
+      "midsole": {
+       "code": "STORE"
+      },
+      "stackHeight": {
+       "url": "https://runrepeat.com/asics-glideride-max-2",
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "url": "https://kream.co.kr/products/546133",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -13465,7 +14184,7 @@
     "value": {
      "drop": {
       "url": "https://www.asics.com/ca/en-ca/gel-pulse-17-1011c153-403",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runrepeat.com/asics-gel-pulse-17",
@@ -13480,12 +14199,39 @@
      },
      "wideAvailable": {
       "url": "https://www.asics.com/us/en-us/gel-pulse-17-wide/p/ANA_1011C157-001.html",
-      "code": "MAN"
+      "code": "STORE"
      }
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.asics.com/ca/en-ca/gel-pulse-17-1011c153-403",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/asics-gel-pulse-17",
+       "code": "MAN"
+      },
+      "weight": {
+       "code": "STORE"
+      },
+      "stackHeight": {
+       "url": "https://runrepeat.com/asics-gel-pulse-17",
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "url": "https://www.asics.com/us/en-us/gel-pulse-17-wide/p/ANA_1011C157-001.html",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -13680,7 +14426,7 @@
     "value": {
      "drop": {
       "url": "https://www.asics.com/us/en-us/jolt-5/p/1011B963-100.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://www.runnea.co.uk/running-shoes/asics/jolt-5/1045279/",
@@ -13688,11 +14434,11 @@
      },
      "weight": {
       "url": "https://www.asics.com/us/en-us/jolt-5/p/ANA_1011B963-002.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.asics.com/us/en-us/jolt-5/p/ANA_1011B963-002.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://runningshoedb.com/en/shoes/asics-jolt-5/",
@@ -13705,7 +14451,39 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.asics.com/us/en-us/jolt-5/p/1011B963-100.html",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://www.runnea.co.uk/running-shoes/asics/jolt-5/1045279/",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.asics.com/us/en-us/jolt-5/p/ANA_1011B963-002.html",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.asics.com/us/en-us/jolt-5/p/ANA_1011B963-002.html",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://runningshoedb.com/en/shoes/asics-jolt-5/",
+       "code": "MAN"
+      },
+      "wideAvailable": {
+       "url": "https://kream.co.kr/products/642832",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
@@ -13816,23 +14594,23 @@
     "value": {
      "drop": {
       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-002",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
-      "code": "WEB"
+      "code": "STORE"
      },
      "weight": {
       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.asics.com/us/en-us/patriot-14-1011c050-001",
-      "code": "WEB"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "code": "NOTFOUND"
@@ -13840,7 +14618,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-002",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
+       "code": "WEB"
+      },
+      "weight": {
+       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
+       "code": "WEB"
+      },
+      "midsole": {
+       "url": "https://www.asics.com/us/en-us/patriot-14-1011c050-001",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://www.asics.com/ca/en-ca/patriot-14-1011c050-006",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "asics:patriot#13": {
@@ -13949,7 +14758,7 @@
     "value": {
      "drop": {
       "url": "https://www.nike.com/za/t/quest-6-mens-road-running-shoes-lk8VbB",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runrepeat.com/nike-quest-6",
@@ -13957,7 +14766,7 @@
      },
      "weight": {
       "url": "https://www.nike.com/za/t/quest-6-mens-road-running-shoes-lk8VbB",
-      "code": "WEB"
+      "code": "STORE"
      },
      "midsole": {
       "code": "STORE"
@@ -13968,7 +14777,33 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.nike.com/za/t/quest-6-mens-road-running-shoes-lk8VbB",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/nike-quest-6",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.nike.com/za/t/quest-6-mens-road-running-shoes-lk8VbB",
+       "code": "WEB"
+      },
+      "midsole": {
+       "code": "STORE"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "nike:quest#5": {
@@ -14678,7 +15513,7 @@
     "value": {
      "drop": {
       "url": "https://www.newbalance.com/pd/fresh-foam-arishi-v4/MARISV4-48847.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runrepeat.com/new-balance-fresh-foam-arishi-v4",
@@ -14686,7 +15521,7 @@
      },
      "weight": {
       "url": "https://www.newbalance.com/pd/fresh-foam-arishi-v4/MARISV4-40565-PMG-NA.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "url": "https://www.nbkorea.com/product/searchResult.action?schWord=arishiv4",
@@ -14695,7 +15530,31 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.newbalance.com/pd/fresh-foam-arishi-v4/MARISV4-48847.html",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/new-balance-fresh-foam-arishi-v4",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://www.newbalance.com/pd/fresh-foam-arishi-v4/MARISV4-40565-PMG-NA.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://www.nbkorea.com/product/searchResult.action?schWord=arishiv4",
+       "code": "STORE"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T17:40Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "newbalance:arishi#3": {
@@ -16252,14 +17111,14 @@
     "value": {
      "drop": {
       "url": "https://www.newbalance.ca/en_ca/pd/fresh-foam-520v9/M520V9-48517.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "weight": {
       "code": "STORE"
      },
      "midsole": {
       "url": "https://www.newbalance.ca/en_ca/pd/fresh-foam-520v9/M520V9-48517.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "url": "https://kream.co.kr/products/918754",
@@ -16268,7 +17127,30 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06) · 2026-11-06 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자 지시, 01a 1-8). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.newbalance.ca/en_ca/pd/fresh-foam-520v9/M520V9-48517.html",
+       "code": "WEB"
+      },
+      "weight": {
+       "code": "STORE"
+      },
+      "midsole": {
+       "url": "https://www.newbalance.ca/en_ca/pd/fresh-foam-520v9/M520V9-48517.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "url": "https://kream.co.kr/products/918754",
+       "code": "MAN"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+    }
    },
    "wide_scope": {
     "action": "use_source",
