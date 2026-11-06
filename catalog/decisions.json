@@ -6395,13 +6395,21 @@
    "drop_mm": {
     "action": "use_source",
     "value": 8,
-    "source": "https://www.altitude-sports.com/p/asics-gt1000-14-road-running-shoes-mens-acs-1011c076",
-    "sources_more": [
-     "https://www.dsw.com/product/asics-gt-1000-14-running-shoe---mens/597475"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-28) — 비실측 2곳 일치: 「Heel Drop: 8mm」(opened)"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "출처 묶음 맞춤(2026-11-06 사용자) — 관리 화면에서 출처를 바꿨지만 값이 같아 칸 판단이 옮겨지지 않았던 칸. 근거는 spec_sources 판단(관리 화면)의 출처",
+    "previous": {
+     "action": "use_source",
+     "value": 8,
+     "source": "https://www.altitude-sports.com/p/asics-gt1000-14-road-running-shoes-mens-acs-1011c076",
+     "sources_more": [
+      "https://www.dsw.com/product/asics-gt-1000-14-running-shoe---mens/597475"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-28) — 비실측 2곳 일치: 「Heel Drop: 8mm」(opened)"
+    }
    },
    "midsole": {
     "action": "use_source",
@@ -8501,14 +8509,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 292,
-    "source": "https://www.nike.com/t/nike-revolution-8-U0b8oy8S",
-    "sources_more": [
-     "https://www.finishline.com/pdp/mens-nike-revolution-8-running-shoes/prod2875461/HJ9198/011"
-    ],
-    "via": "web",
-    "by": "claude",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
     "weight_basis": "US_M10",
-    "note": "Claude 웹 검색(2026-10-23, 재검색): search summary: approx 292g/10.3oz (Men's US 10) · search summary: 10.3 oz, 10 mm drop | brand page via search summary"
+    "note": "출처 묶음 맞춤(2026-11-06 사용자) — 관리 화면에서 출처를 바꿨지만 값이 같아 칸 판단이 옮겨지지 않았던 칸. 근거는 spec_sources 판단(관리 화면)의 출처",
+    "previous": {
+     "action": "use_source",
+     "value": 292,
+     "source": "https://www.nike.com/t/nike-revolution-8-U0b8oy8S",
+     "sources_more": [
+      "https://www.finishline.com/pdp/mens-nike-revolution-8-running-shoes/prod2875461/HJ9198/011"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "US_M10",
+     "note": "Claude 웹 검색(2026-10-23, 재검색): search summary: approx 292g/10.3oz (Men's US 10) · search summary: 10.3 oz, 10 mm drop | brand page via search summary"
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -8542,13 +8559,21 @@
    "drop_mm": {
     "action": "use_source",
     "value": 10,
-    "source": "https://www.nike.com/t/revolution-8-mens-road-running-shoes-U0b8oy8S",
-    "sources_more": [
-     "https://www.nike.com/gb/t/revolution-8-mens-road-running-shoes-scdpZh"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Weight: Approx. 292g/10.3oz (Men's US 10) Heel-to-toe drop: 10mm' | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS · RunRepeat 실측뿐이라 비움"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "출처 묶음 맞춤(2026-11-06 사용자) — 관리 화면에서 출처를 바꿨지만 값이 같아 칸 판단이 옮겨지지 않았던 칸. 근거는 spec_sources 판단(관리 화면)의 출처",
+    "previous": {
+     "action": "use_source",
+     "value": 10,
+     "source": "https://www.nike.com/t/revolution-8-mens-road-running-shoes-U0b8oy8S",
+     "sources_more": [
+      "https://www.nike.com/gb/t/revolution-8-mens-road-running-shoes-scdpZh"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-11-02, 검색 요약만 · 페이지 열지 않음): 'Weight: Approx. 292g/10.3oz (Men's US 10) Heel-to-toe drop: 10mm' | 나이키는 접근 금지라 검색 결과만 | 스택은 RTINGS · RunRepeat 실측뿐이라 비움"
+    }
    },
    "width": {
     "action": "use_source",
@@ -12728,11 +12753,19 @@
    "drop_mm": {
     "action": "use_source",
     "value": 8,
-    "source": "https://www.asics.com/us/en-us/dynablast/c/aa50126000/",
-    "sources_more": [],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): 드롭 8mm: ASICS US 시리즈 페이지 요약(midlevel 8 mm drop) + 소매점 다수. 무게 260g/9.2oz: Altitude Sports·Skroutz 일치(사이즈 미표기; Velocita 는 size 40 기준). wildfiresports.com.au 만 255g(US9)·30mm 힐. 힐 스택: Velocita 40mm vs wildfiresports 30mm 불일치 → null. 미드솔: 소매점간 FF BLAST MAX vs FF BLAST PLUS 불일치 → null."
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "출처 묶음 맞춤(2026-11-06 사용자) — 관리 화면에서 출처를 바꿨지만 값이 같아 칸 판단이 옮겨지지 않았던 칸. 근거는 spec_sources 판단(관리 화면)의 출처",
+    "previous": {
+     "action": "use_source",
+     "value": 8,
+     "source": "https://www.asics.com/us/en-us/dynablast/c/aa50126000/",
+     "sources_more": [],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): 드롭 8mm: ASICS US 시리즈 페이지 요약(midlevel 8 mm drop) + 소매점 다수. 무게 260g/9.2oz: Altitude Sports·Skroutz 일치(사이즈 미표기; Velocita 는 size 40 기준). wildfiresports.com.au 만 255g(US9)·30mm 힐. 힐 스택: Velocita 40mm vs wildfiresports 30mm 불일치 → null. 미드솔: 소매점간 FF BLAST MAX vs FF BLAST PLUS 불일치 → null."
+    }
    },
    "carbon": {
     "action": "use_source",
@@ -15330,13 +15363,21 @@
    "drop_mm": {
     "action": "use_source",
     "value": 10,
-    "source": "https://www.newbalance.ie/en/pd/460-v4/M460V4-49914.html",
-    "sources_more": [
-     "https://www.newbalance.co.uk/pd/460v4/M460V4-46591.html"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「10 mm drop; due to variances created during the development and manufacturing processes, all references to 10 mm drop are approximate」(search summary)"
+    "source": "https://shoecity.com/products/new-balance-mens-460-v4-running-shoes",
+    "via": "admin",
+    "by": "user",
+    "note": "출처 묶음 맞춤(2026-11-06 사용자) — 관리 화면에서 출처를 바꿨지만 값이 같아 칸 판단이 옮겨지지 않았던 칸. 근거는 spec_sources 판단(관리 화면)의 출처",
+    "previous": {
+     "action": "use_source",
+     "value": 10,
+     "source": "https://www.newbalance.ie/en/pd/460-v4/M460V4-49914.html",
+     "sources_more": [
+      "https://www.newbalance.co.uk/pd/460v4/M460V4-46591.html"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「10 mm drop; due to variances created during the development and manufacturing processes, all references to 10 mm drop are approximate」(search summary)"
+    }
    },
    "wide_available": {
     "action": "use_source",
