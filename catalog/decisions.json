@@ -382,19 +382,32 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://therunhouse.com/products/1011c051-001-2e",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/542174",
     "via": "web",
-    "by": "user",
+    "by": "claude",
     "queries": [
-     "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 젤 카야노 32 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r1: 젤 카야노 32 2E 와이드 (국내 판매처 도메인 한정)",
-     "웹 r1: ASICS Gel-Kayano 32 men's wide 2E"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 젤 카야노 32 2E 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: ASICS Men's GEL-KAYANO 32 Wide - BLACK/GRAPHITE GREY. 국내 근거는 GS SHOP 검색 결과 페이지의 요약 문구(상품 주소는 못 봄) — 재확인 권장 | 사용자 결정(2026-11-02): 국외에만 있음 — SSG · GS샵이 robots.txt 로 자동 수집을 막아 국내 근거를 확인하지 못했고, 해외 와이드는 확인됨"
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「아식스 젤 카야노 32 … 4E 엑스트라 와이드」. 크림 발매가: 원화(발매가 199,000원). 이번 검색은 546688 '블랙 그래파이트 그레이 - 2E 와이드'(정가 $165, 외화)를 다시 확인, 요약에 4E 엑스트라 와이드 매물도 있다고 나옴. 원화 발매가 있는 542174(4E, 이전 확인 값)를 기록. 542174 URL 자체는 이번 검색 결과에 다시 나오진 않음",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://therunhouse.com/products/1011c051-001-2e",
+     "via": "web",
+     "by": "user",
+     "queries": [
+      "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 젤 카야노 32 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r1: 젤 카야노 32 2E 와이드 (국내 판매처 도메인 한정)",
+      "웹 r1: ASICS Gel-Kayano 32 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: ASICS Men's GEL-KAYANO 32 Wide - BLACK/GRAPHITE GREY. 국내 근거는 GS SHOP 검색 결과 페이지의 요약 문구(상품 주소는 못 봄) — 재확인 권장 | 사용자 결정(2026-11-02): 국외에만 있음 — SSG · GS샵이 robots.txt 로 자동 수집을 막아 국내 근거를 확인하지 못했고, 해외 와이드는 확인됨"
+    }
    }
   },
   "nike:pegasus#42": {
@@ -646,30 +659,43 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.runandbecome.com/item/New-Balance/Hierro-v9-2E-Wide/7WCZ",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/710315",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 프레시폼 X 이에로 v9 · Hierro v9 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 프레시폼 X 이에로 v9 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-b: 이에로 v9 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-b: New Balance Fresh Foam X Hierro v9 men's wide 2E",
-     "웹 r4-b: 이에로 V9 (남성, 2E) (allowed_domains: nbkorea.com, musinsa.com)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 프레쉬 폼 이에로 v9 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Hierro V9 2E Wide. 국내: nbkorea · 무신사 모두 '이에로 V9 (남성, D)' · GORE-TEX (남성 D) · 여성 B 만. nbkorea 의 D/2E 필터는 사이트 공통 안내라 근거 아님. 2E 는 '이에로 미드' · V8 에서만 보임(다른 변형 · 세대). 해외: Running Warehouse · 뉴질랜드 소매점 등에도 2E 있음.",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 프레쉬 폼 X 이에로 v9 일렉트릭 제이드 블랙 - 2E 와이드」. 크림 발매가: 외화(발매가 ￡140 (약 275,500원)). MTHIERF9. 고어텍스 v9 와이드 변형은 제외. 원화 발매가 있는 v9 와이드는 검색에 안 나옴",
     "previous": {
      "action": "use_source",
      "value": true,
-     "source": "https://frontrunnercolombo.co.nz/products/new-balance-fresh-foam-x-hierro-v9-2e-wide-mens-black",
-     "sources_more": [
-      "https://www.tonton-outdoor.com/fr_FR/p/new-balance-fresh-foam-x-hierro-v9-wide-homme-116168"
-     ],
+     "scope": "overseas",
+     "source": "https://www.runandbecome.com/item/New-Balance/Hierro-v9-2E-Wide/7WCZ",
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 프레시폼 X 이에로 v9 · Hierro v9 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 프레시폼 X 이에로 v9 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-b: 이에로 v9 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-b: New Balance Fresh Foam X Hierro v9 men's wide 2E",
+      "웹 r4-b: 이에로 V9 (남성, 2E) (allowed_domains: nbkorea.com, musinsa.com)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Hierro V9 2E Wide. 국내: nbkorea · 무신사 모두 '이에로 V9 (남성, D)' · GORE-TEX (남성 D) · 여성 B 만. nbkorea 의 D/2E 필터는 사이트 공통 안내라 근거 아님. 2E 는 '이에로 미드' · V8 에서만 보임(다른 변형 · 세대). 해외: Running Warehouse · 뉴질랜드 소매점 등에도 2E 있음.",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://frontrunnercolombo.co.nz/products/new-balance-fresh-foam-x-hierro-v9-2e-wide-mens-black",
+      "sources_more": [
+       "https://www.tonton-outdoor.com/fr_FR/p/new-balance-fresh-foam-x-hierro-v9-wide-homme-116168"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     }
     }
    },
    "midsole": {
@@ -867,31 +893,47 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://us.puma.com/us/en/pd/velocity-nitro-mens-wide-running-shoes/379614?swatch=03",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/323909",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(kr.puma.com): 벨로시티 니트로 3 · Velocity Nitro 3 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 벨로시티 니트로 3 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r1: Puma Velocity Nitro 3 men's wide",
-     "웹 r1: 푸마 벨로시티 니트로 3 와이드",
-     "웹 r1: 벨로시티 나이트로 3 와이드 37961"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 푸마 벨로시티 니트로 3 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): Puma Velocity Nitro 3 Wide",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 벨로시티 나이트로 3 379614-01",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): Puma Velocity Nitro 3 men's 377748 379614 wide"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Velocity NITRO™ 3 Men's Wide Running Shoes (379614). 국내 결과는 KREAM · 후루츠패밀리 · Novelship(리셀)뿐이고, 무신사는 4 와이드만 있음",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「푸마 벨로시티 나이트로 3 블랙 실버(모델번호 379614-01 — 푸마 와이드 품번, 일반판은 377748)」. 크림 발매가: 없음. KREAM 표기는 나이트로. 와이드 표기 상품은 4 · 5 세대와 디비에이트 나이트로 3 뿐. 의심: '벨로시티 나이트로 3 블랙 실버'(/products/323909) 모델번호 379614-01 이 current_src 의 미국 와이드 품번 379614 와 같지만 제목에 와이드 표기가 없어 세지 않음",
     "previous": {
      "action": "use_source",
      "value": true,
+     "scope": "overseas",
      "source": "https://us.puma.com/us/en/pd/velocity-nitro-mens-wide-running-shoes/379614?swatch=03",
-     "sources_more": [
-      "https://za.puma.com/pd/velocity-nitrotm-3-mens-wide-running-shoes/379614.html",
-      "https://www.sportsdirect.com/puma-mens-velocity-nitro-3-wide-running-shoes-210587"
-     ],
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
+     "queries": [
+      "국내 공식몰(kr.puma.com): 벨로시티 니트로 3 · Velocity Nitro 3 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 벨로시티 니트로 3 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r1: Puma Velocity Nitro 3 men's wide",
+      "웹 r1: 푸마 벨로시티 니트로 3 와이드",
+      "웹 r1: 벨로시티 나이트로 3 와이드 37961"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Velocity NITRO™ 3 Men's Wide Running Shoes (379614). 국내 결과는 KREAM · 후루츠패밀리 · Novelship(리셀)뿐이고, 무신사는 4 와이드만 있음",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://us.puma.com/us/en/pd/velocity-nitro-mens-wide-running-shoes/379614?swatch=03",
+      "sources_more": [
+       "https://za.puma.com/pd/velocity-nitrotm-3-mens-wide-running-shoes/379614.html",
+       "https://www.sportsdirect.com/puma-mens-velocity-nitro-3-wide-running-shoes-210587"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
+     }
     }
    },
    "width": {
@@ -1560,21 +1602,35 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://prrunandwalk.com/collections/mens-wide/products/mens-hoka-bondi-9-wide-2e-1162013-flck",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/425660",
     "via": "web",
     "by": "claude",
     "queries": [
-     "ABC마트 · 그랜드스테이지: 본디 9 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r1: 호카 본디 9 와이드 남성",
-     "웹 r1: HOKA Bondi 9 men's wide 2E",
-     "웹 r1: 호카 본디 9 와이드 1162013 무신사",
-     "웹 r1: 본디 9 와이드 남성 ABC마트 OR 그랜드스테이지 OR SSG OR 롯데온 호카",
-     "웹 r1: 호카 (남성) 본디 9 와이드 무신사"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 호카 본디 9 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 호카 본디 9 블랙 - 와이드 발매가"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Men's HOKA Bondi 9 (Wide - 2E) 1162013. 국내는 KREAM(발매가 219,000원) · 쿠팡 판매자 · 11번가(279,000원, 판매자 불명) · 후루츠패밀리만 — 인정 안 함. 무신사는 여성 본디 9 와이드(1162014)만 보임"
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「호카 본디 9 블랙 - 와이드」. 크림 발매가: 원화(발매가 219,000원). 1162013-BBLC. 엑스트라 와이드 426719, 갈락틱 그레이 와이드 426800, 드리즐 다운푸어 와이드 426759 도 있음",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://prrunandwalk.com/collections/mens-wide/products/mens-hoka-bondi-9-wide-2e-1162013-flck",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 본디 9 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r1: 호카 본디 9 와이드 남성",
+      "웹 r1: HOKA Bondi 9 men's wide 2E",
+      "웹 r1: 호카 본디 9 와이드 1162013 무신사",
+      "웹 r1: 본디 9 와이드 남성 ABC마트 OR 그랜드스테이지 OR SSG OR 롯데온 호카",
+      "웹 r1: 호카 (남성) 본디 9 와이드 무신사"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Men's HOKA Bondi 9 (Wide - 2E) 1162013. 국내는 KREAM(발매가 219,000원) · 쿠팡 판매자 · 11번가(279,000원, 판매자 불명) · 후루츠패밀리만 — 인정 안 함. 무신사는 여성 본디 9 와이드(1162014)만 보임"
+    }
    }
   },
   "hoka:speedgoat#6": {
@@ -1692,20 +1748,35 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.fleetfeet.com/products/mens-new-balance-fuelcell-supercomp-pacer",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/377745",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 퓨얼셀 슈퍼컴프 페이서 v1 · SuperComp Pacer v1 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 퓨얼셀 슈퍼컴프 페이서 v1 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-a: 뉴발란스 슈퍼컴프 페이서 2E 남성 (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-a: New Balance FuelCell SuperComp Pacer MFCRRLW men's wide 2E",
-     "웹 r4-a: \"SuperComp Pacer\" New Balance 2E wide men's -v2 (allowed_domains: newbalance.com, runningwarehouse.com, zappos.com, rei.com, fleetfeet.com, roadrunnersports.com, footlocker.com, jackrabbit.com)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 SC 페이서 v2 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 퓨어셀 슈퍼컴프 페이서 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 퓨어셀 SC 페이서 2E 와이드 발매가"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fleet Feet's listing shows a \"Wide 2E\" width option(검색 요약). 국내 결과에 페이서 1세대가 나오지 않음. 해외: Zappos 원조 모델(product/9601529)도 D·EE 두 폭(검색 요약). GOAT 'supercomp pacer 2e wide (MFCRRCE-2E)'는 리셀이라 제외. 근거가 모두 검색 요약이라 Fleet Feet 페이지 한 번 확인 권함."
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 퓨어셀 SC 페이서 일렉트릭 레드 마젠타 팝 - 2E 와이드 정품 안심 거래」. 크림 발매가: 외화(발매가 ￡170 (약 306,400원)). 제목에 세대 표기 없음(v 숫자 없음) — MFCRRCE · 발매 22/08/26 로 v1 이라 판단(의심 사례). 원화 발매가 있는 v1 와이드는 못 찾음",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.fleetfeet.com/products/mens-new-balance-fuelcell-supercomp-pacer",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 퓨얼셀 슈퍼컴프 페이서 v1 · SuperComp Pacer v1 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 퓨얼셀 슈퍼컴프 페이서 v1 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-a: 뉴발란스 슈퍼컴프 페이서 2E 남성 (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-a: New Balance FuelCell SuperComp Pacer MFCRRLW men's wide 2E",
+      "웹 r4-a: \"SuperComp Pacer\" New Balance 2E wide men's -v2 (allowed_domains: newbalance.com, runningwarehouse.com, zappos.com, rei.com, fleetfeet.com, roadrunnersports.com, footlocker.com, jackrabbit.com)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fleet Feet's listing shows a \"Wide 2E\" width option(검색 요약). 국내 결과에 페이서 1세대가 나오지 않음. 해외: Zappos 원조 모델(product/9601529)도 D·EE 두 폭(검색 요약). GOAT 'supercomp pacer 2e wide (MFCRRCE-2E)'는 리셀이라 제외. 근거가 모두 검색 요약이라 Fleet Feet 페이지 한 번 확인 권함."
+    }
    },
    "model": {
     "action": "use_source",
@@ -7049,19 +7120,32 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.shoeclinic.co.nz/hoka-mens-arahi-8-wide-2e-black-white-hoka1168710bwht-blackwhi",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/551071",
     "via": "web",
     "by": "claude",
     "queries": [
-     "ABC마트 · 그랜드스테이지: 아라히 8 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r3-b: 호카 아라히 8 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
-     "웹 r3-b: HOKA Arahi 8 men's wide",
-     "웹 r3-b: 호카 남성 아라히 8 와이드 1168710 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 호카 아라히 8 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Hoka Mens Arahi 8 Wide 2E Black/White 1168710. 국내: 무신사 '(남성) 아라히 8 와이드 1168710-BKSK·BWHT 199,000원' 이 검색 요약에 나오지만 주소는 검색·브랜드 목록 페이지뿐 → 쓰지 않음. GS샵은 판매자 불명. 다시 확인하면 국내 있음 가능성 높음"
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「호카 아라히 8 화이트 - 와이드」. 크림 발매가: 없음. 요약의 219,000원은 즉시 구매가라 발매가 아님. 블랙 와이드 매물도 요약에 있음",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.shoeclinic.co.nz/hoka-mens-arahi-8-wide-2e-black-white-hoka1168710bwht-blackwhi",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 아라히 8 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r3-b: 호카 아라히 8 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
+      "웹 r3-b: HOKA Arahi 8 men's wide",
+      "웹 r3-b: 호카 남성 아라히 8 와이드 1168710 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Hoka Mens Arahi 8 Wide 2E Black/White 1168710. 국내: 무신사 '(남성) 아라히 8 와이드 1168710-BKSK·BWHT 199,000원' 이 검색 요약에 나오지만 주소는 검색·브랜드 목록 페이지뿐 → 쓰지 않음. GS샵은 판매자 불명. 다시 확인하면 국내 있음 가능성 높음"
+    }
    },
    "width": {
     "action": "use_source",
@@ -8091,30 +8175,43 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://hoka.co.th/en/products/1171934-bwht-gaviota-6-wide-men",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/935993",
     "via": "web",
     "by": "claude",
     "queries": [
-     "ABC마트 · 그랜드스테이지: 가비오타 6 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r3-b: 호카 가비오타 6 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
-     "웹 r3-b: HOKA Gaviota 6 men's wide",
-     "웹 r3-b: 호카 남성 가비오타 6 와이드 1171934 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 호카 가비오타 6 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: GAVIOTA 6 WIDE (men, 1171934). 국내: 롯데ON 검색 페이지에 남성 와이드(1171934) 342,220원이 보이나 판매자 불명·검색 페이지 → 쓰지 않음. 무신사 상품 페이지 못 찾음. 해외는 호카 태국 사이트·Outnorth·Triathlete Sports(Men's Gaviota 6 Wide)",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「호카 가비오타 6 스텔라 그레이 스타더스트 - 와이드」. 크림 발매가: 원화(발매가 239,000원). 1171934-STLLR",
     "previous": {
      "action": "use_source",
      "value": true,
-     "source": "https://shop.therunningcompany.com.au/products/mens-hoka-gaviota-6-2e-wide",
-     "sources_more": [
-      "https://sportano.com/p/845622/men-s-running-shoes-hoka-gaviota-6-wide-black-white",
-      "https://www.outnorth.com/int/brands/hoka/hoka-men-s-gaviota-6-wide-midnight-blue-faded-navy-FS668650"
-     ],
+     "scope": "overseas",
+     "source": "https://hoka.co.th/en/products/1171934-bwht-gaviota-6-wide-men",
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 가비오타 6 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r3-b: 호카 가비오타 6 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
+      "웹 r3-b: HOKA Gaviota 6 men's wide",
+      "웹 r3-b: 호카 남성 가비오타 6 와이드 1171934 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: GAVIOTA 6 WIDE (men, 1171934). 국내: 롯데ON 검색 페이지에 남성 와이드(1171934) 342,220원이 보이나 판매자 불명·검색 페이지 → 쓰지 않음. 무신사 상품 페이지 못 찾음. 해외는 호카 태국 사이트·Outnorth·Triathlete Sports(Men's Gaviota 6 Wide)",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://shop.therunningcompany.com.au/products/mens-hoka-gaviota-6-2e-wide",
+      "sources_more": [
+       "https://sportano.com/p/845622/men-s-running-shoes-hoka-gaviota-6-wide-black-white",
+       "https://www.outnorth.com/int/brands/hoka/hoka-men-s-gaviota-6-wide-midnight-blue-faded-navy-FS668650"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+     }
     }
    },
    "width": {
@@ -10175,30 +10272,43 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.sportchek.ca/en/pdp/new-balance-men-s-fuelcell-propel-v4-2e-wide-mesh-running-shoes-80468559f.html",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/111634",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 퓨얼셀 프로펠 v4 · Propel v4 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 퓨얼셀 프로펠 v4 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-b: 퓨얼셀 프로펠 v4 와이드 (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-b: New Balance FuelCell Propel v4 men's wide 2E",
-     "웹 r4-b: 프로펠 v4 2E (allowed_domains: nbkorea.com)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 퓨어셀 프로펠 v4 2E 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Men's FuelCell Propel v4 2E Wide Mesh Running Shoes (상품 주소). 국내: 무신사 결과는 모두 '퓨어셀 레벨 V4 (남성 2E)' — 다른 모델이라 안 씀. SSG 는 검색 페이지뿐(판매자 불명), 요약의 MFCPRCZ4(2E) 도 출처 페이지 불명. nbkorea 검색에서는 '퓨얼셀 프로펠 (D)'(구세대)만 나옴. 해외: GOAT · kicksonfire · eBay 의 2E Wide 는 리셀 · 발매 정보라 안 씀. 21run.com 에 mfcprlb42e(이 품번의 2E) 가 있으나 판매처 성격이 불확실해 sportchek 을 적음.",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 퓨어셀 프로펠 V4 블랙 - 2E 와이드 정품 안심 거래」. 크림 발매가: 원화(발매가 149,000원). MFCPRLB4 발매가 149,000원. 화이트 블랙 2E 와이드 /products/166517 도 있음(요약엔 거래가 182,000원만)",
     "previous": {
      "action": "use_source",
      "value": true,
-     "source": "https://m.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/new-balance-fuelcell-propel-v4",
-     "sources_more": [
-      "https://www.goat.com/en-gb/sneakers/fuelcell-propel-v4-2e-wide-white-bleached-lime-glow-mfcprca4-2e"
-     ],
+     "scope": "overseas",
+     "source": "https://www.sportchek.ca/en/pdp/new-balance-men-s-fuelcell-propel-v4-2e-wide-mesh-running-shoes-80468559f.html",
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 퓨얼셀 프로펠 v4 · Propel v4 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 퓨얼셀 프로펠 v4 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-b: 퓨얼셀 프로펠 v4 와이드 (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-b: New Balance FuelCell Propel v4 men's wide 2E",
+      "웹 r4-b: 프로펠 v4 2E (allowed_domains: nbkorea.com)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Men's FuelCell Propel v4 2E Wide Mesh Running Shoes (상품 주소). 국내: 무신사 결과는 모두 '퓨어셀 레벨 V4 (남성 2E)' — 다른 모델이라 안 씀. SSG 는 검색 페이지뿐(판매자 불명), 요약의 MFCPRCZ4(2E) 도 출처 페이지 불명. nbkorea 검색에서는 '퓨얼셀 프로펠 (D)'(구세대)만 나옴. 해외: GOAT · kicksonfire · eBay 의 2E Wide 는 리셀 · 발매 정보라 안 씀. 21run.com 에 mfcprlb42e(이 품번의 2E) 가 있으나 판매처 성격이 불확실해 sportchek 을 적음.",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://m.outdoorgearlab.com/reviews/shoes-and-boots/running-shoes-men/new-balance-fuelcell-propel-v4",
+      "sources_more": [
+       "https://www.goat.com/en-gb/sneakers/fuelcell-propel-v4-2e-wide-white-bleached-lime-glow-mfcprca4-2e"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     }
     }
    },
    "model": {
@@ -11358,29 +11468,42 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.northernrunner.com/vat/inc/shoes-c133/cushioning-running-shoes-c192/skyflow-wide-2e-mens-running-shoes-black-white-p8974",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/506775",
     "via": "web",
     "by": "claude",
     "queries": [
-     "ABC마트 · 그랜드스테이지: 스카이플로우 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r3-b: 호카 스카이플로우 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
-     "웹 r3-b: HOKA Skyflow men's wide",
-     "웹 r3-b: 호카 남성 스카이플로우 와이드 1155117 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 호카 스카이플로우 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Skyflow Wide 2E Mens Running Shoes Black/White. 국내: 무신사 '(남성) 스카이플로우 와이드 1155117-BWHT 209,000원' 이 검색 요약에 나오지만 주소는 검색 페이지뿐(개별 상품 페이지 없음) → 쓰지 않음. SSG 는 해외직구·여성. 다시 확인하면 국내 있음 가능성 높음. 해외 Triathlete Sports 'Shoe width EE', 21run 1155117",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「호카 스카이플로우 블랙 화이트 - 와이드」. 크림 발매가: 외화(발매가 $160 (약 214,500원)). 1155117-BWHT. (W) 와이드도 있음",
     "previous": {
      "action": "use_source",
      "value": true,
-     "source": "https://www.sportsshoes.com/product/hok3299/hoka-skyflow-men's-running-shoes-(2e-width)---ss26",
-     "sources_more": [
-      "https://www.northernrunner.com/shoes-c133/cushioning-running-shoes-c192/skyflow-wide-2e-mens-running-shoes-black-white-p8974"
-     ],
+     "scope": "overseas",
+     "source": "https://www.northernrunner.com/vat/inc/shoes-c133/cushioning-running-shoes-c192/skyflow-wide-2e-mens-running-shoes-black-white-p8974",
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: 'Hoka Skyflow Men's Running Shoes (2E Width)' · search summary: 'Skyflow Wide 2E Mens Running Shoes'"
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 스카이플로우 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r3-b: 호카 스카이플로우 와이드 (allowed_domains=hoka.co.kr,hoka.com,musinsa.com,kolonmall.com,ssg.com,gsshop.com,lotteon.com,29cm.co.kr,a-rt.com)",
+      "웹 r3-b: HOKA Skyflow men's wide",
+      "웹 r3-b: 호카 남성 스카이플로우 와이드 1155117 (allowed_domains=musinsa.com,kolonmall.com,hoka.co.kr)"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Skyflow Wide 2E Mens Running Shoes Black/White. 국내: 무신사 '(남성) 스카이플로우 와이드 1155117-BWHT 209,000원' 이 검색 요약에 나오지만 주소는 검색 페이지뿐(개별 상품 페이지 없음) → 쓰지 않음. SSG 는 해외직구·여성. 다시 확인하면 국내 있음 가능성 높음. 해외 Triathlete Sports 'Shoe width EE', 21run 1155117",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://www.sportsshoes.com/product/hok3299/hoka-skyflow-men's-running-shoes-(2e-width)---ss26",
+      "sources_more": [
+       "https://www.northernrunner.com/shoes-c133/cushioning-running-shoes-c192/skyflow-wide-2e-mens-running-shoes-black-white-p8974"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 — search summary: 'Hoka Skyflow Men's Running Shoes (2E Width)' · search summary: 'Skyflow Wide 2E Mens Running Shoes'"
+     }
     }
    },
    "midsole": {
@@ -12161,28 +12284,41 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.nike.com/t/revolution-7-mens-road-running-shoes-extra-wide-72BvdH/FB8501-002",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/204668",
     "via": "web",
-    "by": "user",
+    "by": "claude",
     "queries": [
-     "ABC마트 · 그랜드스테이지: 레볼루션 7 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r2-b: 나이키 레볼루션 7 엑스트라 와이드 [allowed_domains: musinsa.com, ssg.com, kolonmall.com, 29cm.co.kr, lotteon.com, gsshop.com, a-rt.com, nike.com]",
-     "웹 r2-b: Nike Revolution 7 men's extra wide"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 나이키 레볼루션 7 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 SSG 입점 판매자(직영인지 불명) — 해외: Nike Revolution 7 Men's Road Running Shoes (Extra Wide). SSG 입점 판매자(나이키 직영인지는 확인 못 함). '[정품] 나이키 레볼루션 7 WIDE (FB8501-001)' 도 있음 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 SSG 입점 판매자(직영인지 불명) → 국외에만 있음(해외 근거 https://www.nike.com/t/revolution-7-mens-road-running-shoes-extra-wide-72BvdH/FB8501-002)",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「나이키 레볼루션 7 블랙 화이트 - 와이드」. 크림 발매가: 없음. FB8501-002(current_src 와 같은 품번). 블랙 - 와이드 192429(FB8501-001)도 있음. 발매가는 요약에 없음",
     "previous": {
      "action": "use_source",
      "value": true,
-     "source": "https://www.dsw.ca/product/nike-mens-revolution-7-extra-wide-width-running-shoe/281171218",
-     "sources_more": [
-      "https://www.supersports.co.th/en/products/nike-revolution-7-wide-men-running-shoes-ni083sh760dpth-fb8501-001"
-     ],
+     "scope": "overseas",
+     "source": "https://www.nike.com/t/revolution-7-mens-road-running-shoes-extra-wide-72BvdH/FB8501-002",
      "via": "web",
-     "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     "by": "user",
+     "queries": [
+      "ABC마트 · 그랜드스테이지: 레볼루션 7 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r2-b: 나이키 레볼루션 7 엑스트라 와이드 [allowed_domains: musinsa.com, ssg.com, kolonmall.com, 29cm.co.kr, lotteon.com, gsshop.com, a-rt.com, nike.com]",
+      "웹 r2-b: Nike Revolution 7 men's extra wide"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 SSG 입점 판매자(직영인지 불명) — 해외: Nike Revolution 7 Men's Road Running Shoes (Extra Wide). SSG 입점 판매자(나이키 직영인지는 확인 못 함). '[정품] 나이키 레볼루션 7 WIDE (FB8501-001)' 도 있음 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 SSG 입점 판매자(직영인지 불명) → 국외에만 있음(해외 근거 https://www.nike.com/t/revolution-7-mens-road-running-shoes-extra-wide-72BvdH/FB8501-002)",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://www.dsw.ca/product/nike-mens-revolution-7-extra-wide-width-running-shoe/281171218",
+      "sources_more": [
+       "https://www.supersports.co.th/en/products/nike-revolution-7-wide-men-running-shoes-ni083sh760dpth-fb8501-001"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     }
     }
    },
    "width": {
@@ -12271,30 +12407,44 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://frontrunnercolombo.co.nz/products/new-balance-fresh-foam-x-more-trail-v3-2e-wide-mens",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/585891",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 프레시폼 X 모어 트레일 v3 · More Trail v3 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 프레시폼 X 모어 트레일 v3 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-b: 모어 트레일 v3 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-b: New Balance Fresh Foam X More Trail v3 men's wide 2E"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 프레쉬 폼 X 모어 트레일 v3 2E 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 프레쉬 폼 X 모어 트레일 v3 2E 와이드 발매가 MTMOR"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Fresh Foam X More Trail v3 2E Wide Mens. 국내: SSG 개별 상품(itemId=1000582099261, '뉴발란스 프레쉬폼x 모어 트레일 V3 2E NBPFES012E') 이 있으나 판매자를 확인 못 해 안 씀. 해외: Altitude Sports(wide, 품절) · REI 등도 있음. 카탈로그 품번 MTMORNWT 의 2E 여부 자체는 확인 안 됨.",
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 프레쉬 폼 x 모어 트레일 v3 레인 클라우드 쿼리 블루 - 2E 와이드」. 크림 발매가: 없음. MTMORAG3_2E. 요약의 190,000원은 거래 시세, 2E 상품 발매가는 검색 요약에 안 나옴(다른 일반 색상 189,000원). 티 트리 블랙 등 다른 2E 색상은 URL 없음",
     "previous": {
      "action": "use_source",
      "value": true,
+     "scope": "overseas",
      "source": "https://frontrunnercolombo.co.nz/products/new-balance-fresh-foam-x-more-trail-v3-2e-wide-mens",
-     "sources_more": [
-      "https://www.goat.com/en-gb/sneakers/fresh-foam-x-more-trail-v3-2e-wide-dark-camo-mtmorca3-2e",
-      "https://www.roadtrailrun.com/2023/04/new-balance-fresh-foam-x-trail-more-v3.html?m=1"
-     ],
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 프레시폼 X 모어 트레일 v3 · More Trail v3 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 프레시폼 X 모어 트레일 v3 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-b: 모어 트레일 v3 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-b: New Balance Fresh Foam X More Trail v3 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: New Balance Fresh Foam X More Trail v3 2E Wide Mens. 국내: SSG 개별 상품(itemId=1000582099261, '뉴발란스 프레쉬폼x 모어 트레일 V3 2E NBPFES012E') 이 있으나 판매자를 확인 못 해 안 씀. 해외: Altitude Sports(wide, 품절) · REI 등도 있음. 카탈로그 품번 MTMORNWT 의 2E 여부 자체는 확인 안 됨.",
+     "previous": {
+      "action": "use_source",
+      "value": true,
+      "source": "https://frontrunnercolombo.co.nz/products/new-balance-fresh-foam-x-more-trail-v3-2e-wide-mens",
+      "sources_more": [
+       "https://www.goat.com/en-gb/sneakers/fresh-foam-x-more-trail-v3-2e-wide-dark-camo-mtmorca3-2e",
+       "https://www.roadtrailrun.com/2023/04/new-balance-fresh-foam-x-trail-more-v3.html?m=1"
+      ],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 3곳 일치"
+     }
     }
    },
    "carbon": {
@@ -15902,19 +16052,32 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.asics.com/au/en-au/novablast-5-2e-wide/p/AOP_1011B975-004.html",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/561506",
     "via": "web",
-    "by": "user",
+    "by": "claude",
     "queries": [
-     "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 노바블라스트 5 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r1: 노바블라스트 5 2E 와이드 (국내 판매처 도메인 한정)",
-     "웹 r1: ASICS Novablast 5 men's wide 2E"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 아식스 노바블라스트 5 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 GS샵 상품(판매자 이름 안 보임) — 해외: NOVABLAST 5 (2E WIDE) 1011B975. 신세계몰에도 '노바블라스트5 와이드 남성 1011B975'. GS SHOP 판매자 명은 검색 결과에 안 보임 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 GS샵 상품(판매자 이름 안 보임) → 국외에만 있음(해외 근거 https://www.asics.com/au/en-au/novablast-5-2e-wide/p/AOP_1011B975-004.html)"
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「아식스 노바블라스트 5 화이트 펀 - 2E 와이드」. 크림 발매가: 원화(발매가 169,000원). 블랙 캐리어 그레이 2E 와이드는 /products/stock/10114314 형태 URL로만 나옴",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.asics.com/au/en-au/novablast-5-2e-wide/p/AOP_1011B975-004.html",
+     "via": "web",
+     "by": "user",
+     "queries": [
+      "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 노바블라스트 5 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r1: 노바블라스트 5 2E 와이드 (국내 판매처 도메인 한정)",
+      "웹 r1: ASICS Novablast 5 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 사용자 기준: 국내 근거가 GS샵 상품(판매자 이름 안 보임) — 해외: NOVABLAST 5 (2E WIDE) 1011B975. 신세계몰에도 '노바블라스트5 와이드 남성 1011B975'. GS SHOP 판매자 명은 검색 결과에 안 보임 | 사용자 기준(2026-11-02): 확실하지 않으면 국내로 넣지 않는다 — 입점 · 해외직구 · 검색 요약뿐은 국내 정식 판매가 아니다: 국내 근거가 GS샵 상품(판매자 이름 안 보임) → 국외에만 있음(해외 근거 https://www.asics.com/au/en-au/novablast-5-2e-wide/p/AOP_1011B975-004.html)"
+    }
    },
    "width": {
     "action": "use_source",
@@ -16414,19 +16577,32 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://shop.therunningcompany.com.au/products/mens-new-balance-fresh-foam-x-hierro-v8-2e-wide",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/271436",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 프레시폼 X 이에로 v8 · Hierro v8 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 프레시폼 X 이에로 v8 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-b: 이에로 v8 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-b: New Balance Fresh Foam X Hierro v8 men's wide 2E"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 이에로 v8 와이드 2E"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Mens New Balance Fresh Foam X Hierro v8 (2E Wide). 국내: SSG 검색 페이지 요약에 '신세계백화점 뉴발란스 남성 프레쉬폼x 이에로 V8 (2E) (NBPFES415Y/MTHIERY8)' 가 보이나 검색 페이지뿐이고, 판매자도 백화점 입점(브랜드 직영 확인 안 됨)이라 안 씀. 국내 2E 가 있었을 가능성은 높음 — 확인 필요."
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 프레쉬 폼 X 이에로 v8 블랙 쉐도우 그레이 - 2E 와이드」. 크림 발매가: 원화(발매가 169,000원). MTHIERK8 발매 24/04/05. 블랙 티 트리 · 버터스카치 진저 레몬 2E 와이드도 요약에 있음(URL 없음). 고어텍스 블랙 팬텀은 제외",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://shop.therunningcompany.com.au/products/mens-new-balance-fresh-foam-x-hierro-v8-2e-wide",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 프레시폼 X 이에로 v8 · Hierro v8 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 프레시폼 X 이에로 v8 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-b: 이에로 v8 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-b: New Balance Fresh Foam X Hierro v8 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Mens New Balance Fresh Foam X Hierro v8 (2E Wide). 국내: SSG 검색 페이지 요약에 '신세계백화점 뉴발란스 남성 프레쉬폼x 이에로 V8 (2E) (NBPFES415Y/MTHIERY8)' 가 보이나 검색 페이지뿐이고, 판매자도 백화점 입점(브랜드 직영 확인 안 됨)이라 안 씀. 국내 2E 가 있었을 가능성은 높음 — 확인 필요."
+    }
    },
    "model_en": {
     "action": "use_source",
@@ -17507,19 +17683,33 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.runningwarehouse.com/New_Balance_FuelCell_SuperComp_Pacer_v2/descpage-N2SCPM3.html",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/416398",
     "via": "web",
     "by": "claude",
     "queries": [
-     "국내 공식몰(www.nbkorea.com): 퓨얼셀 슈퍼컴프 페이서 v2 · SuperComp Pacer v2 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 퓨얼셀 슈퍼컴프 페이서 v2 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-a: 뉴발란스 슈퍼컴프 페이서 v2 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-a: New Balance FuelCell SuperComp Pacer v2 men's wide 2E"
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 SC 페이서 v2 와이드",
+     "크림 검색(kream.co.kr 한정, 검색 결과의 제목 · 주소 · 요약만): 뉴발란스 퓨어셀 슈퍼컴프 페이서 와이드"
     ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Running Warehouse lists 2E sizes alongside standard D widths(검색 요약). 국내: 이마트몰(SSG) 검색 페이지에 '퓨어셀 SC 페이서 v2 (2E) (MFCRRCH2)'가 보이나 판매자 불명이라 쓰지 않음. 공식몰 목록 페이지(cIdx=1380)가 결과에 떴지만 내용이 안 보여 쓰지 않음. 해외: newbalance.com 'MFCRR9HZ-2E' 주소도 결과에 있음(공식몰, 다른 검색에서 확인). kicksonfire 는 발매 정보 사이트라 제외."
+    "checked_at": "2026-11-06",
+    "note": "와이드 크림 재조사(2026-11-06, 사용자 승인 — 와이드 정의를 '국내에서 살 수 있음'으로 바꿈, 01a 1-7): 있음(국내) — 크림 상품 「뉴발란스 퓨어셀 SC 페이서 v2 화이트 - 2E 와이드」. 크림 발매가: 원화(발매가 269,000원). 2E 와이드 MFCRRCH2 발매가 269,000원(출시 25/01/03). 사이버 제이드 2E 와이드 /products/328881 도 발매가 269,000원. (W) D 와이드 389792 는 제외",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.runningwarehouse.com/New_Balance_FuelCell_SuperComp_Pacer_v2/descpage-N2SCPM3.html",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 퓨얼셀 슈퍼컴프 페이서 v2 · SuperComp Pacer v2 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 퓨얼셀 슈퍼컴프 페이서 v2 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-a: 뉴발란스 슈퍼컴프 페이서 v2 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-a: New Balance FuelCell SuperComp Pacer v2 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Running Warehouse lists 2E sizes alongside standard D widths(검색 요약). 국내: 이마트몰(SSG) 검색 페이지에 '퓨어셀 SC 페이서 v2 (2E) (MFCRRCH2)'가 보이나 판매자 불명이라 쓰지 않음. 공식몰 목록 페이지(cIdx=1380)가 결과에 떴지만 내용이 안 보여 쓰지 않음. 해외: newbalance.com 'MFCRR9HZ-2E' 주소도 결과에 있음(공식몰, 다른 검색에서 확인). kicksonfire 는 발매 정보 사이트라 제외."
+    }
    },
    "width": {
     "action": "use_source",
