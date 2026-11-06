@@ -17,8 +17,21 @@ export const snapFile = (base, host) => new URL(`./local/work/snapshot-${(host ?
 //   코드는 todo.mjs code() 와 같다: BITR · RSG · STORE · PR · MAN · DB · SX. 그 밖의 URL(fit2run · solereview 표 · 판매점 …)은 WEB — 사람이 직접 확인한 칸(manual_sources)이면 MAN.
 //   값이 비면 출처도 없다(2.2 — 값을 비우면 출처도 비운다). 카본은 출처 면제라 넣지 않는다
 const SPEC_SOURCE_KEYS = { weight: 'official_weight_g', drop: 'official_drop_mm', stackHeight: 'official_heel_mm', midsole: 'midsole', width: 'toebox_width', wideAvailable: 'wideAvailable' };
+// STORE = 브랜드가 직접 운영하는 공식몰의 상품 페이지 — 국내든 해외든(2026-11-06 사용자, 01a 1-8).
+//   같은 도메인이어도 블로그 · 가이드 · 도움말 · 비교 글은 WEB. 판매점(stores.brooksrunning.com) · 대리점(hoka.co.th)은 WEB.
+//   PR 은 보도자료 사이트만 — saucony.com 을 도메인째 PR 로 보던 것을 고쳤다(상품 페이지는 STORE, buyers-guide 는 WEB)
+const KR_STORE = /nbkorea|saucony\.co\.kr|brooksrunning\.co\.kr|kor\.mizuno|salomon\.co\.kr|kr\.puma\.com|altra\.co\.kr|asics\.co\.kr|merrellkorea|adidas\.co\.kr/;
+const OFFICIAL_HOST = /^(?:[a-z]+\.)?(?:asics\.com|nike\.com|adidas\.(?:com|co\.[a-z]{2}|com\.[a-z]{2}|[a-z]{2})|hoka\.com|on\.com|newbalance\.(?:com|ca|ie|co\.uk)|saucony\.com|brooksrunning\.com|(?:usa|emea|jpn)\.mizuno\.com|mizunousa\.com|(?:us|eu|in|au|uk|ca)\.puma\.com|salomon\.com|altrarunning\.com|merrell\.com|underarmour\.com)$/;
+const NOT_STORE_HOST = /^stores\.brooksrunning\.com$|^mediahub\.puma\.com$/;
+const ARTICLE_PATH = /blog|article|how-it-compares|buyers-guide|help|\/stor(?:y|ies)\b|\/news\b|\/guide\b|\/faq\b/i;
+const hostOf = (u) => { try { return new URL(u).hostname.toLowerCase(); } catch { return ''; } };
+const isStore = (u) => {
+  if (KR_STORE.test(u)) return !ARTICLE_PATH.test(u);
+  const h = hostOf(u);
+  return OFFICIAL_HOST.test(h) && !NOT_STORE_HOST.test(h) && !ARTICLE_PATH.test(new URL(u).pathname);
+};
 export const sourceCode = (u) => !u ? null : u === 'manual' ? 'MAN' : u === 'notfound' ? 'NOTFOUND' : /believeintherun/.test(u) ? 'BITR' : /runningshoesguru/.test(u) ? 'RSG'
-  : /mediahub\.puma|corp\.asics|amersports|saucony\.com/.test(u) ? 'PR' : /nbkorea|saucony\.co\.kr|brooksrunning\.co\.kr|kor\.mizuno|salomon\.co\.kr|kr\.puma\.com|altra\.co\.kr|asics\.co\.kr|merrellkorea/.test(u) ? 'STORE'
+  : /mediahub\.puma|corp\.asics|amersports/.test(u) ? 'PR' : /^https?:\/\//.test(u) && isStore(u) ? 'STORE' : KR_STORE.test(u) ? 'STORE'
   : /db\.json|사용자 확인/.test(u) ? 'DB' : /stockx/.test(u) ? 'SX' : /^https?:\/\//.test(u) ? 'WEB' : null;
 export function specSourcesOf(r) {
   const out = {};

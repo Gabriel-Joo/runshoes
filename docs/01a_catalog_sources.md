@@ -152,14 +152,14 @@
 | 코드 | 뜻 |
 |---|---|
 | BITR · RSG | 그 모델을 직접 리뷰한 BITR · RSG 페이지 |
-| STORE | 브랜드 공식몰 — 국내든 해외든(asics.co.kr · adidas.co.in · saucony.com/CA …, 2026-11-06 사용자) |
+| STORE | 브랜드 공식몰의 **상품 페이지** — 국내든 해외든(asics.co.kr · adidas.co.in · saucony.com/CA …, 2026-11-06 사용자) |
 | PR | 브랜드 보도자료 |
 | WEB | 웹 문서 — **Claude 가 검색해서 찾은 값**(주소 있음) |
 | MAN | 직접 확인 — **사람이 보고 넣은 값**(주소를 적는다) |
 | DB · SX | 시드의 옛 값 · StockX(이미지) — 기존 값에만 보인다 |
 | NOTFOUND | 검색 결과 없음 — 와이드 "없음"에만 |
 
-- **STORE 는 "브랜드가 직접 운영하는 공식몰"이다(2026-11-06 사용자 — 해외 공식몰도 공식몰이다).** 국내 · 해외를 출처 코드로 가르지 않는다 — 와이드의 국내 · 해외는 `wideScope` 가 갖고, 와이드 판정은 "국내에서 살 수 있나"(1-7)로 가른다. 보도자료 사이트(mediahub.puma · newsmarket · press.on-running)는 PR, 브랜드 이름을 단 판매점 · 대리점 사이트는 WEB. 가격 출처의 "공식몰"(1-5)은 그대로 국내 공식몰이다 — 가격은 원화 발매가라서.
+- **STORE 는 브랜드가 직접 운영하는 공식몰의 상품 페이지다(2026-11-06 사용자 — 해외 공식몰도 공식몰이다).** 같은 도메인이어도 블로그 · 가이드 · 도움말 · 비교 글은 WEB 이다 — 상품 페이지가 아니면 "공식몰에서 확인한 값"이라고 하기 어렵다. 코드는 도메인이 아니라 경로로 가른다(`live-fields.mjs sourceCode`). 판매점 · 대리점은 브랜드 이름을 달아도 WEB(stores.brooksrunning.com · 태국 hoka.co.th — 태국 HOKA 는 수입사 REV Edition 이 운영). STORE 주소는 누가 확인했든 STORE 로 나간다(MAN 도). 국내 · 해외를 출처 코드로 가르지 않는다 — 와이드의 국내 · 해외는 `wideScope` 가 갖고, 와이드 판정은 "국내에서 살 수 있나"(1-7)로 가른다. 보도자료 사이트(mediahub.puma · corp.asics · amersports)는 PR. 가격 출처의 "공식몰"(1-5)은 그대로 국내 공식몰이다 — 가격은 원화 발매가라서.
 - WEB 과 MAN 을 가르는 것은 **누가 확인했나**다(2026-11-02 사용자). 판단의 `via`(`web` | `manual`)로 가르고, BITR · RSG · STORE · PR 주소는 누가 확인했든 그 문서 코드로 나간다.
 - 운영 스펙 출처: BITR 640 · WEB 375 · RSG 218 · STORE 89 · MAN 19 · PR 11 · DB 9 · SX 1.
 
