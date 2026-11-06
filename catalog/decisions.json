@@ -7443,14 +7443,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 320,
-    "source": "https://www.sportsshoes.com/product/miz6730/wave-horizon-9-men's-running-shoes---aw26",
-    "sources_more": [
-     "https://activefeet.com.au/products/mizuno-wave-horizon-9-mens-running-shoes"
-    ],
-    "via": "web",
-    "by": "claude",
-    "weight_basis": "unknown",
-    "note": "Claude 웹 검색(2026-10-23, weight-todo): Weight - 320g (no size; search summary) · Weight: 320g (no size; search summary) | Two retailers agree 320g, size not stated. Running Lab Store 11.2 oz (318g). usa.mizuno.com page shows no weight; EMEA Mizuno pages list odd values (640g/580g, "
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": 320,
+     "source": "https://www.sportsshoes.com/product/miz6730/wave-horizon-9-men's-running-shoes---aw26",
+     "sources_more": [
+      "https://activefeet.com.au/products/mizuno-wave-horizon-9-mens-running-shoes"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "unknown",
+     "note": "Claude 웹 검색(2026-10-23, weight-todo): Weight - 320g (no size; search summary) · Weight: 320g (no size; search summary) | Two retailers agree 320g, size not stated. Running Lab Store 11.2 oz (318g). usa.mizuno.com page shows no weight; EMEA Mizuno pages list odd values (640g/580g, "
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -7477,20 +7486,80 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.footlocker.com/product/mizuno-wave-horizon-9-wide-mens/4570539Z.html",
-    "via": "web",
-    "by": "claude",
-    "queries": [
-     "국내 공식몰(kor.mizuno.com): 웨이브 호라이즌 9 · Wave Horizon 9 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 웨이브 호라이즌 9 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r5-b: 웨이브 호라이즌 9 와이드 — allowed_domains [mizuno.co.kr, mizunoshop.co.kr, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com]",
-     "웹 r5-b: 미즈노 WAVE HORIZON 9 SW — allowed_domains (같음)",
-     "웹 r5-b: Mizuno Wave Horizon 9 men's wide 2E"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Mizuno Wave Horizon 9 Wide - Men's; mizuno.com.au 'WIDTH OPTIONS: 2E - Wide'. 국내는 호라이즌 9 SW 상품이 검색에 안 나옴(스카이 9 SW 만). Shoe Clinic NZ 'Wave Horizon 9 Wide 2E' MIZGC263102 도 있음. .it.com 사이트는 가짜 상점 의심이라 제외."
+    "scope": "domestic",
+    "source": "https://onyourmark-running.com/product/%EC%9B%A8%EC%9D%B4%EB%B8%8C-%ED%98%B8%EB%9D%BC%EC%9D%B4%EC%A6%8C-9-%EC%8A%88%ED%8D%BC%EC%99%80%EC%9D%B4%EB%93%9Cj1gc263102/4412/",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.footlocker.com/product/mizuno-wave-horizon-9-wide-mens/4570539Z.html",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "국내 공식몰(kor.mizuno.com): 웨이브 호라이즌 9 · Wave Horizon 9 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 웨이브 호라이즌 9 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r5-b: 웨이브 호라이즌 9 와이드 — allowed_domains [mizuno.co.kr, mizunoshop.co.kr, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com]",
+      "웹 r5-b: 미즈노 WAVE HORIZON 9 SW — allowed_domains (같음)",
+      "웹 r5-b: Mizuno Wave Horizon 9 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Mizuno Wave Horizon 9 Wide - Men's; mizuno.com.au 'WIDTH OPTIONS: 2E - Wide'. 국내는 호라이즌 9 SW 상품이 검색에 안 나옴(스카이 9 SW 만). Shoe Clinic NZ 'Wave Horizon 9 Wide 2E' MIZGC263102 도 있음. .it.com 사이트는 가짜 상점 의심이라 제외."
+    }
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 41,
+    "source": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.roadrunnersports.com/product/49847/mens-mizuno-wave-horizon-9?cc=002",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://emea.mizuno.com/eu/de-lu/wave-horizon-9/J1GC262602.html",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://www.trippsport.fr/blog/en/mizuno-wave-horizon-9-technical-analysis-stability-and-runner-profile/#:~:text=View%20the%20Mizuno%20Wave%20Horizon%209%20at,mm%20drop%20and%20a%20very%20stable%20platform.",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://onyourmark-running.com/product/%EC%9B%A8%EC%9D%B4%EB%B8%8C-%ED%98%B8%EB%9D%BC%EC%9D%B4%EC%A6%8C-9-%EC%8A%88%ED%8D%BC%EC%99%80%EC%9D%B4%EB%93%9Cj1gc263102/4412/",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "domestic",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "mizuno:wave-horizon#8": {
@@ -12389,30 +12458,27 @@
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.asics.com/sg/en-sg/glideride-max-2-wide/p/1011C155-100.html",
-    "via": "web",
-    "by": "claude",
-    "queries": [
-     "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 글라이드라이드 맥스 2 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r2-a: 아식스 글라이드라이드 맥스 와이드 (allowed_domains: 국내 판매처)",
-     "웹 r2-a: ASICS GlideRide Max 2 men's wide 2E"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: GLIDERIDE MAX 2 WIDE (1011C155) — ASICS SG/MY, Academy 'Men's GlideRide Max 2 Wide'",
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/546133",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)",
     "previous": {
      "action": "use_source",
      "value": true,
+     "scope": "overseas",
      "source": "https://www.asics.com/sg/en-sg/glideride-max-2-wide/p/1011C155-100.html",
-     "sources_more": [
-      "https://www.wildfiresports.com.au/asics-glideride-max-2-2e-mens-shoes",
-      "https://www.academy.com/p/asics-men-s-glideride-max-2-wide-running-shoe"
-     ],
      "via": "web",
      "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 브랜드 페이지"
+     "queries": [
+      "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 글라이드라이드 맥스 2 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r2-a: 아식스 글라이드라이드 맥스 와이드 (allowed_domains: 국내 판매처)",
+      "웹 r2-a: ASICS GlideRide Max 2 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: GLIDERIDE MAX 2 WIDE (1011C155) — ASICS SG/MY, Academy 'Men's GlideRide Max 2 Wide'"
     }
    },
    "drop_mm": {
@@ -12438,6 +12504,68 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 2차 50켤레), 출처 엇갈림 — 다수 쪽(기울기). 인용 · 반대 근거는 local/width-2026-11-05-b.csv"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "FF BLAST MAX + FF BLAST PLUS",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 46,
+    "source": "https://runrepeat.com/asics-glideride-max-2",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.asics.com/ca/en-ca/glideride-max-2-1011c156-300",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runtothefinish.com/asics-glideride-max-2-review/",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.asics.co.kr/p/AKR_112610214-300",
+      "code": "STORE"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/asics-glideride-max-2",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://kream.co.kr/products/546133",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "domestic",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T07:37Z 뒤 · 가져온 날 2026-11-06)"
    }
   },
   "nike:revolution#7": {
