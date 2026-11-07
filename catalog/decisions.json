@@ -8877,7 +8877,7 @@
     "value": {
      "drop": {
       "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "width": {
       "url": "https://runrepeat.com/under-armour-infinite-elite-2",
@@ -8889,7 +8889,7 @@
      },
      "midsole": {
       "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://endurance.biz/2025/industry-news/going-long-under-armour-launches-infinite-elite-2-run-shoe/",
@@ -8901,7 +8901,38 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06) · 2026-11-08 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자: 묶음 코드는 의도해 고른 게 아니다). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
+       "code": "WEB"
+      },
+      "width": {
+       "url": "https://runrepeat.com/under-armour-infinite-elite-2",
+       "code": "MAN"
+      },
+      "weight": {
+       "url": "https://runtothefinish.com/ua-infinite-elite-2-review/",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://www.underarmour.com/en-us/p/men-s-ua-infinite-elite-2-running-shoes/3028169.html",
+       "code": "WEB"
+      },
+      "stackHeight": {
+       "url": "https://endurance.biz/2025/industry-news/going-long-under-armour-launches-infinite-elite-2-run-shoe/",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "asics:novablast#6": {
@@ -16720,19 +16751,19 @@
     "value": {
      "drop": {
       "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "weight": {
       "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
-      "code": "MAN"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
-      "code": "MAN"
+      "code": "STORE"
      },
      "stackHeight": {
       "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
-      "code": "WEB"
+      "code": "STORE"
      },
      "wideAvailable": {
       "code": "NOTFOUND"
@@ -16740,7 +16771,34 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06) · 2026-11-08 출처 코드만 STORE 로(공식몰 상품 페이지 — 사용자: 묶음 코드는 의도해 고른 게 아니다). 주소 · 값은 그대로",
+    "previous": {
+     "action": "use_source",
+     "value": {
+      "drop": {
+       "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
+       "code": "WEB"
+      },
+      "weight": {
+       "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
+       "code": "MAN"
+      },
+      "midsole": {
+       "url": "https://www.adidas.com/us/response-runner-2-shoes/KJ1738.html#bqBlacklist=1",
+       "code": "MAN"
+      },
+      "stackHeight": {
+       "url": "https://www.adidas.co.in/response-runner-2-shoes/KJ1737.html",
+       "code": "WEB"
+      },
+      "wideAvailable": {
+       "code": "NOTFOUND"
+      }
+     },
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-06T09:00Z 뒤 · 가져온 날 2026-11-06)"
+    }
    }
   },
   "adidas:supernova-ease#2": {
