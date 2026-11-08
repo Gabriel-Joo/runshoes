@@ -14349,7 +14349,8 @@
     ],
     "via": "web",
     "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24): 남성 공식 33/29mm · 드롭 4mm 3곳 일치(Yahoo 열람 · REI · GearJunkie 검색 요약). BITR 31/27 은 여성 스펙이었다. 이전 판단: review(31mm 의심, 사용자)"
+    "note": "Claude 웹 검색(2026-10-24): 남성 공식 33/29mm · 드롭 4mm 3곳 일치(Yahoo 열람 · REI · GearJunkie 검색 요약). BITR 31/27 은 여성 스펙이었다. 이전 판단: review(31mm 의심, 사용자)",
+    "flag": "사용자(2026-11-09): 값을 둔다 — 출처가 갈려도 다수 쪽 근거가 있으면 남기고 flag. 스택 BITR 31 · weartesters · REI 33 · Running Warehouse 39(실측, 제외). 드롭 호카 공식(검색 요약) US · CA 5 · UK · AU 4. 본디 9(43)가 \"2mm 두꺼워졌다\"는 리뷰와 안 맞음(재는 법이 다른 것으로 보임). field-audit-result-A.md"
    },
    "price_krw": {
     "action": "use_source",
@@ -14382,6 +14383,11 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 있음(국내) — 국내: 무신사「호카(HOKA) (남성) 본디 8 와이드 - 블랙 / 1127953-BBLC」. 남성 와이드 품번 1127953(2E), 1127955 는 4E. 일부 무신사 페이지는 품절 표시"
+   },
+   "drop_mm": {
+    "action": "flag",
+    "note": "사용자(2026-11-09): 값을 둔다 — 출처가 갈려도 다수 쪽 근거가 있으면 남기고 flag. 스택 BITR 31 · weartesters · REI 33 · Running Warehouse 39(실측, 제외). 드롭 호카 공식(검색 요약) US · CA 5 · UK · AU 4. 본디 9(43)가 \"2mm 두꺼워졌다\"는 리뷰와 안 맞음(재는 법이 다른 것으로 보임). field-audit-result-A.md",
+    "by": "user"
    }
   },
   "nike:streakfly#1": {
