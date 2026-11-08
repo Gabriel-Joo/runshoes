@@ -130,14 +130,7 @@
   font-weight: 500;
   line-height: 1.45;
   color: var(--accent);
-  /* 세 줄 고정(2026-11-08 사용자) — 짧으면 빈 줄을 두고, 넘치면 말줄임. 아래 스펙 · 평점 줄이 카드마다 같은 높이에 온다.
-     border-box 라 padding-top(12px)과 위 테두리(1px)를 더한다 */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
-  min-height: calc(3 * 1.45em + 13px);
+  /* 높이는 같은 줄에 뜬 카드끼리만 맞춘다(2026-11-09 사용자 — 세 줄 고정은 빈 줄이 생긴다) — CardRowSync 가 min-height 를 넣는다 */
 }
 
 /* 스펙 */
