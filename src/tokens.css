@@ -27,13 +27,13 @@
 
   /* 신발 카드 */
   --fs-card-no: 11px;
-  --fs-card-model: 19px;
-  --fs-card-brand: 12px;
-  --fs-card-summary: 13px;
+  --fs-card-model: 16px;
+  --fs-card-brand: 11px;
+  --fs-card-summary: 11.5px;
   --fs-card-specs: 11px;
   --fs-card-stability: 12px;
-  --fs-card-rating: 13px;
-  --fs-card-rating-num: 18px;
+  --fs-card-rating: 12px;
+  --fs-card-rating-num: 15px;
   --fs-card-reviews: 11px;
   --fs-card-like: 15px;
   --fs-card-like-count: 12px;
