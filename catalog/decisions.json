@@ -125,16 +125,25 @@
   "nike:vaporfly#4": {
    "weight_g": {
     "action": "use_source",
-    "value": 190,
-    "source": "https://www.nike.com/ch/en/t/vaporfly-4-road-racing-shoes-Mh3I4bFo/II7203-100",
-    "sources_more": [
-     "https://www.fleetfeet.com/blog/nike-vaporfly-next-4-review-can-the-original-super-shoe-stay-on-top",
-     "https://www.prodirectsport.ie/products/nike-vaporfly-4-obsidian-white-persian-violet-mens-shoes-1042420"
-    ],
+    "value": 167,
+    "source": "https://www.runningshoesguru.com/reviews/road/nike-zoomx-vaporfly-4-review/",
+    "weight_basis": "US_M9",
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-A.md): RSG 본문 \"5.9 oz (167 g) for a men's US 9\" · BITR \"high five-ounce range\"(M9). 옛 190 은 나이키 \"UK 9 · US 10\" 기준(M9 아님)",
     "via": "web",
     "by": "claude",
-    "note": "Claude 웹 검색 · 사용자 승인(2026-10-23): Approx. 190g (men's size 9) — search-result summary only, not opened · 6.7 oz (M) ≈ 190 g · Weight 190 g | 이전 판단: use_source 167 https://www.doctorsofrunning.com/2025/04/nike-vaporfly-4-review-2025-m — 사용자: DoR 167 은 Running Warehouse 실측이었다",
-    "weight_basis": "US_M9"
+    "previous": {
+     "action": "use_source",
+     "value": 190,
+     "source": "https://www.nike.com/ch/en/t/vaporfly-4-road-racing-shoes-Mh3I4bFo/II7203-100",
+     "sources_more": [
+      "https://www.fleetfeet.com/blog/nike-vaporfly-next-4-review-can-the-original-super-shoe-stay-on-top",
+      "https://www.prodirectsport.ie/products/nike-vaporfly-4-obsidian-white-persian-violet-mens-shoes-1042420"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색 · 사용자 승인(2026-10-23): Approx. 190g (men's size 9) — search-result summary only, not opened · 6.7 oz (M) ≈ 190 g · Weight 190 g | 이전 판단: use_source 167 https://www.doctorsofrunning.com/2025/04/nike-vaporfly-4-review-2025-m — 사용자: DoR 167 은 Running Warehouse 실측이었다",
+     "weight_basis": "US_M9"
+    }
    },
    "stack_heel_mm": {
     "action": "use_source",
@@ -3107,10 +3116,21 @@
   "underarmour:velociti-elite#2": {
    "stack_heel_mm": {
     "action": "use_source",
-    "value": 36,
-    "source": "https://www.runningshoesguru.com/reviews/road/under-armour-flow-velociti-elite-review-2/",
-    "via": "manual",
-    "note": "사용자(2026-10-23) conflict-todo 판정 A: RSG 상자 > BITR 본문(추측 문장)"
+    "value": 39.5,
+    "source": "https://believeintherun.com/shoe-reviews/under-armour-velociti-elite-2-review/",
+    "sources_more": [
+     "https://weartesters.com/ua-velociti-elite-2-performance-review"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): BITR 2 상자 \"39.5 in the heel\" · weartesters 39.5. 옛 36 은 1세대 RSG 리뷰 값",
+    "via": "web",
+    "by": "claude",
+    "previous": {
+     "action": "use_source",
+     "value": 36,
+     "source": "https://www.runningshoesguru.com/reviews/road/under-armour-flow-velociti-elite-review-2/",
+     "via": "manual",
+     "note": "사용자(2026-10-23) conflict-todo 판정 A: RSG 상자 > BITR 본문(추측 문장)"
+    }
    },
    "midsole": {
     "action": "use_source",
@@ -3158,6 +3178,12 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T00:36Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "drop_mm": {
+    "action": "clear",
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): 비움 — 2(BITR 2 · 3 리뷰)와 8(UA 미국 공식몰 검색 요약 · weartesters)이 맞섬. 옛 8 의 RSG 출처는 1세대 리뷰",
+    "via": "web",
+    "by": "claude"
    }
   },
   "hoka:cielo-x1#2": {
@@ -3935,6 +3961,13 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "note": "사용자(2026-11-09): 카본 칸은 판(plate) 형태일 때만 true — EnergyRim(카본이 섞인 테)은 판이 아니다. BITR 아디오스 프로 5 \"No rods, no plate under the ball of the foot\"",
+    "via": "web",
+    "by": "claude"
    }
   },
   "nike:vomero-plus#1": {
@@ -4604,6 +4637,17 @@
     "action": "clear",
     "by": "user",
     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 42,
+    "source": "https://www.runningshoesguru.com/reviews/trail/hoka-challenger-8-review/",
+    "sources_more": [
+     "https://www.rei.com/product/249148/hoka-challenger-8-trail-running-shoes-mens"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): RSG 본문 \"The men's is 8mm (42 mm, 34 mm)\" · REI · Buffalo Peak 같음. 옛 44 는 드롭 7 짝인 BITR 상자",
+    "via": "web",
+    "by": "claude"
    }
   },
   "hoka:mach-x#3": {
@@ -5022,6 +5066,17 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 32,
+    "source": "https://believeintherun.com/shoe-reviews/on-cloudsurfer-2-review/",
+    "sources_more": [
+     "https://www.marathonsports.com/products/on-running-mens-cloudsurfer-2"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): BITR 본문 \"The stack height is the same (32 mm in the heel)\" · Fleet Feet · Marathon Sports · Run United 32/23. 옛 37 은 같은 BITR 글의 상자(본문과 모순)",
+    "via": "web",
+    "by": "claude"
    }
   },
   "puma:foreverrun-nitro#2": {
@@ -5652,6 +5707,13 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "note": "사용자(2026-11-09): 카본 칸은 판(plate) 형태일 때만 true — EnergyRim(카본이 섞인 테)은 판이 아니다. BITR 아디오스 프로 5 \"No rods, no plate under the ball of the foot\"",
+    "via": "web",
+    "by": "claude"
    }
   },
   "adidas:adizero-adios-pro-evo#2": {
@@ -7705,6 +7767,17 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T20:46Z 뒤 · 가져온 날 2026-11-06)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 35.5,
+    "source": "https://rei.com/product/236653/brooks-adrenaline-gts-24-road-running-shoes-mens",
+    "sources_more": [
+     "https://www.fleetfeet.com/blog/brooks-adrenaline-gts-24-review-your-go-to-support-shoe"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): REI \"Heel Stack Height (mm) | 35.5\" · Fleet Feet \"35.5 mm heel\"(검색 요약, 비실측 2곳). 옛 39 는 RSG 상자(실측값과 같음)",
+    "via": "web",
+    "by": "claude"
    }
   },
   "brooks:beast-gts#24": {
@@ -10360,6 +10433,17 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-02T11:47Z 뒤 · 가져온 날 2026-11-03)"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "CMEVA",
+    "source": "https://weartesters.com/hoka-zinal-2-performance-review/",
+    "sources_more": [
+     "https://believeintherun.com/shoe-reviews/hoka-zinal-2-review/"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-A.md): weartesters \"CMEVA midsole\" · BITR 본문 \"an EVA midsole, another departure from the Profly midsole\". 옛 값 ProFly 는 BITR 상자 \"ProFly outsole\" 오독",
+    "via": "web",
+    "by": "claude"
    }
   },
   "on:cloudflow#4": {
@@ -13509,6 +13593,17 @@
     "via": "admin",
     "by": "user",
     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "FF Blast Plus Eco",
+    "source": "https://www.fit2run.com/products/asics-trabuco-max-4-mens",
+    "sources_more": [
+     "https://www.asics.com/us/en-us/trabuco-max-4/p/ANA_1011B976-101.html"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-A.md): fit2run \"lighter FF BLAST PLUS ECO midsole\" · asics.com US · SG · CA 검색 요약 같음. 옛 값 FlyteFoam 은 RSG 글 안에서 엇갈림",
+    "via": "web",
+    "by": "claude"
    }
   },
   "brooks:cascadia-elite#1": {
@@ -20225,6 +20320,21 @@
     "action": "clear",
     "by": "user",
     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 269,
+    "source": "https://www.runningshoesguru.com/reviews/road/new-balance-fresh-foam-x-880-v14-review/",
+    "weight_basis": "US_M9",
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-A.md): RSG 본문 \"9.5 oz for men's size 9\"(=269, M9) · weartesters 9.5 oz. 옛 261 은 RSG 상자 9.2 oz(사이즈 없음)",
+    "via": "web",
+    "by": "claude"
+   },
+   "stack_heel_mm": {
+    "action": "clear",
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-A.md): 비움 — 29(weartesters · REI · Fleet Feet)와 33(RSG 등)으로 갈림. 출처가 갈리면 비운다(사용자)",
+    "via": "web",
+    "by": "claude"
    }
   },
   "newbalance:balos#1": {
@@ -20981,6 +21091,17 @@
     "action": "clear",
     "by": "user",
     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 비움(다수 없음 · 지금 근거 불성립 · 경계 사례). 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 32.5,
+    "source": "https://www.rundna.com.au/p/on-cloudsurfer-trail-mens-trail-running-shoes-iron-lima",
+    "sources_more": [
+     "https://www.fleetfeet.com/products/mens-on-cloudsurfer-trail"
+    ],
+    "note": "Claude 조사 · 사용자 승인(2026-11-09, local/work/copy-rewrite-20261108/field-audit-result-B.md): rundna · Fleet Feet \"Heel 32.5 / Forefoot 25.5 / Drop 7\"(검색 요약). 옛 41 은 깨진 RSG 상자(Running Warehouse 값과 같음)",
+    "via": "web",
+    "by": "claude"
    }
   },
   "mizuno:wave-rebellion-pro#2": {
