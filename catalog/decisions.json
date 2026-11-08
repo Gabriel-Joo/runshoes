@@ -587,23 +587,20 @@
    },
    "weight_g": {
     "action": "use_source",
-    "value": 195,
+    "value": 218,
     "source": "manual",
     "via": "admin",
     "by": "user",
     "weight_basis": "US_M9",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
     "previous": {
      "action": "use_source",
-     "value": 218,
-     "source": "https://www.nike.com/ph/t/alphafly-3-mens-road-racing-shoes-d6x9mh/FD8311-300",
-     "sources_more": [
-      "https://www.fit2run.com/products/nike-air-zoom-alphafly-next-3-prm-mens"
-     ],
-     "via": "web",
-     "by": "claude",
-     "weight_basis": "US_M10",
-     "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 218g men's UK 9 (=US10) · search summary: 218 g/7.7 oz (Men's US 10) | Nike AU page summary labels 218 g as 'men's size 9' (likely UK 9). BlackToe 218 g M10. DoR 198 g M9 not used. | 이전: use_source 218"
+     "value": 195,
+     "source": "manual",
+     "via": "admin",
+     "by": "user",
+     "weight_basis": "US_M9",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
     }
    },
    "price_krw": {
@@ -645,8 +642,7 @@
       "code": "MAN"
      },
      "weight": {
-      "url": "https://runningwikii.com/entry/nike-alphafly3/",
-      "code": "MAN"
+      "code": "STORE"
      },
      "midsole": {
       "url": "https://runningwikii.com/entry/nike-alphafly3/",
@@ -663,7 +659,7 @@
     },
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
     "previous": {
      "action": "use_source",
      "value": {
@@ -672,8 +668,8 @@
        "code": "BITR"
       },
       "width": {
-       "url": "https://believeintherun.com/shoe-reviews/nike-alphafly-3-review/",
-       "code": "BITR"
+       "url": "https://m.blog.naver.com/inee0623/223598123839",
+       "code": "MAN"
       },
       "weight": {
        "url": "https://runningwikii.com/entry/nike-alphafly3/",
@@ -694,7 +690,7 @@
      },
      "via": "admin",
      "by": "user",
-     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-10-31T22:26Z 뒤 · 가져온 날 2026-11-01)"
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T07:21Z 뒤 · 가져온 날 2026-11-06)"
     }
    },
    "width": {
@@ -921,6 +917,45 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 다른 값으로, 판정 기준 5번. 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 250,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://salomon.co.kr/products/l47770300",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://www.switchbacktravel.com/reviews/salomon-s-lab-pulsar-4",
+      "code": "WEB"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-pulsar-4-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://salomon.co.kr/products/l47770300",
+      "code": "STORE"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "puma:velocity-nitro#4": {
@@ -2080,25 +2115,43 @@
    "weight_g": {
     "action": "use_source",
     "value": 330,
-    "source": "https://believeintherun.com/shoe-reviews/new-balance-more-trail-v2-review/",
-    "note": "사용자 decide.csv(2026-10-21): A — A에 URL 있음. B 272는 여성용 가능성"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": 330,
+     "source": "https://believeintherun.com/shoe-reviews/new-balance-more-trail-v2-review/",
+     "note": "사용자 decide.csv(2026-10-21): A — A에 URL 있음. B 272는 여성용 가능성"
+    }
    },
    "wide_available": {
     "action": "use_source",
     "value": true,
-    "scope": "overseas",
-    "source": "https://www.altitude-sports.com/products/new-balance-fresh-foam-x-more-trail-v2-wide-running-shoe-mens-llll-nwb-mtmor-wide",
-    "via": "web",
-    "by": "claude",
-    "queries": [
-     "국내 공식몰(www.nbkorea.com): 프레시폼 X 모어 트레일 v2 · More Trail v2 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 프레시폼 X 모어 트레일 v2 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r4-b: 모어 트레일 v2 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
-     "웹 r4-b: New Balance Fresh Foam X More Trail v2 men's wide 2E"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fresh Foam X More Trail v2 Wide Running Shoe - Men's (상품 주소, 품절 표시). 국내: v3 · 모어 V4 2E 만 나오고 v2 2E 는 없음. 해외: GOAT 'More Trail v2 2E Wide (MTMORCT2-2E)' 는 리셀이라 안 씀. The Running Company 'More Trail (2E Wide)' 는 세대 표기가 없어 안 씀. Altitude Sports 는 실제 소매점이나 검색 결과 제목이 'New Balance' 뿐이라 주소(slug) 로만 확인."
+    "scope": "domestic",
+    "source": "https://kream.co.kr/products/75966?base_product_id=75966",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": true,
+     "scope": "overseas",
+     "source": "https://www.altitude-sports.com/products/new-balance-fresh-foam-x-more-trail-v2-wide-running-shoe-mens-llll-nwb-mtmor-wide",
+     "via": "web",
+     "by": "claude",
+     "queries": [
+      "국내 공식몰(www.nbkorea.com): 프레시폼 X 모어 트레일 v2 · More Trail v2 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 프레시폼 X 모어 트레일 v2 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r4-b: 모어 트레일 v2 2E (allowed_domains: nbkorea.com, musinsa.com, kolonmall.com, ssg.com, gsshop.com, lotteon.com, 29cm.co.kr, a-rt.com)",
+      "웹 r4-b: New Balance Fresh Foam X More Trail v2 men's wide 2E"
+     ],
+     "checked_at": "2026-11-02",
+     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Fresh Foam X More Trail v2 Wide Running Shoe - Men's (상품 주소, 품절 표시). 국내: v3 · 모어 V4 2E 만 나오고 v2 2E 는 없음. 해외: GOAT 'More Trail v2 2E Wide (MTMORCT2-2E)' 는 리셀이라 안 씀. The Running Company 'More Trail (2E Wide)' 는 세대 표기가 없어 안 씀. Altitude Sports 는 실제 소매점이나 검색 결과 제목이 'New Balance' 뿐이라 주소(slug) 로만 확인."
+    }
    },
    "model": {
     "action": "use_source",
@@ -2126,6 +2179,71 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 4차 · 실측 재점검), 판정 기준 3번(제안). 인용 · 반대 근거는 local/width-2026-11-05-e.csv"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 33,
+    "source": "https://www.zelpio.com/blog/new-balance-fresh-foam-x-more-trail-v2-review/",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 189000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.runningshoesguru.com/review/new-balance-fresh-foam-x-more-trail-v2-review/",
+      "code": "RSG"
+     },
+     "width": {
+      "url": "https://www.doctorsofrunning.com/2022/04/new-balance-fresh-foam-x-more-trail-v2.html",
+      "code": "WEB"
+     },
+     "weight": {
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/new-balance-more-trail-v2-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://www.zelpio.com/blog/new-balance-fresh-foam-x-more-trail-v2-review/",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://kream.co.kr/products/75966?base_product_id=75966",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "domestic",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "on:cloudmonster#2": {
@@ -3141,6 +3259,45 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 기존 발볼 검증) — 다른 값으로, 판정 기준 1번. 인용 · 반대 근거는 local/width-survey-20261105/verify/final-all.md"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "Helion superfoam",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/on-cloudrunner-2-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runtothefinish.com/on-cloudrunner-2-review/",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/on-cloudrunner-2-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/on-cloudrunner-2-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "url": "https://www.on.com/en-us/products/cloudrunner-2-wide-m-3me1032/mens/eclipse-black-shoes-3ME10320264",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "on:cloudsurfer-max#1": {
@@ -7380,27 +7537,25 @@
     "note": "Claude 웹 검색(2026-10-23, weight-todo): search summary: 210 g/7.40754 oz · 210g (shoe size 9 USM) · 210 g / 7.4 oz | The 180 g ASICS page is 1012B863 (women's)."
    },
    "wide_available": {
-    "action": "clear",
+    "action": "use_source",
+    "value": true,
+    "scope": "overseas",
+    "source": "https://supersports.co.kr/product/%EC%95%84%EC%8B%9D%EC%8A%A4-%EB%9F%AC%EB%8B%9D%ED%99%94-%ED%95%98%EC%9D%B4%ED%8D%BC-%EC%8A%A4%ED%94%BC%EB%93%9C-5-1011c084/546/",
+    "via": "admin",
     "by": "user",
-    "queries": [
-     "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
-     "ABC마트 · 그랜드스테이지: 하이퍼 스피드 5 → 와이드 0건",
-     "GS: → 와이드 0건",
-     "웹 r2-a: 아식스 하이퍼 스피드 5 와이드 (allowed_domains: 국내 판매처)",
-     "웹 r2-a: ASICS Hyper Speed 5 men's wide 2E"
-    ],
-    "checked_at": "2026-11-02",
-    "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 발매 정보 사이트 · 리셀뿐",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
     "previous": {
-     "action": "use_source",
-     "value": true,
-     "source": "https://www.supersports.co.th/en/products/asics-running-road-as206sh339etth-1011c082-001",
-     "sources_more": [
-      "https://novelship.com/asics-hyper-speed-5-wide-running-shoes-flash-red-white-1011-c082-600"
+     "action": "clear",
+     "by": "user",
+     "queries": [
+      "국내 공식몰(www.asics.co.kr(러닝 · 트레일 목록)): 러닝 · 트레일 목록 전체 → 와이드 0건",
+      "ABC마트 · 그랜드스테이지: 하이퍼 스피드 5 → 와이드 0건",
+      "GS: → 와이드 0건",
+      "웹 r2-a: 아식스 하이퍼 스피드 5 와이드 (allowed_domains: 국내 판매처)",
+      "웹 r2-a: ASICS Hyper Speed 5 men's wide 2E"
      ],
-     "via": "web",
-     "by": "claude",
-     "note": "Claude 웹 검색(2026-10-23): 남성 와이드 판 있음 — 2곳 일치"
+     "checked_at": "2026-11-02",
+     "note": "사용자(2026-11-02): 확실하지 않으면 null — 직접 보고 넣는다. 재조사: 발매 정보 사이트 · 리셀뿐"
     }
    },
    "drop_mm": {
@@ -7433,6 +7588,48 @@
     "via": "web",
     "by": "claude",
     "note": "Claude 웹 검색(2026-10-28) — 명시 1곳: 「sem recorrer a placas ou tecnologias muito rígidas」(opened)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 147600,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.wildfiresports.com.au/asics-hyper-speed-5-d-mens-shoes",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.asics.com/us/en-us/hyper-speed-5/p/ANA_1011C084-600.html",
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://www.wildfiresports.com.au/asics-hyper-speed-5-d-mens-shoes",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "url": "https://supersports.co.kr/product/%EC%95%84%EC%8B%9D%EC%8A%A4-%EB%9F%AC%EB%8B%9D%ED%99%94-%ED%95%98%EC%9D%B4%ED%8D%BC-%EC%8A%A4%ED%94%BC%EB%93%9C-5-1011c084/546/",
+      "code": "MAN"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "wide_scope": {
+    "action": "use_source",
+    "value": "overseas",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "brooks:adrenaline-gts#24": {
@@ -9271,15 +9468,24 @@
   "salomon:slab-spectur#1": {
    "weight_g": {
     "action": "use_source",
-    "value": 235,
-    "source": "https://www.viladomat.com/en/men-s-road-running-shoes/117047-s-lab-spectur.html",
-    "sources_more": [
-     "https://www.altitude-sports.com/p/salomon-slab-spectur-trail-running-shoes-unisex-sal-l47376000"
-    ],
-    "via": "web",
-    "by": "claude",
-    "weight_basis": "unknown",
-    "note": "사용자(2026-10-23): 공식값(사이즈 불명)과 BITR 값을 둘 다 둔다 — BITR 232(M8.5)는 measured_weight_g. 235 g, no size (search summary) · 235 g (field labelled weight_half_pair), no size (search summary)"
+    "value": 227,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": 235,
+     "source": "https://www.viladomat.com/en/men-s-road-running-shoes/117047-s-lab-spectur.html",
+     "sources_more": [
+      "https://www.altitude-sports.com/p/salomon-slab-spectur-trail-running-shoes-unisex-sal-l47376000"
+     ],
+     "via": "web",
+     "by": "claude",
+     "weight_basis": "unknown",
+     "note": "사용자(2026-10-23): 공식값(사이즈 불명)과 BITR 값을 둘 다 둔다 — BITR 232(M8.5)는 measured_weight_g. 235 g, no size (search summary) · 235 g (field labelled weight_half_pair), no size (search summary)"
+    }
    },
    "measured_weight_g": {
     "value": 232,
@@ -9303,6 +9509,54 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내: 공식몰 상품 페이지(L47376000) 신발폭 'Slim'. 해외: 좁은 핏으로 소개, 와이드 판 없음."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "좁음",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 320000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-spectur-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "code": "STORE"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-spectur-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-spectur-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "nike:journey-run#1": {
@@ -10241,6 +10495,64 @@
     "via": "review",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 RSG 리뷰 본문 1곳(3차 1단계). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "EVA Foam",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 32,
+    "source": "https://runrepeat.com/nike-downshifter-12",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 79000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.runningshoesguru.com/reviews/road/nike-downshifter-12-review/",
+      "code": "RSG"
+     },
+     "width": {
+      "url": "https://www.runningshoesguru.com/reviews/road/nike-downshifter-12-review/",
+      "code": "RSG"
+     },
+     "weight": {
+      "url": "https://www.runningshoesguru.com/reviews/road/nike-downshifter-12-review/",
+      "code": "RSG"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/nike-downshifter-12",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.nike.com/t/downshifter-12-mens-road-running-shoes-extra-wide-hnRmTP/DM0919-002",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "hoka:rincon#4": {
@@ -12367,6 +12679,71 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Men's Cloudrunner 3 Wide (3MG1009) — $160.00. ko-kr 에 일반 Cloudrunner 3(3MG1007) · 3 Max 만. '넓어진 베이스' 는 밑창 설명이라 근거 아님."
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 37,
+    "source": "https://runrepeat.com/on-cloudrunner-3",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/on-cloudrunner-3",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 199000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/on-cloudrunner-3-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/on-cloudrunner-3",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "BITR"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/on-cloudrunner-3",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.on.com/en-us/products/cloudrunner-3-wide-m-3mg1009/mens",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "asics:magic-speed#4": {
@@ -14174,12 +14551,21 @@
    "weight_g": {
     "action": "use_source",
     "value": 260,
-    "source": "https://www.asics.com/ca/en-ca/versablast-4-1011b984-001",
-    "sources_more": [],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS CA: '260g / 9.1712oz', 'Heel Drop 8 mm', AMPLIFOAM PLUS. sourceforsports.ca 도 8mm·260g(US9 표기). 충돌: RunRepeat 는 'ASICS claims 10 mm'라 적음(RunRepeat 근거 제외, 브랜드 값 채택). 스택 42-34 는 소매점 1곳뿐 → null.",
-    "weight_basis": "unknown"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": 260,
+     "source": "https://www.asics.com/ca/en-ca/versablast-4-1011b984-001",
+     "sources_more": [],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS CA: '260g / 9.1712oz', 'Heel Drop 8 mm', AMPLIFOAM PLUS. sourceforsports.ca 도 8mm·260g(US9 표기). 충돌: RunRepeat 는 'ASICS claims 10 mm'라 적음(RunRepeat 근거 제외, 브랜드 값 채택). 스택 42-34 는 소매점 1곳뿐 → null.",
+     "weight_basis": "unknown"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -14235,6 +14621,64 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 재판정 · 3차 1단계), 판정 기준 2번(재판정(1차)). 인용 · 반대 근거는 local/width-2026-11-05-c.csv"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 36,
+    "source": "https://www.runrepeat.com/asics-versablast-4",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 126300,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.asics.com/ca/en-ca/versablast-4-1011b984-001",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://www.runrepeat.com/asics-versablast-4",
+      "code": "WEB"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://www.asics.com/ca/en-ca/versablast-4-1011b984-001",
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://www.runrepeat.com/asics-versablast-4",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.asics.com/ca/en-ca/versablast-4-wide-1011b982-003",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "asics:versablast#3": {
@@ -14401,14 +14845,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 240,
-    "source": "https://www.asics.com/gb/en-gb/gel-pulse-16/p/1011B962-004.html",
-    "sources_more": [
-     "https://www.asics.com/de/en-de/gel-pulse-16/p/1011B962-004.html"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS DE/GB: 'Heel Drop 8 mm, Weight 240 g/8.5 oz'. 충돌: Skroutz 16mm·205g(오기로 보임), Decathlon ES 205g 은 여성용. 브랜드 값 채택. 미드솔 FlyteFoam + Rearfoot GEL (Champs·DSW).",
-    "weight_basis": "unknown"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": 240,
+     "source": "https://www.asics.com/gb/en-gb/gel-pulse-16/p/1011B962-004.html",
+     "sources_more": [
+      "https://www.asics.com/de/en-de/gel-pulse-16/p/1011B962-004.html"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): ASICS DE/GB: 'Heel Drop 8 mm, Weight 240 g/8.5 oz'. 충돌: Skroutz 16mm·205g(오기로 보임), Decathlon ES 205g 은 여성용. 브랜드 값 채택. 미드솔 FlyteFoam + Rearfoot GEL (Champs·DSW).",
+     "weight_basis": "unknown"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -14468,6 +14921,53 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 36,
+    "source": "https://runrepeat.com/asics-gel-pulse-16",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.asics.com/gb/en-gb/gel-pulse-16/p/1011B962-004.html",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://runrepeat.com/asics-gel-pulse-16",
+      "code": "WEB"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://www.champssports.com/product/~/1B962101.html",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/asics-gel-pulse-16",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://sportsworld.co.nz/asics-mens-pulse-v16-2e-running-shoes-black-carrier-grey-updating",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "asics:jolt#5": {
@@ -15005,6 +15505,59 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 3차), 판정 기준 2번(제안). 인용 · 반대 근거는 local/width-2026-11-05-d.csv"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "EVA Foam",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 114000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.nike.com/t/quest-5-mens-road-running-shoes-1tmPXN/DD0204-103",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://longermiles.com/shoe-news/nike-quest-5-review",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.nike.com/t/quest-5-mens-road-running-shoes-1tmPXN/DD0204-103",
+      "code": "STORE"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "adidas:supernova-ease#1": {
@@ -15032,12 +15585,20 @@
    },
    "midsole": {
     "action": "use_source",
-    "value": "Dreamstrike",
-    "source": "https://www.adidas.com.ph/supernova-ease-shoes/IH2580.html",
-    "sources_more": [],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): adidas 지역 사이트: 'midsole drop: 9 mm (heel: 34 mm / forefoot: 25 mm)', 'lighter Dreamstrike hyper-foam'. 무게: gooutdoors 250g(size 8.5), tradeinn 223g 불일치, adidas 공식 무게 없음 → null. Ease 2(270g/10mm)와 혼동 주의."
+    "value": "Dreamstrike Foam",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": "Dreamstrike",
+     "source": "https://www.adidas.com.ph/supernova-ease-shoes/IH2580.html",
+     "sources_more": [],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): adidas 지역 사이트: 'midsole drop: 9 mm (heel: 34 mm / forefoot: 25 mm)', 'lighter Dreamstrike hyper-foam'. 무게: gooutdoors 250g(size 8.5), tradeinn 223g 불일치, adidas 공식 무게 없음 → null. Ease 2(270g/10mm)와 혼동 주의."
+    }
    },
    "wide_available": {
     "action": "use_source",
@@ -15053,6 +15614,72 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 와이드 없음. BSN 'Regular fit', Kohl's 는 사이트 공통 폭 안내표(근거 아님), Ease 2 리뷰 '넓은 발에 맞다' 는 착화감 · 다른 세대."
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 251,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M8.5",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://www.decathlon.co.uk/p/men-s-white-adidas-supernova-ease-running-shoes/364888/c4c22c6m8940534",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 119000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.adidas.com.ph/supernova-ease-shoes/IH2580.html",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://www.decathlon.co.uk/p/men-s-white-adidas-supernova-ease-running-shoes/364888/c4c22c6m8940534",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://www.decathlon.co.uk/p/men-s-white-adidas-supernova-ease-running-shoes/364888/c4c22c6m8940534",
+      "code": "MAN"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://www.adidas.com.ph/supernova-ease-shoes/IH2580.html",
+      "code": "STORE"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "adidas:duramo-sl#2": {
@@ -15759,14 +16386,23 @@
    "weight_g": {
     "action": "use_source",
     "value": 276,
-    "source": "https://www.altitude-sports.com/p/new-balance-fresh-foam-680v9-running-shoes-mens-nwb-m680",
-    "sources_more": [
-     "https://www.sportsshoes.com/product/new696692/new-balance-fresh-foam-680v9-men's-running-shoes---aw26"
-    ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): Altitude Sports 'Weight: 276g/9.7oz, Drop 8 mm', SportsShoes 남성 276 g · 8 mm. correrunamaraton 275 g(hombre). 스택 공시값 없음.",
-    "weight_basis": "unknown"
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)",
+    "previous": {
+     "action": "use_source",
+     "value": 276,
+     "source": "https://www.altitude-sports.com/p/new-balance-fresh-foam-680v9-running-shoes-mens-nwb-m680",
+     "sources_more": [
+      "https://www.sportsshoes.com/product/new696692/new-balance-fresh-foam-680v9-men's-running-shoes---aw26"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24, 검색 요약만 · 페이지 열지 않음): Altitude Sports 'Weight: 276g/9.7oz, Drop 8 mm', SportsShoes 남성 276 g · 8 mm. correrunamaraton 275 g(hombre). 스택 공시값 없음.",
+     "weight_basis": "unknown"
+    }
    },
    "drop_mm": {
     "action": "use_source",
@@ -15843,6 +16479,54 @@
     "value": "프레쉬폼 680 v9, 후레쉬폼 680 v9, 프레시폼 680 v9, Fresh Foam 680 v9",
     "by": "user",
     "note": "사용자(2026-11-05) 승인 — 뉴발란스 모델명을 공식몰(nbkorea) 표기로: 접두어(프레시폼 · 프레시폼 X · 퓨얼셀)를 떼고 슈퍼컴프는 SC. 공식몰에 상품이 없어 같은 규칙으로. 뗀 이름은 검색용 다른 표기에"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "Fresh Foam",
+    "source": "https://www.tradeinn.com/runnerinn/en/new-balance-fresh-foam-680-v9-running-shoes/143059963/p#:~:text=Table_title%3A%20Competitive%20features%20Table_content%3A%20%7C%20%7C%20New,%7C%20%2D%20%7C%20Neutral%20%7C%20neutral%20%7C",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 30,
+    "source": "https://runrepeat.com/new-balance-fresh-foam-680-v9",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.altitude-sports.com/p/new-balance-fresh-foam-680v9-running-shoes-mens-nwb-m680",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runtothefinish.com/new-balance-fresh-foam-680v9-your-budget-daily-trainer/",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://www.runjudge.com/compare?shoes=new-balance-fresh-foam-680-v9,new-balance-fresh-foam-x-ellipse",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://www.tradeinn.com/runnerinn/en/new-balance-fresh-foam-680-v9-running-shoes/143059963/p#:~:text=Table_title%3A%20Competitive%20features%20Table_content%3A%20%7C%20%7C%20New,%7C%20%2D%20%7C%20Neutral%20%7C%20neutral%20%7C",
+      "code": "MAN"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/new-balance-fresh-foam-680-v9",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "url": "https://www.newbalance.com/pd/fresh-foam-680v9/M6808FA-4E-10.html",
+      "code": "STORE"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "newbalance:680#8": {
@@ -16129,6 +16813,61 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 국내는 카와나 1·2·3 일반형만(GS SHOP 'M 카와나 1123163-BLRK'). 해외도 D 폭 목록뿐. 'Some customers find the wide HOKA fit more comfortable' 문구는 카와나 2 페이지의 사이트 공통 안내라 근거로 쓰지 않음."
+   },
+   "carbon": {
+    "action": "use_source",
+    "value": false,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 214700,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 283,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M9",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.roadtrailrun.com/2022/01/hoka-kawana-review-11-comparisons.html",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://irunsg.com/blogs/reviews-archive/hoka-kawana-review",
+      "code": "MAN"
+     },
+     "midsole": {
+      "url": "https://www.runningshoesguru.com/2022/05/hoka-kawana-review/",
+      "code": "RSG"
+     },
+     "stackHeight": {
+      "url": "https://www.roadtrailrun.com/2022/01/hoka-kawana-review-11-comparisons.html",
+      "code": "WEB"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "puma:electrify-nitro#4": {
@@ -16538,6 +17277,55 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 4차 · 실측 재점검), 판정 기준 2번(재점검 — 판단 요청). 인용 · 반대 근거는 local/width-2026-11-05-e.csv"
+   },
+   "weight_g": {
+    "action": "use_source",
+    "value": 265,
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "weight_basis": "US_M10",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 219000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://runrepeat.com/uk/nike-pegasus-plus-2",
+      "code": "WEB"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-plus-2-review/",
+      "code": "BITR"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/nike-pegasus-plus-2-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "on:cloudboom-echo#3": {
@@ -16592,6 +17380,63 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. Running Warehouse 3 Hyper · Hyper 모두 'Men's Shoe Widths: D'. 리뷰의 '앞발이 약간 넓다' 는 착화감 표현. Cloudmonster 3 Wide 는 다른 모델(하이퍼 아님)."
+   },
+   "stack_heel_mm": {
+    "action": "use_source",
+    "value": 37,
+    "source": "https://runrepeat.com/on-cloudmonster-3-hyper",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/on-cloudmonster-3-hyper",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 259000,
+    "source": "manual",
+    "price_source": "공식몰",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://www.fit2run.com/products/on-cloudmonster-3-hyper-mens",
+      "code": "WEB"
+     },
+     "width": {
+      "url": "https://runrepeat.com/on-cloudmonster-3-hyper",
+      "code": "MAN"
+     },
+     "weight": {
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://www.marathons.com/en/tips/on-cloudmonster-3-hyper-review-the-daily-trainer-built-for-long-runs_1ygn",
+      "code": "WEB"
+     },
+     "stackHeight": {
+      "url": "https://runrepeat.com/on-cloudmonster-3-hyper",
+      "code": "MAN"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "salomon:aero-glide#4": {
@@ -19555,6 +20400,45 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 없음(검색 결과 없음) — 국내 · 해외 모두 검색, 근거가 되는 와이드 상품 없음. 공용(Unisex) 레이싱화, 공식몰 · 소매점 모두 폭 선택 없음. 써코니코리아의 '일반/와이드' 필터는 사이트 공통이라 근거 아님."
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/saucony-endorphin-elite-3",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/saucony-endorphin-elite-3-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://runrepeat.com/saucony-endorphin-elite-3",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/saucony-endorphin-elite-3-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "url": "https://saucony.co.kr/product/detail.html?product_no=478",
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/saucony-endorphin-elite-3-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "saucony:endorphin-speed#5": {
@@ -20244,6 +21128,55 @@
     "via": "web",
     "by": "user",
     "note": "사용자 승인(2026-11-05 발볼 190 조사 4차 · 실측 재점검), 판정 기준 1번(제안). 인용 · 반대 근거는 local/width-2026-11-05-e.csv"
+   },
+   "midsole": {
+    "action": "use_source",
+    "value": "EnergyFoam+",
+    "source": "manual",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "price_krw": {
+    "action": "use_source",
+    "value": 369000,
+    "source": "manual",
+    "price_source": "크림",
+    "price_checked_at": "2026-11-08",
+    "price_kind": "발매가",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-phantasm-2-review/",
+      "code": "BITR"
+     },
+     "width": {
+      "url": "https://www.gearpatrol.com/fitness/a44992361/salomon-slab-phantasm-2-review",
+      "code": "WEB"
+     },
+     "weight": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-phantasm-2-review/",
+      "code": "BITR"
+     },
+     "midsole": {
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://believeintherun.com/shoe-reviews/salomon-s-lab-phantasm-2-review/",
+      "code": "BITR"
+     },
+     "wideAvailable": {
+      "code": "NOTFOUND"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "salomon:genesis#1": {
@@ -20401,6 +21334,46 @@
     ],
     "checked_at": "2026-11-02",
     "note": "와이드 재조사(2026-11-02): 국외에만 있음 — 해외: Puma Men's Magnify NITRO 3 Wide (312713-01) $159.95. 해외 근거는 소매점 한 곳(Seliga Shoes)뿐. 푸마 공식몰에서는 확인 못 함(리뷰 한 곳은 '공식몰에 와이드가 없다'고 함)"
+   },
+   "width": {
+    "action": "use_source",
+    "value": "보통",
+    "source": "https://runrepeat.com/puma-magnify-nitro-3",
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
+   },
+   "spec_sources": {
+    "action": "use_source",
+    "value": {
+     "drop": {
+      "url": "https://kr.puma.com/kr/ko/pd/%EB%A7%A4%EA%B7%B8%EB%8B%88%ED%8C%8C%EC%9D%B4-%EB%82%98%EC%9D%B4%ED%8A%B8%EB%A1%9C-3-%3Cbr%3Emagnify-nitro-3/311046.html",
+      "code": "STORE"
+     },
+     "width": {
+      "url": "https://runrepeat.com/puma-magnify-nitro-3",
+      "code": "MAN"
+     },
+     "weight": {
+      "url": "https://kr.puma.com/kr/ko/pd/%EB%A7%A4%EA%B7%B8%EB%8B%88%ED%8C%8C%EC%9D%B4-%EB%82%98%EC%9D%B4%ED%8A%B8%EB%A1%9C-3-%3Cbr%3Emagnify-nitro-3/311046.html",
+      "code": "STORE"
+     },
+     "midsole": {
+      "url": "https://kr.puma.com/kr/ko/pd/%EB%A7%A4%EA%B7%B8%EB%8B%88%ED%8C%8C%EC%9D%B4-%EB%82%98%EC%9D%B4%ED%8A%B8%EB%A1%9C-3-%3Cbr%3Emagnify-nitro-3/311046.html",
+      "code": "STORE"
+     },
+     "stackHeight": {
+      "url": "https://kr.puma.com/kr/ko/pd/%EB%A7%A4%EA%B7%B8%EB%8B%88%ED%8C%8C%EC%9D%B4-%EB%82%98%EC%9D%B4%ED%8A%B8%EB%A1%9C-3-%3Cbr%3Emagnify-nitro-3/311046.html",
+      "code": "STORE"
+     },
+     "wideAvailable": {
+      "url": "https://seligashoes.com/products/puma-mens-magnify-nitro-3-wide-mint-melt-puma-black-speed-blue-fizzy",
+      "code": "WEB"
+     }
+    },
+    "via": "admin",
+    "by": "user",
+    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-07T22:27Z 뒤 · 가져온 날 2026-11-08)"
    }
   },
   "puma:foreverrun-nitro#1": {
