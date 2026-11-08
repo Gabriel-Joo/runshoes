@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { parseCsv } from './stockx.mjs';
-import { specSourcesOf } from './live-fields.mjs';
+import { specSourcesOf, sourceCode } from './live-fields.mjs';
 import { namesOf } from './names.mjs';
 
 const ROOT = path.dirname(new URL(import.meta.url).pathname);
@@ -107,13 +107,15 @@ function priceMeta(url, note) {
   return { source: null, checked_at: null, kind: null };
 }
 const specs = new Map();
-// 작은 무게 차이 정리(아래 병합) — 순위: US M9(_weightBasis 없음) 0 → 다른 사이즈 2 → 사이즈 불명 4, 국내 공식몰(sources.yaml 호스트)이면 1 앞선다
+// 작은 무게 차이 정리(아래 병합) — 순위: US M9(_weightBasis 없음) 0 → 다른 사이즈 2 → 사이즈 불명 4, 공식몰이면 1 앞선다
+//   브랜드 공식몰(국내 · 해외 상품 페이지, sourceCode STORE)은 사이즈 표기가 없어도 M9 로 본다(2026-11-09 사용자, 01a 1-3) — 그래서 사이즈 불명이어도 0 에서 시작
 const STORE_HOSTS = new Set([...fs.readFileSync(path.join(ROOT, 'sources.yaml'), 'utf8').matchAll(/^\s*-?\s*host:\s*([^\s#]+)/gm)].map((m) => m[1]));
 const smallWeightGap = (a, b) => Math.abs(a - b) <= 5 || Math.abs(a - b) / Math.max(a, b) <= 0.02;
 const weightRank = (r) => {
-  const base = r._weightBasis === 'unknown' ? 4 : r._weightBasis ? 2 : 0;
   let host = null; try { host = new URL(r.sources?.weight_g).host; } catch { /* 출처 없음 */ }
-  return base - (STORE_HOSTS.has(host) ? 1 : 0);
+  const store = STORE_HOSTS.has(host) || sourceCode(r.sources?.weight_g) === 'STORE';
+  const base = r._weightBasis === 'unknown' ? (store ? 0 : 4) : r._weightBasis ? 2 : 0;
+  return base - (store ? 1 : 0);
 };
 for (const f of fs.existsSync(WORK) ? fs.readdirSync(WORK).filter((x) => /^specs-.*\.jsonl$/.test(x)) : []) {
   for (const line of fs.readFileSync(path.join(WORK, f), 'utf8').split('\n')) {
@@ -311,8 +313,10 @@ for (const c of cands) {
   if (row.weight !== null) {
     const ws = row.sources.weight ?? '';
     row.weight_basis = decBasis.get(id) ?? (basisM9.has(id) ? 'US_M9' : s?._weightBasis ? s._weightBasis : !/^https?:\/\//.test(ws) ? 'unknown' : 'US_M9');
-    // 국내 공식몰에 사이즈 표기가 없으면 M9(270mm)로 본다(2026-11-06 사용자, 01a 1-3 · 2-7). 사람이 적은 측정 사이즈(decBasis)는 그대로 둔다
-    if (row.weight_basis === 'unknown' && !decBasis.has(id) && KR_MALL.test(ws)) row.weight_basis = 'US_M9';
+    // 브랜드 공식몰(국내 · 해외)에 사이즈 표기가 없으면 M9(270mm)로 본다(2026-11-06 국내몰 → 2026-11-09 해외 공식몰까지, 사용자, 01a 1-3 · 2-7).
+    //   소매점 · 리뷰는 그대로 사이즈 불명. 사람이 적은 측정 사이즈(decBasis)는 그대로 둔다
+    //   Claude 가 웹 검색 판단에 적은 'unknown'(공식몰 페이지에 사이즈가 없었다는 뜻)도 같다 — 사람이 정한 사이즈(by: user)만 그대로
+    if (row.weight_basis === 'unknown' && (!decBasis.has(id) || DEC.rows[id]?.weight_g?.by !== 'user') && (KR_MALL.test(ws) || sourceCode(ws) === 'STORE')) row.weight_basis = 'US_M9';
   }
   if (row.price !== null) { const m = priceMeta(src.price, s?.note); row.price_source = m.source; row.price_checked_at = m.checked_at; row.price_kind = m.kind; }
   // 시드 가격 중 ABC · 공식몰에 없는 것 — 사용자가 다나와에서 넣은 값(2026-10-29 사용자: 값은 두고 출처를 "다나와"로). 날짜는 db.json 에 들어간 커밋 날짜
