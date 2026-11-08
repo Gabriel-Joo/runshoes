@@ -11324,19 +11324,27 @@
    },
    "midsole": {
     "action": "use_source",
-    "value": "FF LEAP + FF BALST+",
+    "value": "FF Leap + FF Blast Plus",
     "source": "manual",
     "via": "admin",
     "by": "user",
-    "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)",
+    "note": "사용자(2026-11-08): 오타 고침 FF LEAP + FF BALST+ → FF Leap + FF Blast Plus",
     "previous": {
      "action": "use_source",
-     "value": "FF LEAP",
-     "source": "https://www.asics.com/ca/en-ca/magic-speed-5-1013a183-101",
-     "sources_more": [],
-     "via": "web",
-     "by": "claude",
-     "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「FF LEAP™ cushioning for an ultra-light, highly responsive ride」(search summary)"
+     "value": "FF LEAP + FF BALST+",
+     "source": "manual",
+     "via": "admin",
+     "by": "user",
+     "note": "관리 화면 수정(진짜 관리자 계정, 운영 runshoes.ronanlab.dev, 스냅숏 2026-11-05T02:18Z 뒤 · 가져온 날 2026-11-05)",
+     "previous": {
+      "action": "use_source",
+      "value": "FF LEAP",
+      "source": "https://www.asics.com/ca/en-ca/magic-speed-5-1013a183-101",
+      "sources_more": [],
+      "via": "web",
+      "by": "claude",
+      "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「FF LEAP™ cushioning for an ultra-light, highly responsive ride」(search summary)"
+     }
     }
    },
    "carbon": {
