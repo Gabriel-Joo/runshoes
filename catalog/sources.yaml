@@ -32,8 +32,8 @@ domains:
     reason: /help/* 가 봇 방어(WAF)로 403
   - brand: hoka
     host: www.hoka.com          # 한국 공식 온라인몰 없음
-    mode: unknown
-    reason: DataDome 봇 차단으로 약관 본문을 못 읽음
+    mode: blocked
+    reason: '약관이 scraper 등 자동 수집을 금지(2026-11-09 사용자 확인). 우리 UA 로는 DataDome 봇 차단이라 원문을 직접 받지 못함(2026-10-21 · 11-09)'
   - brand: newbalance
     host: www.nbkorea.com
     mode: fetch
@@ -102,3 +102,59 @@ domains:
     host: www.xtep.com
     mode: blocked
     reason: '法律声明 "通过机器人、蜘蛛等程序或设备…擅自获取" 금지'
+
+  # ── 해외 공식몰(2026-11-09 사용자 — 미드솔 · 카본 · 스택 · 드롭 · 무게만. 가격 · 와이드 국내 판정에는 쓰지 않는다, 01a 1-2a) ──
+  #    확인 2026-11-09: 우리 UA 로 robots.txt · 이용약관 원문을 받아 읽음. 지역 리다이렉트 · 403 · 봇 차단이면 그 상태로 기록(우회하지 않는다)
+  - brand: saucony
+    host: www.saucony.com       # /en (미국)
+    mode: fetch
+    scope: specs
+    terms: https://www.saucony.com/en/content?caid=terms
+    terms_version: "2026-07-08"
+    caution: 'Wolverine 약관 — 자동 수집 금지 조항 없음. "materials … may not be copied … for public or commercial purposes" 는 글 · 사진(지재권) 조항이라 사실 값은 해당 없음(2-2). robots 는 검색 · 장바구니 · 필터만 막음. 무게는 페이지의 사이즈 표기를 따른다'
+  - brand: mizuno
+    host: usa.mizuno.com
+    mode: fetch
+    scope: specs
+    terms: https://usa.mizuno.com/legal
+    terms_version: "2025-11-21"
+    caution: '자동 수집 금지 조항 없음 · 프레이밍 금지(우리는 하지 않음). robots 는 계정 · 장바구니 · 검색 · 일부 특집만 막음. 무게는 페이지의 사이즈 표기를 따른다'
+  - brand: puma
+    host: us.puma.com
+    mode: blocked
+    terms: https://help.us.puma.com/hc/en-us/articles/38784355552539-Terms-and-Conditions
+    terms_version: "2026-10-14"
+    reason: '약관 "You agree not to use any data mining, robots, scraping or similar data gathering methods."'
+  - brand: salomon
+    host: www.salomon.com
+    mode: blocked
+    terms: https://www.salomon.com/en-us/copyright.html
+    reason: '이용약관 본문을 찾지 못함 · 저작권 페이지가 "no portion … may be copied, downloaded, or retransmitted via any means" (개인 비영리 열람만) — 보수적으로 막음. 지역 몰 sg.salomon.com 약관은 spider · crawl · scrape 금지'
+  - brand: merrell
+    host: www.merrell.com       # /US/en
+    mode: unknown
+    reason: '읽은 약관이 판매 약관뿐(이용약관 미확인) · robots 에 Disallow: / 줄이 있음 — 사람이 확인할 때까지 받지 않는다'
+  - brand: mizuno
+    host: emea.mizuno.com
+    mode: unknown
+    reason: '판매 약관(Online Terms of Sales)만 확인 · 이용약관 미확인'
+  - brand: asics
+    host: www.asics.com
+    mode: unknown
+    reason: '루트는 asics.co.kr 로 지역 리다이렉트, /us/en-us/ 는 우리 UA 에 403 — 약관을 못 읽음'
+  - brand: newbalance
+    host: www.newbalance.com
+    mode: unknown
+    reason: 'robots.txt · 첫 화면 모두 우리 UA 에 403'
+  - brand: brooks
+    host: www.brooksrunning.com
+    mode: unknown
+    reason: '우리 UA 에 403 · 봇 차단 표시'
+  - brand: adidas
+    host: www.adidas.com
+    mode: unknown
+    reason: '우리 UA 에 403 · 봇 차단 표시'
+  - brand: underarmour
+    host: www.underarmour.com
+    mode: unknown
+    reason: '약관(privacy.underarmour.com, Salesforce)이 JS 렌더링이라 본문을 못 읽음'
