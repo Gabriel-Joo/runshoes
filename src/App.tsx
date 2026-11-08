@@ -8,6 +8,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import ScrollTop from "./components/ScrollTop";
 import ResetScroll from "./components/ResetScroll";
+import CardRowSync from "./components/CardRowSync";
 import ChatBot from "./components/ChatBot";
 import Notice from "./components/Notice";
 import Login from "./pages/Login";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/edit/:id" element={<RequireAuth admin><ShoeForm /></RequireAuth>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <CardRowSync />
       <ScrollTop />
       <ChatBot />
     </AuthProvider>
