@@ -28,16 +28,46 @@
 | 구분 | 곳 | 읽는 방법 |
 |---|---|---|
 | 국내 공식몰(`sources.yaml` fetch 9) | asics.co.kr · nbkorea.com · saucony.co.kr · brooksrunning.co.kr · kor.mizuno.com · salomon.co.kr · kr.puma.com · altra.co.kr · merrellkorea.co.kr | 정적 HTML 은 `local/fetch.mjs`, JS 목록은 Playwright(2026-11-01 사용자 승인) |
+| 해외 공식몰(`sources.yaml` fetch · `scope: specs` 2, 2026-11-09) | saucony.com · usa.mizuno.com — **스펙 칸만**(1-2a) | `local/fetch.mjs` |
 | 리뷰 · 소매 · 보도자료(`sources-media.yaml` fetch 9) | BITR(believeintherun) · RSG(runningshoesguru) · fit2run · weartesters · 브랜드 보도자료 몇 곳 | `local/fetch.mjs` — **사이트맵 색인에 있는 주소만** |
 | 국내 판매처 | ABC마트 · GRAND STAGE(같은 a-rt.com) | Playwright(2026-10-28 · 11-02 사용자 승인) |
 | 웹 검색 | 검색 결과의 제목 · 요약만 | 페이지를 열지 않는다. 브랜드 1곳 또는 비실측 도메인 2곳이 같을 때만 판정 |
 | 이미지 | KicksDB(StockX · GOAT) | `01b` |
-| **열지 않는 곳** | 나이키 · 알트라 글로벌 · 리닝 · 엑스텝(약관이 자동 수집 금지, `blocked`) · 아디다스 · 호카 · 온 · 언더아머(약관을 못 읽음, `unknown`) · 리뷰 매체 20곳(`blocked`) · solereview · i-run(실측, `excluded`) | 코드가 거절한다(`fetch.mjs HARD_BLOCK` · 모드 검사) |
+| **열지 않는 곳** | 나이키 · 알트라 글로벌 · 리닝 · 엑스텝 · 푸마 미국 · 살로몬 글로벌 · 호카(약관이 자동 수집 금지, `blocked`) · 아디다스 · 온 · 언더아머 · 아식스 · 뉴발란스 · 브룩스 글로벌 · 머렐 미국 · 미즈노 EMEA(약관을 못 읽음 · 403 · 지역 리다이렉트, `unknown`) · 리뷰 매체 20곳(`blocked`) · solereview · i-run(실측, `excluded`) | 코드가 거절한다(`fetch.mjs HARD_BLOCK` · 모드 검사) |
 
 - **요청 예절**(코드가 강제): 호스트마다 5초에 1회, 동시 1개, 우리 UA(`RUNSHOES-catalog/0.1 … +https://runshoes.ronanlab.dev`), robots 의 `*` · `$` 까지 해석, 403 · 418 · 429 · 캡차면 그 호스트를 멈춘다. **우회하지 않는다.** Playwright 는 HeadlessChrome UA 뒤에 우리 UA 를 붙인다 — 일반 브라우저로 위장하지 않는다.
 - **웹 검색 요약을 근거로 쓸 때는 단위가 붙은 수치나 상표명이 그대로 있어야 한다. 모호한 서술은 쓰지 않는다**(2026-11-06 사용자). "283 g" · "10.0 oz" · "Heel-to-Toe Drop (mm) 8" · "FF Blast Max"는 쓰고, "가벼운 편" · "쿠션이 두툼하다"는 쓰지 않는다. 요약은 판단 메모에 「인용」으로 남긴다. 11-06 조사에서 검색 요약만 근거인 칸 139개(무게 91 · 미드솔 19 · 스택 14 · 드롭 9 · 카본 5 · 와이드 1)는 모두 이 조건을 만족해 그대로 뒀다(목록 `catalog/local/work/linkcheck-20261106/search-summary-fields.csv`).
 - **주소를 지어내지 않는다.** 사이트맵 · 검색 결과 · 그 사이트 안의 링크로 얻은 주소만 연다.
 - **글 · 사진은 옮기지 않는다.** 저장하는 것은 숫자 · 상표명 · 상품명 · 출처 URL 이다.
+
+#### 1-2a. 칸별로 쓸 수 있는 공식몰(2026-11-09 사용자)
+
+"국내 공식몰"로 묶은 까닭은 **가격 · 와이드**다 — 둘은 나라마다 다르다. 신발 자체의 사실 값(미드솔 · 카본 · 스택 · 드롭 · 무게)은 어느 나라 공식몰에서나 같으므로 **해외 공식몰도 쓴다.**
+
+| 칸 | 국내 공식몰 | 해외 공식몰(상품 페이지) | 메모 |
+|---|---|---|---|
+| 미드솔 · 카본 | 쓴다 | 쓴다 | 상표 표기 그대로 |
+| 스택 · 드롭 | 쓴다 | 쓴다 | 제조사 발표값. 나라마다 다르면(호카 본디 8 드롭 — 검색 요약상 US · CA 5 · UK · AU 4) 사람이 본다 |
+| 무게 | 쓴다 — 사이즈 표기 없으면 270mm(M9, 2-7) | 쓴다 — **그 페이지의 사이즈 표기를 확인한다.** 표기가 없으면 사이즈 불명(null), M9 로 보지 않는다. 남성 UK 는 +1(UK8 = M9) · EU · cm 표기는 US 로 바꾸지 않고 메모에 그대로 | M9 가정은 국내몰에만(`build.mjs KR_MALL`) |
+| 가격 | 쓴다(원화 발매가) | **쓰지 않는다** | 1-5 |
+| 와이드 | 쓴다 — "있음(국내)" | "국외에만 있음"의 근거로만(1-7 그대로) | 국내 판정에는 쓰지 않는다 |
+
+- **약관을 확인한 곳만 연다.** 해외 공식몰도 국내와 같은 기준으로 `sources.yaml` 에 적는다 — robots 가 상품 페이지를 막지 않고 약관에 자동 수집 금지가 없으면 `mode: fetch` + `scope: specs`. 약관을 못 읽은 곳(지역 리다이렉트 · 403 · 봇 차단 · JS 렌더링)은 `unknown` 으로 두고 **우회하지 않는다** — 지역 차단으로 못 열리면 쓰지 않는다.
+- 2026-11-09 확인(우리 UA 로 robots.txt · 약관 원문):
+
+  | 곳 | 판정 | 까닭 |
+  |---|---|---|
+  | saucony.com(미국) · usa.mizuno.com | `fetch`(스펙만) | 약관에 자동 수집 금지 없음(복제 제한은 글 · 사진, 2-2) · robots 가 상품 페이지를 막지 않음 |
+  | us.puma.com | `blocked` | 약관 "data mining, robots, scraping … 금지" |
+  | salomon.com | `blocked` | 이용약관을 못 찾았고 저작권 페이지가 "any means" 내려받기 금지 — 보수적으로 |
+  | asics.com · newbalance.com · brooksrunning.com · adidas.com | `unknown` | 우리 UA 에 403 · 지역 리다이렉트(asics.com 루트 → asics.co.kr) |
+  | underarmour.com · on.com | `unknown` | 약관이 JS 렌더링 |
+  | merrell.com · emea.mizuno.com | `unknown` | 판매 약관만 읽음(이용약관 미확인) |
+  | nike.com · altrarunning.com | `blocked` | 원래 판정 그대로(약관이 자동 수집 금지) |
+  | hoka.com | `blocked` | 약관이 scraper 금지(사용자 확인) — 우리 UA 로는 봇 차단이라 원문을 직접 받지 못했다 |
+
+- 열지 못하는 해외 공식몰도 **웹 검색 요약**(1-2 표의 조건 — 단위가 붙은 수치 · 상표명, 브랜드 1곳)으로는 쓴다. 이때도 무게는 요약에 사이즈 표기가 있어야 그 사이즈로 적는다(베이퍼플라이 4 의 나이키 190g 은 "UK 9 · US 10" 기준이었다 — M9 가 아니다, 11-09 조사).
+- 출처 코드는 1-8 그대로 `STORE`(해외 공식몰 상품 페이지도 STORE).
 
 #### 1-3. 무게
 
@@ -55,6 +85,8 @@
 - 출처끼리 0.5mm 라도 다르면 사람이 본다(무게와 달리 자동으로 고르지 않는다).
 - 미드솔은 브랜드 상표의 영문 원문(FF Blast Plus · ZoomX). 스펙 상자에서 읽지 않는다(BITR Key Features 는 자유 문장).
 - 카본은 예/아니오라 출처 URL 을 요구하지 않는다(모델 · 용도로 거의 정해진다). 비어도 적재를 막지 않는다.
+- **카본은 판(plate) 형태일 때만 true 다**(2026-11-09 사용자 — 화면 칸 이름이 "카본 플레이트"다). 카본이 섞인 테 · 막대처럼 판이 아닌 구조는 false — 아디제로 아디오스 프로 5 · 아디오스 프로 에보 3 의 EnergyRim(BITR "No rods, no plate under the ball of the foot")을 false 로 바꿨다. 그 구조는 설명문에 이름(EnergyRim)으로 쓴다. 카본이 섞인 고무("carbon rubber" 아웃솔)도 판이 아니다.
+- **출처가 갈리면 비운다**(2026-11-09 사용자) — 스택 · 드롭에서 서로 다른 값이 둘 다 근거 조건(1-2)을 채우면 고르지 않고 비운다(880 v14 스택 29 · 33, 벨로시티 엘리트 2 드롭 2 · 8).
 - **다른 판 · 다른 모델 · 모음 글은 어느 칸에도 쓰지 않는다**(`variant.mjs`) — 주소에 라인 이름에 없는 변형 낱말(GRVL · GTX · Hike · Mid · Max · Trail …)이 있거나 `best-…` · `…-vs-…` 글이면 다른 신발이다.
 
 #### 1-5. 가격 — 발매가(정가)만
