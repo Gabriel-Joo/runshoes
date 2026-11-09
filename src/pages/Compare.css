@@ -831,10 +831,19 @@
     display: block;
     margin-top: 18px;
   }
-  .ctable__scroll {
+  .ctable__scroll,
+  .ctable__headwrap {
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
     margin-right: calc(-1 * var(--gut));
+  }
+  .ctable__scroll {
+    scroll-snap-type: x mandatory;
+  }
+  .ctable__headwrap {
+    scrollbar-width: none;       /* 카드 줄은 손으로 밀어도 되지만 스크롤바는 표 쪽 하나만 */
+  }
+  .ctable__headwrap::-webkit-scrollbar {
+    display: none;
   }
   .ctable {
     --w: calc(100vw - 2 * var(--gut));
@@ -951,98 +960,18 @@
   }
 }
 
-/* 카드 띠 — 카드 줄이 헤더 아래로 지나가면 붙는다(2026-11-09 사용자). 표의 열 폭 · 가로 스크롤을 그대로 따른다(CompareStrip) */
-.cstrip {
-  position: fixed;
-  z-index: 9;                    /* 헤더(10) 아래, 표 위 */
-  overflow: hidden;
+/* 카드 줄 고정(2026-11-09 사용자) — 카드 줄(+ 추가 포함)을 표와 다른 칸으로 떼어 헤더 바로 아래에 붙인다.
+   1199px 이하에서는 이 칸도 가로로 넘기고, 표와 가로 위치를 서로 맞춘다(CompareTable) */
+.ctable__headwrap {
+  position: sticky;
+  top: var(--header-h, 109px);
+  z-index: 8;                    /* 헤더(10) 아래, 표 위 — 그래프 · ⓘ(z 40~50)는 그보다 위 */
+  padding-top: 8px;
   background: var(--bg-light);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
 }
 
-.cstrip__row {
-  display: grid;
-  padding: 6px 0;
-}
-
-.cstrip__item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-  margin: 0 6px;
-  padding: 6px 8px;
-  border: 1px solid var(--border-light);
-  background: #fff;
-  text-align: left;
-  color: var(--text-strong);
-}
-
-.cstrip__item.is-base {
-  border-color: var(--accent);
-}
-
-.cstrip__item:hover .cstrip__model {
-  color: var(--accent);
-}
-
-.cstrip__top {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.cstrip__img {
-  flex: none;
-  width: 40px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cstrip__img .shoeimage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.cstrip__meta {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.3;
-}
-
-.cstrip__why,
-.cstrip__meta small {
-  font-size: 11px;
-  color: var(--text-weak);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.is-base .cstrip__why {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-/* 모델명은 칸 전체 폭 — 두 줄까지(띠 높이가 들쭉날쭉하지 않게 두 줄 자리를 늘 둔다) */
-.cstrip__model {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  min-height: 2.6em;
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-@media (max-width: 1199px) {
-  .cstrip__item {
-    margin: 0 4px;
-  }
+.ctable--head .ctable__card,
+.ctable--head .ctable__add,
+.ctable--head .ctable__gap {
+  margin-bottom: 10px;
 }

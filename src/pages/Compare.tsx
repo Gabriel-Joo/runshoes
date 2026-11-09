@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Shoe, Term } from "../types";
 import { API } from "../api";
@@ -135,16 +135,14 @@ function Compare() {
   const closeModal = () => setParams((p) => { p.delete("shoe"); return p; }, { replace: true });
   const modalShoe = modalId ? byId.get(modalId) : undefined;
 
-  // 내 찜 열은 헤더 바로 아래에 붙는다 — 헤더 높이가 화면 폭마다 달라 잰다
+  // 내 찜 열 · 카드 줄은 헤더 바로 아래에 붙는다 — 헤더 높이는 화면 폭 · 로고 글꼴이 늦게 오는 것에 따라 바뀌어 크기가 바뀔 때마다 잰다
   const [headerH, setHeaderH] = useState(118);
-  const measured = useRef(false);
-  useLayoutEffect(() => {
+  useEffect(() => {
     const h = document.querySelector<HTMLElement>(".header");
     if (!h) return;
-    const on = () => setHeaderH(h.offsetHeight);
-    if (!measured.current) { measured.current = true; on(); }
-    window.addEventListener("resize", on);
-    return () => window.removeEventListener("resize", on);
+    const ro = new ResizeObserver(() => setHeaderH(Math.round(h.getBoundingClientRect().height)));
+    ro.observe(h);
+    return () => ro.disconnect();
   }, []);
 
   const likes = status === "user" && all ? all.filter((s) => s.liked) : null;
@@ -191,7 +189,7 @@ function Compare() {
   }
 
   return (
-    <div className="compare" style={{ "--compare-top": `${headerH + 16}px` } as CSSProperties}>
+    <div className="compare" style={{ "--compare-top": `${headerH + 16}px`, "--header-h": `${headerH}px` } as CSSProperties}>
       <div className="compare__head">
         <h2 className="compare__title">비교하기</h2>
         <p className="compare__desc">고른 신발을 나란히 놓고 봅니다. 값이 {all?.length || 310}켤레 가운데 어디쯤인지도 함께 보여 드려요.</p>
