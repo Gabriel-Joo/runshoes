@@ -213,6 +213,23 @@
   }
 }
 
+/* 좁은 태블릿(768~899px) — 메뉴가 넷(비교하기 추가, 2026-11-09)이라 관리자 · 닉네임까지 붙으면 헤더가 폭을 넘어 페이지가 옆으로 밀렸다(768px 에서 784/689px) */
+@media (max-width: 899px) {
+  .header__logo {
+    font-size: 32px;
+  }
+  .header__nav {
+    gap: 12px;
+  }
+  .header__link {
+    font-size: 17px;
+  }
+  .header__link--admin,
+  .header__link--auth {
+    padding-left: 12px;
+  }
+}
+
 /* 모바일 */
 @media (max-width: 767px) {
   .header {
