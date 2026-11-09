@@ -1,0 +1,11 @@
+{ "width": 768, "height": 900, "out": "/tmp/screen-shot", "steps": [
+  {"go": "http://localhost:5179/compare?ids=202,71,2,108,115&why=p,u,u,r,u", "ms": 3500},
+  {"overflow": "768 5켤레", "skip": ".ctable__scroll"},
+  {"shot": "768-five"},
+  {"go": "http://localhost:5179/compare?ids=202,71,2,108&why=p,u,u,r", "ms": 3500},
+  {"click": ".ctable__add", "ms": 600},
+  {"overflow": "768 추가 시트", "skip": ".ctable__scroll"},
+  {"shot": "768-add-sheet"},
+  {"go": "http://localhost:5179/compare", "ms": 3000},
+  {"overflow": "768 첫 화면"}
+]}
