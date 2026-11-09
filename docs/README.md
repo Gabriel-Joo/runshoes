@@ -35,7 +35,7 @@
 | `05_api_contract.md` | API 계약과 계약 시험 |
 | `06_deployment.md` | CI/CD · GitOps · 클러스터 · 스키마 변경 절차 |
 | `07_database.md` | 스키마와 마이그레이션 V1~V12 |
-| `08_compare.md` | 비교 페이지(설계안 — 결정 전) |
+| `08_compare.md` | 비교하기 페이지(설계 확정 — 구현 전) |
 
 #### 2. 문서 형식
 
