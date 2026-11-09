@@ -1,4 +1,4 @@
-> 상태: **운영 반영**(2026-11-09, 이미지 `a7c6085c443e` — 공개 API `search=nike` 34 · `hoka` 30 · `new balance` 31, `/compare` 확인). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(계산 — 시험 `tests/compare.test.ts`) · `src/utils/compareStore.ts` · 서버 `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절.
+> 상태: **운영 반영**(2026-11-09, 처음 이미지 `a7c6085c443e` · 지금 `fb39d232ad90` — 공개 API `search=nike` 34 · `hoka` 30 · `new balance` 31, `/compare` 확인). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(계산 — 시험 `tests/compare.test.ts`) · `src/utils/compareStore.ts` · 서버 `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절.
 
 #### 0. 한 줄 요약
 
@@ -20,7 +20,7 @@
   | 찜 목록 체크 → "선택 비교" | 고른 2~5켤레(6개 이상이면 버튼이 꺼지고 "5개까지") | 하지 않음 |
   | 링크 `/compare?ids=…` | 그 신발들 그대로 | 하지 않음 |
 
-- **로그인 없이 쓴다.** 구성은 주소(`?ids=`)가 정답이고, 마지막 구성만 브라우저(localStorage)에 기억한다 — 읽고 쓸 때 실패해도 화면은 주소로 그린다. 로그인한 사람이 표를 보면 `POST /api/activity {type:"compare.view", shoeIds}`(이미 있다 — 2~3개만 받으므로 5개까지로 넓힌다).
+- **로그인 없이 쓴다.** 구성은 주소(`?ids=`)가 정답이고, 마지막 구성만 브라우저(localStorage)에 기억한다 — 읽고 쓸 때 실패해도 화면은 주소로 그린다. 로그인한 사람이 표를 보면 `POST /api/activity {type:"compare.view", shoeIds}`(2~5개를 받는다 — 그 밖은 400).
 - 주소는 `replace` 로 바꾼다 — 칸을 바꿀 때마다 뒤로 가기가 쌓이지 않게.
 
 #### 1-2. 첫 화면 · 한 켤레
@@ -128,7 +128,7 @@
 
 찜 목록 카드는 깔끔하지만 카드마다 스펙이 따로 있어 같은 칸을 눈으로 찾아야 한다. 비교는 같은 줄의 값이 같은 높이에 있어야 읽힌다.
 
-#### 2-4. 빈 칸은 합친다
+#### 2-4. 빈 칸도 열마다 쓴다
 
 발볼 · 가격이 비는 켤레가 많아 "정보 없음"이 줄마다 되풀이되면 표가 허전하다. 처음에는 모두 빈 줄을 한 칸으로 합쳤지만, 합친 칸은 열이 어긋나 보여 열마다 그대로 쓴다. 빈 칸은 옅은 글씨로 덜 눈에 띄게 한다.
 
@@ -151,8 +151,17 @@
 - 화면: 첫 화면 → 고르기 → 4켤레, ✕ · 되돌리기, "+ 추가", 한 켤레 · 0켤레, 열마다 "정보 없음", 다른 줄 배경(발에 맞나 · 주행감만), 머리 → 상세 모달 · "리뷰 N" → 리뷰 쪽, 그래프(호버 · 탭 · 화면 끝에서 뒤집기), ⓘ, 내 찜 끌어 놓기(더하기 · 바꾸기), 찜 목록 "선택 비교", 추천받기 "1~3위 비교하기", 상세 모달 "비교에 담기", 링크로 들어오기(비로그인), 1440 · 1280 · 1024 · 768 · 390 · 360px.
 - 계약: spring-v6 에 X130 ~ X135(영문 브랜드 검색 넷 · `compare.view` 5개 204 · 6개 400). 목록 API 의 모양은 바뀌지 않는다.
 - 2026-11-09 로컬: 화면은 운영 공개 API(읽기)와 로컬 Spring(시드 · 로그인)에 붙여 1440 · 1024 · 800 · 390px 캡처로 확인, 계약 v6 PASS 98 · v3-search 24 · v4 21 · v3 101/11(그대로).
-- 배포: 마이그레이션 없음 — 이미지 Sync 하나(자동 Sync).
+- 배포: 마이그레이션 없음 — 이미지 Sync 하나(자동 Sync). 확인은 인프라 `apps/runshoes/kustomization.yaml` 의 `newTag` 가 커밋 해시 12자리인지, 운영 `/compare` 가 내보내는 `assets/index-*.css` · `*.js` 이름이 로컬 `npm run build` 의 `dist/assets` 와 같은지로 한다.
+
+#### 화면 점검 방식
+
+- **로컬 코드 + 운영 공개 API**: `npx vite --config scripts/vite.prodapi.config.mjs` → `http://localhost:5179`. `/api` 만 운영으로 보낸다 — 310켤레 실제 데이터로 화면을 본다. **읽기만** 한다(찜 · 리뷰 · 관리 화면 쓰기 금지).
+- **로그인 상태**는 로컬 Spring(시드 DB, 포트 3000)에 붙인다: `API_TARGET=http://localhost:3000 PORT=5180 npx vite --config scripts/vite.prodapi.config.mjs`. 시드 계정 비밀번호는 plan · 문서 · 커밋에 적지 않는다.
+- **운영 데이터로 상세 모달을 열지 않는다** — 모달이 AI 요약을 불러 운영 Ollama(GPU)를 쓴다. 머리 → 모달 흐름은 로컬 Spring 쪽에서 본다.
+- **캡처 · 넘침 검사**: `node scripts/screen-shot.mjs plan.json`(헤드리스 크롬 CDP, 예시 `scripts/screen-shot.example.json`). 단계 `{overflow: "이름", skip: ".ctable__scroll"}` 이 페이지 가로 넘침과 넘친 요소를 찍는다(skip 은 원래 가로로 넘기는 표 안쪽). 결과 PNG 는 git 밖(세션 임시 폴더)에 둔다.
+- **넘침 검사는 스크롤바를 켠 채로** 한다(스크립트 기본값). 숨기고 재면 폭이 스크롤바(약 15px)만큼 넓게 잡혀, 관리자로 로그인한 768~800px 헤더 넘침을 놓쳤다(2026-11-09). 768px 이면 `cw 753` 처럼 나와야 스크롤바가 켜진 것이다.
+- 폭: 1440 · 1280 · 1024 · 900 · 768 · 390 · 360px. 헤더 넘침은 관리자 로그인 상태(메뉴 넷 + 등록·관리 + 닉네임)에서 768 · 800 · 899px 를 본다.
 
 #### 다음에 할 일
 
-- 찜 목록 · 상세 모달에서 넘어온 비교는 이유 표시가 없다 — 필요하면 "찜에서" 같은 표시를 더한다.
+- 없음 — 다음 기능은 따로 정한다.
