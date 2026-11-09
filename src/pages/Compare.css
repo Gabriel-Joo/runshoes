@@ -21,7 +21,8 @@
 .compare__layout {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 296px;   /* 내 찜 — 긴 모델명이 한 줄에(2026-11-09 사용자, 248 → 296) */
+  /* 내 찜 340px(2026-11-09 사용자) — 이름 자리 = 340 − 테두리 · 여백 · 사진 64 · 스크롤바 17 ≈ 190px ≥ 310켤레 가장 긴 이름(13px 굵게 180px). "비교 중"은 이름 아래 */
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 28px;
   align-items: start;
 }
@@ -245,14 +246,17 @@
   outline-offset: 2px;
 }
 
+/* 이유 — 모든 카드에 늘 한 줄(끈 구멍 아래, 사진 위). 줄이 카드마다 같은 자리에 오게 */
 .ctable__why {
-  position: absolute;
-  top: 7px;
-  left: 10px;
-  max-width: calc(50% - 16px);
+  display: block;
+  height: 17px;
+  margin-bottom: 2px;
   font-size: 12px;
-  line-height: 1.35;
+  line-height: 17px;
   color: var(--text-weak);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .is-base > .ctable__why {
@@ -273,6 +277,27 @@
 
 .ctable__x:hover {
   color: var(--text-strong);
+}
+
+/* 고른 신발 ↻ — 기준 바꾸기. 마우스를 올리면 이름이 뜬다 */
+.ctable__rebase {
+  font-size: 17px;
+  color: var(--accent);
+}
+
+.ctable__rebase:hover::after,
+.ctable__rebase:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 5;
+  padding: 4px 8px;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-invert);
+  background: var(--bg-dark);
 }
 
 .ctable__link {
@@ -321,9 +346,13 @@
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  margin-top: 6px;
+  margin-top: auto;              /* 카드 맨 아래 — 모델명이 두 줄인 카드가 있어도 바코드 줄이 맞는다(카드는 같은 줄에서 높이가 같다) */
   padding-top: 10px;
   border-top: 1px solid var(--border-light);
+}
+
+.ctable__link {
+  margin-bottom: 8px;
 }
 
 .ctable__tag .barcode {
@@ -367,6 +396,7 @@
   font-size: 12px;
   line-height: 1.6;
   color: var(--text-weak);
+  word-break: keep-all;          /* "오세/요"처럼 낱말 가운데서 꺾이지 않게 */
 }
 
 .ctable__gap {
@@ -694,10 +724,12 @@
   font-size: 13px;
 }
 
-.clikes__item em {
-  margin-left: auto;
+/* "비교 중" — 이름 아래 줄(오른쪽에 두면 이름 자리를 30px 넘게 먹었다) */
+.clikes__in {
+  display: block;
+  margin-top: 1px;
   font-style: normal;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-weak);
 }
 
@@ -763,28 +795,17 @@
   color: oklch(0.8 0.08 180);
 }
 
-/* 태블릿 — 내 찜 열을 좁게 */
-@media (max-width: 1199px) {
+/* 1200~1439px — 내 찜 300px(이름 자리 ≈ 150px, 310켤레의 98% 한 줄), 표 줄 이름 열을 조금 줄인다 */
+@media (max-width: 1439px) {
   .compare__layout {
-    grid-template-columns: minmax(0, 1fr) 200px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     gap: 20px;
   }
   .ctable {
-    grid-template-columns: 104px repeat(5, minmax(0, 1fr));
+    grid-template-columns: 112px repeat(5, minmax(0, 1fr));
   }
   .ctable__card {
     padding: 28px 10px 10px;
-  }
-  .ctable__why {                 /* 칸이 좁아 이유가 두 줄로 꺾이며 끈 구멍과 겹친다 — 사진 위 한 줄로 */
-    position: static;
-    max-width: none;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .clikes__img {
-    width: 48px;
   }
 }
 
@@ -802,8 +823,9 @@
   }
 }
 
-/* 1023px 이하(세로 태블릿 · 휴대폰) — 표 안쪽만 가로로 넘긴다, 줄 이름은 값 위에, 내 찜은 "+ 추가" 시트에 */
-@media (max-width: 1023px) {
+/* 1199px 이하(태블릿 · 휴대폰) — 표 안쪽만 가로로 넘긴다, 줄 이름은 값 위에, 내 찜은 "+ 추가" 시트에.
+   1024~1199px 에서 내 찜 열(200px)을 두면 이름이 두 줄로 꺾이고 표도 좁았다(2026-11-09) */
+@media (max-width: 1199px) {
   .compare__layout {
     display: block;
     margin-top: 18px;
@@ -815,8 +837,8 @@
   }
   .ctable {
     --w: calc(100vw - 2 * var(--gut));
-    grid-template-columns: repeat(var(--n), 150px);
-    width: max-content;
+    grid-template-columns: repeat(var(--n), minmax(150px, 1fr));   /* 태블릿은 폭을 채우고, 좁으면 150px 로 넘긴다 */
+    min-width: max-content;
     padding-right: var(--gut);
   }
   .ctable__corner {
@@ -827,12 +849,6 @@
     margin: 0 4px 10px;
     padding: 24px 10px 10px;
     scroll-snap-align: start;
-  }
-  .ctable__why {
-    position: static;
-    max-width: none;
-    white-space: nowrap;
-    margin-bottom: 2px;
   }
   .ctable__img {
     height: 70px;
@@ -901,8 +917,8 @@
     margin: 0;
     padding: 24px 12px 12px;
   }
-  .compare__onecard .ctable__why {
-    position: absolute;
+  .compare__onecard .ctable__tag {
+    display: none;
   }
   .compare__onecard .ctable__link {
     display: grid;

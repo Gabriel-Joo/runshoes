@@ -54,8 +54,9 @@ function CompareLikes({ likes, inCompare, onAdd }: Props) {
                 <span className="clikes__name">
                   <small>{s.brand}</small>
                   <strong>{s.model}</strong>
+                  {/* 늘 자리를 둔다 — "비교 중"인 칸만 키가 커지지 않게 */}
+                  <em className="clikes__in" aria-hidden={!on}>{on ? "비교 중" : "\u00a0"}</em>
                 </span>
-                {on && <em>비교 중</em>}
               </li>
             );
           })}

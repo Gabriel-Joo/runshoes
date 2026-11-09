@@ -6,11 +6,11 @@ import { apiFetch } from "../auth/session";
 import { useAuth } from "../auth/useAuth";
 import { useIsMobile } from "../useIsMobile";
 import ShoeModal from "../components/ShoeModal";
-import ShoeImage from "../components/ShoeImage";
+import CompareCard from "../components/compare/CompareCard";
 import CompareTable from "../components/compare/CompareTable";
 import CompareLikes from "../components/compare/CompareLikes";
 import ComparePicker from "../components/compare/ComparePicker";
-import { autofill, eulReul, formatCols, MAX_COLS, parseCols, WHY_LABEL, type Col } from "../utils/compare";
+import { autofill, eulReul, formatCols, MAX_COLS, parseCols, type Col } from "../utils/compare";
 import { readLastCompare, writeLastCompare } from "../utils/compareStore";
 import "./Compare.css";
 
@@ -24,7 +24,7 @@ function Compare() {
   const [terms, setTerms] = useState<Term[]>([]);
   const [reload, setReload] = useState(0);
   const { status, user } = useAuth();
-  const mobile = useIsMobile("(max-width: 1023px)");   // 표를 가로로 넘기는 구간(Compare.css) — 호버 대신 탭 · 시트
+  const mobile = useIsMobile("(max-width: 1199px)");   // 표를 가로로 넘기는 구간(Compare.css) — 호버 대신 탭 · 시트
   const [params, setParams] = useSearchParams();
 
   useEffect(() => {
@@ -72,7 +72,8 @@ function Compare() {
   useEffect(() => {
     if (all && cols.length) writeLastCompare(cols);
   }, [all, cols]);
-  const last = useMemo(() => (all ? readLastCompare(known) : []), [all, known]);
+  // 첫 화면에서만 읽는다 — ↻(기준 바꾸기)로 막 비운 구성도 "이어서 보기"로 남게 렌더마다 읽는다
+  const last = all && cols.length === 0 ? readLastCompare(known) : [];
 
   // 조회 기록 — 로그인했고 두 켤레 이상일 때. 같은 조합 30분에 한 번은 서버가 거른다
   const idsKey = cols.map((c) => c.id).join(",");
@@ -99,6 +100,12 @@ function Compare() {
     const s = byId.get(cols[i].id);
     setToast({ text: `${eulReul(s?.model ?? "신발")} 뺐어요`, restore: cols });
     setCols(cols.filter((_, j) => j !== i));
+  };
+
+  // 기준 바꾸기(고른 신발 ↻) — 첫 화면으로 돌아가 다시 고른다. 새로 고르면 자동 채우기가 다시 돈다. 되돌리기로 그대로 복구
+  const rebase = () => {
+    setToast({ text: "기준 신발을 다시 골라 주세요", restore: cols });
+    setCols([]);
   };
 
   // 더하기 — 비었으면 자동 채우기, at 이 있으면 그 열을 바꾼다
@@ -167,15 +174,7 @@ function Compare() {
     const s = shoes[0];
     main = (
       <div className="compare__one">
-        <div className={`compare__onecard ${cols[0].why === "pick" ? "is-base" : ""}`}>
-          {WHY_LABEL[cols[0].why] && <span className="ctable__why">{WHY_LABEL[cols[0].why]}</span>}
-          <button className="ctable__x" onClick={() => remove(0)} aria-label={`${s.model} 빼기`}>✕</button>
-          <button className="ctable__link" onClick={() => openModal(s.id, false)}>
-            <span className="ctable__img"><ShoeImage src={s.image} alt={s.model} /></span>
-            <small>{s.brand}</small>
-            <strong>{s.model}</strong>
-          </button>
-        </div>
+        <CompareCard col={cols[0]} shoe={s} className="compare__onecard" onRemove={() => remove(0)} onRebase={rebase} onOpen={() => openModal(s.id, false)} />
         <div className="compare__pick compare__pick--one">
           <h3>한 켤레 더 골라 주세요</h3>
           <p>비교는 두 켤레부터예요.</p>
@@ -187,7 +186,7 @@ function Compare() {
   } else {
     main = (
       <CompareTable cols={cols} shoes={shoes} all={all} terms={terms} guest={guest} mobile={mobile}
-        onRemove={remove} onAdd={() => setAdding(true)} onDrop={add} onOpen={openModal} />
+        onRemove={remove} onRebase={rebase} onAdd={() => setAdding(true)} onDrop={add} onOpen={openModal} />
     );
   }
 

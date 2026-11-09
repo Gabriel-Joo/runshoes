@@ -1,14 +1,12 @@
 import { useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
 import type { Shoe, Term } from "../../types";
-import ShoeImage from "../ShoeImage";
-import Barcode from "../Barcode";
+import CompareCard from "./CompareCard";
 import TermTooltip from "../TermTooltip";
 import CompareDist from "./CompareDist";
 import { NONE, text, wideLabel, yesNo } from "../../utils/display";
 import { WIDE_TERM, stabilityTerm } from "../../utils/terms";
-import { BAND_WORD, MAX_COLS, SIZE_MM, WHY_LABEL, formatNum, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
+import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
 
-const tagCode = (id: number) => `RS${String(id).padStart(4, "0")}`;
 
 type RowKey = "purpose" | "stability" | "width" | "wide" | NumKey | "carbon" | "midsole" | "rating" | "likes";
 interface Row {
@@ -65,13 +63,14 @@ interface Props {
   guest: boolean;
   mobile: boolean;
   onRemove: (index: number) => void;
+  onRebase: () => void;          // 고른 신발 ↻ — 첫 화면으로 돌아가 기준을 다시 고른다
   onAdd: () => void;
   onDrop: (id: number, at: number | null) => void;   // at — 그 열을 바꾼다 · null 이면 더한다
   onOpen: (id: number, reviews: boolean) => void;
 }
 
 /** 머리는 찜 목록 카드 모양(사진 · 브랜드 · 모델 · 바코드), 아래는 줄 이름이 왼쪽에 있는 표(08 1-5) */
-function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onAdd, onDrop, onOpen }: Props) {
+function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onRebase, onAdd, onDrop, onOpen }: Props) {
   const [open, setOpen] = useState<{ id: number; key: NumKey } | null>(null);
   const [openTerm, setOpenTerm] = useState<string | null>(null);
   const [dropAt, setDropAt] = useState<number | "add" | null>(null);
@@ -142,24 +141,10 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onAdd,
     <div className="ctable__scroll">
       <div className="ctable" style={{ "--n": cols.length + (canAdd ? 1 : 0) } as CSSProperties}>
         <div className="ctable__corner" />
-        {cols.map((c, i) => {
-          const s = shoes[i];
-          return (
-            <div key={c.id} className={`ctable__card ${c.why === "pick" ? "is-base" : ""} ${dropAt === i ? "is-drop" : ""}`} {...dragProps(i)}>
-              {WHY_LABEL[c.why] && <span className="ctable__why">{WHY_LABEL[c.why]}</span>}
-              <button className="ctable__x" onClick={() => onRemove(i)} aria-label={`${s.model} 빼기`}>✕</button>
-              <button className="ctable__link" onClick={() => onOpen(s.id, false)}>
-                <span className="ctable__img"><ShoeImage src={s.image} alt={s.model} /></span>
-                <small>{s.brand}</small>
-                <strong>{s.model}</strong>
-              </button>
-              <span className="ctable__tag">
-                <Barcode value={tagCode(s.id)} />
-                <small>{tagCode(s.id)}</small>
-              </span>
-            </div>
-          );
-        })}
+        {cols.map((c, i) => (
+          <CompareCard key={c.id} col={c} shoe={shoes[i]} onRemove={() => onRemove(i)} onRebase={onRebase}
+            onOpen={() => onOpen(shoes[i].id, false)} drop={{ active: dropAt === i, ...dragProps(i) }} />
+        ))}
         {canAdd && (
           <button className={`ctable__add ${dropAt === "add" ? "is-drop" : ""}`} onClick={onAdd} {...dragProps("add")}>
             <b>+</b>추가
