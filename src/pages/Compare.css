@@ -838,6 +838,7 @@
   }
   .ctable__scroll {
     scroll-snap-type: x mandatory;
+    container-type: inline-size;  /* 아래 --w 의 기준(100cqw = 보이는 폭) */
   }
   .ctable__headwrap {
     scrollbar-width: none;       /* 카드 줄은 손으로 밀어도 되지만 스크롤바는 표 쪽 하나만 */
@@ -846,7 +847,9 @@
     display: none;
   }
   .ctable {
-    --w: calc(100vw - 2 * var(--gut));
+    /* 묶음 이름 · 줄 이름 · 경고 줄의 폭 = 표 칸의 보이는 폭 - 오른쪽 여백. 100vw 는 PC 스크롤바(15px)까지 넣어
+       표가 15px 넘쳐 맨 아래에 가로 스크롤바가 생겼다(2026-11-09 사용자) */
+    --w: calc(100cqw - var(--gut));
     grid-template-columns: repeat(var(--n), minmax(150px, 1fr));   /* 태블릿은 폭을 채우고, 좁으면 150px 로 넘긴다 */
     min-width: max-content;
     padding-right: var(--gut);
