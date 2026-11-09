@@ -18,7 +18,8 @@ import org.springframework.util.MultiValueMap;
  * 데이터가 수십~백여 행이라 메모리에서 한다 — SQL 로 흉내 내는 것보다 비교·정렬 규칙(JS 문자열 비교, lodash stable sort)을 정확히 지킨다.
  * 안 하는 것: _page(Link 헤더), _embed/_expand — 프런트가 쓰지 않는다(contract/README.md).
  *
- * search(json-server 에 없는 것): 컬렉션이 정한 필드(shoes 는 brand · model)에서 찾는다 — 띄어쓰기로 나눈 낱말이 전부 들어 있어야 한다(AND).
+ * search(json-server 에 없는 것): 컬렉션이 정한 필드(shoes 는 brand · model · modelEn · modelAlias)에서 찾는다 — 띄어쓰기로 나눈 낱말이 전부 들어 있어야 한다(AND).
+ * brand 칸은 영문 이름(BrandNames)도 같이 본다 — "nike" 로 나이키를 찾는다.
  * 대소문자 무시, 공백을 뺀 글자로도 맞춘다("젤카야노" → "젤 카야노 32"). 다른 필터 · 정렬 · _limit 과 함께 돈다(docs/API_CONTRACT.md).
  */
 final class ListQuery {
@@ -117,6 +118,7 @@ final class ListQuery {
 		for (String f : fields) {
 			Object v = doc.get(f);
 			if (v != null) sb.append(' ').append(normalize(Js.toJsString(v)));
+			if (v != null && f.equals("brand")) sb.append(' ').append(BrandNames.english(Js.toJsString(v)));
 		}
 		String hay = sb.toString(), compact = hay.replaceAll("\\s+", "");
 		return terms.stream().allMatch(t -> hay.contains(t) || compact.contains(t));

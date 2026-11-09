@@ -5,6 +5,8 @@ import { logout } from "../auth/session";
 import { loginPath } from "../auth/session";
 import "./Header.css";
 
+const NAV: [string, string][] = [["/", "홈"], ["/recommend", "추천받기"], ["/compare", "비교하기"], ["/best", "러너들의 선택"]];
+
 /** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 등록·관리는 admin · 데모 관리자(보기만)에게 */
 function Header() {
   const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ function Header() {
   };
 
   const drawerLink = (to: string, label: string) => (
-    <Link to={to} className={`header__drawerlink ${location.pathname === to ? "is-active" : ""}`} onClick={close}>
+    <Link key={to} to={to} className={`header__drawerlink ${location.pathname === to ? "is-active" : ""}`} onClick={close}>
       {label}
     </Link>
   );
@@ -57,15 +59,12 @@ function Header() {
         </Link>
 
         <nav className="header__nav">
-          <Link to="/" className="header__link">
-            홈
-          </Link>
-          <Link to="/recommend" className="header__link header__link--point">
-            맞춤추천
-          </Link>
-          <Link to="/best" className="header__link header__link--sub">
-            러너들의 선택
-          </Link>
+          {/* 메뉴는 동사로 · 넷 다 같은 색, 지금 보는 화면만 강조색(2026-11-09 사용자) */}
+          {NAV.map(([to, label]) => (
+            <Link key={to} to={to} className={`header__link ${location.pathname === to ? "is-active" : ""}`}>
+              {label}
+            </Link>
+          ))}
           {canViewAdmin && (
             <Link to="/admin" className="header__link header__link--admin">
               등록·관리
@@ -110,9 +109,7 @@ function Header() {
 
       {open && (
         <nav className="header__drawer">
-          {drawerLink("/", "홈")}
-          {drawerLink("/recommend", "맞춤 추천")}
-          {drawerLink("/best", "러너들의 선택")}
+          {NAV.map(([to, label]) => drawerLink(to, label))}
           {canViewAdmin && drawerLink("/admin", "등록·관리")}
           {status === "anonymous" && (
             <Link to={toLogin} className="header__drawerlink header__drawerlink--auth" onClick={close}>

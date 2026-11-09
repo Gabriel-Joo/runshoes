@@ -317,3 +317,20 @@
     right: -8px;
   }
 }
+
+/* 비교에 담기(2026-11-09) — 평점 · 가격 줄 아래 오른쪽, 테두리 버튼 */
+.modal__compare {
+  display: block;
+  margin: 14px 0 0 auto;
+  padding: 7px 14px;
+  border: 1px solid var(--accent);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.modal__compare:hover {
+  background: var(--accent);
+  color: #fff;
+}

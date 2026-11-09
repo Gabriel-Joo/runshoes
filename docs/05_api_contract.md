@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-02 로컬): v6 PASS 85 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v3-summary 5. 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-09 로컬): v6 PASS 98 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v3-summary 5. 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -16,7 +16,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `PUT` · `DELETE /api/{shoes,reviews}/{id}/like` | 찜 · 리뷰 공감 → `{liked, likeCount}`, 멱등 | 로그인 |
 | `/api/auth/{signup,login,refresh,logout,demo,demo-accounts,nickname-available}` | 인증 · 체험 로그인(`04_auth.md`) | — |
 | `GET` · `DELETE /api/me`, `PATCH /api/me/nickname`, `PUT /api/me/password` | 내 정보 · 탈퇴 · 닉네임 · 비밀번호 | 로그인 |
-| `POST /api/activity` | 조회 · 비교 기록. 언제나 204 | 로그인 |
+| `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 언제나 204 | 로그인 |
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
 | `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
@@ -38,7 +38,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 
 - 헤더는 Spring CORS 지원 대신 필터 하나(`ApiHeadersFilter`)가 만든다 — 204 · Origin 이 없을 때 `*` 같은 모양이 Spring 기본과 다르다.
 - 목록 쿼리는 SQL 이 아니라 메모리에서 한다(`ListQuery`) — JS 문자열 비교 · lodash 정렬을 SQL 로 흉내 내는 것보다 정확하다.
-- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model · modelEn · modelAlias(V13)에서 낱말마다 AND, 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 관리 화면의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`.
+- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model · modelEn · modelAlias(V13)에서 낱말마다 AND — brand 는 영문 이름도 같이 본다(`BrandNames`, "nike" · "new balance", 2026-11-09), 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 관리 화면의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`.
 
 #### 1-3. 데이터 표현
 

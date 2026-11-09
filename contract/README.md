@@ -98,6 +98,10 @@ v6 PASS 78 · v3 101/11(그대로) · v4 21 · v3-search 24 · v3-summary 5.
 같은 날 다시 녹화한 두 건 — X101(품번 오류 문구: 11-01 품번에 `.` `/` 를 허용하며 바뀌었는데 기준선이 옛 문구였다) · X53(출처 코드 오류 문구가 받는 코드 아홉을 모두 알리게). 상태코드는 둘 다 400 그대로.
 v6 PASS 85 · FAIL 0.
 
+**비교하기(2026-11-09) — 영문 브랜드 검색 · compare.view 다섯 켤레**: 검색이 brand 의 영문 이름도 본다(`BrandNames`). spring-v6 에 X130 ~ X135(nike · hoka 클리프톤 · new balance · nike 클리프톤 → [] · compare.view 5개 204 · 6개 400)를 녹화해 더했다.
+같은 날 X124 · X125(V13 검색)에 `volatile: ["updatedAt"]` 를 붙였다 — 앞 단계 PATCH 시각이 그대로 비교돼 녹화한 날이 아니면 FAIL 이었다(시나리오 · 기준선 둘 다).
+v6 PASS 98 · FAIL 0 · v3-search 24 · v4 21 · v3 101/11(그대로).
+
 INFO 24 · 25(필드 필터 · `_limit`)는 기준선과 같다. INFO 26(`/api/db`)은 재현하지 않기로 했다. 요약 S9(mock 이 받은 Ollama 요청 본문 — 프롬프트 글자 단위)도 같다.
 계약을 왜 이렇게 맞췄는지는 [docs/05_api_contract.md](../docs/05_api_contract.md).
 

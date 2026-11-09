@@ -420,10 +420,18 @@ export const V6_SCENARIOS = [
   // V13(2026-11-03) — 영어 이름(modelEn) · 검색용 다른 표기(modelAlias). 검색(search)이 둘 다 본다
   W("X123", "영어 이름 · 다른 표기 PATCH → 200, lastChange [modelEn, modelAlias]", "PATCH", "/api/shoes/2",
     { headers: jb("admin"), body: { modelEn: "FuelCell SuperComp Pacer v2", modelAlias: "SC Pacer v2, 퓨어셀" }, volatile: ["updatedAt"], expect: 200 }),
-  W("X124", "다른 표기로 검색 — 퓨어셀 → shoe 2", "GET", "/api/shoes?search=%ED%93%A8%EC%96%B4%EC%85%80", { expect: 200 }),
-  W("X125", "영어 이름으로 검색 — supercomp pacer → shoe 2", "GET", "/api/shoes?search=supercomp%20pacer", { expect: 200 }),
+  W("X124", "다른 표기로 검색 — 퓨어셀 → shoe 2", "GET", "/api/shoes?search=%ED%93%A8%EC%96%B4%EC%85%80", { volatile: ["updatedAt"], expect: 200 }),
+  W("X125", "영어 이름으로 검색 — supercomp pacer → shoe 2", "GET", "/api/shoes?search=supercomp%20pacer", { volatile: ["updatedAt"], expect: 200 }),
   W("X126", "영어 이름 101자 → 400", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { modelEn: "A".repeat(101) }, expect: 400 }),
   W("X127", "데모 관리자 modelEn PATCH → 403", "PATCH", "/api/shoes/2", { headers: jb("d"), body: { modelEn: "x" }, expect: 403 }),
   W("X128", "빈 다른 표기 → null 로 저장", "PATCH", "/api/shoes/2", { headers: jb("admin"), body: { modelAlias: "  " }, volatile: ["updatedAt"], expect: 200 }),
   W("X129", "끝 상태 — shoe 2(modelEn 있음 · modelAlias null)", "GET", "/api/shoes/2", { volatile: ["updatedAt"], expect: 200 }),
+
+  // 비교하기(2026-11-09) — 브랜드 영문 검색(BrandNames) · compare.view 다섯 켤레까지
+  W("X130", "영문 브랜드 검색 — nike → 나이키", "GET", "/api/shoes?search=nike", { volatile: ["updatedAt"], expect: 200 }),
+  W("X131", "영문 브랜드 + 한글 모델 — hoka 클리프톤", "GET", "/api/shoes?search=hoka%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4", { volatile: ["updatedAt"], expect: 200 }),
+  W("X132", "띄어 쓴 영문 브랜드 — new balance → 뉴발란스", "GET", "/api/shoes?search=new%20balance", { volatile: ["updatedAt"], expect: 200 }),
+  W("X133", "영문 브랜드 + 다른 브랜드 모델 — nike 클리프톤 → []", "GET", "/api/shoes?search=nike%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4", { expect: 200 }),
+  W("X134", "POST /api/activity compare.view(5개) → 204", "POST", "/api/activity", { headers: jb("u1"), body: { type: "compare.view", shoeIds: [1, 2, 3, 4, 5] }, expect: 204 }),
+  W("X135", "POST /api/activity compare.view(6개) → 400", "POST", "/api/activity", { headers: jb("u1"), body: { type: "compare.view", shoeIds: [1, 2, 3, 4, 5, 6] }, expect: 400 }),
 ];
