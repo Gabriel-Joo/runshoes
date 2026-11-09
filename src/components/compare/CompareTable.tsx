@@ -1,8 +1,9 @@
-import { useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
 import type { Shoe, Term } from "../../types";
 import CompareCard from "./CompareCard";
 import TermTooltip from "../TermTooltip";
 import CompareDist from "./CompareDist";
+import CompareStrip from "./CompareStrip";
 import { NONE, text, wideLabel, yesNo } from "../../utils/display";
 import { WIDE_TERM, stabilityTerm } from "../../utils/terms";
 import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
@@ -74,6 +75,8 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   const [open, setOpen] = useState<{ id: number; key: NumKey } | null>(null);
   const [openTerm, setOpenTerm] = useState<string | null>(null);
   const [dropAt, setDropAt] = useState<number | "add" | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const canAdd = cols.length < MAX_COLS;
   const pad = MAX_COLS - cols.length;
   const pops = Object.fromEntries(NUM_KEYS.map((k) => [k, population(all, k)])) as Record<NumKey, number[]>;
@@ -138,8 +141,9 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   };
 
   return (
-    <div className="ctable__scroll">
-      <div className="ctable" style={{ "--n": cols.length + (canAdd ? 1 : 0) } as CSSProperties}>
+    <div ref={scrollRef} className="ctable__scroll">
+      <CompareStrip cols={cols} shoes={shoes} scrollRef={scrollRef} gridRef={gridRef} mobile={mobile} onOpen={(id) => onOpen(id, false)} />
+      <div ref={gridRef} className="ctable" style={{ "--n": cols.length + (canAdd ? 1 : 0) } as CSSProperties}>
         <div className="ctable__corner" />
         {cols.map((c, i) => (
           <CompareCard key={c.id} col={c} shoe={shoes[i]} onRemove={() => onRemove(i)} onRebase={onRebase}
