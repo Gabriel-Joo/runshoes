@@ -8,16 +8,17 @@ export const MAX_COLS = 5;   // 비교는 다섯 켤레까지
 export const AUTO_COLS = 4;  // 하나를 고르면 네 켤레까지 채운다
 
 /** 열마다 붙는 이유 — 주소(?why=)에는 한 글자로 */
-export type Why = "pick" | "line" | "brand" | "stability" | "similar" | "user";
+export type Why = "pick" | "line" | "brand" | "stability" | "similar" | "user" | "rec";
 export const WHY_LABEL: Record<Why, string> = {
   pick: "고른 신발",
   line: "같은 라인",
   brand: "같은 브랜드",
   stability: "안정성 다름",
   similar: "비슷한 신발",
-  user: "",
+  user: "내가 담은 신발",       // 검색 · 찜 · 상세 모달에서 담은 것(2026-11-09 사용자 — 모든 카드에 이유가 있어야 줄이 맞는다)
+  rec: "추천받은 신발",         // 추천받기 결과에서
 };
-const WHY_CODE: Record<Why, string> = { pick: "p", line: "l", brand: "b", stability: "s", similar: "m", user: "u" };
+const WHY_CODE: Record<Why, string> = { pick: "p", line: "l", brand: "b", stability: "s", similar: "m", user: "u", rec: "r" };
 const CODE_WHY = Object.fromEntries(Object.entries(WHY_CODE).map(([k, v]) => [v, k])) as Record<string, Why>;
 
 export interface Col {
