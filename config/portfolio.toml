@@ -1,0 +1,68 @@
+# RUNSHOES 포트폴리오 주제(2026-11-09 사용자) — FOREMAN 서기실 「포트폴리오 쓰기」가 주제를 하나 골라 서기에게 맡긴다.
+# 결과는 portfolio/<slug>.md, Notion 런슈즈 루트 바로 아래에 이 순서로 게시한다(FOREMAN과 같은 방식 — 묶음 페이지 없이 제목 앞에 slug 번호).
+# sources: 서기가 먼저 읽을 재료. 접두어 없는 경로는 이 저장소, `infra:` 는 ~/ronanlab-infra, `foreman-log:` 는 FOREMAN 저장소 log/.
+#
+# 근거 표시(문장 끝): [c:해시] 이 저장소 커밋 · [docs:파일] 이 저장소 docs/ · [t:번호] FOREMAN DB 턴
+#                    [ic:해시] ronanlab-infra 커밋 · [infra:경로] ronanlab-infra 파일 · [foreman-log:파일] FOREMAN log/
+#   뒤의 셋은 FOREMAN 확인기(bridge/evidence.py)가 알아야 한다 — FOREMAN 쪽 일(2026-11-09 요청).
+# 쓰지 않는 재료: ~/k8s-cluster/backup/ (비밀번호 해시 · 활동 로그, 권한 600), catalog/local/ (git 밖 작업 파일 — 숫자는 docs 를 근거로).
+# 아직 쓰지 않는다(2026-11-09 사용자) — 리뷰 생성 · 비교 페이지 · 챗봇 RAG 가 남아 지금 쓰면 다시 고쳐야 한다. 프로젝트가 끝나면 쓴다.
+# 사람이 한 말(턴)은 FOREMAN 이 기록을 시작한 11월 초부터만 있다. 그 전(07 ~ 10월)의 판단은 커밋 메시지 · docs 3절 · 런북 실행 기록에서 찾는다.
+
+[[topic]]
+slug = "00_overview"
+title = "한눈에 — RUNSHOES가 무엇인가"
+about = "러닝화를 고르는 서비스가 무엇이고 어떤 구조로 도는지. 다룰 것 — ① 문제와 사용자(스펙 · 발볼 · 리뷰를 한곳에서) ② 화면 흐름(찾기 → 카드 → 상세 모달, 맞춤 추천 · 러너들의 선택 · 관리 화면) ③ 구조도: React · Spring Boot · MySQL · 챗봇(Ollama)을 자체 클러스터에, 배포는 Jenkins → Harbor → ArgoCD ④ 숫자: 운영 신발 수 · 커밋 수 · 스키마 V1 ~ V13 · 문서 ⑤ 뒤 글 일곱 편 안내. 화면 사진(홈 · 상세 모달 · 관리 화면)이 있으면 좋다 — 운영 사이트에서, 계정 · 개인정보가 찍히지 않게"
+sources = ["README.md", "docs/README.md", "docs/overview.md", "docs/requirements.md", "docs/HISTORY.md", "docs/02_screens.md", "docs/03_admin.md"]
+screenshots = true
+
+[[topic]]
+slug = "01_cicd"
+title = "CI/CD — push 한 번이면 배포된다"
+about = "이 저장소의 push 가 운영 Pod 가 되기까지를 직접 만든 과정. 다룰 것 — ① 흐름: GitHub 웹훅(+ 폴링 15분 안전망) → Jenkins(BuildKit rootless, 특권 없이) → Harbor(태그 = 커밋 12자리, latest 없음) → ronanlab-infra newTag 커밋(deploy key, 3번 재시도) → ArgoCD 자동 Sync ② Pull 형(GitOps)을 고른 까닭 — Jenkins 가 클러스터 권한을 갖지 않는다, 배포된 것의 답이 Git 에, 롤백은 git revert ③ 함정과 고친 것: 인프라 저장소를 git 단계로 받으면 태그 push 가 빌드를 다시 부르는 루프, 비밀값을 Groovy 문자열에 넣지 않기, Spring 이미지 빌드 메모리(실측 2.4GiB · limit 3Gi) ④ 학교 환경(kaniko · std-harbor · BUILD_NUMBER 태그)에서 자체 클러스터로 옮긴 것(2026-10-18) ⑤ 폴링 2분 → 웹훅(Access 에 막혀 있던 것을 /github-webhook/ 만 Bypass) ⑥ 정전 뒤 Jenkins 가 죽었는데 조용했던 일과 FOREMAN 빌드 알림 ⑦ 문서만 바뀐 커밋도 이미지를 새로 굽던 것을 건너뛰게 한 판단(이 일이 끝나면 — .dockerignore 가 docs · *.md 를 이미 빼고 있어 이미지 내용은 같았다)"
+sources = ["Jenkinsfile", "Dockerfile", "Dockerfile.chatbot", ".dockerignore", "docs/06_deployment.md", "docs/archive/DEPLOY.md", "docs/archive/INFRA.md",
+           "infra:platform/jenkins/values.yaml", "infra:apps/runshoes/kustomization.yaml", "infra:apps/runshoes/app.yaml", "infra:bootstrap/root-app.yaml",
+           "foreman-log:stage8_cicd_result.md", "foreman-log:infra_20261106_jenkins-harbor-after-outage.md"]
+
+[[topic]]
+slug = "02_schema_deploy"
+title = "스키마 변경 배포 — 자동 Sync를 끄는 순간"
+about = "평소에는 자동으로 배포하고, 되돌릴 수 없는 순간에만 사람이 문을 연다. 다룰 것 — ① Sync 가 곧 마이그레이션 적용(Flyway) — MySQL DDL 은 트랜잭션이 아니다 ② 런북 순서: 자동 Sync 끄기(automated 없음 확인) → 덤프 → Sync → Pod 로그 · 공개 API · 행 수 → 다시 켜기 ③ 마이그레이션은 추가만 — 옛 이미지가 새 스키마에서 뜬다, 적용된 V*.sql 은 한 글자도 안 고친다(체크섬) ④ 이미지에 든 마이그레이션 확인 스크립트 ⑤ V3 ~ V13 일곱 번의 실행 기록(V6 ~ V9 는 한 번에 — 끄고 켜기를 줄이려고) ⑥ 자동 Sync 상태를 확인하지 않고 보고했다가 바로잡은 일 → 매번 syncPolicy · 이미지 태그 · Pod 로그를 읽고 보고"
+sources = ["docs/06_deployment.md", "docs/07_database.md", "backend/src/main/resources/db/migration",
+           "infra:apps/runshoes/runbooks/auth-v3.md", "infra:apps/runshoes/runbooks/catalog-v4-v5.md", "infra:apps/runshoes/runbooks/admin-demo-v6-v9.md",
+           "infra:apps/runshoes/runbooks/v10-auto-increment.md", "infra:apps/runshoes/runbooks/v11-admin-history.md",
+           "infra:apps/runshoes/runbooks/v12-wide-scope.md", "infra:apps/runshoes/runbooks/v13-model-en.md",
+           "infra:apps/runshoes/scripts/check-image-migrations.sh"]
+
+[[topic]]
+slug = "03_spring_cutover"
+title = "Spring 전환 — 계약 시험으로 끊김 없이 옮기기"
+about = "운영 중인 Node(json-server) 백엔드를 Spring Boot + MySQL 로 바꾸면서 화면은 한 줄도 바꾸지 않은 과정(2026-11-09 사용자 — 따로 보여 줄 가치). 다룰 것 — ① 계약 녹화: 옛 서버의 응답을 시나리오로 녹화해 정답(baseline)으로, 새 서버를 같은 시나리오로 돌려 diff(계약 v6 PASS 85) ② 계약을 지키려고 생긴 설계(id max+1 · 중복 id · DOUBLE · CORS 반사 등)와 그 근거 ③ 전환 순서: MySQL 먼저 선택 Sync → 앱 이미지 · Deployment 를 Sync 한 번에 — 새 이미지가 DB 설정 없이 뜨는 창이 없게 ④ 2026-10-21 01:39 KST 전환 중 공개 /api/terms 1초마다 90회 — 실패 0, 롤링 겹침 2초 동안 Node 와 Spring 이 번갈아 응답 ⑤ 되돌리기 길(Node 이미지 + PVC db.json)을 V3 뒤에 닫은 판단 ⑥ 챗봇 요약 시험은 Ollama 를 실제로 부르지 않고 mock 으로"
+sources = ["docs/05_api_contract.md", "docs/06_deployment.md", "docs/07_database.md", "docs/archive/SPRING_MIGRATION_PLAN.md", "docs/archive/API_CONTRACT.md",
+           "contract/README.md", "contract/scenarios.mjs", "contract/diff.mjs", "contract/run-spring-local.sh"]
+
+[[topic]]
+slug = "04_auth"
+title = "로그인 · 데모 관리자 · 시도 제한"
+about = "포트폴리오로 공개하는 서비스에서 계정과 관리 화면을 어떻게 지켰나. 다룰 것 — ① 권한은 서버가 막는다(화면의 경로 가드는 안내용) ② 데모 관리자 — 관리 화면을 누구나 둘러보되 쓰기는 서버가 거절 ③ 로그인 시도 제한 · 활동 로그 ④ 비밀번호 · 비밀값을 명령줄 · 로그 밖에(적재 스크립트가 Secret 을 스크립트 안 변수로만 읽는 것 포함) ⑤ 탈퇴 · 소프트 삭제(V8 · V9)"
+sources = ["docs/04_auth.md", "docs/03_admin.md", "docs/archive/AUTH_DESIGN.md", "docs/archive/AUTH_RATELIMIT_DESIGN.md", "docs/archive/ADMIN_DEMO_DESIGN.md",
+           "backend/src/main/java/com/kopo17/runshoes/auth", "scripts/load-prod.sh", "infra:apps/runshoes/scripts/create-secrets.sh"]
+
+[[topic]]
+slug = "05_catalog"
+title = "카탈로그 — 출처가 달린 신발 데이터"
+about = "300켤레 남짓의 스펙을 어디서 읽고 어떻게 믿을 수 있게 했나. 다룰 것 — ① 약관 · robots 를 먼저 읽고 수집처를 정한 것(fetch · blocked · unknown, 막힌 곳은 우회하지 않는다) ② 칸별 출처 순위(공식몰 → 리뷰 스펙 상자 → 본문), 기본값으로 메우지 않는다 ③ 출처가 갈릴 때 — 무게는 작은 차이만 자동, 스택 · 드롭은 사람이 본다, 다수 쪽이 있으면 남기고 flag ④ 사람 판단과 Claude 판단을 칸마다 나눠 기록(by · via) — 검증은 Claude 가 판단한 값만 ⑤ 사진은 저장하지 않고 핫링크, 같은 모델 다른 색상은 실루엣 대조(IoU 0.80) ⑥ 숫자: 후보 행 · 운영 켤레 · 판단 칸 · 출처 링크 점검(다시 세어서)"
+sources = ["docs/01a_catalog_sources.md", "docs/01b_catalog_images.md", "catalog/sources.yaml", "docs/HISTORY.md", "docs/archive/CATALOG_PIPELINE.md"]
+
+[[topic]]
+slug = "06_loader"
+title = "적재기 — 관리자의 수정을 덮지 않는다"
+about = "카탈로그를 운영에 넣는 도구가 사람이 관리 화면에서 고친 값을 되돌리지 않게 만든 과정. 다룰 것 — ① DB 가 아니라 관리자 API 로만 쓴다(앱 검증을 그대로 탄다) ② 칸마다 '누가 고쳤나'를 저장하는 대신 적재 직후 스냅숏과의 차이로 알아본다 — 스키마를 바꾸지 않고 ③ 사람의 수정을 찾으면 멈추던 것 → 끌어와서 진행(2026-10-30 사용자) ④ 실제로 막을 뻔한 일들(덤프 복원 뒤 96칸, 끊긴 적재, 대표 사진 → 품번, 출처 묶음째 굳은 와이드) ⑤ 기본은 건조 실행, 비밀번호는 스크립트 안에서만, 적용 뒤 건조 실행 0 ⑥ 적재기의 수정은 수정 이력에 남기지 않는다"
+sources = ["docs/01c_catalog_loader.md", "scripts/load-prod.sh", "catalog/load.mjs", "catalog/pull-admin.mjs", "docs/HISTORY.md"]
+
+[[topic]]
+slug = "07_working_with_ai"
+title = "AI와 같이 만든 방식"
+about = "이 서비스의 코드 · 데이터 · 문서 대부분을 Claude Code 와 만들면서 사람이 무엇을 정하고 무엇을 확인했나. 다룰 것 — ① 판단을 사람과 Claude 로 나눠 남긴다 — 사람이 정한 값은 다시 검증하지 않는다 ② 문장마다 근거를 단 설명문과 기계 검사기(01d) — 넘겨짚기는 사람이 읽어 잡는다 ③ 상태를 추정으로 보고하지 않는다(자동 Sync 오보 뒤의 규칙) ④ 자동 압축으로 잊은 지시를 재고 인계 · 문서로 메운 것 ⑤ 운영 쓰기(적재 · Sync)는 사람이 누른다 — 권한 판단기와 스크립트 허용 규칙 ⑥ 지금 규칙만 쓰는 문서와 바뀐 과정을 모은 3절 · HISTORY. 일반론(\"소통이 중요했다\")이 아니라 사람이 바로잡은 자리를 앞에"
+sources = ["docs/01d_catalog_copy.md", "docs/01a_catalog_sources.md", "docs/01c_catalog_loader.md", "docs/README.md", "docs/HISTORY.md", "CLAUDE.md",
+           "foreman-log:runshoes_compaction_loss_20261105.md", "foreman-log:runshoes_claude_md_draft_20261105.md"]
