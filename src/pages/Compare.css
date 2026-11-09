@@ -895,7 +895,9 @@
     z-index: 1002;
     inset: auto 0 0 0;
     width: auto;
-    padding: 18px 16px 24px;
+    max-height: 50vh;            /* 화면 절반 이하(2026-11-09 사용자) */
+    overflow-y: auto;
+    padding: 18px max(16px, calc((100% - 300px) / 2)) 24px;   /* 내용은 PC 호버 그래프와 같은 300px 폭 — 그래프가 시트 폭만큼 커지지 않게 */
     border: 0;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
   }
