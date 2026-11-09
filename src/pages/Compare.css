@@ -21,7 +21,7 @@
 .compare__layout {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 248px;
+  grid-template-columns: minmax(0, 1fr) 296px;   /* 내 찜 — 긴 모델명이 한 줄에(2026-11-09 사용자, 248 → 296) */
   gap: 28px;
   align-items: start;
 }
