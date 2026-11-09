@@ -26,7 +26,7 @@ export interface Col {
   why: Why;
 }
 
-/** ?ids=1,2,3&why=p,l,b — 숫자 아님 · 모르는 id · 겹침은 버리고 다섯 개까지. why 가 모자라거나 모르면 "user"(표시 없음) */
+/** ?ids=1,2,3&why=p,l,b — 숫자 아님 · 모르는 id · 겹침은 버리고 다섯 개까지. why 가 모자라거나 모르면 "user"("내가 담은 신발") */
 export function parseCols(ids: string | null, why: string | null, known: Set<number>): Col[] {
   const whys = (why ?? "").split(",");
   const out: Col[] = [];
@@ -38,7 +38,7 @@ export function parseCols(ids: string | null, why: string | null, known: Set<num
   return out;
 }
 
-/** Col[] → 주소의 ids · why. 표시할 이유가 하나도 없으면 why 는 뺀다 */
+/** Col[] → 주소의 ids · why. 모두 "user" 면 why 는 뺀다(읽을 때 없으면 "user") */
 export function formatCols(cols: Col[]): { ids: string; why: string | null } {
   return {
     ids: cols.map((c) => c.id).join(","),
