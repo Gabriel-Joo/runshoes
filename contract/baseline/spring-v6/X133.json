@@ -1,0 +1,33 @@
+{
+  "id": "X133",
+  "plan": null,
+  "name": "영문 브랜드 + 다른 브랜드 모델 — nike 클리프톤 → []",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=nike%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Mon, 09 Nov 2026 08:12:03 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": []
+  }
+}

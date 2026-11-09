@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * POST /api/activity — 화면이 알려 주는 조회(docs/04_auth.md). 로그인한 사람만(401 은 SecurityConfig).
- * {type:"shoe.view", shoeId} — 같은 사람 · 같은 신발은 30분에 한 번만 남긴다. {type:"compare.view", shoeIds:[…]} — 2~3개, 같은 조합은 30분에 한 번.
+ * {type:"shoe.view", shoeId} — 같은 사람 · 같은 신발은 30분에 한 번만 남긴다. {type:"compare.view", shoeIds:[…]} — 2~5개(비교하기는 5켤레까지, 2026-11-09), 같은 조합은 30분에 한 번.
  * 언제나 204(남겼는지 말하지 않는다). 없는 신발 404, 모르는 type · 모양 400 — 본문은 {}.
  */
 @RestController
@@ -63,7 +63,7 @@ class ActivityController {
 			}
 			case "compare.view" -> {
 				List<Long> ids = b.shoeIds() == null ? List.of() : b.shoeIds().stream().distinct().sorted().toList();
-				if (ids.size() < 2 || ids.size() > 3) throw new Bad(HttpStatus.BAD_REQUEST);
+				if (ids.size() < 2 || ids.size() > 5) throw new Bad(HttpStatus.BAD_REQUEST);
 				if (shoes.countByIdIn(ids) != ids.size()) throw new Bad(HttpStatus.NOT_FOUND);
 				String meta = "{\"shoeIds\": " + ids + "}";
 				Integer seen = jdbc.queryForObject("""

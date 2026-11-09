@@ -1,0 +1,935 @@
+/* 비교하기(docs/08_compare.md) — 머리는 찜 목록 카드(Account.css .mypage__card), 표 글씨는 관리 폼 스펙 칸(ShoeForm.css), 설명은 러너들의 선택(.best__desc) */
+.compare {
+  --diff: rgba(29, 122, 114, 0.15);          /* 값이 다른 줄 — 틸 15%(2026-11-09 사용자) */
+  --gut: var(--page-gutter);
+  padding: 40px var(--gut) max(120px, var(--fab-clearance));
+}
+
+.compare__title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.compare__desc {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-mid);
+}
+
+.compare__layout {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 248px;
+  gap: 28px;
+  align-items: start;
+}
+
+.compare__loading {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-weak);
+}
+
+/* 첫 화면 · 한 켤레 */
+.compare__pick {
+  max-width: 560px;
+  margin: 32px auto 0;
+  text-align: center;
+}
+
+.compare__pick h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.compare__pick > p {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.compare__resume {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.compare__resume button {
+  font-size: 13px;
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+
+.compare__hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-weak);
+  text-align: left;
+}
+
+.compare__one {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.compare__onecard {
+  flex: none;
+  width: 220px;
+  margin: 0;
+}
+
+.compare__pick--one {
+  margin: 0;
+  flex: 0 1 460px;
+  text-align: left;
+}
+
+/* 신발 고르기 */
+.cpick {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.cpick__input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--text-strong);
+  background: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text-strong);
+}
+
+.cpick__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cpick__results {
+  max-height: 340px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-top: 0;
+  background: #fff;
+}
+
+.cpick__count {
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-weak);
+  background: var(--bg-light);
+}
+
+.cpick__item {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border-light);
+  font-size: 13px;
+  color: var(--text-strong);
+  text-align: left;
+  background: #fff;
+}
+
+.cpick__likes .cpick__item {
+  border: 1px solid var(--border-light);
+}
+
+.cpick__item:hover:not(:disabled) {
+  background: oklch(0.97 0.02 180);
+}
+
+.cpick__item.is-in {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.cpick__img {
+  flex: none;
+  width: 52px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cpick__name small {
+  margin-right: 6px;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.cpick__item em {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.cpick__likes .cpick__item em {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cpick__sub {
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.cpick__likes {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 표 */
+.ctable {
+  display: grid;
+  grid-template-columns: 132px repeat(5, minmax(0, 1fr));
+}
+
+.ctable__group,
+.ctable__row {
+  display: contents;
+}
+
+/* 머리 — 찜 목록 카드 */
+.ctable__card,
+.compare__onecard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 6px 12px;
+  padding: 28px 14px 12px;
+  border: 1px solid var(--border-light);
+  background: #fff;
+}
+
+.ctable__card::before,
+.compare__onecard::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--bg-light);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+}
+
+.ctable__card.is-base,
+.compare__onecard.is-base {
+  border-color: var(--accent);
+}
+
+.ctable__card.is-drop,
+.ctable__add.is-drop {
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+}
+
+.ctable__why {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  max-width: calc(50% - 16px);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-weak);
+}
+
+.is-base > .ctable__why {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ctable__x {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-weak);
+}
+
+.ctable__x:hover {
+  color: var(--text-strong);
+}
+
+.ctable__link {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  color: var(--text-strong);
+}
+
+.ctable__link:hover strong {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 사진 — 홈 카드(.card__image)와 같은 처리: 흰 바탕 · 좌우 11% · contain */
+.ctable__img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 111px;
+  margin: 6px 0 8px;
+  padding: 0 11%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.ctable__img .shoeimage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ctable__link small {
+  font-size: 12px;
+  color: var(--text-weak);
+}
+
+.ctable__link strong {
+  font-size: 14px;
+}
+
+.ctable__tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+.ctable__tag .barcode {
+  width: 100%;
+  max-width: 150px;
+}
+
+.ctable__tag small {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--text-weak);
+}
+
+.ctable__add {
+  margin: 0 6px 12px;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.ctable__add:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ctable__add b {
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.ctable__add span {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-weak);
+}
+
+.ctable__gap {
+  margin: 0 6px 12px;
+}
+
+/* 줄 — 관리 폼 스펙 칸 글씨: 묶음 .form__section(21px 700) · 줄 이름 .form__rowlabel(13px 600) · 값 입력 칸(14px 400) · 보조 .form__hint(12px) */
+.ctable__grp {
+  grid-column: 1 / -1;
+  padding: 28px 0 10px;
+  font-size: calc(var(--fs-sort) * 1.5);
+  font-weight: 700;
+  color: var(--text-strong);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.ctable__lab {
+  padding: 11px 0 11px 8px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.ctable__labtext {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+
+.ctable__labtext .tooltip {
+  font-weight: 400;
+}
+
+.ctable__labtext .tooltip__trigger {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+}
+
+.ctable__labtext .tooltip__box {
+  z-index: 40;
+}
+
+.ctable__val {
+  position: relative;
+  padding: 11px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-strong);
+  border-bottom: 1px solid var(--border-light);
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+
+.ctable__val.is-pad {
+  background: transparent;
+}
+
+.ctable__lab.is-diff,
+.ctable__val.is-diff {
+  background: linear-gradient(var(--diff), var(--diff)), #fff;
+}
+
+.ctable__val.is-num {
+  cursor: pointer;
+}
+
+.ctable__val.is-num:hover,
+.ctable__val.is-open {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.ctable__val.is-open {
+  z-index: 30;
+}
+
+.ctable__sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--text-weak);
+}
+
+.ctable__none {
+  color: var(--text-weak);
+}
+
+/* 위치 말 — 틸 알약(2026-11-09 사용자). 흰 바탕 위에 겹쳐 15% 줄에서도 묻히지 않게 */
+.ctable__badge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 1px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 122, 114, 0.3);
+  background: linear-gradient(rgba(29, 122, 114, 0.1), rgba(29, 122, 114, 0.1)), #fff;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--accent);
+}
+
+.ctable__reviews {
+  font-size: 14px;
+  color: var(--text-strong);
+  border-bottom: 1px solid var(--border);
+}
+
+.ctable__reviews:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* 기준 사이즈 경고 — 줄 이름 칸부터 신발 열까지(빈 "+ 추가" 열은 빼고) */
+.ctable__note {
+  padding: 8px 12px 8px 8px;
+  font-size: 12px;
+  color: var(--coral-strong);
+  background: var(--coral-soft);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* 분포 그래프 */
+.cdist {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  left: -1px;
+  width: 300px;
+  padding: 14px 16px 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  cursor: default;
+  white-space: normal;
+}
+
+.cdist.is-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.cdist.is-right {
+  left: auto;
+  right: -1px;
+}
+
+.cdist__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.cdist__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.cdist__bar {
+  fill: oklch(0.86 0 0);
+}
+
+.cdist__other {
+  stroke: var(--coral-strong);
+  stroke-width: 2;
+}
+
+.cdist__me {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.cdist__mark {
+  fill: var(--accent);
+}
+
+.cdist__axis {
+  font-size: 10px;
+  fill: var(--text-weak);
+}
+
+.cdist__axis.is-me {
+  fill: var(--accent);
+  font-weight: 700;
+}
+
+.cdist__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.cdist__legend span::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+}
+
+.cdist__legend .is-me::before {
+  background: var(--accent);
+}
+
+.cdist__legend .is-other::before {
+  background: var(--coral-strong);
+}
+
+.cdist__text {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
+.cdist__text b {
+  color: var(--accent);
+}
+
+.cdist__note {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-weak);
+}
+
+.cdist__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 22px;
+  color: var(--text-weak);
+}
+
+.cdist__dim,
+.compare__dim {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;                 /* 챗봇 버튼(1000) 위 — 시트 · 추가 창이 버튼에 가리지 않게 */
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* 내 찜 — 오른쪽 고정(헤더 바로 아래, 찜이 많으면 그 안에서만 스크롤) */
+.clikes {
+  position: sticky;
+  top: var(--compare-top, 124px);
+  max-height: calc(100vh - var(--compare-top, 124px) - 24px);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-light);
+  background: #fff;
+}
+
+.clikes__title {
+  padding: 14px 16px 10px;
+  font-size: 15px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.clikes__title span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-weak);
+}
+
+.clikes__list {
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clikes__item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid var(--border-light);
+  background: #fff;
+  cursor: grab;
+}
+
+.clikes__item:hover,
+.clikes__item:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.clikes__item.is-in {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.clikes__img {
+  flex: none;
+  width: 64px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clikes__img .shoeimage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.clikes__name small {
+  display: block;
+  font-size: 11px;
+  color: var(--text-weak);
+}
+
+.clikes__name strong {
+  font-size: 13px;
+}
+
+.clikes__item em {
+  margin-left: auto;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--text-weak);
+}
+
+.clikes__guest {
+  padding: 18px 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  word-break: keep-all;
+}
+
+.clikes__guest a {
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+}
+
+/* 추가 창(PC) · 시트(휴대폰) */
+.compare__addbox {
+  position: fixed;
+  z-index: 1002;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.compare__addbox h4 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.compare__addx {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 18px;
+  color: var(--text-weak);
+}
+
+.compare__toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  z-index: 1003;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--bg-dark);
+  color: var(--text-invert);
+  font-size: 13px;
+}
+
+.compare__toast button {
+  font-size: 13px;
+  font-weight: 600;
+  color: oklch(0.8 0.08 180);
+}
+
+/* 태블릿 — 내 찜 열을 좁게 */
+@media (max-width: 1199px) {
+  .compare__layout {
+    grid-template-columns: minmax(0, 1fr) 200px;
+    gap: 20px;
+  }
+  .ctable {
+    grid-template-columns: 104px repeat(5, minmax(0, 1fr));
+  }
+  .ctable__card {
+    padding: 28px 10px 10px;
+  }
+  .ctable__why {                 /* 칸이 좁아 이유가 두 줄로 꺾이며 끈 구멍과 겹친다 — 사진 위 한 줄로 */
+    position: static;
+    max-width: none;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .clikes__img {
+    width: 48px;
+  }
+}
+
+/* 휴대폰 */
+@media (max-width: 767px) {
+  .compare {
+    --gut: 16px;
+    padding: 28px var(--gut) max(100px, var(--fab-clearance));
+  }
+  .compare__title {
+    font-size: 24px;
+  }
+  .compare__desc {
+    font-size: 13px;
+  }
+}
+
+/* 1023px 이하(세로 태블릿 · 휴대폰) — 표 안쪽만 가로로 넘긴다, 줄 이름은 값 위에, 내 찜은 "+ 추가" 시트에 */
+@media (max-width: 1023px) {
+  .compare__layout {
+    display: block;
+    margin-top: 18px;
+  }
+  .ctable__scroll {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-right: calc(-1 * var(--gut));
+  }
+  .ctable {
+    --w: calc(100vw - 2 * var(--gut));
+    grid-template-columns: repeat(var(--n), 150px);
+    width: max-content;
+    padding-right: var(--gut);
+  }
+  .ctable__corner {
+    display: none;
+  }
+  .ctable__card,
+  .ctable__add {
+    margin: 0 4px 10px;
+    padding: 24px 10px 10px;
+    scroll-snap-align: start;
+  }
+  .ctable__why {
+    position: static;
+    max-width: none;
+    white-space: nowrap;
+    margin-bottom: 2px;
+  }
+  .ctable__img {
+    height: 70px;
+    margin-bottom: 4px;
+  }
+  .ctable__link strong {
+    font-size: 13px;
+  }
+  .ctable__tag .barcode {
+    width: 110px;
+  }
+  .ctable__grp,
+  .ctable__lab,
+  .ctable__note {
+    grid-column: 1 / -1 !important;
+    position: sticky;
+    left: 0;
+    width: var(--w);
+  }
+  .ctable__lab {
+    z-index: 5;                  /* sticky 는 쌓임 맥락을 만든다 — ⓘ 설명이 아래 값 칸에 깔리지 않게 */
+    padding: 10px 4px 2px;
+    border-bottom: 0;
+  }
+  .ctable__lab.is-diff {
+    background: transparent;
+  }
+  .ctable__val {
+    margin: 0 4px;
+    padding: 4px 10px 10px;
+  }
+  .cdist.is-sheet {
+    position: fixed;
+    z-index: 1002;
+    inset: auto 0 0 0;
+    width: auto;
+    padding: 18px 16px 24px;
+    border: 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+  }
+  .cdist.is-sheet::before,
+  .compare__addbox::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin: -6px auto 12px;
+    border-radius: 2px;
+    background: var(--border);
+  }
+  .compare__addbox {
+    inset: auto 0 0 0;
+    top: auto;
+    transform: none;
+    width: auto;
+    max-height: 80vh;
+    padding: 18px 16px 24px;
+  }
+  .compare__one {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .compare__onecard {
+    width: auto;
+    margin: 0;
+    padding: 24px 12px 12px;
+  }
+  .compare__onecard .ctable__why {
+    position: absolute;
+  }
+  .compare__onecard .ctable__link {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    column-gap: 12px;
+    row-gap: 2px;
+  }
+  .compare__onecard .ctable__img {
+    grid-row: 1 / span 2;
+    width: 110px;
+    height: 70px;
+    margin: 0;
+  }
+  .compare__onecard .ctable__link small {
+    align-self: end;
+  }
+  .compare__onecard .ctable__link strong {
+    align-self: start;
+  }
+  .compare__pick--one {
+    flex: none;
+  }
+  .compare__toast {
+    left: 16px;
+    right: 16px;
+    transform: none;
+    justify-content: space-between;
+    bottom: 20px;
+  }
+}

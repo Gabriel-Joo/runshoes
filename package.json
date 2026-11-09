@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3000"
+    "server": "json-server --watch db.json --port 3000",
+    "test": "tsc -p tests && node --test node_modules/.tmp/tests/tests/"
   },
   "dependencies": {
     "express": "4",

@@ -7,32 +7,32 @@ import ReviewSummary from "./ReviewSummary";
 import { text, wideLabel, withUnit, yesNo } from "../utils/display";
 import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
+import { WIDE_TERM } from "../utils/terms";
+import { useNavigate } from "react-router-dom";
+import { addToCompareUrl } from "../utils/compare";
+import { readLastCompare } from "../utils/compareStore";
 import "./ShoeModal.css";
 
-// 와이드 모델 ⓘ — 값 넷(V12)을 다 설명한다(2026-11-03 사용자 문구). terms 테이블은 읽기 전용이라(TermCollection) 화면이 직접 가진다
-const WIDE_TERM: Term = {
-  id: 0,
-  key: "wideAvailable",
-  name: "와이드 모델",
-  short: "넓은 폭(2E·4E) 버전이 따로 나오는지",
-  description: "그 신발의 넓은 폭(2E·4E) 버전이 따로 나오는지를 뜻합니다.",
-  // 값 이름은 칸에 보이는 값(wideLabel)과 같게 — 말투는 다른 용어처럼 "~입니다"(2026-11-03 사용자)
-  values: [
-    ["있음", "국내에서 살 수 있습니다."],
-    ["국외에만 있음", "해외에는 나오지만 국내에서는 살 수 없습니다. 해외 직구로만 구할 수 있습니다."],
-    ["없음", "찾아봤지만 넓은 폭 버전이 없습니다."],
-    ["정보 없음", "아직 확인하지 못했습니다."],
-  ],
-};
 
 interface ShoeModalProps {
   shoe: Shoe;
   terms: Term[];
   onClose: () => void;
   onReviewChange: () => void;
+  /** 열 때 리뷰 쪽으로 내려 둔다(비교하기의 "리뷰 N") */
+  focusReviews?: boolean;
+  /** 비교하기 안에서 열면 "비교에 담기"를 숨긴다 */
+  inCompare?: boolean;
 }
 
-function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
+function ShoeModal({ shoe, terms, onClose, onReviewChange, focusReviews = false, inCompare = false }: ShoeModalProps) {
+  const navigate = useNavigate();
+  const boxRef = useRef<HTMLDivElement>(null);
+  const reviewsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!focusReviews || !boxRef.current || !reviewsRef.current) return;
+    boxRef.current.scrollTop = reviewsRef.current.offsetTop - 12;
+  }, [focusReviews, shoe.id]);
   const [reviewVersion, setReviewVersion] = useState(0);
   const handleReviewChange = () => {
     setReviewVersion((v) => v + 1);
@@ -84,6 +84,7 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
   return (
     <div className="modal" onClick={onClose}>
       <div
+        ref={boxRef}
         className="modal__box"
         onClick={(e) => {
           e.stopPropagation();
@@ -221,10 +222,15 @@ function ShoeModal({ shoe, terms, onClose, onReviewChange }: ShoeModalProps) {
                 )}
               </span>
             </div>
+            {!inCompare && (
+              <button className="modal__compare" onClick={() => { onClose(); navigate(addToCompareUrl(shoe.id, readLastCompare())); }}>
+                비교에 담기
+              </button>
+            )}
             </div>
           </div>
         </div>
-        <div className="modal__reviews">
+        <div ref={reviewsRef} className="modal__reviews">
           <ReviewSummary key={reviewVersion} shoeId={shoe.id} />
           <ReviewSection shoeId={shoe.id} onReviewChange={handleReviewChange} />
         </div>

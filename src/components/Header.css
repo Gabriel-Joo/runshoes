@@ -33,12 +33,9 @@
   color: var(--text-strong);
   white-space: nowrap;
 }
-.header__link--point {
-  color: #2a6f97;
-}
-.header__link--sub {
-  font-weight: 600;
-  color: var(--text-strong);
+/* 지금 보는 화면 — 강조색(메뉴 하나만 따로 강조하지 않는다, 2026-11-09 사용자) */
+.header__nav .header__link.is-active {
+  color: var(--accent);
 }
 .header__link--admin {
   border-left: 1px solid #000000;

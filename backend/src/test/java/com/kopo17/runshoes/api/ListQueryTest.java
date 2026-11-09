@@ -101,6 +101,15 @@ class ListQueryTest {
 	}
 
 	@Test
+	void search_는_브랜드를_영문으로도_찾는다() {   // BrandNames — 2026-11-09
+		assertEquals(List.of(2L, 3L), ids(ListQuery.apply(named, q("search", "nike"), BM)));
+		assertEquals(List.of(2L, 3L), ids(ListQuery.apply(named, q("search", "NIKE"), BM)));
+		assertEquals(List.of(2L), ids(ListQuery.apply(named, q("search", "nike peg"), BM)));
+		assertEquals(List.of(1L), ids(ListQuery.apply(named, q("search", "asics 젤"), BM)));
+		assertEquals(List.of(), ids(ListQuery.apply(named, q("search", "nike 젤"), BM)));
+	}
+
+	@Test
 	void search_는_영어_이름과_다른_표기에서도_찾는다() {   // V13 — 신발 검색 필드(ShoeCollection.searchFields)
 		List<Map<String, Object>> v13 = List.of(
 				doc("id", 1L, "brand", "뉴발란스", "model", "슈퍼컴프 페이서 v2", "modelEn", "FuelCell SuperComp Pacer v2", "modelAlias", "SC Pacer v2, 퓨어셀"),

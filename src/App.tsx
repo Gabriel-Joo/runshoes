@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import ShoeList from "./pages/ShoeList";
 import Recommend from "./pages/Recommend";
 import Best from "./pages/Best";
+import Compare from "./pages/Compare";
 import ShoeForm from "./pages/ShoeForm";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ShoeList />} />
         <Route path="/recommend" element={<Recommend />} />
+        <Route path="/compare" element={<Compare />} />
         <Route path="/best" element={<Best />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

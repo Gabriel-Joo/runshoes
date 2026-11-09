@@ -11,6 +11,7 @@ import Barcode from "../components/Barcode";
 import ReviewCounter from "../components/ReviewCounter";
 import { clampReview, contentError, reviewError, REVIEW_MAX } from "../components/reviewRules";
 import { text, withUnit } from "../utils/display";
+import { MAX_COLS } from "../utils/compare";
 import type { Review, Shoe } from "../types";
 import "./Auth.css";
 import "./Account.css";
@@ -431,6 +432,7 @@ const tagCode = (id: number) => `RS${String(id).padStart(4, "0")}`;
  */
 function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => void }) {
   const { setNotice } = useAuth();
+  const navigate = useNavigate();
   const sel = useSelection((shoes ?? []).map((s) => s.id));
   const [bulkOpen, setBulkOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -463,7 +465,12 @@ function MyLikes({ shoes, onChange }: { shoes: Shoe[] | null; onChange: () => vo
             <label className="mypage__checkall">
               <input type="checkbox" checked={sel.all} onChange={sel.toggleAll} /> 전체 선택
             </label>
-            <span className="mypage__bulkcount">{sel.picked.size > 0 ? `${sel.picked.size}개 선택됨` : ""}</span>
+            <span className="mypage__bulkcount">{sel.picked.size > MAX_COLS ? `비교는 ${MAX_COLS}개까지예요` : sel.picked.size > 0 ? `${sel.picked.size}개 선택됨` : ""}</span>
+            {/* 고른 신발로 비교하기(2026-11-09) — 2~5켤레. 고른 순서가 아니라 목록 순서 */}
+            <button className="mypage__btn mypage__btn--compare" disabled={sel.picked.size < 2 || sel.picked.size > MAX_COLS}
+              onClick={() => navigate(`/compare?ids=${shoes.filter((s) => sel.picked.has(s.id)).map((s) => s.id).join(",")}`)}>
+              선택 비교
+            </button>
             <button className="mypage__btn is-danger is-strong" onClick={() => setBulkOpen(true)} disabled={sel.picked.size === 0}>
               찜 해제
             </button>
