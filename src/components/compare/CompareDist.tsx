@@ -52,7 +52,9 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
   const max = Math.max(...counts), bw = W / BINS, x = (a: number) => ((a - lo) / span) * W;
   const otherVals = others.map((s) => numValue(s, field)).filter((a): a is number => a != null);
   const skipped = field === "weight" ? others.filter((s) => numValue(s, "weight") == null).map((s) => s.model) : [];
-  const short = (a: number) => (field === "price" ? `${Math.round(a / 1000)}천원` : formatNum(field, a));
+  const short = (a: number) => formatNum(field, a);   // 가격도 "159,000원" 그대로(2026-11-09 사용자 — "159천원"은 쓰지 않는다)
+  const edge = field === "price" ? 80 : 60;            // 끝 값과 이 신발 값이 겹치면 끝 값을 뺀다(가격 글자가 길다)
+  const half = field === "price" ? 38 : 24;
   const r = rankIn(pop, v), t = NUM_TEXT[field], word = BAND_WORD[field][r.band];
 
   return (
@@ -66,9 +68,9 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
         {otherVals.map((a, i) => <line key={i} x1={x(a)} x2={x(a)} y1={4} y2={H} className="cdist__other" />)}
         <line x1={x(v)} x2={x(v)} y1={0} y2={H} className="cdist__me" />
         <path d={`M${x(v) - 5} ${H + 9} L${x(v) + 5} ${H + 9} L${x(v)} ${H + 3}Z`} className="cdist__mark" />
-        {x(v) > 60 && <text x={0} y={H + 22} className="cdist__axis">{short(lo)}</text>}
-        {x(v) < W - 60 && <text x={W} y={H + 22} className="cdist__axis" textAnchor="end">{short(hi)}</text>}
-        <text x={Math.min(Math.max(x(v), 24), W - 24)} y={H + 22} className="cdist__axis is-me" textAnchor="middle">{short(v)}</text>
+        {x(v) > edge && <text x={0} y={H + 22} className="cdist__axis">{short(lo)}</text>}
+        {x(v) < W - edge && <text x={W} y={H + 22} className="cdist__axis" textAnchor="end">{short(hi)}</text>}
+        <text x={Math.min(Math.max(x(v), half), W - half)} y={H + 22} className="cdist__axis is-me" textAnchor="middle">{short(v)}</text>
       </svg>
       <div className="cdist__legend">
         <span className="is-me">{shoe.model}</span>
