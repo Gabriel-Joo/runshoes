@@ -10,7 +10,8 @@ push 한 번이면 배포된다 — Jenkins 가 이미지를 빌드해 Harbor �
 
 ```
 git push(GitHub Gabriel-Joo/runshoes main)
-  │ ① Jenkins Job runshoes-app — 2분 폴링 → BuildKit rootless 로 이미지 2개(같은 태그 = 커밋 12자리)
+  │ ① Jenkins Job runshoes-app — GitHub 웹훅(놓치면 15분 폴링) → BuildKit rootless 로 이미지 2개(같은 태그 = 커밋 12자리)
+  │    바뀐 파일이 모두 문서면 여기서 끝(이미지 · 태그 커밋 없음, 1-4)
   ▼
 Harbor harbor.ronanlab.dev/runshoes/{runshoes, runshoes-chatbot}:<커밋12>
   │ ② Jenkins 가 ronanlab-infra apps/runshoes/kustomization.yaml 의 newTag 두 줄을 커밋 · push
@@ -22,7 +23,7 @@ runshoes 네임스페이스 ─ Deployment runshoes(Spring :3000 + chatbot :8766
 방문자 ─ Cloudflare ─ 공용 터널(cloudflared ns) ─ ingress-nginx(VIP 192.168.122.240)
 ```
 
-push 에서 새 Pod 까지 보통 10~15분(빌드 4~5분 + 폴링 · 감지 대기).
+push 에서 새 Pod 까지 약 5분 — 2026-11-09 `5d11d2e` 측정: push 10:53:00 → 빌드 시작 20초 안(웹훅) → 태그 커밋 10:57:27 → 롤아웃 끝 10:58:02 전.
 
 #### 1-2. 구성 요소
 
@@ -53,6 +54,8 @@ jre     eclipse-temurin:21-jdk  jlink — 필요한 모듈만             → /j
 #### 1-4. Jenkinsfile
 
 세 스테이지 — 태그(`GIT_COMMIT` 앞 12자리) → 빌드 · push → 매니페스트 태그 커밋.
+
+- **문서만 바뀐 빌드는 뒤의 두 스테이지를 건너뛴다**(2026-11-09 사용자). 직전 성공 빌드의 커밋 → 이번 커밋에서 바뀐 파일이 모두 `docs/` · `portfolio/` · `config/portfolio.toml` · `*.md` 이면 `when` 으로 건너뛰고 SUCCESS, 빌드 설명 "건너뜀 — 문서만", FOREMAN 끝 알림에 `"skipped": true`. 손으로 누른 빌드 · 직전 성공 커밋이 없거나 못 찾을 때 · 바뀐 파일을 못 셀 때는 늘 빌드한다(모르면 빌드 쪽).
 
 - `newTag` 두 줄을 sed 한 번에 바꾸고 **바뀐 줄이 정확히 2개인지 센다** — 한쪽만 바뀌는 배포를 막는다. MySQL 이미지는 `images:` 에 넣지 않는다(StatefulSet 에 고정 태그).
 - 인프라 리포는 Jenkins git 단계가 아니라 `sh 'git clone'` 으로 받는다 — git 단계로 받으면 폴링이 그 리포까지 감시해 태그 push 가 빌드를 다시 부르는 루프가 된다.
@@ -115,7 +118,8 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 - **Pull 형(GitOps).** Jenkins 가 `kubectl set image` 로 밀어 넣으면 Jenkins 가 클러스터 권한을 들고 있어야 하고(뚫리면 클러스터도), "지금 무엇이 배포됐나"를 알려면 kubectl 을 쳐야 한다. Jenkins 는 Git 에 커밋만 하고 ArgoCD 가 Git 을 읽게 하면 — 자격 증명이 줄고, 배포된 것의 답이 늘 Git 에 있고, 롤백이 `git revert` 다.
 - **ArgoCD 는 레지스트리를 보지 않는다.** 새 이미지가 Harbor 에 올라와도 Git 에 태그가 적히기 전에는 배포되지 않는다 — 태그 커밋 한 줄이 Harbor 와 ArgoCD 를 잇는 유일한 다리다.
 - **앱 리포와 인프라 리포를 나눴다.** 같은 매니페스트가 두 곳에 있으면 "어느 쪽이 진짜냐"가 생긴다. 인프라 리포 하나로 클러스터 전체가 보이고, 태그 커밋이 앱 리포의 빌드를 다시 부르지 않는다.
-- **webhook 대신 2분 폴링.** Jenkins 가 Cloudflare Access 뒤에 있어 GitHub 이 들어올 수 없다 — 운영 도구는 인터넷에 열지 않는다.
+- **웹훅이 주력, 폴링은 안전망.** 운영 도구는 Cloudflare Access 뒤에 두고, GitHub 이 들어올 `/github-webhook/`(Jenkins) · `/api/webhook`(ArgoCD)만 Access 를 비켜 둔다 — 요청은 서명(공유 비밀)으로 확인한다. 웹훅을 놓쳐도 Jenkins 15분 · ArgoCD 3분 폴링이 잡는다.
+- **문서만 바뀐 커밋은 이미지를 굽지 않는다.** `docs/` · `*.md` 는 `.dockerignore` 로 이미지에 들어가지 않아, 구워도 내용이 같은 이미지에 새 태그만 붙고 Pod 가 한 번 더 바뀐다. 빌드 트리거에서 경로를 빼지 않고 빌드 안에서 건너뛰는 것은, push 마다 빌드가 하나씩 있어야 FOREMAN 이 "push 했는데 빌드 없음"(조용한 고장)을 알아볼 수 있어서다.
 - **스키마 변경 때만 사람이 Sync 한다.** 자동 Sync 는 태그 커밋을 3분 안에 배포해 "덤프 → Sync" 순서를 깬다. 평소 배포는 자동이 낫고, 되돌릴 수 없는 순간(MySQL DDL 은 트랜잭션이 아니다)에만 사람이 문을 연다.
 - **DB 는 runshoes 네임스페이스의 자기 StatefulSet(2026-10-21).** 같은 클러스터의 펫퍼민트 MySQL 에 데이터베이스만 더하면 메모리는 거의 들지 않지만, 펫퍼민트의 초기화 Job · Secret 을 고쳐야 하고 롤백 · 실험을 같이 산다. 메모리 512Mi 를 더 쓰고 격리를 골랐다 — StatefulSet 을 직접 운영해 보는 것도 학습 목표였다. 설정 값은 펫퍼민트 MySQL 과 맞췄다.
 
@@ -128,6 +132,8 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 - **Spring 전환(2026-10-21 01:39 KST).** MySQL 을 먼저 선택 Sync 로 띄우고, 앱 이미지와 Deployment 변경은 Sync 한 번에 내보냈다 — 새 이미지가 DB 설정 없이 뜨는 창이 없게. 공개 `/api/terms` 를 1초마다 90회 — 실패 0, 롤링 겹침 2초 동안 Node 와 Spring 이 번갈아 응답했다. 되돌리기 길(Node 이미지 + PVC 의 db.json)은 V3 적용 뒤 데이터와 맞지 않아 같은 날 닫았다.
 - **자동 Sync 를 켰다(2026-10-21) → 스키마 변경 때마다 끈다.** 처음에는 수동 Sync 였다. 자동으로 바꾼 뒤 V3 런북에 "자동 Sync 는 이 순서를 깬다"를 적었고, V4 · V5(10-29) · V6~V9(10-30) · V10 · V11(11-01) · V12(11-02) 모두 끄고 켰다. V6~V9 는 자동 Sync 를 두 번 끄고 켜지 않으려고 한 번에 배포했다(2026-10-30 사용자).
 - **롤링 겹침이 PK 충돌을 냈다(2026-11-01).** `maxSurge 1` 이라 배포 중 Pod 가 둘인 순간이 있다. 앱이 JVM 안의 잠금으로 매기던 `max + 1` id 가 두 Pod 에서 같아져 충돌했다 — V10 에서 AUTO_INCREMENT 로 고쳤다(`07_database.md` 3절). "Pod 는 하나"라는 가정이 롤링 배포에서는 성립하지 않는다.
+- **2분 폴링 → 웹훅(2026-11-03).** Jenkins 가 Access 뒤라 GitHub 웹훅이 닿지 않아 2분마다 폴링했다. 웹훅 경로만 Access 를 비켜 두고 폴링은 15분 안전망으로 줄였다.
+- **문서만 바꿔도 재배포됐다 → 건너뛴다(2026-11-09).** 문서 · 카탈로그 커밋도 push 마다 이미지 빌드 → 태그 커밋 → 자동 Sync 로 Pod 를 갈았다(10-18 이후 커밋 122개 중 문서만 바꾼 것 11개). 문서만 바뀐 빌드는 건너뛰게 했다. 카탈로그(`catalog/`)도 이미지에 들어가지 않지만 이번에는 빼지 않았다 — 건너뛸 목록이 넓을수록 이미지에 들어가는 파일을 새로 더했을 때 배포가 조용히 빠질 위험이 커진다.
 - **상태를 추정으로 보고했다가 고쳤다.** 자동 Sync · 배포 상태를 확인하지 않고 말한 적이 있어, 이후 매번 `syncPolicy` · 이미지 태그 · Pod 로그를 읽고 보고한다(사용자 — "확인 안 하고 꺼져 있다고 하지 마라").
 
 #### 4. 남은 한계
@@ -135,7 +141,7 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 - **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만 뜬다. 그 사이의 리뷰 · 관리 화면 수정은 백업이 없다.
 - **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다. 다른 프로젝트의 MySQL 도 w1 에 있다 — 노드가 3대라 감수한다.
 - **앱은 replicas 1 이다.** 롤링 배포 중에만 둘이 된다. 노드 장애 때 Pod 를 다시 띄우는 동안 끊긴다.
-- **배포가 느리다.** 폴링 2분 + 빌드 4~5분 + 감지 3분 — push 에서 반영까지 10~15분.
+- **배포는 빌드 시간만큼 걸린다.** push 에서 반영까지 약 5분, 대부분 이미지 빌드(Vite + Maven)다. 웹훅을 놓치면 폴링(Jenkins 15분 · ArgoCD 3분)만큼 늦어진다.
 - **스키마 변경 배포는 사람이 세 번 손댄다**(자동 Sync 끄기 · Sync · 켜기). 빼먹으면 Jenkins 태그 커밋이 덤프 전에 배포된다 — 런북의 1단계 확인(`automated` 없음)이 유일한 장치다.
 - **노드 메모리를 다른 프로젝트와 나눈다.** 빌드 Pod 는 상한 3Gi 라 다른 빌드와 겹치면 기다린다.
 
