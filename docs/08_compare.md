@@ -1,4 +1,4 @@
-> 상태: **구현**(2026-11-09). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(계산 — 시험 `tests/compare.test.ts`) · `src/utils/compareStore.ts` · 서버 `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절.
+> 상태: **운영 반영**(2026-11-09, 이미지 `a7c6085c443e` — 공개 API `search=nike` 34 · `hoka` 30 · `new balance` 31, `/compare` 확인). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(계산 — 시험 `tests/compare.test.ts`) · `src/utils/compareStore.ts` · 서버 `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절.
 
 #### 0. 한 줄 요약
 
@@ -151,5 +151,4 @@
 
 #### 다음에 할 일
 
-- 배포 뒤 운영에서 영문 브랜드 검색 · 비교하기 확인.
 - 찜 목록 · 상세 모달에서 넘어온 비교는 이유 표시가 없다 — 필요하면 "찜에서" 같은 표시를 더한다.
