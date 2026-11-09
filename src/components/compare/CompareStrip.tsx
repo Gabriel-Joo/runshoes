@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Shoe } from "../../types";
 import ShoeImage from "../ShoeImage";
-import Barcode from "../Barcode";
 import { WHY_LABEL, type Col } from "../../utils/compare";
-
-const tagCode = (id: number) => `RS${String(id).padStart(4, "0")}`;
 
 interface Props {
   cols: Col[];
@@ -71,7 +68,7 @@ function CompareStrip({ cols, shoes, scrollRef, gridRef, onOpen, mobile }: Props
           const s = shoes[i];
           return (
             <button key={c.id} className={`cstrip__item ${c.why === "pick" ? "is-base" : ""}`} onClick={() => onOpen(s.id)} title={`${s.brand} ${s.model}`}>
-              {/* 윗줄: 사진 · (이유 / 브랜드), 아랫줄: 모델명(칸 전체 폭, 두 줄까지) · 바코드 */}
+              {/* 윗줄: 사진 · (이유 / 브랜드), 아랫줄: 모델명(칸 전체 폭, 두 줄까지). 바코드는 이 크기에서 무늬로만 보여 뺐다(2026-11-09 사용자) */}
               <span className="cstrip__top">
                 <span className="cstrip__img"><ShoeImage src={s.image} alt="" /></span>
                 <span className="cstrip__meta">
@@ -80,7 +77,6 @@ function CompareStrip({ cols, shoes, scrollRef, gridRef, onOpen, mobile }: Props
                 </span>
               </span>
               <strong className="cstrip__model">{s.model}</strong>
-              <span className="cstrip__tag"><Barcode value={tagCode(s.id)} height={10} /></span>
             </button>
           );
         })}
