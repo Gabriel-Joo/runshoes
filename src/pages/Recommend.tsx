@@ -480,6 +480,12 @@ function Recommend() {
         <button className="recommend__all" onClick={() => navigate("/")}>
           전체 목록 보기
         </button>
+        {/* 결과 그대로 비교하기로(2026-11-09) — 이미 고른 신발이라 자동 채우기는 하지 않는다 */}
+        {results.length >= 2 && (
+          <button className="recommend__compare" onClick={() => navigate(`/compare?ids=${results.map((r) => r.shoe.id).join(",")}`)}>
+            1~{results.length}위 비교하기
+          </button>
+        )}
       </div>
 
       {selectedShoe && (

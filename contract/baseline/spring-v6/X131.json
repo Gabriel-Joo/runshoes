@@ -1,0 +1,86 @@
+{
+  "id": "X131",
+  "plan": null,
+  "name": "영문 브랜드 + 한글 모델 — hoka 클리프톤",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "updatedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes?search=hoka%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Mon, 09 Nov 2026 08:12:03 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": [
+      {
+        "id": 3,
+        "brand": "호카",
+        "model": "클리프톤 10",
+        "purpose": "조깅·회복주",
+        "stability": "중립화",
+        "midsole": "CMEVA",
+        "weight": 278,
+        "drop": 8,
+        "stackHeight": null,
+        "width": "넓음",
+        "wideAvailable": true,
+        "wideScope": null,
+        "carbon": false,
+        "price": 189000,
+        "image": "/images/clifton-10.png",
+        "images": [
+          "/images/clifton-10.png",
+          "/images/clifton-10-1.png",
+          "/images/clifton-10-2.png"
+        ],
+        "summary": "푹신한 착지를 원하는 분에게",
+        "description": "호카 특유의 두툼한 미드솔로 푹신함을 앞세운 모델입니다. 착지 충격이 부담스러운 분이나 회복주를 자주 뛰는 분에게 잘 맞습니다. 와이드핏이 따로 나와 발볼이 넓어도 무리가 없습니다.",
+        "rating": 4.6,
+        "reviewCount": 5,
+        "likeCount": 55,
+        "liked": false,
+        "lineKey": "hoka:clifton",
+        "generation": 10,
+        "isCurrent": false,
+        "gender": "men",
+        "weightSize": null,
+        "specSize": null,
+        "measuredWeight": null,
+        "measuredWeightSize": null,
+        "measuredStackHeight": null,
+        "measuredDrop": null,
+        "measuredSource": null,
+        "measuredCount": null,
+        "priceSource": null,
+        "priceCheckedAt": null,
+        "priceKind": null,
+        "specSources": null,
+        "sku": null,
+        "updatedAt": null,
+        "lastChange": null,
+        "modelEn": null,
+        "modelAlias": null
+      }
+    ]
+  }
+}

@@ -194,7 +194,8 @@
 }
 
 .recommend__again,
-.recommend__all {
+.recommend__all,
+.recommend__compare {
   height: 44px;
   padding: 0 28px;
   font-size: 13px;
@@ -214,6 +215,13 @@
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
+}
+
+/* 1~3위 비교하기 — 강조색 테두리(전체 목록 보기와 구분) */
+.recommend__compare {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: #fff;
 }
 
 /* 반응형 */
@@ -254,7 +262,8 @@
     flex-direction: column;
   }
   .recommend__again,
-  .recommend__all {
+  .recommend__all,
+  .recommend__compare {
     width: 100%;
     justify-content: center;
   }
