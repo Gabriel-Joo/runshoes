@@ -1,9 +1,8 @@
-import { useRef, useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
 import type { Shoe, Term } from "../../types";
 import CompareCard from "./CompareCard";
 import TermTooltip from "../TermTooltip";
 import CompareDist from "./CompareDist";
-import CompareStrip from "./CompareStrip";
 import { NONE, text, wideLabel, yesNo } from "../../utils/display";
 import { WIDE_TERM, stabilityTerm } from "../../utils/terms";
 import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
@@ -75,8 +74,32 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   const [open, setOpen] = useState<{ id: number; key: NumKey } | null>(null);
   const [openTerm, setOpenTerm] = useState<string | null>(null);
   const [dropAt, setDropAt] = useState<number | "add" | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);   // 표(값) — 1199px 이하에서 가로로 넘긴다
   const gridRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);     // 카드 줄 — 헤더 아래에 붙는다(sticky)
+  const [headCols, setHeadCols] = useState<string | undefined>();
+
+  /*
+   * 카드 줄 고정(2026-11-09 사용자 — 표를 내리면 어떤 신발인지 알 수 없었다, "+ 추가"도 같이).
+   * 카드 줄을 표와 다른 칸(자기 가로 스크롤 칸)으로 떼어 그 칸을 sticky 로 — 가로 스크롤 칸 "안"의 것은 세로 sticky 가 듣지 않지만,
+   * 가로 스크롤 칸 "자체"는 듣는다. 두 칸의 가로 위치를 서로 맞추고, 열 폭은 표에서 재서 카드 줄에 그대로 준다.
+   */
+  useEffect(() => {
+    const body = scrollRef.current, head = headRef.current, grid = gridRef.current;
+    if (!body || !head || !grid) return;
+    const syncCols = () => setHeadCols(getComputedStyle(grid).gridTemplateColumns);
+    const fromBody = () => { if (head.scrollLeft !== body.scrollLeft) head.scrollLeft = body.scrollLeft; };
+    const fromHead = () => { if (body.scrollLeft !== head.scrollLeft) body.scrollLeft = head.scrollLeft; };
+    const ro = new ResizeObserver(syncCols);
+    ro.observe(grid);
+    body.addEventListener("scroll", fromBody, { passive: true });
+    head.addEventListener("scroll", fromHead, { passive: true });
+    return () => {
+      ro.disconnect();
+      body.removeEventListener("scroll", fromBody);
+      head.removeEventListener("scroll", fromHead);
+    };
+  }, [cols.length, mobile]);
   const canAdd = cols.length < MAX_COLS;
   const pad = MAX_COLS - cols.length;
   const pops = Object.fromEntries(NUM_KEYS.map((k) => [k, population(all, k)])) as Record<NumKey, number[]>;
@@ -141,9 +164,9 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   };
 
   return (
-    <div ref={scrollRef} className="ctable__scroll">
-      <CompareStrip cols={cols} shoes={shoes} scrollRef={scrollRef} gridRef={gridRef} mobile={mobile} onOpen={(id) => onOpen(id, false)} />
-      <div ref={gridRef} className="ctable" style={{ "--n": cols.length + (canAdd ? 1 : 0) } as CSSProperties}>
+    <div className="ctable__wrap">
+      <div ref={headRef} className="ctable__headwrap">
+      <div className="ctable ctable--head" style={{ "--n": cols.length + (canAdd ? 1 : 0), gridTemplateColumns: headCols } as CSSProperties}>
         <div className="ctable__corner" />
         {cols.map((c, i) => (
           <CompareCard key={c.id} col={c} shoe={shoes[i]} onRemove={() => onRemove(i)} onRebase={onRebase}
@@ -156,6 +179,10 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
           </button>
         )}
         {!mobile && Array.from({ length: Math.max(0, pad - 1) }, (_, i) => <div key={`gap${i}`} className="ctable__gap" />)}
+      </div>
+      </div>
+      <div ref={scrollRef} className="ctable__scroll">
+      <div ref={gridRef} className="ctable" style={{ "--n": cols.length + (canAdd ? 1 : 0) } as CSSProperties}>
 
         {GROUPS.map((g) => (
           <div key={g.title} className="ctable__group">
@@ -209,6 +236,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
             })}
           </div>
         ))}
+      </div>
       </div>
       {open && mobile && (() => {
         const s = shoes.find((x) => x.id === open.id);
