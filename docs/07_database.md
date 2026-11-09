@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V12 까지 적용됐다 — 신발 302켤레 · 리뷰 104건(공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V12` · `domain/*.java` · 로컬 dev DB(V1~V12)의 `information_schema`
+> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V12 까지 적용됐다 — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V12` · `domain/*.java` · 로컬 dev DB(V1~V12)의 `information_schema`
 
 #### 0. 한 줄 요약
 
@@ -119,7 +119,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - **운영 사본에서 새 마이그레이션 하나** — 운영 덤프를 로컬에 복원하고 새 jar 를 띄워 걸린 시간 · 행 수 · FK 를 본다(리허설, 런북마다 기록).
 - **스키마 대조** — `ddl-auto validate` 로 엔티티와 스키마가 맞지 않으면 기동이 실패한다.
 - **롤백** — 새 스키마에 옛 이미지를 띄워 기동하는지. V4 · V5 리허설에서 옛 운영 jar(`eeffbd8`)를 V5 DB 에 띄워 `Successfully validated` 를 봤다(`catalog-v4-v5.md`).
-- 운영 적용 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 302 · 리뷰 104).
+- 운영 적용 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 · 리뷰 — 직전과 같은지).
 
 #### 다음에 할 일
 

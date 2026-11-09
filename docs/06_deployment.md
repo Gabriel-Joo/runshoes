@@ -148,7 +148,7 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 #### 5. 검증 항목
 
 - 배포 뒤: `kubectl -n runshoes get deploy runshoes -o wide`(이미지 태그 = 커밋 12자리) · ArgoCD `sync.status` · `health.status` · `sync.revision`(= infra 태그 커밋).
-- 스키마 변경 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 302 · 리뷰 104), 자동 Sync 다시 켜짐(`syncPolicy.automated`).
+- 스키마 변경 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 · 리뷰 — 직전과 같은지), 자동 Sync 다시 켜짐(`syncPolicy.automated`).
 - 배포 전: `scripts/check-image-migrations.sh` — Harbor 이미지 안의 마이그레이션 파일이 git 과 같은지(sha256).
 - 보고 전에는 위를 **읽어서 확인**한다 — 추정으로 말하지 않는다.
 
