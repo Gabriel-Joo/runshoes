@@ -44,7 +44,7 @@ RUNSHOES 는 **정보를 덜어내지 않고, 모르는 말과 근거 없는 값
 
 ```
 git push ─ Jenkins(BuildKit) ─ Harbor ─ ronanlab-infra 태그 커밋 ─ ArgoCD ─▶ Pod
-                                                                            ├ runshoes  Spring Boot :3000 (React 빌드물 + /api)  ─▶ MySQL 8 (Flyway V1~V12)
+                                                                            ├ runshoes  Spring Boot :3000 (React 빌드물 + /api)  ─▶ MySQL 8 (Flyway V1~V13)
                                                                             └ chatbot   Python WebSocket :8766                    ─▶ Ollama (GPU 호스트)
 카탈로그(catalog/) ─ 사람 판단(decisions.json) ─ 적재기 ─▶ 관리자 API
 ```
@@ -64,8 +64,8 @@ git push ─ Jenkins(BuildKit) ─ Harbor ─ ronanlab-infra 태그 커밋 ─ A
 | [01a 신발 데이터](docs/01a_catalog_sources.md) · [01b 이미지](docs/01b_catalog_images.md) · [01c 적재기](docs/01c_catalog_loader.md) | 카탈로그 — 수집처 · 약관 · 판단 규칙 · 실루엣 대조 · 사람 판단 |
 | [02 화면](docs/02_screens.md) · [02b 디자인](docs/02b_design_system.md) | 화면 구성 · 표본 전시실 컨셉 |
 | [03 관리 화면](docs/03_admin.md) · [04 로그인 · 계정](docs/04_auth.md) | 출처 · 숨김 · 수정 이력 / JWT · 체험 계정 · 시도 제한 |
-| [05 API 계약](docs/05_api_contract.md) · [06 배포](docs/06_deployment.md) · [07 DB](docs/07_database.md) | 계약 시험 · GitOps · 스키마 V1~V12 |
-| [08 비교](docs/08_compare.md) | 설계안(결정 전) |
+| [05 API 계약](docs/05_api_contract.md) · [06 배포](docs/06_deployment.md) · [07 DB](docs/07_database.md) | 계약 시험 · GitOps · 스키마 V1~V13 |
+| [08 비교](docs/08_compare.md) | 점수 없는 비교표(2~5켤레) · 자동 채우기 · 분포 그래프 — 운영 반영(2026-11-09) |
 | [backend/README.md](backend/README.md) · [contract/README.md](contract/README.md) | 백엔드 개발 · 계약 시험 실행 |
 
 ## 실행하기
@@ -91,10 +91,10 @@ python chatbot_server.py        # (선택) 챗봇 ws://localhost:8766
 ```
 runshoes/
 ├─ src/          React 화면 — pages · components · auth(메모리 토큰 · refresh)
-├─ backend/      Spring Boot — api · auth · activity · summary · config, db/migration(Flyway V1~V12)
+├─ backend/      Spring Boot — api · auth · activity · summary · config, db/migration(Flyway V1~V13)
 ├─ catalog/      카탈로그 — candidates.csv · 수집기 · decisions.json(사람 판단) · build.mjs · load.mjs
 ├─ contract/     API 계약 녹화본 · 녹화 · 비교 도구
-├─ scripts/      운영 적재(load-prod.sh) · 시드 생성 · 알림
+├─ scripts/      운영 적재(load-prod.sh) · 시드 생성 · 화면 점검(screen-shot.mjs)
 ├─ docs/         설계 문서(위 표) · archive/(옛 계획서 — 지우지 않고 남긴다)
 ├─ chatbot_server.py · Dockerfile · Dockerfile.chatbot · Jenkinsfile · docker-compose.yml
 └─ db.json · server.cjs   json-server 시절의 시드 · API — 계약 기준선을 다시 뜨는 용도(운영 이미지에는 없다)
@@ -104,7 +104,7 @@ runshoes/
 
 ## 다음에 할 일
 
-리뷰(실사용 후기 화면) · 비교(레이더 차트) · 챗봇(로그인 맥락을 읽는 RAG) · MySQL 정기 백업 · Argo Rollouts — 자세한 것은 [overview](docs/overview.md#다음에-할-일).
+리뷰(실사용 후기 화면) · 챗봇(로그인 맥락을 읽는 RAG) · MySQL 정기 백업 · Argo Rollouts — 자세한 것은 [overview](docs/overview.md#다음에-할-일).
 
 ## 데이터
 

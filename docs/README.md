@@ -1,6 +1,6 @@
 # docs/
 
-> 상태: 새 구조로 옮김(2026-11-02). 상위 문서(requirements · overview · HISTORY)와 영역 문서 01a ~ 08 작성(08 은 설계안). 옛 문서 12개는 `archive/` — CATALOG_PIPELINE · API_CONTRACT · DEPLOY · INFRA · SPRING_MIGRATION_PLAN · AUTH_DESIGN · AUTH_RATELIMIT_DESIGN · ADMIN_DEMO_DESIGN · design-prompt · design-handoff · COMPARE_DESIGN · HISTORY(옛 이야기판). 와이드 재조사 결과가 나오면 01a 1-7 을 채운다.
+> 상태: 새 구조로 옮김(2026-11-02). 상위 문서(requirements · overview · HISTORY)와 영역 문서 01a ~ 08 작성(08 비교는 2026-11-09 운영 반영). 옛 문서 12개는 `archive/` — CATALOG_PIPELINE · API_CONTRACT · DEPLOY · INFRA · SPRING_MIGRATION_PLAN · AUTH_DESIGN · AUTH_RATELIMIT_DESIGN · ADMIN_DEMO_DESIGN · design-prompt · design-handoff · COMPARE_DESIGN · HISTORY(옛 이야기판). 와이드 재조사 결과가 나오면 01a 1-7 을 채운다.
 
 이 폴더는 RUNSHOES 의 설계 문서다. **진실의 원천은 코드다** — 문서는 코드 · 마이그레이션 · 카탈로그 데이터를 읽고 거꾸로 쓴다(역문서화). 코드와 문서가 다르면 코드가 맞고, 문서를 고친다.
 
@@ -34,7 +34,7 @@
 | `04_auth.md` | 로그인 · 계정 · 데모 계정 · 시도 제한 · 활동 로그 |
 | `05_api_contract.md` | API 계약과 계약 시험 |
 | `06_deployment.md` | CI/CD · GitOps · 클러스터 · 스키마 변경 절차 |
-| `07_database.md` | 스키마와 마이그레이션 V1~V12 |
+| `07_database.md` | 스키마와 마이그레이션 V1~V13 |
 | `08_compare.md` | 비교하기 — 점수 없는 비교표 · 자동 채우기 · 분포 그래프 · 내 찜 |
 
 #### 2. 문서 형식
