@@ -247,8 +247,8 @@ class ShoeCollection implements DocCollection {
 		});
 	}
 
-	/** 수정 이력에 넣지 않는 키 — 셈하는 값 · 요청한 사람 기준 값 · 이력 자신 */
-	private static final Set<String> NOT_EDITS = Set.of("id", "rating", "reviewCount", "likeCount", "liked", "updatedAt", "lastChange");
+	/** 수정 이력에 넣지 않는 키 — 셈하는 값 · 요청한 사람 기준 값 · 이력 자신 · DB 가 계산하는 값(무게를 고치면 weight 가 이미 남는다) */
+	private static final Set<String> NOT_EDITS = Set.of("id", "rating", "reviewCount", "likeCount", "liked", "updatedAt", "lastChange", "weightNorm270");
 
 	/** 바뀐 칸 이름(API 이름, toDoc 순서) — 값은 보지 않고 같은지만 */
 	static List<String> changedFields(Map<String, Object> before, Map<String, Object> after) {
@@ -327,6 +327,8 @@ class ShoeCollection implements DocCollection {
 		// V13 — 영어 이름 · 검색용 다른 표기. 같은 방식으로 맨 뒤에
 		d.put("modelEn", s.getModelEn());
 		d.put("modelAlias", s.getModelAlias());
+		// V15 — 270mm(M9)로 맞춘 무게(DB 생성 컬럼, 읽기 전용 — 본문에 와도 apply 가 읽지 않는다). 같은 방식으로 맨 뒤에
+		d.put("weightNorm270", s.getWeightNorm270());
 		return d;
 	}
 

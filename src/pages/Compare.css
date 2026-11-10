@@ -500,6 +500,24 @@
   color: var(--accent);
 }
 
+.ctable__sub .nowrap {
+  white-space: nowrap;
+}
+
+/* 배지 둘(위치 · 환산)이 한 줄에 — 좁은 열에서는 다음 줄로 */
+.ctable__badges {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 4px;
+}
+
+/* "환산" — 이 숫자가 그대로가 아니라는 표시. 위치 말(틸)과 다른 것을 말하니 회색 테두리만 */
+.ctable__badge.is-conv {
+  border-color: var(--border);
+  background: #fff;
+  color: var(--text-weak);
+}
+
 .ctable__reviews {
   font-size: 14px;
   color: var(--text-strong);
@@ -511,12 +529,12 @@
   border-color: var(--accent);
 }
 
-/* 기준 사이즈 경고 — 줄 이름 칸부터 신발 열까지(빈 "+ 추가" 열은 빼고) */
+/* 환산 알림 — 줄 이름 칸부터 신발 열까지(빈 "+ 추가" 열은 빼고). 경고가 아니라 했다는 말이라 코랄을 쓰지 않는다 */
 .ctable__note {
   padding: 8px 12px 8px 8px;
   font-size: 12px;
-  color: var(--coral-strong);
-  background: var(--coral-soft);
+  color: var(--text-weak);
+  background: var(--bg-light);
   border-bottom: 1px solid var(--border-light);
 }
 

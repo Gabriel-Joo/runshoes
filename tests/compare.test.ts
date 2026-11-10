@@ -1,15 +1,16 @@
 // 비교하기 계산(src/utils/compare.ts) — npm test(tsc 로 옮긴 뒤 node --test). 화면 없이
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { addToCompareUrl, autofill, eunNeun, formatCols, numValue, parseCols, population, rankIn, sortResults } from "../src/utils/compare.ts";
+import { addToCompareUrl, autofill, eunNeun, formatCols, formatNum, isConverted, makeDistance, numValue, parseCols, population, rankIn, sortResults, topic } from "../src/utils/compare.ts";
 
 const base = { purpose: "조깅·회복주", stability: "중립화", stackHeight: 40, drop: 8, weight: 270, carbon: false, isCurrent: true, generation: 1 };
-const shoe = (id: number, o: Partial<typeof base> & { brand: string; lineKey: string; weightSize?: string | null; price?: number | null }) =>
-  ({ ...base, weightSize: "M9", price: null, id, ...o });
+// weightNorm270 은 서버(V15 생성 컬럼)가 준다 — 여기서는 M9 면 무게 그대로를 기본으로
+const shoe = (id: number, o: Partial<typeof base> & { brand: string; lineKey: string; weightSize?: string | null; weightNorm270?: number | null; price?: number | null }) =>
+  ({ ...base, weightSize: "M9", weightNorm270: o.weight ?? base.weight, price: null, id, ...o });
 
 const all = [
   shoe(1, { brand: "호카", lineKey: "hoka:clifton", generation: 11 }),
-  shoe(2, { brand: "호카", lineKey: "hoka:clifton", generation: 10, isCurrent: false, weightSize: "M9.5" }),
+  shoe(2, { brand: "호카", lineKey: "hoka:clifton", generation: 10, isCurrent: false, weightSize: "M9.5", weightNorm270: 270 / 1.026 }),
   shoe(3, { brand: "호카", lineKey: "hoka:skyflow", stackHeight: 39 }),
   shoe(4, { brand: "아식스", lineKey: "asics:pulse", stackHeight: 41 }),
   shoe(5, { brand: "아식스", lineKey: "asics:gt2000", stability: "안정화", stackHeight: 38 }),
@@ -48,11 +49,30 @@ test("주소 — 숫자 아님 · 모르는 id · 겹침 버리고 다섯까지,
   assert.deepEqual(formatCols([{ id: 1, why: "user" }]), { ids: "1", why: null });
 });
 
-test("무게 자리는 270mm 로 잰 것끼리만", () => {
-  assert.equal(numValue(all[1], "weight"), null);
+test("무게 자리는 270mm 로 맞춘 값으로 — 기준 모름만 빠진다(V15)", () => {
+  const unknown = shoe(9, { brand: "온", lineKey: "on:x", weightSize: null, weightNorm270: null });
+  assert.equal(numValue(all[1], "weight"), 270 / 1.026);              // M9.5 도 들어간다
   assert.equal(numValue(all[0], "weight"), 270);
-  assert.equal(population(all, "weight").length, all.length - 1);
+  assert.equal(numValue(unknown, "weight"), null);
+  assert.equal(population([...all, unknown], "weight").length, all.length);
   assert.deepEqual(population(all, "price"), []);
+});
+
+test("환산 여부 · 표시 반올림 · 이름 묶기", () => {
+  assert.equal(isConverted(all[1]), true);
+  assert.equal(isConverted(all[0]), false);                              // M9 는 환산이 아니다
+  assert.equal(isConverted({ weightSize: null, weightNorm270: null }), false);
+  assert.equal(formatNum("weight", 270.73), "271g");
+  assert.equal(topic(["클라우드고", "클리프톤 10"]), "클라우드고 · 클리프톤 10은");
+  assert.equal(topic(["클라우드고"]), "클라우드고는");
+});
+
+test("비슷한 신발 거리는 270mm 로 맞춘 무게로 — 큰 사이즈로 잰 무거운 숫자가 멀어 보이지 않는다", () => {
+  const a = shoe(20, { brand: "A", lineKey: "a", weight: 270 });
+  const b = shoe(21, { brand: "B", lineKey: "b", weight: 284, weightSize: "M10", weightNorm270: 284 / 1.026 ** 2 });   // 약 269.8g
+  const c = shoe(22, { brand: "C", lineKey: "c", weight: 284 });                                                           // 진짜 284g(M9)
+  const d = makeDistance([a, b, c, ...all]);
+  assert.ok(d(a, b) < d(a, c));
 });
 
 test("자리 — 하위 25% · 가운데 · 상위 25%, 동점은 가운데 순위", () => {

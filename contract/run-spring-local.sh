@@ -106,4 +106,6 @@ V11_KEYS=sku,updatedAt,lastChange
 V12_KEYS=wideScope
 # V13 키 — 영어 이름 · 검색용 다른 표기(2026-11-03). 시드에서는 null
 V13_KEYS=modelEn,modelAlias
-node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS,$V11_KEYS,$V12_KEYS,$V13_KEYS" "contract/baseline/$BASE" "$OUT"
+# V15 키 — 270mm(M9)로 맞춘 무게(2026-11-10, DB 생성 컬럼). 시드는 기준 사이즈가 없어 null
+V15_KEYS=weightNorm270
+node contract/diff.mjs --allow-added="$V4_KEYS,$V5_KEYS,$V6_KEYS,$V11_KEYS,$V12_KEYS,$V13_KEYS,$V15_KEYS" "contract/baseline/$BASE" "$OUT"

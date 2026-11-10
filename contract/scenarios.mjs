@@ -465,4 +465,21 @@ export const V6_SCENARIOS = [
   W("X133", "영문 브랜드 + 다른 브랜드 모델 — nike 클리프톤 → []", "GET", "/api/shoes?search=nike%20%ED%81%B4%EB%A6%AC%ED%94%84%ED%86%A4", { expect: 200 }),
   W("X134", "POST /api/activity compare.view(5개) → 204", "POST", "/api/activity", { headers: jb("u1"), body: { type: "compare.view", shoeIds: [1, 2, 3, 4, 5] }, expect: 204 }),
   W("X135", "POST /api/activity compare.view(6개) → 400", "POST", "/api/activity", { headers: jb("u1"), body: { type: "compare.view", shoeIds: [1, 2, 3, 4, 5, 6] }, expect: 400 }),
+
+  // V15(2026-11-10) — 270mm(M9)로 맞춘 무게 weightNorm270(DB 생성 컬럼). 저장 직후 응답에 새 값이 나오는지 · 반 사이즈당 2.6%(01a 1-3a)
+  //   신발 4(시드 297g · 기준 없음). weightNorm270 은 수정 이력(lastChange)에 넣지 않는다 — 무게를 고치면 weight · weightSize 가 남는다
+  W("X136", "기준 M10.5 PATCH → weightNorm270 = 297 ÷ 1.026³", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightSize: "M10.5" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X137", "무게 300 PATCH → 300 ÷ 1.026³", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weight: 300 }, volatile: ["updatedAt"], expect: 200 }),
+  W("X138", "기준 M8.5 PATCH → 300 × 1.026", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightSize: "M8.5" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X139", "실측 무게 · 사이즈 PATCH → weightNorm270 그대로(실측은 환산하지 않는다)", "PATCH", "/api/shoes/4",
+    { headers: jb("admin"), body: { measuredWeight: 250, measuredWeightSize: "M10" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X140", "본문에 weightNorm270 → 버린다(DB 가 계산)", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightNorm270: 1 }, volatile: ["updatedAt"], expect: 200 }),
+  W("X141", "다섯 값 밖의 기준(W7.5) → weightNorm270 null(기준 모름)", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightSize: "W7.5" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X142", "기준 M10 PATCH → 300 ÷ 1.026²", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightSize: "M10" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X143", "기준 지우기 → weightNorm270 null", "PATCH", "/api/shoes/4", { headers: jb("admin"), body: { weightSize: null }, volatile: ["updatedAt"], expect: 200 }),
+  W("X144", "기준 M9.5 로 새 신발 POST → 201, weightNorm270 = 280 ÷ 1.026", "POST", "/api/shoes",
+    { headers: jb("admin"), body: { ...newShoe, model: "Contract Runner V15", weight: 280, weightSize: "M9.5" }, volatile: ["updatedAt"], capture: { v15: "body.id" }, expect: 201 }),
+  W("X145", "PUT 으로 기준 M9 → weightNorm270 = 280, lastChange 에 weightNorm270 없음", "PUT", "/api/shoes/{{v15}}",
+    { headers: jb("admin"), body: { ...newShoe, model: "Contract Runner V15", weight: 280, weightSize: "M9" }, volatile: ["updatedAt"], expect: 200 }),
+  W("X146", "끝 상태 — shoe 4(weightNorm270 null)", "GET", "/api/shoes/4", { volatile: ["updatedAt"], expect: 200 }),
 ];
