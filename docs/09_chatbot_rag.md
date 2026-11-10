@@ -155,7 +155,7 @@ cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 Reac
 
 #### 5. 리뷰 요약 — 배치로 전환
 
-> 구현(2026-11-10, 작업 1 — 로컬 끝, 운영 반영 전): V14 `shoe_summaries` · `summary/*` · CronJob `runshoes-summary`(infra) · 런북 infra `apps/runshoes/runbooks/v14-shoe-summaries.md`. 아래 "결정" 다음의 "구현에서 정한 것"이 설계안에 더해진 내용이다.
+> 구현(2026-11-10, 작업 1 — 운영 적용: V14 · 이미지 `1a4304e5baae`, 첫 전체 생성 212켤레 · 실패 0 · 27분 17초, CronJob 은 아직 suspend): V14 `shoe_summaries` · `summary/*` · CronJob `runshoes-summary`(infra) · 런북 infra `apps/runshoes/runbooks/v14-shoe-summaries.md`. 아래 "결정" 다음의 "구현에서 정한 것"이 설계안에 더해진 내용이다.
 
 전에는: 요청할 때 실시간으로 Ollama 를 부르고(`summary/SummaryService.java`), 캐시는 Pod 메모리뿐이었다. Pod 를 다시 배포하면 전부 사라졌다.
 
