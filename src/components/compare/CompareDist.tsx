@@ -80,7 +80,8 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
         {otherVals.length > 0 && <span className="is-other">같이 보는 신발</span>}
       </div>
       <p className="cdist__text">
-        {meConv && `${mm}mm 신발로 잰 무게예요. 270mm로 맞추면 약 ${formatNum(field, v)}이고, 그 값으로 그래프에 넣었어요. `}
+        {/* 환산한 신발 — 값은 제목에만, 본문은 까닭만(2026-11-10 사용자) */}
+        {meConv && `${mm}mm 신발로 잰 무게라 270mm로 맞춰 그래프에 넣었어요. `}
         {t.pop} {pop.length}켤레를 {t.order}으로 세우면 <b>{r.order}번째</b>예요.
       </p>
       {convOthers.length > 0 && (
