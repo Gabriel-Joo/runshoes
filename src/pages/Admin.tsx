@@ -100,6 +100,8 @@ function Admin() {
   const [loaded, setLoaded] = useState(false);
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState<Shoe[]>([]);
+  // 리뷰 요약(V14) — 다시 만들 것 · 아직 없는 것. 읽기만(만드는 것은 매일 03:30 CronJob — 화면에서 돌리지 않는다, 2026-11-10 사용자)
+  const [summaries, setSummaries] = useState<{ stale: number; pending: number; generated: number; total: number } | null>(null);
   // 등록된 신발 · 숨긴 신발 · 보완 필요(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
   const [tab, setTab] = useState<"list" | "hidden" | "gaps">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps"] as const, "list"));
   // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 적은 순)
@@ -159,6 +161,10 @@ function Admin() {
       .then((res) => (res.ok ? res.json() : []))
       .then(setHidden)
       .catch(() => setHidden([]));
+    apiFetch("/admin/summaries")
+      .then((res) => (res.ok ? res.json() : null))
+      .then(setSummaries)
+      .catch(() => setSummaries(null));
   }, [reload]);
 
   const getShoes = () => setReload((n) => n + 1);
@@ -232,6 +238,12 @@ function Admin() {
           러닝화 관리
           {isDemoAdmin && <span className="admin__demo">데모 관리자 · 보기 전용</span>}
         </h2>
+        {summaries && (
+          <p className="admin__summaries" title="리뷰 요약은 매일 03:30(KST) 배치가 다시 만든다 — 리뷰 수 ±10% · 평균 별점 ±0.3 · 30일">
+            리뷰 요약 {summaries.generated}켤레 · 다시 만들 것 <strong>{summaries.stale}</strong>
+            {summaries.pending > 0 && ` (아직 없음 ${summaries.pending})`}
+          </p>
+        )}
       </div>
 
       <div className="admin__brands">

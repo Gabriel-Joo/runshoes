@@ -1,0 +1,40 @@
+{
+  "id": "Y52",
+  "plan": null,
+  "name": "관리 — stale 1 · pending 1 · total 20",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/summaries",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "stale": 1,
+      "pending": 1,
+      "generated": 19,
+      "total": 20
+    }
+  }
+}

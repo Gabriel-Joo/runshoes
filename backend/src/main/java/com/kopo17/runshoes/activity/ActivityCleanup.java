@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  * 끝나면 지운 수 · 남은 행 수를 로그 한 줄로, 남은 행이 경고선을 넘으면 WARN — Loki 를 붙이면 이 줄에 경보를 건다.
  */
 @Component
+@Profile("!batch")   // 요약 CronJob(batch) 안에서는 돌지 않는다 — 정리는 웹 Pod 가 한다
 class ActivityCleanup {
 
 	private static final Logger log = LoggerFactory.getLogger(ActivityCleanup.class);

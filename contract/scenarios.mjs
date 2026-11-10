@@ -276,6 +276,36 @@ export const SUMMARY_V3_SCENARIOS = [
     body: { shoeId: 1, rating: 5, content: "요약 캐시 무효화 리뷰" }, volatile: ["createdAt"], expect: 201 }),
 ];
 
+// V14(2026-11-10) — 리뷰 요약을 DB 에 두고 배치(CronJob, batch 프로필)가 만든다. 조회는 Ollama 를 부르지 않는다(docs/09_chatbot_rag.md 5절).
+// SUMMARY_V3_SCENARIOS(spring-v3-summary)는 "조회가 Ollama 를 부르고 메모리에 캐시"하던 계약 — 이력으로 둔다(V14 뒤 앱에는 맞지 않는다).
+// run-spring-local.sh v14-summary 가 녹화 전에 배치를 한 번 돌린다(mock-ollama, 시드 20켤레 → 20번 호출). 그 뒤 녹화 중에는 Ollama 호출이 늘면 안 된다(스크립트가 본다).
+// 신발 8 은 시드 리뷰 4건(28 · 29 · 79 · …) — 1건이면 5건 25%(stale), 3건을 지우면 2건(행 삭제), 1건을 더하면 3건(아직 만들지 않은 행)
+export const SUMMARY_V14_SCENARIOS = [
+  login("Y00", "admin@runshoes.test", "{{adminPassword}}", "admin"),
+  login("Y01", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
+  login("Y02", "runner02@runshoes.test", "{{seedPassword}}", "u2"),
+  W("Y10", "요약 shoe 1 — 배치가 만든 것을 읽는다 {summary, reviewCount, generatedAt}", "GET", "/api/shoes/1/summary", { volatile: ["generatedAt"], expect: 200 }),
+  W("Y11", "요약 없는 신발 → 리뷰<3", "GET", "/api/shoes/9999/summary", { expect: 200 }),
+  W("Y12", "요약 비숫자 id → 리뷰<3", "GET", "/api/shoes/abc/summary", { expect: 200 }),
+  W("Y20", "관리 — 요약 건수 admin → {stale 0, pending 0, generated 20, total 20}", "GET", "/api/admin/summaries", { headers: bearer("admin"), expect: 200 }),
+  W("Y21", "관리 — 요약 건수 비로그인 → 401", "GET", "/api/admin/summaries", { expect: 401 }),
+  W("Y22", "관리 — 요약 건수 USER → 403", "GET", "/api/admin/summaries", { headers: bearer("u1"), expect: 403 }),
+  W("Y30", "리뷰 shoe 8(4건 → 5건, 25%) → 201", "POST", "/api/reviews", { headers: jb("u1"), body: { shoeId: 8, rating: 4, content: "요약 stale 확인용 리뷰입니다" }, volatile: ["createdAt"], capture: { y30: "body.id" }, expect: 201 }),
+  W("Y31", "관리 — stale 1", "GET", "/api/admin/summaries", { headers: bearer("admin"), expect: 200 }),
+  W("Y32", "요약 shoe 8 — stale 이어도 기존 요약(reviewCount 4)", "GET", "/api/shoes/8/summary", { volatile: ["generatedAt"], expect: 200 }),
+  W("Y40", "리뷰 지우기 admin — shoe 8 의 시드 리뷰 28", "DELETE", "/api/reviews/28", { headers: bearer("admin"), expect: 200 }),
+  W("Y41", "리뷰 지우기 admin — 29", "DELETE", "/api/reviews/29", { headers: bearer("admin"), expect: 200 }),
+  W("Y43", "리뷰 지우기 admin — Y30(→ 2건, 3건 미만이라 요약 행 삭제)", "DELETE", "/api/reviews/{{y30}}", { headers: bearer("admin"), expect: 200 }),
+  W("Y44", "요약 shoe 8 → 리뷰<3", "GET", "/api/shoes/8/summary", { expect: 200 }),
+  W("Y45", "관리 — total 19", "GET", "/api/admin/summaries", { headers: bearer("admin"), expect: 200 }),
+  W("Y50", "리뷰 shoe 8(2건 → 3건) → 아직 만들지 않은 행", "POST", "/api/reviews", { headers: jb("u2"), body: { shoeId: 8, rating: 5, content: "다시 세 건이 되는 리뷰입니다" }, volatile: ["createdAt"], expect: 201 }),
+  W("Y51", "요약 shoe 8 → 아직 만들지 않음", "GET", "/api/shoes/8/summary", { expect: 200 }),
+  W("Y52", "관리 — stale 1 · pending 1 · total 20", "GET", "/api/admin/summaries", { headers: bearer("admin"), expect: 200 }),
+  { id: "Y90", name: "mock 호출 수 — 배치 20번, 녹화 중 조회는 0번", method: "GET", url: "{{mock}}/__calls" },
+  { id: "Y91", name: "mock 동시 요청 최대 — 배치는 하나씩(1)", method: "GET", url: "{{mock}}/__maxActive" },
+  { id: "Y92", name: "mock 프롬프트(배치의 마지막 호출, shoe 20) — 프롬프트 문구 기준선", method: "GET", url: "{{mock}}/__last" },
+];
+
 // V4(세대 구조 · 공시값 기준 사이즈 · 실측값, 2026-10-24) — 새 기능만 담는다. 기존 115건(V3 · AUTH)은 기준선 spring-v3 그대로 두고
 // diff --allow-added 로 "응답에 V4 키가 더해졌을 뿐"인지만 본다(다시 녹화하지 않는다 — 무엇이 바뀌었는지 추적이 남게).
 // 시드(V4 가 기존 20켤레에 line_key · generation · is_current · gender 를 채운 상태)에서 시작한다. 목록 기본은 전체 노출(isCurrent 필터는 고를 때만)

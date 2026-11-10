@@ -11,6 +11,18 @@
   gap: 16px;
 }
 
+/* 리뷰 요약 건수(V14) — 제목 오른쪽에 작게. 읽기만 */
+.admin__summaries {
+  font-size: 13px;
+  color: var(--text-weak);
+  margin: 0;
+}
+
+.admin__summaries strong {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
 .admin__title {
   font-size: 28px;
   font-weight: 800;

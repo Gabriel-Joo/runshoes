@@ -1,0 +1,35 @@
+{
+  "id": "Y43",
+  "plan": null,
+  "name": "리뷰 지우기 admin — Y30(→ 2건, 3건 미만이라 요약 행 삭제)",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/reviews/106",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

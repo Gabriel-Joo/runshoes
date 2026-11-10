@@ -1,0 +1,129 @@
+{
+  "recordedAt": "2026-11-10T03:59:16.442Z",
+  "base": "http://127.0.0.1:3200/",
+  "host": "runshoes.ronanlab.dev",
+  "set": "summary-v14",
+  "readOnly": false,
+  "note": "",
+  "scenarios": [
+    {
+      "id": "Y00",
+      "name": "로그인 admin@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "Y01",
+      "name": "로그인 runner01@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "Y02",
+      "name": "로그인 runner02@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "Y10",
+      "name": "요약 shoe 1 — 배치가 만든 것을 읽는다 {summary, reviewCount, generatedAt}",
+      "status": 200
+    },
+    {
+      "id": "Y11",
+      "name": "요약 없는 신발 → 리뷰<3",
+      "status": 200
+    },
+    {
+      "id": "Y12",
+      "name": "요약 비숫자 id → 리뷰<3",
+      "status": 200
+    },
+    {
+      "id": "Y20",
+      "name": "관리 — 요약 건수 admin → {stale 0, pending 0, generated 20, total 20}",
+      "status": 200
+    },
+    {
+      "id": "Y21",
+      "name": "관리 — 요약 건수 비로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "Y22",
+      "name": "관리 — 요약 건수 USER → 403",
+      "status": 403
+    },
+    {
+      "id": "Y30",
+      "name": "리뷰 shoe 8(4건 → 5건, 25%) → 201",
+      "status": 201
+    },
+    {
+      "id": "Y31",
+      "name": "관리 — stale 1",
+      "status": 200
+    },
+    {
+      "id": "Y32",
+      "name": "요약 shoe 8 — stale 이어도 기존 요약(reviewCount 4)",
+      "status": 200
+    },
+    {
+      "id": "Y40",
+      "name": "리뷰 지우기 admin — shoe 8 의 시드 리뷰 28",
+      "status": 200
+    },
+    {
+      "id": "Y41",
+      "name": "리뷰 지우기 admin — 29",
+      "status": 200
+    },
+    {
+      "id": "Y43",
+      "name": "리뷰 지우기 admin — Y30(→ 2건, 3건 미만이라 요약 행 삭제)",
+      "status": 200
+    },
+    {
+      "id": "Y44",
+      "name": "요약 shoe 8 → 리뷰<3",
+      "status": 200
+    },
+    {
+      "id": "Y45",
+      "name": "관리 — total 19",
+      "status": 200
+    },
+    {
+      "id": "Y50",
+      "name": "리뷰 shoe 8(2건 → 3건) → 아직 만들지 않은 행",
+      "status": 201
+    },
+    {
+      "id": "Y51",
+      "name": "요약 shoe 8 → 아직 만들지 않음",
+      "status": 200
+    },
+    {
+      "id": "Y52",
+      "name": "관리 — stale 1 · pending 1 · total 20",
+      "status": 200
+    },
+    {
+      "id": "Y90",
+      "name": "mock 호출 수 — 배치 20번, 녹화 중 조회는 0번",
+      "status": 200
+    },
+    {
+      "id": "Y91",
+      "name": "mock 동시 요청 최대 — 배치는 하나씩(1)",
+      "status": 200
+    },
+    {
+      "id": "Y92",
+      "name": "mock 프롬프트(배치의 마지막 호출, shoe 20) — 프롬프트 문구 기준선",
+      "status": 200
+    }
+  ],
+  "vars": {
+    "mock": "http://127.0.0.1:3109",
+    "y30": 106
+  }
+}
