@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 비교 · 추천 이관 전수 대조(2026-11-10, 작업 3) — 서버 API 가 이관 전 브라우저 계산(reference/, 얼린 사본)과 같은 답을 내는가.
+// 비교 · 추천 전수 대조(2026-11-10, 작업 3 · 3-1) — 서버 API 가 기준 사본(reference/)과 같은 답을 내는가. 옛 규칙과의 차이는 diff-reference.mjs
 //   node scripts/parity/check.mjs --base http://localhost:3200          # 로컬 Spring
 //   node scripts/parity/check.mjs --base https://runshoes.ronanlab.dev   # 운영(읽기만 — 두 API 는 계산만 한다)
 // 하는 일:
@@ -130,4 +130,4 @@ if (r.bad.length) {
   r.bad.slice(0, MAX_SHOW).forEach((b) => console.log("  " + b));
   process.exit(1);
 }
-console.log("불일치 0 — 비교 · 추천 모두 이관 전과 같다");
+console.log("불일치 0 — 비교 · 추천 모두 기준 사본(reference/)과 같다");

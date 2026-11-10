@@ -113,7 +113,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - **NOT NULL 로 조이지 못한 칸.** `line_key` · `generation` · `gender` · `is_current` 는 NULL 허용이다(지금 운영 302행은 모두 값이 있다 — 공개 API 로 센 NULL 0, 적재기 · 관리 화면이 채운다). `reviews.user_id` 도 NULL 허용이다. UNIQUE 는 NULL 을 서로 다르게 보므로 값이 빠진 신발 행은 중복을 막지 못한다.
 - **엔티티 주석이 옛 계획을 말한다.** `domain/Shoe.java`(옛 칸 "V6 에서 지운다") · `domain/Review.java`(`liked` "V4 에서 지운다"). 코드 주석이라 고칠 수 있지만 정리 마이그레이션과 함께 고친다.
 - **카운터는 앱이 지킨다.** `like_count` · `review_count` · `rating` 이 `likes` · `reviews` 와 어긋나도 DB 가 막지 않는다.
-- **`terms.id` 가 키가 아니다.** 시드의 중복(`id 12` 둘)을 재현하려고 `row_no` 를 키로 썼다. 용어는 읽기 전용이라 실제 문제는 없다.
+- **`terms.id` 가 키가 아니다.** 시드의 중복(`id 12` 둘)을 재현하려고 `row_no` 를 키로 썼다. 용어는 읽기 전용이라 실제 문제는 없다. 중복은 챗봇(5단계)이 용어를 id 로 참조할 때 다시 본다(2026-11-10 사용자). 아웃솔에 새 id 를 주면 `/api/terms` 응답이 바뀌니 계약 기준 응답(`contract/baseline`)도 다시 녹화한다. 같은 때 화면이 직접 가진 와이드 모델 용어(`ShoeModal WIDE_TERM`)를 `terms` 로 옮길지 정한다.
 - **`spec_sources` 형식은 DB 가 아니라 API 가 본다.** DB 에 직접 쓰면 형식이 틀린 값이 들어갈 수 있다 — 그래서 운영 쓰기는 관리자 API(적재기 · 관리 화면)로만 한다.
 
 #### 5. 검증 항목
@@ -123,8 +123,3 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - **스키마 대조** — `ddl-auto validate` 로 엔티티와 스키마가 맞지 않으면 기동이 실패한다.
 - **롤백** — 새 스키마에 옛 이미지를 띄워 기동하는지. V4 · V5 리허설에서 옛 운영 jar(`eeffbd8`)를 V5 DB 에 띄워 `Successfully validated` 를 봤다(`catalog-v4-v5.md`).
 - 운영 적용 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 · 리뷰 — 직전과 같은지).
-
-#### 다음에 할 일
-
-- 옛 칸 정리 마이그레이션 — 롤백 지점을 정한 뒤 옛 칸 삭제 · `liked` 삭제 · NOT NULL 조이기를 한 번에. 엔티티의 `legacy*` 와 주석도 같이 지운다.
-- **`terms` 의 `id 12` 중복(무게 · 아웃솔)** — 다음 V14 에 같이 고친다(2026-11-03 사용자). 화면 영향은 없지만 이상하다. 아웃솔에 새 id 를 주면 `/api/terms` 응답이 바뀌니 계약 기준 응답(`contract/baseline`)도 다시 녹화한다. 같은 때 화면이 직접 가진 와이드 모델 용어(`ShoeModal WIDE_TERM`)를 `terms` 로 옮길지 정한다.
