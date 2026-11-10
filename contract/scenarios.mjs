@@ -482,4 +482,13 @@ export const V6_SCENARIOS = [
   W("X145", "PUT 으로 기준 M9 → weightNorm270 = 280, lastChange 에 weightNorm270 없음", "PUT", "/api/shoes/{{v15}}",
     { headers: jb("admin"), body: { ...newShoe, model: "Contract Runner V15", weight: 280, weightSize: "M9" }, volatile: ["updatedAt"], expect: 200 }),
   W("X146", "끝 상태 — shoe 4(weightNorm270 null)", "GET", "/api/shoes/4", { volatile: ["updatedAt"], expect: 200 }),
+
+  // 작업 3(2026-11-10) — 비교 · 추천 계산을 서버로(GET, 로그인 없음). 값이 이관 전 브라우저 계산과 같은지는 scripts/parity/check.mjs 가 전수로 본다 — 여기는 모양 · 상태코드
+  W("X147", "비교 pick=1 → cols(자동 채우기) · fields · shoes", "GET", "/api/compare?pick=1", { expect: 200 }),
+  W("X148", "비교 ids — 숫자 아님 · 겹침 · 모르는 id 버림", "GET", "/api/compare?ids=3,x,3,999,1", { expect: 200 }),
+  W("X149", "비교 ids · pick 둘 다 없음 → 400", "GET", "/api/compare", { expect: 400 }),
+  W("X150", "비교 모르는 pick → cols []", "GET", "/api/compare?pick=999", { expect: 200 }),
+  W("X151", "추천 다섯 칸 → 상위 3 · score · reasons", "GET", "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=%EB%84%93%EC%9D%8C&stability=%EC%A4%91%EB%A6%BD%ED%99%94-outer&cushion=high&price=mid", { expect: 200 }),
+  W("X152", "추천 모르는 값 → 400", "GET", "/api/recommend?purpose=x&width=unknown&stability=unknown&cushion=unknown&price=unknown", { expect: 400 }),
+  W("X153", "추천 칸 빠짐 → 400", "GET", "/api/recommend?purpose=%EB%A0%88%EC%9D%B4%EC%8A%A4", { expect: 400 }),
 ];

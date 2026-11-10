@@ -1,0 +1,32 @@
+{
+  "id": "X152",
+  "plan": null,
+  "name": "추천 모르는 값 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "GET",
+    "path": "/api/recommend?purpose=x&width=unknown&stability=unknown&cushion=unknown&price=unknown",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 07:48:23 GMT",
+      "connection": "close"
+    },
+    "body": {}
+  }
+}
