@@ -104,7 +104,7 @@ runshoes/
 
 ## 다음에 할 일
 
-리뷰(실사용 후기 화면) · 챗봇(로그인 맥락을 읽는 RAG) · MySQL 정기 백업 · Argo Rollouts — 자세한 것은 [overview](docs/overview.md#다음에-할-일).
+리뷰(실사용 후기 화면) · 챗봇(로그인 맥락을 읽는 RAG) · MySQL 정기 백업 · Argo Rollouts — 자세한 것은 [TODO](docs/TODO.md).
 
 ## 데이터
 
