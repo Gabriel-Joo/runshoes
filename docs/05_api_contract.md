@@ -16,9 +16,9 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `PUT` · `DELETE /api/{shoes,reviews}/{id}/like` | 찜 · 리뷰 공감 → `{liked, likeCount}`, 멱등 | 로그인 |
 | `/api/auth/{signup,login,refresh,logout,demo,demo-accounts,nickname-available}` | 인증 · 체험 로그인(`04_auth.md`) | — |
 | `GET` · `DELETE /api/me`, `PATCH /api/me/nickname`, `PUT /api/me/password` | 내 정보 · 탈퇴 · 닉네임 · 비밀번호 | 로그인 |
-| `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 언제나 204 | 로그인 |
+| `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 기록하면 204(30분 안 같은 기록은 다시 쓰지 않아도 204). type 이 없거나 모르는 값 · `shoeId` 없음 · 2~5켤레 밖은 400, 없는 신발은 404 | 로그인 |
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
-| `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin |
+| `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
 
 #### 1-2. json-server 와 같게 한 것
@@ -52,7 +52,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 #### 1-4. 로그인 뒤 — 권한과 서버가 정하는 값
 
 - **쓰기 판정 순서: 401 → 404 → 403.** 토큰이 없으면 대상이 있는지 보기 전에 401 `{}`. 그 뒤 없는 대상은 404, 있으면 권한(신발 쓰기 admin · 리뷰 PATCH 작성자 · 리뷰 DELETE 작성자 또는 admin).
-- **서버가 정하는 값** — 리뷰의 `author` · `userId` · `createdAt`, 신발의 `rating` · `reviewCount`(FIRST 리뷰만, 소수 한 자리) · `likeCount` · `updatedAt` · `lastChange`. 본문에 와도 버린다(`NOT_EDITS`).
+- **서버가 정하는 값** — 리뷰의 `author` · `userId` · `createdAt`, 신발의 `rating` · `reviewCount`(FIRST 리뷰만, 소수 한 자리) · `likeCount` · `updatedAt` · `lastChange`. 본문에 와도 버린다 — 신발은 `ShoeCollection.apply` 가 받는 칸만 읽고, 리뷰는 서버가 덮어쓴다(`ReviewCollection`).
 - **`liked`** 는 요청한 사람 기준이다(비로그인은 false). `?liked=true` 도 그 사람의 찜.
 - 리뷰 POST — 한 신발에 첫 리뷰 하나(409), 별점 1~5 · 내용 10~300자(400). 리뷰 PATCH 는 `rating` · `content` 만, PUT 은 405.
 - 데모 관리자(`DEMO_ADMIN`)는 관리 화면을 다 보지만 모든 쓰기 · 찜 · 리뷰가 403 `{code:"demo_admin", message}` — 이 오류만 본문이 있다(화면이 문구를 그대로 띄운다).
@@ -105,9 +105,9 @@ contract/run-spring-local.sh v3|v3-search|v3-summary|v4|v6   로컬 dev DB 를 �
 | `baseline/spring-search` | 24 | 검색 — json-server 에 없어 Spring 이 기준선(2026-10-21) |
 | `baseline/spring-v3` · `spring-v3-search` · `spring-v3-summary` | 115 · 24 · 10 | 로그인 뒤 계약 — 지금의 정답 |
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 |
-| `baseline/spring-v6` | 85 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제의 새 기능만 |
+| `baseline/spring-v6` | 98 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제의 새 기능만 |
 
-- **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
+- **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
 - diff 정규화: `createdAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.
 - 기록에 비밀번호 · JWT · refresh 쿠키를 남기지 않는다(`<가림>` · `<jwt>`).
 - 운영에는 읽기 시나리오만(`--read-only`). 요약 시나리오는 mock Ollama(`mock-ollama.mjs`)로만 — 운영에서 시드 신발의 요약을 부르면 GPU 가 돈다.

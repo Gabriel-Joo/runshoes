@@ -15,7 +15,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
    │  runshoes :3000  Spring Boot                       │
    │   ├ 화면(React 빌드물, SPA)                         │
    │   ├ /api/shoes · reviews · terms  json-server 계약  │──▶ MySQL 8(StatefulSet runshoes-mysql)
-   │   ├ /api/auth · /api/me · like · admin · activity   │       Flyway V1~V12
+   │   ├ /api/auth · /api/me · like · admin · activity   │       Flyway V1~V13
    │   └ /api/shoes/{id}/summary ─────────────┐          │
    │  chatbot :8766  Python WebSocket ─────────┤          │
    └───────────────────────────────────────────┼──────────┘
@@ -32,8 +32,8 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 | 계정 | JWT · refresh 쿠키 · 체험 계정 · 시도 제한 · 활동 로그 | `04_auth.md` |
 | API | json-server 계약 재현 + 새 기능, 계약 시험 | `05_api_contract.md` |
 | 배포 | Jenkins(BuildKit) → Harbor → 인프라 리포 태그 → ArgoCD | `06_deployment.md` |
-| DB | 테이블 9 · 마이그레이션 V1~V12 | `07_database.md` |
-| 비교 | 설계안(결정 전) | `08_compare.md` |
+| DB | 테이블 9 · 마이그레이션 V1~V13 | `07_database.md` |
+| 비교 | 점수 없는 비교표(2~5켤레) · 자동 채우기 · 분포 그래프 — 운영 반영(2026-11-09). 레이더 차트는 버렸다 | `08_compare.md` |
 
 | 저장소 | 담는 것 |
 |---|---|
@@ -43,7 +43,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 #### 2. 데이터 흐름
 
 ```
-① 카탈로그   candidates.csv(408행) ─ 수집기 · KicksDB 이미지 ─ decisions.json(사람 판단) ─ build.mjs ─ shoes.jsonl(적재 대상 302)
+① 카탈로그   candidates.csv(408행) ─ 수집기 · KicksDB 이미지 ─ decisions.json(사람 판단) ─ build.mjs ─ shoes.jsonl(적재 대상 309)
 ② 적재      load.mjs — 건조 실행 → 관리 화면 수정 먼저 가져오기 → 관리자 API 로 POST · PATCH(scripts/load-prod.sh --apply)
 ③ API       Spring Boot — 검증(값 범위 · 출처 형식 · 품번) → MySQL. 평점 · 찜 수 · 작성자는 서버가 정한다
 ④ 화면      목록 · 검색 · 정렬은 서버가, 화면은 받은 것을 그린다. 없는 값은 "정보 없음"
@@ -82,7 +82,6 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 | 무엇 | 내용 | 어디서 시작 |
 |---|---|---|
 | 리뷰 | 실사용 후기(FOLLOWUP) 화면 — 칸과 규칙은 V3 에 있다. 시드 밖 신발에 리뷰가 쌓이는 길 | `04_auth.md` 다음에 할 일 |
-| 비교 | 찜한 신발 둘의 레이더 차트 + 표 — 열린 질문 넷 결정 뒤 | `08_compare.md` |
 | 챗봇(RAG) | 로그인 맥락(활동 로그 — 최근 본 · 쓴 것 · 비교한 것)과 카탈로그를 읽고 답한다. 먼저 인증 프레임 | `04_auth.md` 다음에 할 일 |
 | 와이드 정보 없음 4켤레 | 사용자가 직접 보고 MAN 으로 넣는다 | `01a_catalog_sources.md` 1-7 |
 | 인프라 | MySQL 정기 백업 · Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 | `06_deployment.md` |

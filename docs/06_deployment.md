@@ -35,15 +35,15 @@ push 에서 새 Pod 까지 약 5분 — 2026-11-09 `5d11d2e` 측정: push 10:53:
 | Jenkins | `jenkins` ns, Job `runshoes-app` | Job · 자격 증명은 JCasC(`platform/jenkins/values.yaml`)가 만든다 — UI 에서 고치지 않는다 |
 | Harbor | `harbor.ronanlab.dev/runshoes`(private) | robot 계정 push(`robot$runshoes+jenkins`) · pull(`robot$runshoes+pull`) 분리 |
 | ArgoCD | Application `runshoes` | 읽기 전용 deploy key 로 인프라 리포를 읽는다 |
-| 외부 노출 | Cloudflare Tunnel(`platform/cloudflared`) | 클러스터 공용 터널. 운영 도구(Jenkins · Harbor · ArgoCD)는 Cloudflare Access 뒤, runshoes 공개 주소는 Access 없음 |
+| 외부 노출 | Cloudflare Tunnel(`apps/cloudflared`) | 클러스터 공용 터널. 운영 도구(Jenkins · Harbor · ArgoCD)는 Cloudflare Access 뒤, runshoes 공개 주소는 Access 없음 |
 | Ollama | GPU 호스트 `192.168.122.1:11434` | 리뷰 요약 · 챗봇. Pod 가 사설망으로 바로 부른다 |
 
 #### 1-3. 이미지
 
 ```
 web     node:20-alpine          yarn install → vite build        → dist/
-server  maven:3.9-temurin-21    mvn package(단위 테스트 포함)     → app.jar
-jre     eclipse-temurin:21-jdk  jlink — 필요한 모듈만             → /jre
+server  maven:3.9-eclipse-temurin-21   mvn package(단위 테스트 포함)  → app.jar
+jre     eclipse-temurin:21-jdk-alpine   jlink — 필요한 모듈만          → /jre
 실행    alpine                  /jre + app.jar + static/(dist), 사용자 10001, :3000
 ```
 
@@ -65,6 +65,8 @@ jre     eclipse-temurin:21-jdk  jlink — 필요한 모듈만             → /j
 #### 1-5. 매니페스트 — infra `apps/runshoes/`
 
 ```
+app.yaml                    ArgoCD Application `runshoes`(1-6) — kustomization 의 resources 에는 넣지 않는다
+README.md                   이 폴더 안내 · Secret 을 사람이 넣는 순서
 kustomization.yaml          리소스 목록 + 이미지 태그 2개
 app/deployment.yaml         runshoes(Spring) + chatbot
 app/service.yaml · ingress.yaml   / → :3000, /ws/chat → :8766
@@ -80,11 +82,12 @@ runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 - **DB** — utf8mb4 · `utf8mb4_unicode_ci` · `default-time-zone=+00:00`. 데이터베이스와 계정은 이미지가 첫 기동에 만들고, 스키마는 앱의 Flyway 가 만든다(`07_database.md`). PVC 는 Retain.
 - 리소스(요청/상한): runshoes 200m · 512Mi/1Gi, chatbot 10m · 48Mi/256Mi, MySQL 200m · 512Mi/1Gi. namespace quota 는 없고 노드 메모리가 상한이다.
 
-#### 1-6. ArgoCD Application — infra `platform/argocd/applications/runshoes.yaml`
+#### 1-6. ArgoCD Application — infra `apps/runshoes/app.yaml`
 
 - **자동 Sync**(`automated: {prune: false, selfHeal: false}`). selfHeal 을 끈 것은 복구 중 손으로 바꾼 것(예: replicas 0)을 되돌리지 않게.
 - **prune 없음** — git 에서 지운 리소스는 남는다(PVC 를 실수로 지우지 않게). **finalizer 없음** — Application 을 지워도 앱 · DB · PVC 는 남는다.
-- Application 객체는 사람이 `kubectl apply` 로 넣는다 — git push 만으로는 바뀌지 않는다. 자동 Sync 를 끄고 켜는 것도 사람이 한다.
+- Application 객체는 루트 Application(`bootstrap/root-app.yaml`, App of Apps)이 git 의 `apps/*/app.yaml` 을 읽어 만든다 — 손으로 apply 하지 않는다. 사람이 한 번 넣는 것은 루트뿐이다.
+- 루트는 자식의 `spec.syncPolicy` 를 덮지 않는다(ignoreDifferences + `RespectIgnoreDifferences`). 그래서 자동 Sync 를 끄고 켜는 스위치는 클러스터의 `kubectl patch` 이고 사람이 한다 — `app.yaml` 의 syncPolicy 는 기록이다.
 
 #### 1-7. 스키마를 바꾸는 배포
 
@@ -99,7 +102,7 @@ runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 | 5 | 자동 Sync 다시 켜기 | 사람 |
 | 6 | 필요하면 운영 적재(`scripts/load-prod.sh --apply`, `01c_catalog_loader.md`) | Claude, 사용자 승인 뒤 |
 
-- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다.
+- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다.
 - 운영 MySQL `exec` 와 Secret 읽기가 필요한 단계는 사람이 친다(2026-10-29 사용자). 운영 적재만은 `scripts/load-prod.sh` 안에서 Secret 을 읽는다(비밀번호는 스크립트 밖으로 나오지 않는다).
 - **되돌리기** — 인프라 리포의 태그 커밋을 `git revert` → push → Sync. 스키마는 되돌아가지 않는다 — 마이그레이션은 추가만 하므로 옛 이미지가 새 스키마에서 뜬다(`07_database.md` 1-5). 데이터가 잘못되면 덤프 복원(런북 "실패했을 때").
 

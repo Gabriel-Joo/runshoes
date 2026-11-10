@@ -61,6 +61,7 @@ ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은
 | `JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD` | Secret `runshoes-auth`(envFrom) — 서명 키(32바이트 이상, 없으면 뜨지 않는다) · V3 계정의 처음 비밀번호(비밀번호가 없는 계정에만, 기동 때 한 번) |
 | `SERVER_PORT` · `APP_STATIC` | 이미지 기본값 `3000` · `/opt/app/static` |
 | `BASE_PATH` | 비움(루트). 주면 그 아래로(context-path) |
+| `DEMO_LOGIN_ENABLED` | `true` — 로그인 화면의 체험 카드(application.yml 기본값은 `false`) |
 
 - 프로브: startup `/actuator/health` · readiness `/actuator/health/readiness`(readinessState + **db**) · liveness `/actuator/health/liveness`
 - 종료: graceful shutdown 20초(`server.shutdown: graceful`) — Deployment preStop 5초 뒤
