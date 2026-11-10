@@ -104,7 +104,7 @@ cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 Reac
 
 **결정:** 환산 컬럼을 만들고 화면 · 챗봇이 함께 쓴다.
 
-> 구현(2026-11-10, 작업 2 — 로컬 끝, 운영 적용 전): V15 `shoes.weight_norm_270`(DB 생성 컬럼 VIRTUAL, API `weightNorm270`) · 비교하기 등수 · 그래프 · 비슷한 신발 거리. 규칙 · 계수 · 출처는 `01a_catalog_sources.md` 1-3a 로 옮겼고(아래 "docs 에 환산 규칙 절"), 화면 표시는 `08_compare.md` 1-7. 설계에서 달라진 것은 아래 "구현에서 정한 것".
+> 구현(2026-11-10, 작업 2 — 운영 적용: V15 · V16 · 이미지 `40586d6eb722`, 환산값 281 · 기준 모름 29): V15 `shoes.weight_norm_270`(DB 생성 컬럼 VIRTUAL, API `weightNorm270`) · 비교하기 등수 · 그래프 · 비슷한 신발 거리. 규칙 · 계수 · 출처는 `01a_catalog_sources.md` 1-3a 로 옮겼고(아래 "docs 에 환산 규칙 절"), 화면 표시는 `08_compare.md` 1-7. 설계에서 달라진 것은 아래 "구현에서 정한 것".
 
 현황 (`official_weight_size`, 공개 API `weightSize` 로 셈)
 
