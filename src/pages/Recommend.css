@@ -268,3 +268,11 @@
     justify-content: center;
   }
 }
+
+/* 결과를 서버에서 받는 동안 · 실패(2026-11-10 작업 3) — 비교하기 "불러오는 중이에요…"와 같은 모양 */
+.recommend__loading {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-weak);
+}

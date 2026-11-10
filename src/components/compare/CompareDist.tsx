@@ -1,13 +1,14 @@
 import { useLayoutEffect, useRef } from "react";
 import type { Shoe } from "../../types";
-import { BAND_WORD, formatNum, topic, isConverted, NUM_TEXT, numValue, rankIn, SIZE_MM, type NumKey } from "../../utils/compare";
+import { formatNum, topic, NUM_TEXT, SIZE_MM, type NumKey } from "../../utils/compare";
+import type { CompareStats } from "../../utils/compareApi";
 
 const W = 268, H = 64, BINS = 24;
 
 interface Props {
   shoe: Shoe;
   field: NumKey;
-  pop: number[];             // 그 칸의 모집단(무게는 270mm 로 맞춘 값)
+  stats: CompareStats | null; // 서버가 센 모집단 · 등수 · 밴드(무게는 270mm 로 맞춘 값). 없으면 그래프를 열지 않는다
   others: Shoe[];            // 같이 비교 중인 다른 신발
   sheet: boolean;            // 휴대폰 — 아래에서 올라오는 시트
   right: boolean;            // 오른쪽 끝 열 — 왼쪽으로 펼친다
@@ -18,7 +19,7 @@ interface Props {
  * 어디쯤인지 — 회색 막대(모집단) · 틸(이 신발) · 진한 코랄(같이 보는 신발). 글은 결론 먼저(08 1-7).
  * 화면 밖으로 나가면 위로(아래쪽 줄) · 왼쪽으로(오른쪽 끝) 뒤집는다.
  */
-function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props) {
+function CompareDist({ shoe, field, stats, others, sheet, right, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const el = ref.current;
@@ -29,7 +30,11 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
     if (r.right > window.innerWidth - 8) el.classList.add("is-right");
   });
   const cls = `cdist ${sheet ? "is-sheet" : ""} ${right ? "is-right" : ""}`;
-  const v = numValue(shoe, field);
+  const cellOf = (id: number) => stats?.shoes.find((r) => r.id === id)?.[field];
+  const me = cellOf(shoe.id);
+  if (!stats || !me) return null;   // 불러오는 중 · 실패 — 배지와 같이 그래프도 없다
+  const v = me.value;
+  const pop = stats.fields[field].values;
 
   // 무게 — 기준 사이즈를 모르면 270mm 로 맞출 수 없어 그래프 대신 까닭만
   if (field === "weight" && v == null) {
@@ -47,16 +52,17 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
   const counts = Array<number>(BINS).fill(0);
   pop.forEach((a) => counts[Math.min(BINS - 1, Math.floor(((a - lo) / span) * BINS))]++);
   const max = Math.max(...counts), bw = W / BINS, x = (a: number) => ((a - lo) / span) * W;
-  const otherVals = others.map((s) => numValue(s, field)).filter((a): a is number => a != null);
-  const skipped = field === "weight" ? others.filter((s) => numValue(s, "weight") == null).map((s) => s.model) : [];
+  const otherCells = others.map((s) => ({ s, c: cellOf(s.id) })).filter((o) => o.c);
+  const otherVals = otherCells.map((o) => o.c!.value).filter((a): a is number => a != null);
+  const skipped = field === "weight" ? otherCells.filter((o) => o.c!.value == null).map((o) => o.s.model) : [];
   // 같이 보는 신발(코랄 눈금) 중 환산한 것 — 표의 "환산" 배지와 같은 사실을 그래프에서도 밝힌다(2026-11-10 사용자). 셋 이상이면 수로
-  const convOthers = field === "weight" ? others.filter(isConverted).map((s) => s.model) : [];
-  const meConv = field === "weight" && isConverted(shoe);
+  const convOthers = field === "weight" ? otherCells.filter((o) => o.c!.converted).map((o) => o.s.model) : [];
+  const meConv = field === "weight" && !!me.converted;
   const mm = shoe.weightSize ? SIZE_MM[shoe.weightSize] : undefined;
   const short = (a: number) => formatNum(field, a);   // 가격도 "159,000원" 그대로(2026-11-09 사용자 — "159천원"은 쓰지 않는다)
   const edge = field === "price" ? 80 : 60;            // 끝 값과 이 신발 값이 겹치면 끝 값을 뺀다(가격 글자가 길다)
   const half = field === "price" ? 38 : 24;
-  const r = rankIn(pop, v), t = NUM_TEXT[field], word = BAND_WORD[field][r.band];
+  const t = NUM_TEXT[field], word = me.word, order = me.order;
 
   return (
     <div ref={ref} className={cls} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={`${t.label} 분포`}>
@@ -82,7 +88,7 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
       <p className="cdist__text">
         {/* 환산한 신발 — 값은 제목에만, 본문은 까닭만(2026-11-10 사용자) */}
         {meConv && `${mm}mm 신발로 잰 무게라 270mm로 맞춰 그래프에 넣었어요. `}
-        {t.pop} {pop.length}켤레를 {t.order}으로 세우면 <b>{r.order}번째</b>예요.
+        {t.pop} {stats.fields[field].n}켤레를 {t.order}으로 세우면 <b>{order}번째</b>예요.
       </p>
       {convOthers.length > 0 && (
         <p className="cdist__note">

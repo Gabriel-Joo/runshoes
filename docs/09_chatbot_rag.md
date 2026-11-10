@@ -75,10 +75,10 @@ embedding-service (호스트 `~/llm_env`)
 
 cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 React / 백엔드 Spring 방향이 정해져 있다.
 
-지금 상태 — 둘 다 브라우저에서 돈다. 백엔드에 없다.
+옮기기 전 — 둘 다 브라우저에서 돌았다(2026-11-10 작업 3 에서 옮김, 13절).
 
-- 비교 → `src/utils/compare.ts` (순수 함수로 분리돼 있음)
-- 추천 → `src/pages/Recommend.tsx` 206~350줄 (컴포넌트 안의 `evaluate`)
+- 비교 → `src/utils/compare.ts` (순수 함수로 분리돼 있었다) → 서버 `compare/ComparePolicy`
+- 추천 → `src/pages/Recommend.tsx` 206~350줄 (컴포넌트 안의 `evaluate`) → 서버 `compare/RecommendPolicy`
 
 목표
 
@@ -388,6 +388,7 @@ VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습
 
 - 1 · 2단계: 운영 적용(5절 · 4절).
 - 3단계: 서버 API `GET /api/compare` · `GET /api/recommend`(`compare/` 패키지)를 만들었다. 이관 전 브라우저 계산의 얼린 사본(`scripts/parity/reference/`)과 로컬 310켤레(운영 공개 API 스냅숏) 전수 대조 불일치 0. 두 번에 나눠 배포한다 — 1차는 서버 API 만(화면은 그대로 브라우저 계산), 운영 대조가 통과하면 2차로 화면을 API 호출로 바꾼다(2026-11-10 사용자).
+  - 1차 운영 대조(이미지 `ddb4496d5e90`) 불일치 0 · 서버 응답 약 16ms(내부 VIP, `/api/terms` 6ms). 2차 — 화면을 API 호출로 바꿨다(로컬, 운영 적용 전). 전후 캡처 20쌍이 픽셀까지 같다(`08_compare.md` 5절).
   - 메서드는 3절의 POST 가 아니라 GET 이다 — 읽기만 하는 계산이고, 보안 설정이 "GET 은 누구나, 그 밖은 로그인"이라 POST 면 두 경로만 예외로 열어야 했다(2026-11-10 사용자).
 
 남은 작업 — 3단계에서 찾았고 고치지 않고 그대로 옮긴 것(2026-11-10 사용자)
