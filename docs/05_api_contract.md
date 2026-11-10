@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, V16): v6 PASS 109 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -19,6 +19,8 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 기록하면 204(30분 안 같은 기록은 다시 쓰지 않아도 204). type 이 없거나 모르는 값 · `shoeId` 없음 · 2~5켤레 밖은 400, 없는 신발은 404 | 로그인 |
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
 | `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
+| `GET /api/compare?pick=<id>` · `?ids=<id,…>` | 비교하기 계산(2026-11-10, 작업 3 — 브라우저에서 옮김). `pick` 이면 자동 채우기 `cols:[{id, why}]`(08 1-3)까지, `ids` 는 1~5켤레(숫자 아님 · 모르는 id · 겹침은 버림). 응답 `fields`(칸마다 모집단 `{n, values}` 오름차순 — 그래프 막대용) · `shoes`(칸마다 `{value, order, band, word}`, 무게는 `converted` — 등수를 말할 수 없으면 `value: null` 만). 둘 다 없거나 둘 다 있으면 400 `{}` | 누구나 |
+| `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | 추천받기 상위 3 `{results:[{id, score, reasons:[{hit, text}]}]}`(02 1-4). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
 | `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
 
@@ -109,7 +111,7 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 | `baseline/spring-v3-summary` | 10 | 요약을 조회 때 Ollama 로 만들던 계약 — 이력, V14 전 |
 | `baseline/spring-v14-summary` | 23 | 요약 V14 — 배치가 만든 것을 읽기 · 쓰기 시점 stale · 3건 미만 삭제 · 관리 건수. 녹화 중 Ollama 호출이 늘지 않는지 · 배치가 하나씩 보냈는지는 스크립트가 본다 |
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 |
-| `baseline/spring-v6` | 109 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15)의 새 기능만 |
+| `baseline/spring-v6` | 116 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15) · 비교 · 추천 API 의 새 기능만 |
 
 - **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS` · `V15_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
 - diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.

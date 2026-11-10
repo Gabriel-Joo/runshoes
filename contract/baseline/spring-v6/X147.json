@@ -1,0 +1,238 @@
+{
+  "id": "X147",
+  "plan": null,
+  "name": "비교 pick=1 → cols(자동 채우기) · fields · shoes",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/compare?pick=1",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 07:48:23 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "cols": [
+        {
+          "why": "pick",
+          "id": 1
+        },
+        {
+          "why": "stability",
+          "id": 8
+        },
+        {
+          "why": "similar",
+          "id": 9
+        },
+        {
+          "why": "similar",
+          "id": 2
+        }
+      ],
+      "fields": {
+        "weight": {
+          "values": [
+            280
+          ],
+          "n": 1
+        },
+        "stackHeight": {
+          "values": [
+            32,
+            34.5,
+            35,
+            35,
+            36,
+            36,
+            36,
+            37,
+            37,
+            38,
+            38.5,
+            39,
+            39,
+            40,
+            40,
+            40.5,
+            41.5,
+            43,
+            43.5
+          ],
+          "n": 19
+        },
+        "drop": {
+          "values": [
+            5,
+            5,
+            6,
+            6,
+            6,
+            6,
+            7,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            10,
+            10,
+            10,
+            10,
+            10
+          ],
+          "n": 21
+        },
+        "price": {
+          "values": [
+            159000,
+            159000,
+            159000,
+            169000,
+            179000,
+            179000,
+            179000,
+            189000,
+            189000,
+            189000,
+            199000,
+            209000,
+            219000,
+            219000,
+            229000,
+            229000,
+            239000,
+            259000,
+            309000,
+            329000,
+            339000
+          ],
+          "n": 21
+        }
+      },
+      "shoes": [
+        {
+          "id": 1,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": 40,
+            "order": 14,
+            "band": "mid",
+            "word": "중간"
+          },
+          "drop": {
+            "value": 8,
+            "order": 8,
+            "band": "mid",
+            "word": "중간"
+          },
+          "price": {
+            "value": 199000,
+            "order": 11,
+            "band": "mid",
+            "word": "중간"
+          }
+        },
+        {
+          "id": 8,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": 40.5,
+            "order": 16,
+            "band": "high",
+            "word": "높은 편"
+          },
+          "drop": {
+            "value": 6,
+            "order": 3,
+            "band": "low",
+            "word": "낮은 편"
+          },
+          "price": {
+            "value": 179000,
+            "order": 5,
+            "band": "mid",
+            "word": "중간"
+          }
+        },
+        {
+          "id": 9,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": 39,
+            "order": 12,
+            "band": "mid",
+            "word": "중간"
+          },
+          "drop": {
+            "value": 10,
+            "order": 17,
+            "band": "high",
+            "word": "높은 편"
+          },
+          "price": {
+            "value": 239000,
+            "order": 17,
+            "band": "high",
+            "word": "높은 편"
+          }
+        },
+        {
+          "id": 2,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": 36,
+            "order": 5,
+            "band": "mid",
+            "word": "중간"
+          },
+          "drop": {
+            "value": 10,
+            "order": 17,
+            "band": "high",
+            "word": "높은 편"
+          },
+          "price": {
+            "value": 179000,
+            "order": 5,
+            "band": "mid",
+            "word": "중간"
+          }
+        }
+      ]
+    }
+  }
+}
