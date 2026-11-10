@@ -1,0 +1,110 @@
+{
+  "id": "X151",
+  "plan": null,
+  "name": "추천 다섯 칸 → 상위 3 · score · reasons",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=%EB%84%93%EC%9D%8C&stability=%EC%A4%91%EB%A6%BD%ED%99%94-outer&cushion=high&price=mid",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 07:48:23 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "results": [
+        {
+          "id": 8,
+          "score": 110,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "와이드 모델이 따로 있어요",
+              "hit": true
+            },
+            {
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
+            },
+            {
+              "text": "쿠션 두께가 원하시는 정도예요 (40.5mm)",
+              "hit": true
+            },
+            {
+              "text": "생각하신 것보다 저렴해요 (179,000원)",
+              "hit": false
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "score": 100,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "발볼이 넓게 나온 모델이에요",
+              "hit": true
+            },
+            {
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
+            },
+            {
+              "text": "쿠션이 원하시는 것보다 얇아요 (36mm)",
+              "hit": false
+            },
+            {
+              "text": "생각하신 것보다 저렴해요 (179,000원)",
+              "hit": false
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "score": 100,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "발볼이 넓게 나온 모델이에요",
+              "hit": true
+            },
+            {
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
+            },
+            {
+              "text": "생각하신 것보다 저렴해요 (189,000원)",
+              "hit": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

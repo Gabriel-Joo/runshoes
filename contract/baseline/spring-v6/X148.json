@@ -1,0 +1,167 @@
+{
+  "id": "X148",
+  "plan": null,
+  "name": "비교 ids — 숫자 아님 · 겹침 · 모르는 id 버림",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/compare?ids=3,x,3,999,1",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 07:48:23 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "fields": {
+        "weight": {
+          "values": [
+            280
+          ],
+          "n": 1
+        },
+        "stackHeight": {
+          "values": [
+            32,
+            34.5,
+            35,
+            35,
+            36,
+            36,
+            36,
+            37,
+            37,
+            38,
+            38.5,
+            39,
+            39,
+            40,
+            40,
+            40.5,
+            41.5,
+            43,
+            43.5
+          ],
+          "n": 19
+        },
+        "drop": {
+          "values": [
+            5,
+            5,
+            6,
+            6,
+            6,
+            6,
+            7,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            10,
+            10,
+            10,
+            10,
+            10
+          ],
+          "n": 21
+        },
+        "price": {
+          "values": [
+            159000,
+            159000,
+            159000,
+            169000,
+            179000,
+            179000,
+            179000,
+            189000,
+            189000,
+            189000,
+            199000,
+            209000,
+            219000,
+            219000,
+            229000,
+            229000,
+            239000,
+            259000,
+            309000,
+            329000,
+            339000
+          ],
+          "n": 21
+        }
+      },
+      "shoes": [
+        {
+          "id": 3,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": null
+          },
+          "drop": {
+            "value": 8,
+            "order": 8,
+            "band": "mid",
+            "word": "중간"
+          },
+          "price": {
+            "value": 189000,
+            "order": 8,
+            "band": "mid",
+            "word": "중간"
+          }
+        },
+        {
+          "id": 1,
+          "weight": {
+            "value": null,
+            "converted": false
+          },
+          "stackHeight": {
+            "value": 40,
+            "order": 14,
+            "band": "mid",
+            "word": "중간"
+          },
+          "drop": {
+            "value": 8,
+            "order": 8,
+            "band": "mid",
+            "word": "중간"
+          },
+          "price": {
+            "value": 199000,
+            "order": 11,
+            "band": "mid",
+            "word": "중간"
+          }
+        }
+      ]
+    }
+  }
+}
