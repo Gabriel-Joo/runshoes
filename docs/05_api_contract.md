@@ -113,7 +113,7 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 - **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
 - diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.
 - 기록에 비밀번호 · JWT · refresh 쿠키를 남기지 않는다(`<가림>` · `<jwt>`).
-- 운영에는 읽기 시나리오만(`--read-only`). 요약 시나리오는 mock Ollama(`mock-ollama.mjs`)로만 — 운영에서 시드 신발의 요약을 부르면 GPU 가 돈다.
+- 운영에는 읽기 시나리오만(`--read-only`). 요약 시나리오(v14-summary)는 녹화 전에 배치를 돌리므로 로컬에서 mock Ollama(`mock-ollama.mjs`)로만 한다. 조회(`/api/shoes/{id}/summary`)는 DB 만 읽어 운영에서 불러도 GPU 를 쓰지 않는다.
 
 #### 2. 왜 이렇게 했나
 
