@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 값이 비어 있으면 그 계정들은 로그인할 수 없는 채로 둔다(경고만).
  */
 @Component
+@Profile("!batch")   // 요약 CronJob(batch)에서는 돌지 않는다 — 배치는 인증을 쓰지 않는다
 class SeedPasswords implements ApplicationRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(SeedPasswords.class);

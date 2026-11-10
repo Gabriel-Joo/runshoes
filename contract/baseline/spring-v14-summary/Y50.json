@@ -1,0 +1,59 @@
+{
+  "id": "Y50",
+  "plan": null,
+  "name": "리뷰 shoe 8(2건 → 3건) → 아직 만들지 않은 행",
+  "contract": true,
+  "expect": 201,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/reviews",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{u2}}"
+    },
+    "body": {
+      "shoeId": 8,
+      "rating": 5,
+      "content": "다시 세 건이 되는 리뷰입니다"
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "location": "http://runshoes.ronanlab.dev/api/reviews/107",
+      "access-control-expose-headers": "Location",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 107,
+      "shoeId": 8,
+      "userId": 2,
+      "author": "산악울트라",
+      "rating": 5,
+      "content": "다시 세 건이 되는 리뷰입니다",
+      "createdAt": "2026-11-10T03:59:17.102Z",
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

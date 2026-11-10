@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V13 까지 적용됐다(11-03) — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V13` · `domain/*.java` · 로컬 dev DB(V1~V13)의 `information_schema`
+> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V13 까지 적용됐다(11-03), V14(요약)는 로컬 끝 · 운영 전(2026-11-10) — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V13` · `domain/*.java` · 로컬 dev DB(V1~V13)의 `information_schema`
 
 #### 0. 한 줄 요약
 
@@ -24,7 +24,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
   - `uk_shoes_line_generation_gender(line_key, generation, gender)` — 한 라인의 한 세대 · 한 성별은 한 행. 숨긴 행에도 걸린다(같은 세대는 새로 넣지 않고 되살린다, 409).
   - `uk_reviews_user_first_shoe(user_id, first_shoe_id)` — 한 사람이 한 신발에 첫 리뷰는 하나. `first_shoe_id` 는 FIRST 일 때만 값이 있는 VIRTUAL 생성 칸이라 FOLLOWUP 은 걸리지 않는다.
   - `uk_users_email` · `uk_users_nickname`(collation 이 대소문자를 같게 본다) · `uk_refresh_tokens_hash`.
-  - FK 10개. 신발 · 리뷰를 가리키는 것(`likes` · `review_likes` · `reviews.shoe_id` · `reviews.parent_review_id`)은 `ON DELETE CASCADE` — 영구 삭제 때 함께 지워진다. `activity_logs.user_id` 는 `SET NULL`, `reviews.user_id` 는 막는다(탈퇴는 행을 지우지 않는다).
+  - FK 11개. 신발 · 리뷰를 가리키는 것(`likes` · `review_likes` · `reviews.shoe_id` · `reviews.parent_review_id` · `shoe_summaries.shoe_id`(V14))은 `ON DELETE CASCADE` — 영구 삭제 때 함께 지워진다. `activity_logs.user_id` 는 `SET NULL`, `reviews.user_id` 는 막는다(탈퇴는 행을 지우지 않는다).
 - id — `shoes` · `reviews` · `users` 모두 `AUTO_INCREMENT`(V10 부터). 신발 POST 본문에 id 가 있으면 그대로 쓴다(`AutoIncrementOrAssigned`).
 - 시간은 모두 UTC, `DATETIME(3)`(ms) — 프런트의 `toISOString()` 과 같은 값을 돌려준다.
 - 숫자 스펙 · 가격 · 평점은 `DOUBLE` — JSON 숫자를 그대로 담는다(250.5 · 38.55 가 잘리지 않게).
@@ -56,7 +56,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - `ActivityCleanup` 이 매일(`app.activity.cleanup-cron`, Asia/Seoul) 지운다 — `auth.*` · `user.*` 90일, 나머지(`review.*` · `like.*` · `shoe.*` · `compare.*` …) 180일(`application.yml`).
 - 그래서 오래 남아야 하는 기록은 로그에 기대지 않는다 — 영구 삭제는 `shoe_purges`, 신발의 마지막 수정은 `shoes.last_change`.
 
-#### 1-4. 마이그레이션 V1~V13
+#### 1-4. 마이그레이션 V1~V14
 
 | V | 이름 | 무엇 | 운영 적용 |
 |---|---|---|---|
@@ -73,6 +73,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 11 | admin history | `sku` · `updated_at` · `last_change` · `shoe_purges` | 2026-11-01 |
 | 12 | wide scope | `wide_scope`(domestic · overseas) | 2026-11-02 |
 | 13 | model en | `model_en` · `model_alias` | 2026-11-03 |
+| 14 | shoe summaries | 리뷰 요약 `shoe_summaries`(요약 · 만들 때 리뷰 수 · 반올림 전 평균 · stale · 만든 때). 3건 이상인 보이는 신발을 "아직 만들지 않은" 행으로 넣는다 — `09_chatbot_rag.md` 5절 | 전 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md`)에 있다. 절차는 `06_deployment.md`.
 

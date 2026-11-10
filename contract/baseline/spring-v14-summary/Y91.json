@@ -1,0 +1,25 @@
+{
+  "id": "Y91",
+  "plan": null,
+  "name": "mock 동시 요청 최대 — 배치는 하나씩(1)",
+  "contract": false,
+  "request": {
+    "method": "GET",
+    "path": "/__maxActive",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "connection": "keep-alive",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "maxActive": 1
+    }
+  }
+}

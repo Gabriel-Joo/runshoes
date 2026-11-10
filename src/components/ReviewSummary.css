@@ -18,12 +18,12 @@
   margin: 0 0 10px;
 }
 
-.review-summary__loading-text,
-.review-summary__empty {
-  font-size: 14px;
-  color: #999;
-  font-style: italic;
-  margin: 0;
+/* "리뷰 N건 기준" — 요약이 언제 것인지. 라벨 옆에 작게, 대문자 간격 없이 */
+.review-summary__basis {
+  margin-left: 8px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text-weak);
 }
 
 .review-summary__positive,

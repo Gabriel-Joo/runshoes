@@ -1,0 +1,40 @@
+{
+  "id": "Y10",
+  "plan": null,
+  "name": "요약 shoe 1 — 배치가 만든 것을 읽는다 {summary, reviewCount, generatedAt}",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "generatedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/shoes/1/summary",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Tue, 10 Nov 2026 03:59:16 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "summary": {
+        "positive": "쿠션이 좋다는 의견이 많습니다.",
+        "negative": "발볼이 좁다는 의견이 있습니다."
+      },
+      "reviewCount": 5,
+      "generatedAt": "2026-11-10T03:59:15.718Z"
+    }
+  }
+}
