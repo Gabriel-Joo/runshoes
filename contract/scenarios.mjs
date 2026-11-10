@@ -270,6 +270,7 @@ export const AUTH_SCENARIOS = [
 ];
 
 // 요약 — V3 에서는 리뷰를 쓰려면 로그인해야 한다(S0). S5 내용은 10자 이상(V3 규칙) — 그래서 S9 프롬프트의 그 한 줄만 Node 기준선과 다르다
+// 폐기(V14, 2026-11-10): 조회가 Ollama 를 부르고 메모리에 캐시하던 시절의 계약 — V14 에서 조회가 DB 만 읽게 바뀌어 S2 · S3 · S7 이 FAIL 한다(원래 깨져 있던 것이 아니다). 지금은 SUMMARY_V14_SCENARIOS
 export const SUMMARY_V3_SCENARIOS = [
   login("S0", "runner01@runshoes.test", "{{seedPassword}}", "u1"),
   ...SUMMARY_SCENARIOS.map((s) => s.id !== "S5" ? s : { ...s, headers: jb("u1"),

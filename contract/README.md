@@ -15,7 +15,8 @@ baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Sp
 baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/05_api_contract.md 1-4)
 baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
 baseline/spring-v4/         V4(세대 구조) 새 기능만 21건 — 옛 기준선은 다시 녹화하지 않고 diff --allow-added 로 V4 키 추가만 허용(2026-10-24). V5 키(priceSource · priceCheckedAt · priceKind)도 같은 방식(2026-10-29)
-baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다. V14 전(조회가 Ollama 를 불렀다) — 이력
+baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다.
+                        **폐기(V14, 2026-11-10)**: 조회가 Ollama 를 부르고 메모리에 캐시하던 시절의 계약이다. V14 에서 조회가 DB 만 읽게 바뀌어 지금 앱에서는 S2 · S3 · S7 이 FAIL 한다 — 원래 깨져 있던 것이 아니다. 지금의 요약 계약은 spring-v14-summary
 baseline/spring-v14-summary/ V14 요약 — 녹화 전에 배치(batch 프로필)를 한 번 돌리고 읽기 · stale · 3건 미만 삭제 · 관리 건수를 녹화. Y90 ~ Y92 는 mock 상태(INFO)
 baseline/spring-v6/         V6 뒤 새 기능만 98건 — 옛 기준선은 다시 녹화하지 않고 --allow-added 로 V4 · V5 · V6 · V11 · V12 · V13 키 추가만 허용
 run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v14-summary | v4 | v6 (V14 전: v3-summary) (V3 전: main | summary | search)
