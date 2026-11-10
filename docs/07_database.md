@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V13 까지 적용됐다(11-03), V14(요약)는 2026-11-10 적용 — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V13` · `domain/*.java` · 로컬 dev DB(V1~V13)의 `information_schema`
+> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V13 까지 적용됐다(11-03), V14(요약) · V15(270mm 무게) · V16(무게 용어 설명)은 2026-11-10 적용 — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V16` · `domain/*.java` · 로컬 dev DB(V1~V16)의 `information_schema`
 
 #### 0. 한 줄 요약
 
@@ -74,8 +74,8 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 12 | wide scope | `wide_scope`(domestic · overseas) | 2026-11-02 |
 | 13 | model en | `model_en` · `model_alias` | 2026-11-03 |
 | 14 | shoe summaries | 리뷰 요약 `shoe_summaries`(요약 · 만들 때 리뷰 수 · 반올림 전 평균 · stale · 만든 때). 3건 이상인 보이는 신발을 "아직 만들지 않은" 행으로 넣는다 — `09_chatbot_rag.md` 5절 | 2026-11-10 |
-| 15 | weight norm 270 | `weight_norm_270` — 공시 무게를 270mm(M9)로 맞춘 값, 생성 컬럼(VIRTUAL, 반 사이즈당 2.6%). 기준이 없거나 다섯 사이즈 밖이면 NULL — `01a_catalog_sources.md` 1-3a | 적용 전 |
-| 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 적용 전 |
+| 15 | weight norm 270 | `weight_norm_270` — 공시 무게를 270mm(M9)로 맞춘 값, 생성 컬럼(VIRTUAL, 반 사이즈당 2.6%). 기준이 없거나 다섯 사이즈 밖이면 NULL — `01a_catalog_sources.md` 1-3a | 2026-11-10 |
+| 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 2026-11-10 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`)에 있다. 절차는 `06_deployment.md`.
 
@@ -118,7 +118,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 
 #### 5. 검증 항목
 
-- **빈 DB 에서 V1~V13** — 계약 시험(`contract/run-spring-local.sh v6|v3|v3-search`)이 로컬 dev DB 를 지우고 새 jar 로 처음부터 올린다. 기동 로그의 `Successfully applied` 와 계약 PASS 를 본다.
+- **빈 DB 에서 V1~V16** — 계약 시험(`contract/run-spring-local.sh v6|v3|v3-search`)이 로컬 dev DB 를 지우고 새 jar 로 처음부터 올린다. 기동 로그의 `Successfully applied` 와 계약 PASS 를 본다.
 - **운영 사본에서 새 마이그레이션 하나** — 운영 덤프를 로컬에 복원하고 새 jar 를 띄워 걸린 시간 · 행 수 · FK 를 본다(리허설, 런북마다 기록).
 - **스키마 대조** — `ddl-auto validate` 로 엔티티와 스키마가 맞지 않으면 기동이 실패한다.
 - **롤백** — 새 스키마에 옛 이미지를 띄워 기동하는지. V4 · V5 리허설에서 옛 운영 jar(`eeffbd8`)를 V5 DB 에 띄워 `Successfully validated` 를 봤다(`catalog-v4-v5.md`).
