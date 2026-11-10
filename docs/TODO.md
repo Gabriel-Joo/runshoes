@@ -48,6 +48,6 @@
 
 - [ ] MySQL 정기 백업(덤프 CronJob, 저장소 밖 보관) → `06_deployment.md` 4절
 - [ ] ShedLock — activity_logs 정리를 Pod 하나만 돌게, 그 뒤 infra Deployment env `ACTIVITY_CLEANUP_CRON` 빼기 → `06_deployment.md` 4절
-- [ ] MySQL Replica + 수동 승격 런북(인프라 묶음 2) → `06_deployment.md` 4절
+- [ ] MySQL 승격을 앱 트래픽까지 옮겨 한 번 해 보기(점검 시간에 — Replica · 런북은 2026-11-10 인프라 묶음 2에서 생김) → `06_deployment.md` 4절
 - [ ] Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 → 상세 문서 없음(전에 `overview.md` 표에만 있던 것)
 - [ ] 옛 칸 정리 마이그레이션(옛 칸 · `liked` 삭제 · NOT NULL 조이기 · `legacy*`) → `07_database.md` 4절
