@@ -33,8 +33,11 @@ export interface Reason {
 }
 export interface RecommendResult {
   id: number;
-  score: number;
+  score: number;        // 판단한 조건에서 얻은 점수
+  max: number;          // 판단한 조건의 만점 — 데이터가 없어 못 본 조건은 빠진다(docs/10_recommend.md)
+  checked: number;      // 판단한 조건 수
   reasons: Reason[];
+  notes: string[];      // 못 본 조건 — 조건이 아니라 상태라 모든 순위에 보인다
 }
 
 export async function fetchRecommend(answers: Record<string, string>, signal?: AbortSignal): Promise<RecommendResult[]> {

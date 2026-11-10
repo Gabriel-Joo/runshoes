@@ -20,7 +20,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
 | `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
 | `GET /api/compare?pick=<id>` · `?ids=<id,…>` | 비교하기 계산(2026-11-10, 작업 3 — 브라우저에서 옮김). `pick` 이면 자동 채우기 `cols:[{id, why}]`(08 1-3)까지, `ids` 는 1~5켤레(숫자 아님 · 모르는 id · 겹침은 버림). 응답 `fields`(칸마다 모집단 `{n, values}` 오름차순 — 그래프 막대용) · `shoes`(칸마다 `{value, order, band, word}`, 무게는 `converted` — 등수를 말할 수 없으면 `value: null` 만). 둘 다 없거나 둘 다 있으면 400 `{}` | 누구나 |
-| `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | 추천받기 상위 3 `{results:[{id, score, reasons:[{hit, text}]}]}`(02 1-4). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
+| `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | 추천받기 상위 3 `{results:[{id, score, max, checked, reasons:[{hit, text}], notes}]}` — `score` · `max` 는 판단한 조건의 점수 · 만점(데이터가 없어 못 본 조건은 빠진다), `checked` 판단한 조건 수, `notes` 못 본 조건 한 줄(`10_recommend.md`). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
 | `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
 
@@ -149,7 +149,3 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 - `contract/run-spring-local.sh v6` · `v3` · `v3-search` · `v4` · `v14-summary` — PASS 와, FAIL 이 `contract/README.md` 의 의도한 차이 목록과 같은지.
 - 녹화만 남았을 때: `node contract/diff.mjs --allow-added=<키> contract/baseline/<세트> contract/run/<세트>` — 서버 없이 다시 센다.
 - 운영: `node contract/record.mjs --read-only --base http://192.168.122.240 --host runshoes.ronanlab.dev …` 뒤 `diff.mjs --read-only`(운영 데이터가 시드와 같을 때만 PASS 다. 지금 운영은 카탈로그 302켤레가 들어 있어 신발 목록 시나리오는 맞지 않는다 — 2026-10-21 전환 직후의 PASS 23 이 마지막 운영 비교다).
-
-#### 다음에 할 일
-
-- 페이지 나누기(프런트가 `_start` · `_limit` 을 붙이면 된다 — 서버는 그대로).

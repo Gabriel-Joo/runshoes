@@ -1,0 +1,50 @@
+# TODO — 남은 일
+
+> 한 줄에 하나. 무엇이 남았는지만 적는다 — 무엇이 문제고 왜 그런지 · 어떻게 고칠지는 → 가리키는 문서에 있다. 끝나면 이 줄을 지우고, 한 일은 그 문서(3절)와 `HISTORY.md` 에 남긴다. 남은 일을 다른 문서에 따로 적지 않는다(2026-11-10 사용자 — 두 군데에 적으면 한쪽만 지우게 된다).
+
+#### 추천받기 — 이 순서로(2026-11-10 사용자)
+
+1. [ ] 예산이 상한이 아니라 구간 일치로 작동("30만원 이상"이 30만 원 이상 28켤레에만 맞음) → `10_recommend.md` 4절
+2. [ ] 예산 판단이 발매가 기준이라는 것이 추천 화면에 없음 → `10_recommend.md` 4절
+2. [ ] 예산 배점(20) — 발매가 기준이라 다른 조건보다 불확실, 위 둘 뒤에 분포를 다시 재고 → `10_recommend.md` 4절
+3. [ ] 쿠션 문구 — low 인데 35 ~ 39.5mm 신발에 "얇아요" → `10_recommend.md` 4절
+3. [ ] 조건 문구 — 근거 없이 "다른 조건이 잘 맞아요" → `10_recommend.md` 4절
+3. [ ] 옛 세대 표시 — 점수에 넣지 않고 표시만("지금은 다음 세대가 나와 있어요") → `10_recommend.md` 2-4 · 4절
+
+#### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
+
+- [ ] 4단계 embedding-service 분리(펫퍼민트 영향) → `09_chatbot_rag.md` 2절
+- [ ] 5단계 챗봇 RAG → `09_chatbot_rag.md`
+- [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
+- [ ] `terms` id 12 중복(무게 · 아웃솔) — 챗봇이 용어를 참조할 때 → `07_database.md` 4절 · `09_chatbot_rag.md` 8절
+- [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
+- [ ] 리랭커를 켤지 — 평가 결과를 보고 → `09_chatbot_rag.md` 2절
+
+#### 카탈로그
+
+- [ ] 와이드 정보 없음 4켤레(사용자가 MAN 으로) · 울트라부스트 5X 의 와이드 · 정가 · 카본 → `01a_catalog_sources.md` 4절
+- [ ] GTX 판을 별도 행으로 → `01a_catalog_sources.md` 4절
+- [ ] 정가 빈 칸을 채울 방법(국내 공식몰 아카이브 · MAN) → `01a_catalog_sources.md` 4절
+- [ ] 정기 확인 작업(월 1회 보고서 — 새 세대 · 정가 변경 · 이미지 링크) → `01a_catalog_sources.md` 4절
+- [ ] 여성 행(출처가 모이면) → `01a_catalog_sources.md` 4절
+- [ ] 상품명이 세대를 섞는 라인 점검 → `01b_catalog_images.md` 4절
+- [ ] 이미지 링크 정기 확인 → `01b_catalog_images.md` 4절
+- [ ] 이미지 1장뿐인 57켤레 — GOAT 색상 → `01b_catalog_images.md` 4절
+- [ ] 사진이 없어 적재되지 않은 14켤레 — 사용자가 관리 화면에서 → `01b_catalog_images.md` 4절
+- [ ] 정기 가져오기 · 정기 확인(CronJob — 보고서만) → `01c_catalog_loader.md` 4절
+- [ ] 관리 화면에서 새로 넣은 신발을 후보 목록 행으로 바꾸는 도구 → `01c_catalog_loader.md` 4절
+- [ ] 문구 규칙 · 검사기를 저장소로 옮겨 새 켤레에도 → `01d_catalog_copy.md` 4절
+- [ ] 새 신발에 시드 리뷰 더하기 → `01e_seed_reviews.md` 4절
+
+#### 화면 · 계정 · API
+
+- [ ] 실사용 후기(FOLLOWUP) 화면 → `04_auth.md` 4절
+- [ ] 토큰 밖 색 둘을 토큰으로 옮길지 → `02b_design_system.md` 4절
+- [ ] 서버도 와이드 "없음"의 출처를 요구할지 → `03_admin.md` 4절
+- [ ] 목록 페이지 나누기 → `05_api_contract.md` 4절
+
+#### 인프라 · DB
+
+- [ ] MySQL 정기 백업(덤프 CronJob, 저장소 밖 보관) → `06_deployment.md` 4절
+- [ ] Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 → 상세 문서 없음(전에 `overview.md` 표에만 있던 것)
+- [ ] 옛 칸 정리 마이그레이션(옛 칸 · `liked` 삭제 · NOT NULL 조이기 · `legacy*`) → `07_database.md` 4절

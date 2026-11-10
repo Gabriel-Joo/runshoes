@@ -45,4 +45,39 @@ class PolicyTest {
 		assertEquals("쿠션이 원하시는 것보다 얇아요 (37mm)", r.reasons().get(3).text());
 		assertEquals(List.of(false, false, false, false), r.reasons().stream().map(RecommendPolicy.Reason::hit).toList());
 	}
+
+	private static Map<String, String> ask(String width, String cushion, String price) {
+		return Map.of("purpose", "조깅·회복주", "width", width, "stability", "중립화", "cushion", cushion, "price", price);
+	}
+
+	@Test
+	void missingDataIsNotScored() {
+		// 스택 · 가격 없는 신발 — 두 조건을 점수 · 만점에서 함께 뺀다. 못 본 것이 둘이라 후보에서는 빠진다(하한선)
+		var r = RecommendPolicy.evaluate(shoe(1, null, null, "보통", false), ask("unknown", "high", "low"));
+		assertEquals(70, r.score());
+		assertEquals(70, r.max());
+		assertEquals(2, r.checked());
+		assertEquals(List.of("cushion", "price"), r.skipped());
+		assertEquals(List.of("스택 · 가격 정보가 없어 쿠션 · 예산은 보지 않았어요"), r.notes());
+		assertEquals(List.of(), RecommendPolicy.top3(List.of(shoe(1, null, null, "보통", false)), ask("unknown", "high", "low")));
+	}
+
+	@Test
+	void normalWidthIsNotACondition() {
+		// "보통"을 고르면 발볼을 보지 않는다 — 보통 신발도 점수 없음, 만점에도 없음(10_recommend.md)
+		var r = RecommendPolicy.evaluate(shoe(1, 40.0, 150000.0, "보통", false), ask("보통", "high", "low"));
+		assertEquals(110, r.score());
+		assertEquals(110, r.max());
+		assertEquals("발볼은 보통로 나왔어요", r.reasons().get(1).text());
+	}
+
+	@Test
+	void sameRatioPrefersMoreChecked() {
+		// 둘 다 만점 비율 — 판단한 조건이 많은 쪽이 앞(평점이 낮아도)
+		Spec full = new Spec(1, "A", "조깅·회복주", "중립화", 42.0, 8.0, 270.0, 270.0, "M9", false, "a", true, 150000.0, "넓음", false, null, 1.0, 1, 0);
+		Spec thin = new Spec(2, "B", "조깅·회복주", "중립화", 42.0, 8.0, 270.0, 270.0, "M9", false, "b", true, null, "넓음", false, null, 5.0, 30, 50);
+		var top = RecommendPolicy.top3(List.of(thin, full), ask("넓음", "high", "low"));
+		assertEquals(List.of(1L, 2L), top.stream().map(x -> x.shoe().id()).toList());
+		assertEquals(List.of("가격 정보가 없어 예산은 보지 않았어요"), top.get(1).notes());
+	}
 }

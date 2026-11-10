@@ -159,6 +159,11 @@
   color: var(--text-weak);
 }
 
+/* 못 본 조건(데이터 없음) — 맞음 · 안 맞음이 아니라 상태. 회색, 표식 ⓘ */
+.recommend__reasons li.is-note {
+  color: var(--text-weak);
+}
+
 .recommend__reasons li.is-hit span {
   color: var(--accent);
   font-weight: 700;

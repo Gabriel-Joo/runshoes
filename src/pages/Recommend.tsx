@@ -215,7 +215,7 @@ function Recommend() {
 
   const byId = new Map(shoes.map((s) => [s.id, s]));
   const results = Array.isArray(picked)
-    ? picked.flatMap((r) => { const shoe = byId.get(r.id); return shoe ? [{ shoe, score: r.score, reasons: r.reasons }] : []; })
+    ? picked.flatMap((r) => { const shoe = byId.get(r.id); return shoe ? [{ shoe, score: r.score, reasons: r.reasons, notes: r.notes }] : []; })
     : [];
 
   const selectedShoe = shoes.find((s) => s.id === selectedId) ?? null;
@@ -293,6 +293,9 @@ function Recommend() {
               onToggleLike={() => toggleLike(results[0].shoe)}
             />
             <ul className="recommend__reasons">
+              {results[0].notes.map((note, i) => (
+                <li key={`n${i}`} className="is-note"><span>ⓘ</span>{note}</li>
+              ))}
               {results[0].reasons.map((reason, i) => (
                 <li key={i} className={reason.hit ? "is-hit" : ""}>
                   <span>{reason.hit ? "✓" : "·"}</span>
@@ -313,6 +316,10 @@ function Recommend() {
                   onToggleLike={() => toggleLike(result.shoe)}
                 />
                 <ul className="recommend__reasons recommend__reasons--small">
+                  {/* 못 본 조건 — ✓ 셋에 끼지 않고 따로(조건이 아니라 상태) */}
+                  {result.notes.map((note, j) => (
+                    <li key={`n${j}`} className="is-note"><span>ⓘ</span>{note}</li>
+                  ))}
                   {result.reasons
                     .filter((r) => r.hit)
                     .slice(0, 3)
