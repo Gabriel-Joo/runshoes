@@ -4,7 +4,7 @@ Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 �
 계획: [docs/archive/SPRING_MIGRATION_PLAN.md](../docs/archive/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
-scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건)
+scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건) · V4_SCENARIOS(세대 구조, 21건) · V6_SCENARIOS(출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · V12 와이드 · V13 영어 이름 · 영문 브랜드 검색 · 비교 기록, 98건)
                   V3 전: SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, 9건) — 이력
 record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태코드 · 헤더 전체 · 본문)과 index.json 을 쓴다
 diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
@@ -16,7 +16,8 @@ baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰�
 baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
 baseline/spring-v4/         V4(세대 구조) 새 기능만 21건 — 옛 기준선은 다시 녹화하지 않고 diff --allow-added 로 V4 키 추가만 허용(2026-10-24). V5 키(priceSource · priceCheckedAt · priceKind)도 같은 방식(2026-10-29)
 baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다
-run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v3-summary (V3 전: main | summary | search)
+baseline/spring-v6/         V6 뒤 새 기능만 98건 — 옛 기준선은 다시 녹화하지 않고 --allow-added 로 V4 · V5 · V6 · V11 · V12 · V13 키 추가만 허용
+run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v3-summary | v4 | v6 (V3 전: main | summary | search)
 ```
 
 ## 녹화 · 비교
@@ -41,7 +42,7 @@ node contract/record.mjs --base http://127.0.0.1:3000 --set search --out contrac
 node contract/diff.mjs contract/baseline/spring-search contract/run/spring-search
 ```
 
-로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
+로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary|v4|v6]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
 V3 세트는 로그인해야 하므로 비밀번호를 env(`SEED_USER_PASSWORD` · `ADMIN_PASSWORD`)로 앱과 record.mjs 에 같이 준다 — 스크립트가 매번 새로 만든다(Secret 과 상관없다).
 기록에는 비밀번호 · JWT · refresh 쿠키 값을 남기지 않는다(`<가림>` · `<jwt>`). 시나리오의 `expect`(상태코드)가 다르면 record.mjs 가 표시하고 exit 1,
 `volatile: ["createdAt"]` · `["retryAfter"]` 은 서버가 그때 정하는 값이라 diff 가 형식(날짜 · 숫자)만 본다.

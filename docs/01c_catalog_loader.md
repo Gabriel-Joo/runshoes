@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 적재는 `scripts/load-prod.sh [--apply]` 로만 한다. 사람 판단 282행 · 618칸이 `catalog/decisions.json` 에 있다.
+> 상태: 운영에서 쓰는 중(2026-11-02). 운영 적재는 `scripts/load-prod.sh [--apply]` 로만 한다. 사람 판단 359행 · 1,491칸(2026-11-10)이 `catalog/decisions.json` 에 있다.
 
 #### 0. 한 줄 요약
 
@@ -15,11 +15,11 @@ candidates.csv ─ 수집기들(local/work/specs-*.jsonl · fit2run · ABC마트
 build.mjs ← decisions.json(사람 판단) · copy.json(요약 · 설명) · extra-images.json(색상) · KicksDB 캐시(대표 이미지 · 품번)
      │
      ▼
-shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 302) ─ load.mjs ─ 관리자 API(/api/shoes) ─ 운영 DB
+shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 309) ─ load.mjs ─ 관리자 API(/api/shoes) ─ 운영 DB
 ```
 
 - **적재 경로는 앱의 관리자 API 다.** DB 에 직접 쓰지 않는다 — 앱 검증(값 범위 · 출처 형식 · 품번 형식)을 그대로 탄다.
-- 운영 행은 `lineKey + generation` 으로 맞춘다. 없으면 POST(id 는 DB 가 매긴다), 사실 값이 다르면 PATCH, 같으면 건너뛴다. 비교하는 칸은 `live-fields.mjs FACTS`(스펙 · 가격 메타 · 세대 · 스펙 출처 · 품번 · 와이드 범위).
+- 운영 행은 `lineKey + generation` 으로 맞춘다. 없으면 POST(id 는 DB 가 매긴다), 사실 값이 다르면 PATCH, 같으면 건너뛴다. 비교하는 칸은 `live-fields.mjs FACTS`(스펙 · 가격 메타 · 세대 · 스펙 출처 · 품번 · 와이드 범위 · 영어 이름 · 다른 표기).
 - 적재기의 요청에는 `X-Runshoes-Client: loader` 를 붙인다. 서버는 적재기의 등록 · 수정에 **수정 시각 · 바뀐 칸(V11)을 찍지 않는다** — 관리 화면의 "최근 수정순"이 사람의 수정만 보이게.
 - 운영 행의 `purpose`(용도)는 사람이 검수한 분류라 덮지 않는다. 시드 20켤레의 요약 · 설명은 사람이 고른 것(`copy.json seed_choice`)만 쓴다.
 
@@ -29,15 +29,15 @@ shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 302) ─ load.mjs ─
 
 | action | 뜻 |
 |---|---|
-| `use_source` | 이 값 · 이 출처로 바꾼다(599칸) |
-| `keep_db` | 시드의 기존 값을 유지한다(8) |
-| `clear` | 비운다(5) |
+| `use_source` | 이 값 · 이 출처로 바꾼다(1,455칸) |
+| `keep_db` | 시드의 기존 값을 유지한다(6) |
+| `clear` | 비운다(23) |
 | `resolve_official` | 충돌을 공식값으로 정리했다(3) |
-| `flag` · `hold` | 값은 두고 사람이 다시 본다(2) |
-| `review` | 다시 볼 때까지 적재하지 않는다 |
+| `flag` · `hold` | 값은 두고 사람이 다시 본다(flag 3 · hold 0) |
+| `review` | 다시 볼 때까지 적재하지 않는다(지금 0) |
 | `accept_image` | 판정이 애매한 이미지를 받아들인다(1) |
 
-- `by`(user · claude)와 `via`(web · manual · admin · abcmart)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색 458 · 관리 화면 43 · 사람 승인 27 · 직접 확인 22 · 그 밖.
+- `by`(user · claude)와 `via`(web · manual · admin · abcmart · store · review)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색(claude · web) 618 · 관리 화면(admin) 471 · 사람(by user, via 없음) 150 · 사람 웹 확인(user · web) 111 · 직접 확인(manual) 46 · 그 밖 95.
 - 고칠 때 이전 판단을 `previous` 에, 이미지를 바꿀 때 이전 대표를 `was` 에 남긴다.
 - 같은 파일에 `image_overrides`(이미지, `01b`) · `hidden` · `purged`(숨김 · 영구 삭제) · 시드 전용 값이 있다.
 

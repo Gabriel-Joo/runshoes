@@ -27,7 +27,7 @@
 |---|---|---|
 | `USER` | 가입자 · 시드 사용자 30(`runner01~30@runshoes.test`, 가상 인물) · 리뷰용 가상 사용자 170(`reviewer001~170@runshoes.test`, 비밀번호 칸 `!seed-reviewer` — 로그인 불가 · 체험 카드에 없음, `01e_seed_reviews.md`) | 리뷰 · 찜 · 도움이 돼요 · 내 정보 |
 | `ADMIN` | 관리자 1 | 위 + 신발 쓰기 · 리뷰 삭제 · 관리 화면 |
-| `DEMO_ADMIN` | 데모 관리자 1(V7) | 관리 화면을 다 **본다**. 모든 쓰기 · 리뷰 · 찜 · 회원 정보 수정은 403 `{code:"demo_admin"}` |
+| `DEMO_ADMIN` | 데모 관리자 1(V7) | 관리 화면을 다 **본다**. 모든 쓰기 · 리뷰 · 찜은 403 `{code:"demo_admin"}`, 회원 정보 수정(`/api/me/*`)은 403 `{error:{code:"DEMO_ADMIN", message}}` |
 
 - 권한 판정 순서: **401 → 404 → 403**(`05_api_contract.md` 1-4). 쓰기 권한은 화면이 아니라 서버(`api/Viewer` · `SecurityConfig`)가 막는다.
 - 입력 규칙(`AuthRules` — 프런트도 같은 규칙으로 먼저 보지만 정답은 서버):
@@ -78,7 +78,7 @@
 
 - 이벤트는 "영역.동작" — 인증(`auth.login.success` · `.failure` · `.blocked` · `auth.signup` · `auth.demo_login` · `user.withdraw` …), 쓰기(리뷰 · 찜 · 도움이 돼요 · 관리 화면의 신발 쓰기), 조회(`shoe.view` 30분 중복 제거 · `compare.view`).
 - IP · User-Agent 는 인증 이벤트에만 남긴다. 이메일 원문은 남기지 않는다.
-- `POST /api/activity`(조회 기록)는 로그인한 사람만, 언제나 204 — 남겼는지 말하지 않는다. refresh 성공 · 비로그인 조회는 남기지 않는다.
+- `POST /api/activity`(조회 기록)는 로그인한 사람만. 입력이 맞으면 204 — 30분 안 같은 기록이라 남기지 않았어도 204 라 남겼는지 말하지 않는다. type 이 없거나 모르는 값 · `shoeId` 없음 · `compare.view` 2~5켤레 밖은 400, 없는 신발은 404. refresh 성공 · 비로그인 조회는 남기지 않는다.
 - 보관은 인증 90일 · 나머지 180일, 매일 앱이 지운다(`ActivityCleanup`). 50만 행이 넘으면 정리 job 이 WARN 을 남긴다.
 - 읽는 API 는 아직 없다 — 사람은 DB 에서 본다.
 
