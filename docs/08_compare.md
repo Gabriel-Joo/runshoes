@@ -158,7 +158,7 @@
 
 - **로컬 코드 + 운영 공개 API**: `npx vite --config scripts/vite.prodapi.config.mjs` → `http://localhost:5179`. `/api` 만 운영으로 보낸다 — 310켤레 실제 데이터로 화면을 본다. **읽기만** 한다(찜 · 리뷰 · 관리 화면 쓰기 금지).
 - **로그인 상태**는 로컬 Spring(시드 DB, 포트 3000)에 붙인다: `API_TARGET=http://localhost:3000 PORT=5180 npx vite --config scripts/vite.prodapi.config.mjs`. 시드 계정 비밀번호는 plan · 문서 · 커밋에 적지 않는다.
-- **운영 데이터로 상세 모달을 열지 않는다** — 모달이 AI 요약을 불러 운영 Ollama(GPU)를 쓴다. 머리 → 모달 흐름은 로컬 Spring 쪽에서 본다.
+- **상세 모달은 운영 데이터로 열어도 된다** — 모달의 AI 요약은 DB(`shoe_summaries`, V14)만 읽고 Ollama 를 부르지 않는다(요약을 만드는 것은 하루 한 번 배치, `09_chatbot_rag.md` 5절).
 - **캡처 · 넘침 검사**: `node scripts/screen-shot.mjs plan.json`(헤드리스 크롬 CDP, 예시 `scripts/screen-shot.example.json`). 단계 `{overflow: "이름", skip: ".ctable__scroll"}` 이 페이지 가로 넘침과 넘친 요소를 찍는다(skip 은 원래 가로로 넘기는 표 안쪽). 결과 PNG 는 git 밖(세션 임시 폴더)에 둔다.
 - **넘침 검사는 스크롤바를 켠 채로** 한다(스크립트 기본값). 숨기고 재면 폭이 스크롤바(약 15px)만큼 넓게 잡혀, 관리자로 로그인한 768~800px 헤더 넘침을 놓쳤다(2026-11-09). 768px 이면 `cw 753` 처럼 나와야 스크롤바가 켜진 것이다.
 - 폭: 1440 · 1280 · 1024 · 900 · 768 · 390 · 360px. 헤더 넘침은 관리자 로그인 상태(메뉴 넷 + 등록·관리 + 닉네임)에서 768 · 800 · 899px 를 본다.
