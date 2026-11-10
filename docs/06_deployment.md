@@ -78,6 +78,7 @@ runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 ```
 
 - **노드 분산(2026-11-10, 인프라 가용성 묶음 1)** — replicas 2 를 required anti-affinity(`kubernetes.io/hostname`)로 서로 다른 노드에 두고 PDB minAvailable 1. 노드 하나가 죽어도 다른 Pod 가 받는다. 롤링 중 2+1개라 스케줄 가능한 워커 3대가 필요하다 — 워커가 4대라 한 대를 정비하는 동안에도 된다(그날 w1 을 cordon 한 채 새 태그가 w2 · w3 로 롤링됐다). 시도 제한(RateLimiter)은 DB 에 있어 Pod 가 둘이어도 갈리지 않는다. 상세 원본은 infra `docs/02_availability.md`.
+- **배치 고정 · Replica(2026-11-10 저녁, 인프라 가용성 묶음 2)** — 앱은 app 노드(w1 · w2)에만(nodeSelector). 노드가 둘이라 위의 2+1 롤링은 세 번째 Pod 가 갈 곳이 없어 **옛 Pod 하나를 먼저 내리고 새 Pod**(maxSurge 0 · maxUnavailable 1)로 바꿨다 — 롤링 동안 잠깐 Pod 하나, `rollout restart` 82초 · 1초 탐침 실패 0. MySQL Replica `runshoes-mysql-replica-0`(w2)가 binlog 로 따라간다(자동 전환 없음 — infra `docs/runbooks/mysql-replica.md`, 승격 시험은 이 Replica 로 했다: SQL 0.2초 · Service 전환 0.1초 · 다시 만들기 10초).
 - **activity_logs 정리를 꺼 두었다(2026-11-10 사용자 결정)** — `ActivityCleanup`(`@Scheduled`)이 Pod 마다 돌아 두 Pod 가 같은 시각 같은 행을 지우려 한다. Deployment env `ACTIVITY_CLEANUP_CRON: "-"`(Spring 의 끄기 값). ShedLock 이 들어오면 그 env 를 뺀다(4절).
 - **앱** — RollingUpdate `maxSurge 1, maxUnavailable 0`: 새 Pod 가 Ready 가 된 뒤 옛 Pod 를 내린다. Ready 는 DB 까지(`/actuator/health/readiness`), startup 은 최대 2분(Flyway 첫 기동). 종료는 preStop 5초 → graceful shutdown 최대 20초.
 - **비밀** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`), DB 비밀번호는 `runshoes-mysql`. optional 이 아니다 — Secret 이 없으면 새 Pod 가 멈추고 옛 Pod 가 계속 돈다.
@@ -147,7 +148,8 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 
 - **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만 뜬다. 그 사이의 리뷰 · 관리 화면 수정은 백업이 없다.
 - **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다(앱 Pod 가 둘이어도 503). 다른 프로젝트의 MySQL 도 w1 에 있다.
-- **MySQL 자동 장애 전환이 없다.** Operator 가 필요한데 자원 제약으로 Replica + 수동 승격을 택했다 — Replica 구성은 인프라 묶음 2. 그 전까지는 w1 이 돌아올 때까지 DB 가 멈춘다.
+- **MySQL 자동 장애 전환이 없다.** Operator 가 필요한데 자원 제약으로 Replica(w2, 2026-11-10) + 수동 승격을 택했다 — w1 이 죽으면 사람이 런북대로 승격한다(기계 쪽 약 2분). 앱 트래픽까지 옮기는 전환은 아직 해 보지 않았다. 승격하면 Service `runshoes-mysql` 의 selector 를 git 에도 반영해야 한다 — 자동 Sync 라 Jenkins 태그 커밋 하나에 되돌아간다.
+- **app 노드가 둘이다.** 롤링 동안 잠깐 Pod 하나, app 노드 하나가 죽으면 Pod 하나로 버티고 그동안 롤링(Jenkins 태그 커밋의 자동 Sync)은 멈춘다.
 - **activity_logs 정리가 꺼져 있다(2026-11-10부터).** replicas 2 에서 두 Pod 가 같은 정리를 하지 않게 env 로 껐다(1-5). ShedLock 전까지 activity_logs 가 지워지지 않고 쌓이고, 정리 때 남기던 행 수 경고 로그도 나오지 않는다.
 - **백업 · VM 이 같은 물리 서버다.** 덤프(호스트 `~/k8s-cluster/backup/`)와 MySQL PV(VM 디스크)가 같은 NVMe 이고, VM 이 모두 같은 서버라 서버가 죽으면 전부 멈춘다.
 - **배포는 빌드 시간만큼 걸린다.** push 에서 반영까지 약 5분, 대부분 이미지 빌드(Vite + Maven)다. 웹훅을 놓치면 폴링(Jenkins 15분 · ArgoCD 3분)만큼 늦어진다.
