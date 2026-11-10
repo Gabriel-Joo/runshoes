@@ -7,6 +7,7 @@ import com.kopo17.runshoes.domain.ReviewRepository;
 import com.kopo17.runshoes.domain.ShoeRepository;
 import com.kopo17.runshoes.domain.User;
 import com.kopo17.runshoes.domain.UserRepository;
+import com.kopo17.runshoes.summary.SummaryStore;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 데모 관리자(V7)는 쓰기 · 고치기 · 지우기 모두 403 demo_admin. 탈퇴 회원(V9)의 리뷰는 남는다(작성자 "탈퇴 회원").
  * 숨긴 신발(V8)의 리뷰는 없는 것으로 본다 — 목록에서 빠지고 GET · PATCH · DELETE 는 404(DB 에는 남는다, 되살리면 돌아온다).
  * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings). 그 전에 신발 행부터 잠근다(Ratings.lock — 데드락, 2026-11-01).
+ * 쓰고 · 고치고 · 지운 뒤 같은 트랜잭션에서 요약을 다시 만들어야 하나만 판단한다(SummaryStore.judge — is_stale 만 세운다, 요약은 배치가 만든다. V14).
  * 새 id 는 DB 가 매긴다(V10 AUTO_INCREMENT). 저장 오류는 제약 이름으로 가른다 — 첫 리뷰 UNIQUE 만 409, 그 밖(PK 등)은 500.
  */
 @Component
@@ -37,14 +39,16 @@ class ReviewCollection implements DocCollection {
 	private final Likes likes;
 	private final Ratings ratings;
 	private final ActivityLogger activity;
+	private final SummaryStore summaries;
 
-	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes, UserRepository users, Likes likes, Ratings ratings, ActivityLogger activity) {
+	ReviewCollection(ReviewRepository reviews, ShoeRepository shoes, UserRepository users, Likes likes, Ratings ratings, ActivityLogger activity, SummaryStore summaries) {
 		this.reviews = reviews;
 		this.shoes = shoes;
 		this.users = users;
 		this.likes = likes;
 		this.ratings = ratings;
 		this.activity = activity;
+		this.summaries = summaries;
 	}
 
 	@Override
@@ -99,6 +103,7 @@ class ReviewCollection implements DocCollection {
 			throw ApiException.conflict("리뷰를 저장하지 못했다(" + DuplicateKey.key(e) + ")");   // "이미 리뷰를 썼다"가 아니다
 		}
 		ratings.recompute(shoeId);
+		summaries.judge(shoeId);
 		activity.log(Entry.of("review.create", userId, "review", r.getId()).meta(Map.of("shoeId", shoeId)));
 		return toDoc(r, false);
 	}
@@ -114,6 +119,7 @@ class ReviewCollection implements DocCollection {
 			if (body.containsKey("content")) r.setContent(ReviewRules.content(body.get("content")));
 			r = reviews.saveAndFlush(r);
 			ratings.recompute(r.getShoeId());
+			summaries.judge(r.getShoeId());
 			activity.log(Entry.of("review.update", viewer.userId(), "review", r.getId()).meta(Map.of("shoeId", r.getShoeId())));
 			return toDoc(r, likes.likesReview(viewer.userId(), r.getId()));
 		});
@@ -136,6 +142,7 @@ class ReviewCollection implements DocCollection {
 		reviews.delete(r);
 		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다
 		ratings.recompute(r.getShoeId());
+		summaries.judge(r.getShoeId());
 		// 지운 사람(작성자 또는 admin)이 user_id, 원래 작성자는 meta — 지워진 리뷰는 조인할 수 없다
 		activity.log(Entry.of("review.delete", viewer.userId(), "review", r.getId())
 				.meta(r.getUserId() == null ? Map.of("shoeId", r.getShoeId()) : Map.of("shoeId", r.getShoeId(), "authorId", r.getUserId())));

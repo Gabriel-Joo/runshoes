@@ -4,7 +4,7 @@ Node 앱(Express + json-server 0.17.4)이 **실제로** 돌려주는 응답을 �
 계획: [docs/archive/SPRING_MIGRATION_PLAN.md](../docs/archive/SPRING_MIGRATION_PLAN.md) Phase 0·2.
 
 ```
-scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V3_SCENARIOS(요약, 10건) · SEARCH_SCENARIOS(검색, 24건) · V4_SCENARIOS(세대 구조, 21건) · V6_SCENARIOS(출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · V12 와이드 · V13 영어 이름 · 영문 브랜드 검색 · 비교 기록, 98건)
+scenarios.mjs     시나리오 — V3_SCENARIOS(읽기 R · 쓰기 W, 72건) · AUTH_SCENARIOS(인증 · 시도 제한 · 조회 기록 A, 43건) · SUMMARY_V14_SCENARIOS(요약 V14, 23건) · SUMMARY_V3_SCENARIOS(V14 전 요약, 10건 — 이력) · SEARCH_SCENARIOS(검색, 24건) · V4_SCENARIOS(세대 구조, 21건) · V6_SCENARIOS(출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · V12 와이드 · V13 영어 이름 · 영문 브랜드 검색 · 비교 기록, 98건)
                   V3 전: SCENARIOS(본 녹화, 50건) · SUMMARY_SCENARIOS(요약, 9건) — 이력
 record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태코드 · 헤더 전체 · 본문)과 index.json 을 쓴다
 diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
@@ -15,9 +15,10 @@ baseline/spring-search/ 검색 녹화 — json-server 에 없던 기능이라 Sp
 baseline/spring-v3/         V3(로그인) 뒤 계약 — 지금의 정답. 쓰기는 토큰으로, 401 · 403 · 405 · 409 포함(docs/05_api_contract.md 1-4)
 baseline/spring-v3-search/  V3 뒤 검색(작성자 · 8번 신발 · 비로그인 liked)
 baseline/spring-v4/         V4(세대 구조) 새 기능만 21건 — 옛 기준선은 다시 녹화하지 않고 diff --allow-added 로 V4 키 추가만 허용(2026-10-24). V5 키(priceSource · priceCheckedAt · priceKind)도 같은 방식(2026-10-29)
-baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다
+baseline/spring-v3-summary/ V3 뒤 요약 — 로그인(S0) 뒤 리뷰를 쓴다. S9 프롬프트는 Node 기준선과 S5 리뷰 한 줄만 다르다. V14 전(조회가 Ollama 를 불렀다) — 이력
+baseline/spring-v14-summary/ V14 요약 — 녹화 전에 배치(batch 프로필)를 한 번 돌리고 읽기 · stale · 3건 미만 삭제 · 관리 건수를 녹화. Y90 ~ Y92 는 mock 상태(INFO)
 baseline/spring-v6/         V6 뒤 새 기능만 98건 — 옛 기준선은 다시 녹화하지 않고 --allow-added 로 V4 · V5 · V6 · V11 · V12 · V13 키 추가만 허용
-run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v3-summary | v4 | v6 (V3 전: main | summary | search)
+run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 — v3 | v3-search | v14-summary | v4 | v6 (V14 전: v3-summary) (V3 전: main | summary | search)
 ```
 
 ## 녹화 · 비교
@@ -94,6 +95,9 @@ v4 21 · v3-search 24 · v3-summary 5 · v6 60 은 그대로. 기준선은 다�
 **V11(2026-11-01) — 품번 · 수정 이력 · 영구 삭제**: 응답에 `sku` · `updatedAt` · `lastChange` 키가 더해졌다 — 옛 기준선은 다시 녹화하지 않고 허용 키(`V11_KEYS`)로 센다.
 spring-v6 에 X100 ~ X115(품번 · 바뀐 칸 · 적재기 제외 · 바뀐 것 없는 저장 · 영구 삭제 409/403/200/404 · 기록)를 녹화해 더했다 — `updatedAt` · `purgedAt` 은 날짜 형식만 본다(diff.mjs).
 v6 PASS 78 · v3 101/11(그대로) · v4 21 · v3-search 24 · v3-summary 5.
+
+**V14(2026-11-10) — 요약을 배치로**: 조회는 DB 만 읽는다. 새 세트 spring-v14-summary PASS 20 · INFO 3(mock 상태) — 스크립트가 녹화 중 Ollama 호출이 늘지 않았는지(배치 20 → 그대로) · 배치의 동시 요청 최대 1 을 따로 본다.
+v3-summary 는 PASS 2 · FAIL 3(S3 캐시 · S7 LLM 실패 · S2 본문 키) — 조회가 Ollama 를 부르던 계약이라 이력으로 둔다. v6 98 · v3 101/11 · v3-search 24 · v4 21 은 그대로.
 
 **V12(2026-11-02) — 와이드 범위 · 출처 NOTFOUND**: 응답에 `wideScope` 가 더해졌다(허용 키 `V12_KEYS`). spring-v6 에 X116 ~ X122(국외에만 · 모르는 값 400 · 없음 + NOTFOUND · NOTFOUND 를 다른 칸에 400 · 모르는 코드 400 · 데모 관리자 403 · 끝 상태)를 녹화해 더했다.
 같은 날 다시 녹화한 두 건 — X101(품번 오류 문구: 11-01 품번에 `.` `/` 를 허용하며 바뀌었는데 기준선이 옛 문구였다) · X53(출처 코드 오류 문구가 받는 코드 아홉을 모두 알리게). 상태코드는 둘 다 400 그대로.

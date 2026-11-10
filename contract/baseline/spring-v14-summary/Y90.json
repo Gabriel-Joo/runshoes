@@ -1,0 +1,25 @@
+{
+  "id": "Y90",
+  "plan": null,
+  "name": "mock 호출 수 — 배치 20번, 녹화 중 조회는 0번",
+  "contract": false,
+  "request": {
+    "method": "GET",
+    "path": "/__calls",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "connection": "keep-alive",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "calls": 20
+    }
+  }
+}

@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-09 로컬): v6 PASS 98 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v3-summary 5. 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, V14): v6 PASS 98 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -12,13 +12,14 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 |---|---|---|
 | `GET` · `POST` · `PATCH` · `PUT` · `DELETE /api/{shoes,reviews,terms}[/{id}]` | json-server 모양의 컬렉션(`JsonServerController`) | 읽기는 누구나, 쓰기는 1-4 |
 | `GET /api/brands` | 브랜드 이름 배열(id 순으로 처음 나온 순서) | 누구나 |
-| `GET /api/shoes/{id}/summary` | 리뷰 AI 요약(Ollama). 리뷰 3개 미만 · 실패면 `{summary: null, reason}`, 리뷰 수가 같으면 캐시 | 누구나 |
+| `GET /api/shoes/{id}/summary` | 리뷰 AI 요약 — DB(`shoe_summaries`, V14)만 읽는다, Ollama 를 부르지 않는다. 만들었으면 `{summary: {positive, negative}, reviewCount, generatedAt}`(다시 만들 차례여도 그대로), 리뷰 3개 미만 · 없는 신발이면 `{summary: null, reason: "리뷰가 3개 미만입니다"}`, 아직 만들지 않았으면 `{summary: null, reason: "요약을 아직 만들지 않았습니다"}`. 만드는 것은 하루 한 번 배치(`09_chatbot_rag.md` 5절) | 누구나 |
 | `PUT` · `DELETE /api/{shoes,reviews}/{id}/like` | 찜 · 리뷰 공감 → `{liked, likeCount}`, 멱등 | 로그인 |
 | `/api/auth/{signup,login,refresh,logout,demo,demo-accounts,nickname-available}` | 인증 · 체험 로그인(`04_auth.md`) | — |
 | `GET` · `DELETE /api/me`, `PATCH /api/me/nickname`, `PUT /api/me/password` | 내 정보 · 탈퇴 · 닉네임 · 비밀번호 | 로그인 |
 | `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 기록하면 204(30분 안 같은 기록은 다시 쓰지 않아도 204). type 이 없거나 모르는 값 · `shoeId` 없음 · 2~5켤레 밖은 400, 없는 신발은 404 | 로그인 |
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
 | `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
+| `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
 
 #### 1-2. json-server 와 같게 한 것
@@ -96,19 +97,21 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 contract/scenarios.mjs     시나리오 — 세트마다 요청 · 기대 상태코드 · 다음 단계로 넘길 값({{newShoe}})
 contract/record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태 · 헤더 · 본문)을 쓴다
 contract/diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
-contract/run-spring-local.sh v3|v3-search|v3-summary|v4|v6   로컬 dev DB 를 지우고 새 jar 로 띄워 녹화 · 비교
+contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 지우고 새 jar 로 띄워 녹화 · 비교(v14-summary 는 녹화 전에 배치를 한 번 돌린다)
 ```
 
 | 기준선 | 건수 | 무엇 |
 |---|---|---|
 | `baseline/node` · `node-summary` | 50 · 9 | 원래 json-server 앱의 녹화(2026-10-18) — 이력, V3 전 |
 | `baseline/spring-search` | 24 | 검색 — json-server 에 없어 Spring 이 기준선(2026-10-21) |
-| `baseline/spring-v3` · `spring-v3-search` · `spring-v3-summary` | 115 · 24 · 10 | 로그인 뒤 계약 — 지금의 정답 |
+| `baseline/spring-v3` · `spring-v3-search` | 115 · 24 | 로그인 뒤 계약 — 지금의 정답 |
+| `baseline/spring-v3-summary` | 10 | 요약을 조회 때 Ollama 로 만들던 계약 — 이력, V14 전 |
+| `baseline/spring-v14-summary` | 23 | 요약 V14 — 배치가 만든 것을 읽기 · 쓰기 시점 stale · 3건 미만 삭제 · 관리 건수. 녹화 중 Ollama 호출이 늘지 않는지 · 배치가 하나씩 보냈는지는 스크립트가 본다 |
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 |
 | `baseline/spring-v6` | 98 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제의 새 기능만 |
 
 - **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
-- diff 정규화: `createdAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.
+- diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.
 - 기록에 비밀번호 · JWT · refresh 쿠키를 남기지 않는다(`<가림>` · `<jwt>`).
 - 운영에는 읽기 시나리오만(`--read-only`). 요약 시나리오는 mock Ollama(`mock-ollama.mjs`)로만 — 운영에서 시드 신발의 요약을 부르면 GPU 가 돈다.
 
@@ -129,6 +132,7 @@ contract/run-spring-local.sh v3|v3-search|v3-summary|v4|v6   로컬 dev DB 를 �
 - **v3 FAIL 이 쌓인 이유(2026-10-30~11-01).** 데모 관리자(V7)가 id 32 를 가져가 계약 가입 계정이 33 이 됐고(A06 · A11 · A16 · A20 · A21 · A26), 신발 삭제가 숨김이 되어 새 신발 id 가 21 → 22(W51 · W52 · W52b), 그리고 V10 의 W46 · W47 — 합계 11건, 모두 의도한 변경이다.
 - **값 이름을 바꾼 적이 있다.** 가격 종류 `정가` → `발매가`(2026-10-30 사용자 — 크림 발매가 · 공식몰 · ABC마트 정가를 한 이름으로), 리뷰 내용 상한 1,000 → 300자(2026-10-30), 가격 출처 "직접 확인" → `MAN(직접 확인)`(2026-11-02 — 스펙 출처의 MAN 과 같은 뜻으로).
 - **문서를 쓰다 찾은 세 건(2026-11-02).** X101 은 품번 형식에 `.` `/` 를 허용하며(11-01) 오류 문구가 바뀌었는데 기준선을 다시 녹화하지 않아 FAIL 이었다. `SpecSources` 의 코드 오류 문구는 여섯 개만 알렸는데 받는 코드는 아홉이었다. V12 `wideScope` 는 허용 키로 "더해졌을 뿐"만 보고 쓰기 동작은 녹화돼 있지 않았다. 문구를 고치고 X101 · X53 을 다시 녹화했고, X116 ~ X122(국외에만 · 모르는 값 · 없음 + NOTFOUND · NOTFOUND 를 다른 칸에 · 모르는 코드 · 데모 관리자 · 끝 상태)를 더했다 — v6 PASS 85 · FAIL 0.
+- **요약 응답에 키를 더했다(V14, 2026-11-10 사용자).** 요약을 조회 때 Ollama 로 만들던 것을 배치로 옮기며 `reviewCount` · `generatedAt` 을 더했고(화면의 "리뷰 N건 기준"), "아직 만들지 않음" reason 이 생겼다. 조회가 Ollama 를 부르지 않으니 spring-v3-summary(캐시 · LLM 실패 시나리오)는 더 맞지 않아 이력으로 두고 spring-v14-summary 를 새로 녹화했다 — 기준선 다시 녹화가 아니라 새 세트다. 프롬프트 문구는 그대로(Y92).
 - **탈퇴 뒤 남은 토큰(2026-11-01).** 탈퇴 뒤 남은 access token(15분)으로 자기 리뷰 수정 · 삭제가 통과했다. 어디서나 401 로 고치고 X78b · X78c 를 녹화해 기준선에 더했다.
 
 #### 4. 남은 한계
@@ -139,7 +143,7 @@ contract/run-spring-local.sh v3|v3-search|v3-summary|v4|v6   로컬 dev DB 를 �
 
 #### 5. 검증 항목
 
-- `contract/run-spring-local.sh v6` · `v3` · `v3-search` · `v4` · `v3-summary` — PASS 와, FAIL 이 `contract/README.md` 의 의도한 차이 목록과 같은지.
+- `contract/run-spring-local.sh v6` · `v3` · `v3-search` · `v4` · `v14-summary` — PASS 와, FAIL 이 `contract/README.md` 의 의도한 차이 목록과 같은지.
 - 녹화만 남았을 때: `node contract/diff.mjs --allow-added=<키> contract/baseline/<세트> contract/run/<세트>` — 서버 없이 다시 센다.
 - 운영: `node contract/record.mjs --read-only --base http://192.168.122.240 --host runshoes.ronanlab.dev …` 뒤 `diff.mjs --read-only`(운영 데이터가 시드와 같을 때만 PASS 다. 지금 운영은 카탈로그 302켤레가 들어 있어 신발 목록 시나리오는 맞지 않는다 — 2026-10-21 전환 직후의 PASS 23 이 마지막 운영 비교다).
 

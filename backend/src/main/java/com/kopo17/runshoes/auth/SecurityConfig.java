@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -41,6 +42,7 @@ class SecurityConfig {
 	static final String ISSUER = "runshoes";
 
 	@Bean
+	@ConditionalOnWebApplication   // 요약 CronJob(batch 프로필, 웹 서버 없음)에는 HttpSecurity 가 없다 — 필터 체인만 빼고 JWT 키 · 인코더는 그대로
 	SecurityFilterChain securityFilterChain(HttpSecurity http, AuthEntryPoints entry, UserRepository users) throws Exception {
 		http.csrf(c -> c.disable())
 				.cors(c -> c.disable())

@@ -1,5 +1,6 @@
 package com.kopo17.runshoes.domain;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	long countByShoeId(Long shoeId);
 
 	long countByUserId(Long userId);
+
+	/** 요약 입력(summary/SummaryService) — 그 신발의 리뷰 전부, id 순 */
+	List<Review> findByShoeIdOrderByIdAsc(Long shoeId);
 
 	/** 닉네임을 바꾸면 그 사람 리뷰의 author(닉네임 스냅샷)도 — 같은 트랜잭션에서 */
 	@Modifying
