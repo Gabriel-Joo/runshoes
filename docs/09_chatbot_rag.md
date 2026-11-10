@@ -82,8 +82,8 @@ cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 Reac
 
 목표
 
-- `POST /api/compare` — 신발 id 들 → 등수 · 밴드 · 무게 비교 가능 여부
-- `POST /api/recommend` — 조건 5칸 → 상위 3 + reasons
+- `GET /api/compare` — 신발 id 들(`?ids=`) 또는 고른 신발 하나(`?pick=`, 자동 채우기까지) → 등수 · 밴드 · 무게 환산 여부(13절 — GET 인 까닭)
+- `GET /api/recommend` — 조건 5칸 → 상위 3 + score + reasons
 
 프런트는 계산하지 않고 API 를 불러 그리기만 한다. 챗봇도 같은 API 를 부른다.
 
