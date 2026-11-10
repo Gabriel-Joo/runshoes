@@ -46,7 +46,7 @@ export function formatCols(cols: Col[]): { ids: string; why: string | null } {
   };
 }
 
-type Spec = Pick<Shoe, "id" | "brand" | "purpose" | "stability" | "stackHeight" | "drop" | "weight" | "carbon" | "lineKey" | "isCurrent">;
+type Spec = Pick<Shoe, "id" | "brand" | "purpose" | "stability" | "stackHeight" | "drop" | "weightNorm270" | "carbon" | "lineKey" | "isCurrent">;
 
 function stdev(xs: number[]): number {
   if (xs.length === 0) return 1;
@@ -54,16 +54,16 @@ function stdev(xs: number[]): number {
   return Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / xs.length) || 1;
 }
 
-/** 스펙이 얼마나 가까운가 — 스택 + 드롭 × 0.7 + 무게(각각 전체 표준편차로 나눔), 카본이 서로 다르면 +2, 한쪽이 비면 그 칸은 1 */
+/** 스펙이 얼마나 가까운가 — 스택 + 드롭 × 0.7 + 무게(270mm 로 맞춘 값, V15)(각각 전체 표준편차로 나눔), 카본이 서로 다르면 +2, 한쪽이 비면 그 칸은 1 */
 export function makeDistance(all: Spec[]) {
   const sd = {
     stackHeight: stdev(all.map((s) => s.stackHeight).filter((v): v is number => v != null)),
     drop: stdev(all.map((s) => s.drop).filter((v): v is number => v != null)),
-    weight: stdev(all.map((s) => s.weight).filter((v): v is number => v != null)),
+    weightNorm270: stdev(all.map((s) => s.weightNorm270).filter((v): v is number => v != null)),
   };
   return (a: Spec, b: Spec) => {
     let d = 0;
-    for (const [k, w] of [["stackHeight", 1], ["drop", 0.7], ["weight", 1]] as const) {
+    for (const [k, w] of [["stackHeight", 1], ["drop", 0.7], ["weightNorm270", 1]] as const) {
       const x = a[k], y = b[k];
       d += w * (x == null || y == null ? 1 : Math.abs(x - y) / sd[k]);
     }
@@ -111,18 +111,25 @@ export function autofill(pickId: number, all: Spec[]): Col[] {
 
 export type NumKey = "weight" | "stackHeight" | "drop" | "price";
 
-/** 무게를 잰 사이즈 → mm. 무게 자리는 270mm(M9)끼리만 말한다 */
+/** 무게를 잰 사이즈 → mm(표시용). 무게 자리는 270mm(M9)로 맞춘 값으로 말한다(V15 weightNorm270, 환산 규칙 01a 1-3a) */
 export const SIZE_MM: Record<string, number> = { "M8.5": 265, M9: 270, "M9.5": 275, M10: 280, "M10.5": 285 };
 export const BASE_SIZE = "M9";
 
-/** 그 칸의 "자리를 말할 수 있는" 값 — 무게는 270mm 로 잰 것만 */
-export function numValue(s: Pick<Shoe, NumKey | "weightSize">, key: NumKey): number | null {
-  if (key === "weight") return s.weightSize === BASE_SIZE ? s.weight : null;
+type WeightSpec = Pick<Shoe, NumKey | "weightSize" | "weightNorm270">;
+
+/** 그 칸의 "자리를 말할 수 있는" 값 — 무게는 270mm 로 맞춘 값(기준 모름이면 null) */
+export function numValue(s: WeightSpec, key: NumKey): number | null {
+  if (key === "weight") return s.weightNorm270 ?? null;
   return s[key];
 }
 
-/** 모집단 — 그 칸의 값이 있는 신발(무게는 270mm 로 잰 것) */
-export function population(all: Pick<Shoe, NumKey | "weightSize">[], key: NumKey): number[] {
+/** 환산한 무게인가 — 270mm 로 맞춘 값이 있고 기준이 M9 가 아니다(표의 "환산" 배지 · 그래프 설명) */
+export function isConverted(s: Pick<Shoe, "weightSize" | "weightNorm270">): boolean {
+  return s.weightNorm270 != null && s.weightSize !== BASE_SIZE;
+}
+
+/** 모집단 — 그 칸의 값이 있는 신발(무게는 270mm 로 맞춘 값이 있는 것) */
+export function population(all: WeightSpec[], key: NumKey): number[] {
   return all.map((s) => numValue(s, key)).filter((v): v is number => v != null);
 }
 
@@ -151,7 +158,7 @@ export const BAND_WORD: Record<NumKey, Record<Rank["band"], string>> = {
 
 /** 그래프 설명 — 결론 먼저(2026-11-09 사용자): "무게 280g — 중간이에요" / "…를 가벼운 순으로 세우면 131번째예요." */
 export const NUM_TEXT: Record<NumKey, { label: string; pop: string; order: string }> = {
-  weight: { label: "무게", pop: "270mm 기준 무게가 있는 신발", order: "가벼운 순" },
+  weight: { label: "무게", pop: "270mm로 맞춘 무게가 있는 신발", order: "가벼운 순" },
   stackHeight: { label: "스택하이트", pop: "스택하이트 값이 있는 신발", order: "낮은 순" },
   drop: { label: "드롭", pop: "드롭 값이 있는 신발", order: "낮은 순" },
   price: { label: "발매가", pop: "발매가를 확인한 신발", order: "낮은 순" },
@@ -159,7 +166,8 @@ export const NUM_TEXT: Record<NumKey, { label: string; pop: string; order: strin
 
 export function formatNum(key: NumKey, v: number): string {
   if (key === "price") return `${v.toLocaleString("ko-KR")}원`;
-  return `${v}${key === "weight" ? "g" : "mm"}`;
+  if (key === "weight") return `${Math.round(v)}g`;   // 환산값은 소수 — 화면에서만 반올림한다
+  return `${v}mm`;
 }
 
 /** 끝 글자에 받침이 있나 — 숫자 · 영문은 읽는 소리로 어림 */
@@ -172,6 +180,8 @@ function hasJong(word: string): boolean {
 }
 export const eunNeun = (word: string) => word + (hasJong(word) ? "은" : "는");
 export const eulReul = (word: string) => word + (hasJong(word) ? "을" : "를");
+/** 이름 여럿을 한 주어로 — "클라우드고 · 클리프톤 10은" (은/는은 끝 이름에만) */
+export const topic = (names: string[]) => [...names.slice(0, -1), eunNeun(names[names.length - 1] ?? "")].join(" · ");
 
 /* ───── 검색 결과 순서 ───── */
 

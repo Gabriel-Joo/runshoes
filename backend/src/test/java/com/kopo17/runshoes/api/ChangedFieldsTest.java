@@ -48,4 +48,15 @@ class ChangedFieldsTest {
 		s.setLastChange(List.of("x"));
 		assertEquals(List.of(), ShoeCollection.changedFields(before, ShoeCollection.toDoc(s, true)));
 	}
+
+	@Test
+	void derivedWeightIsNotAnEdit() {
+		// V15 weightNorm270 은 DB 가 계산한다 — PUT 은 새 엔티티(아직 null)와 옛 문서를 비교하므로 이력에서 빼야 헛 기록이 안 생긴다
+		Map<String, Object> before = new java.util.LinkedHashMap<>(Map.of("weight", 300.0));
+		before.put("weightNorm270", 277.7);
+		Map<String, Object> after = new java.util.LinkedHashMap<>(Map.of("weight", 300.0));
+		after.put("weightNorm270", null);
+		assertEquals(List.of(), ShoeCollection.changedFields(before, after));
+		assertEquals("weightNorm270", List.copyOf(ShoeCollection.toDoc(shoe(), false).keySet()).getLast());   // 맨 뒤에 더한다
+	}
 }
