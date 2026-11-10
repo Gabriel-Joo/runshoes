@@ -1,4 +1,4 @@
-> 상태: 운영 중(2026-11-02 확인 — 읽기만). 이미지 `8a4d4a42508b`(앱 커밋 `8a4d4a4`) · ArgoCD `runshoes` Synced/Healthy(infra `4a54ca7`) · 자동 Sync 켜짐(`prune: false, selfHeal: false`) · Deployment replicas 1(컨테이너 2) · MySQL 8.0.46 local-path 2Gi. 원천: infra `apps/runshoes/` · `platform/` · `Jenkinsfile` · `Dockerfile` · 런북
+> 상태: 운영 중(2026-11-02 확인 — 읽기만). 이미지 `8a4d4a42508b`(앱 커밋 `8a4d4a4`) · ArgoCD `runshoes` Synced/Healthy(infra `4a54ca7`) · 자동 Sync 켜짐(`prune: false, selfHeal: false`) · Deployment replicas 1(컨테이너 2 — 2026-11-10 replicas 2 · 노드 분산 · PDB, 1-5절) · MySQL 8.0.46 local-path 2Gi. 원천: infra `apps/runshoes/` · `platform/` · `Jenkinsfile` · `Dockerfile` · 런북
 
 #### 0. 한 줄 요약
 
@@ -68,7 +68,8 @@ jre     eclipse-temurin:21-jdk-alpine   jlink — 필요한 모듈만          �
 app.yaml                    ArgoCD Application `runshoes`(1-6) — kustomization 의 resources 에는 넣지 않는다
 README.md                   이 폴더 안내 · Secret 을 사람이 넣는 순서
 kustomization.yaml          리소스 목록 + 이미지 태그 2개
-app/deployment.yaml         runshoes(Spring) + chatbot
+app/deployment.yaml         runshoes(Spring) + chatbot — replicas 2, required anti-affinity(2026-11-10)
+app/pdb.yaml                PodDisruptionBudget minAvailable 1 — drain 때 하나는 남긴다(2026-11-10, 펫퍼민트와 같다)
 app/service.yaml · ingress.yaml   / → :3000, /ws/chat → :8766
 mysql/statefulset.yaml · service.yaml   MySQL 8.0.46, local-path 2Gi, w1 선호
 scripts/create-secrets.sh   runshoes-mysql · harbor-pull · runshoes-auth(사람이 돌린다)
@@ -76,6 +77,8 @@ scripts/check-image-migrations.sh   Harbor 이미지 안의 Flyway 파일 sha256
 runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 ```
 
+- **노드 분산(2026-11-10, 인프라 가용성 묶음 1)** — replicas 2 를 required anti-affinity(`kubernetes.io/hostname`)로 서로 다른 노드에 두고 PDB minAvailable 1. 노드 하나가 죽어도 다른 Pod 가 받는다. 롤링 중 2+1개라 스케줄 가능한 워커 3대가 필요하다 — 워커가 4대라 한 대를 정비하는 동안에도 된다(그날 w1 을 cordon 한 채 새 태그가 w2 · w3 로 롤링됐다). 시도 제한(RateLimiter)은 DB 에 있어 Pod 가 둘이어도 갈리지 않는다. 상세 원본은 infra `docs/02_availability.md`.
+- **activity_logs 정리를 꺼 두었다(2026-11-10 사용자 결정)** — `ActivityCleanup`(`@Scheduled`)이 Pod 마다 돌아 두 Pod 가 같은 시각 같은 행을 지우려 한다. Deployment env `ACTIVITY_CLEANUP_CRON: "-"`(Spring 의 끄기 값). ShedLock 이 들어오면 그 env 를 뺀다(4절).
 - **앱** — RollingUpdate `maxSurge 1, maxUnavailable 0`: 새 Pod 가 Ready 가 된 뒤 옛 Pod 를 내린다. Ready 는 DB 까지(`/actuator/health/readiness`), startup 은 최대 2분(Flyway 첫 기동). 종료는 preStop 5초 → graceful shutdown 최대 20초.
 - **비밀** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`), DB 비밀번호는 `runshoes-mysql`. optional 이 아니다 — Secret 이 없으면 새 Pod 가 멈추고 옛 Pod 가 계속 돈다.
 - **Namespace · Secret 은 사람이 만든다.** ArgoCD 가 Namespace 를 소유하면 Application 삭제 · prune 한 번에 Secret 까지 사라질 수 있다(`CreateNamespace=false`).
@@ -137,13 +140,16 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 - **롤링 겹침이 PK 충돌을 냈다(2026-11-01).** `maxSurge 1` 이라 배포 중 Pod 가 둘인 순간이 있다. 앱이 JVM 안의 잠금으로 매기던 `max + 1` id 가 두 Pod 에서 같아져 충돌했다 — V10 에서 AUTO_INCREMENT 로 고쳤다(`07_database.md` 3절). "Pod 는 하나"라는 가정이 롤링 배포에서는 성립하지 않는다.
 - **2분 폴링 → 웹훅(2026-11-03).** Jenkins 가 Access 뒤라 GitHub 웹훅이 닿지 않아 2분마다 폴링했다. 웹훅 경로만 Access 를 비켜 두고 폴링은 15분 안전망으로 줄였다.
 - **문서만 바꿔도 재배포됐다 → 건너뛴다(2026-11-09).** 문서 · 카탈로그 커밋도 push 마다 이미지 빌드 → 태그 커밋 → 자동 Sync 로 Pod 를 갈았다(10-18 이후 커밋 122개 중 문서만 바꾼 것 11개). 문서만 바뀐 빌드는 건너뛰게 했다. 카탈로그(`catalog/`)도 이미지에 들어가지 않지만 이번에는 빼지 않았다 — 건너뛸 목록이 넓을수록 이미지에 들어가는 파일을 새로 더했을 때 배포가 조용히 빠질 위험이 커진다.
+- **replicas 2 · 워커 증설(2026-11-10).** 노드를 하나씩 내리며 워커를 4대 · 8GB 로 늘리기 전에 replicas 를 2 로(같은 커밋에 정리 작업 끄기). 적용 뒤 두 Pod env `-`, `@Scheduled` 스레드 0개(정리 미등록), 응답 200. 증설 중 1초마다 잰 `/api/shoes`: w2 · w3 정비 실패 0, w1(MySQL PV) 정비 때 19:35:15~19:36:59 약 1분 40초 500/503(사용자가 받아들인 중단) — 그 전 19:27:20~31 약 12초는 ingress-nginx 등 재시작 때 모든 호스트가 응답하지 않았다(원인 미확인, infra `docs/02_availability.md` 4절). 그날 Jenkins #109 빌드 · 롤아웃이 끝난 뒤 w1 을 내렸다.
 - **상태를 추정으로 보고했다가 고쳤다.** 자동 Sync · 배포 상태를 확인하지 않고 말한 적이 있어, 이후 매번 `syncPolicy` · 이미지 태그 · Pod 로그를 읽고 보고한다(사용자 — "확인 안 하고 꺼져 있다고 하지 마라").
 
 #### 4. 남은 한계
 
 - **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만 뜬다. 그 사이의 리뷰 · 관리 화면 수정은 백업이 없다.
-- **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다. 다른 프로젝트의 MySQL 도 w1 에 있다 — 노드가 3대라 감수한다.
-- **앱은 replicas 1 이다.** 롤링 배포 중에만 둘이 된다. 노드 장애 때 Pod 를 다시 띄우는 동안 끊긴다.
+- **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다(앱 Pod 가 둘이어도 503). 다른 프로젝트의 MySQL 도 w1 에 있다.
+- **MySQL 자동 장애 전환이 없다.** Operator 가 필요한데 자원 제약으로 Replica + 수동 승격을 택했다 — Replica 구성은 인프라 묶음 2. 그 전까지는 w1 이 돌아올 때까지 DB 가 멈춘다.
+- **activity_logs 정리가 꺼져 있다(2026-11-10부터).** replicas 2 에서 두 Pod 가 같은 정리를 하지 않게 env 로 껐다(1-5). ShedLock 전까지 activity_logs 가 지워지지 않고 쌓이고, 정리 때 남기던 행 수 경고 로그도 나오지 않는다.
+- **백업 · VM 이 같은 물리 서버다.** 덤프(호스트 `~/k8s-cluster/backup/`)와 MySQL PV(VM 디스크)가 같은 NVMe 이고, VM 이 모두 같은 서버라 서버가 죽으면 전부 멈춘다.
 - **배포는 빌드 시간만큼 걸린다.** push 에서 반영까지 약 5분, 대부분 이미지 빌드(Vite + Maven)다. 웹훅을 놓치면 폴링(Jenkins 15분 · ArgoCD 3분)만큼 늦어진다.
 - **스키마 변경 배포는 사람이 세 번 손댄다**(자동 Sync 끄기 · Sync · 켜기). 빼먹으면 Jenkins 태그 커밋이 덤프 전에 배포된다 — 런북의 1단계 확인(`automated` 없음)이 유일한 장치다.
 - **노드 메모리를 다른 프로젝트와 나눈다.** 빌드 Pod 는 상한 3Gi 라 다른 빌드와 겹치면 기다린다.
