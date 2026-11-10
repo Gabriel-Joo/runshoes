@@ -75,6 +75,16 @@ test("비슷한 신발 거리는 270mm 로 맞춘 무게로 — 큰 사이즈로
   assert.ok(d(a, b) < d(a, c));
 });
 
+test("비슷한 신발 거리 — 기준 모름은 거리 안에서만 원값(247g 옆에 311g 이 아니라 252g)", () => {
+  const unknown = shoe(30, { brand: "U", lineKey: "u", weight: 247, stackHeight: 32, weightSize: null, weightNorm270: null });
+  const near = shoe(31, { brand: "N", lineKey: "n", weight: 252, stackHeight: 38 });
+  const far = shoe(32, { brand: "F", lineKey: "f", weight: 311, stackHeight: 37 });
+  const d = makeDistance([unknown, near, far, ...all]);
+  assert.ok(d(unknown, near) < d(unknown, far));
+  assert.equal(numValue(unknown, "weight"), null);                       // 화면 · 등수 · 그래프에는 여전히 없다
+  assert.equal(population([unknown], "weight").length, 0);
+});
+
 test("자리 — 하위 25% · 가운데 · 상위 25%, 동점은 가운데 순위", () => {
   const arr = [1, 2, 3, 4, 5, 6, 7, 8];
   assert.equal(rankIn(arr, 1).band, "low");
