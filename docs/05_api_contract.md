@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, V14): v6 PASS 98 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, V15): v6 PASS 109 · FAIL 0 · v3 PASS 101 · FAIL 11(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -72,6 +72,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | V11 | `sku` · `updatedAt` · `lastChange` | 품번은 영문 · 숫자 · `- . /` · 공백 50자 |
 | V12 | `wideScope` | `domestic` · `overseas` |
 | V13 | `modelEn` · `modelAlias` | 100자 · 255자까지, 빈 칸은 null. 검색이 두 칸도 본다 |
+| V15 | `weightNorm270` | 읽기 전용 — DB 가 공시 무게 · 기준 사이즈로 계산한다(270mm 로 맞춘 값, `01a_catalog_sources.md` 1-3a). 본문에 와도 버리고, 수정 이력(`lastChange`)에 넣지 않는다. 기준이 없거나 다섯 사이즈 밖이면 null |
 
 - 추가 이미지 `images` 는 6장까지.
 - 적재기의 요청(`X-Runshoes-Client: loader`)은 `updatedAt` · `lastChange` 를 찍지 않는다. 바뀐 칸이 없는 저장도 찍지 않는다.
@@ -108,9 +109,9 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 | `baseline/spring-v3-summary` | 10 | 요약을 조회 때 Ollama 로 만들던 계약 — 이력, V14 전 |
 | `baseline/spring-v14-summary` | 23 | 요약 V14 — 배치가 만든 것을 읽기 · 쓰기 시점 stale · 3건 미만 삭제 · 관리 건수. 녹화 중 Ollama 호출이 늘지 않는지 · 배치가 하나씩 보냈는지는 스크립트가 본다 |
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 |
-| `baseline/spring-v6` | 98 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제의 새 기능만 |
+| `baseline/spring-v6` | 109 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15)의 새 기능만 |
 
-- **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
+- **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS` · `V15_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
 - diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.
 - 기록에 비밀번호 · JWT · refresh 쿠키를 남기지 않는다(`<가림>` · `<jwt>`).
 - 운영에는 읽기 시나리오만(`--read-only`). 요약 시나리오(v14-summary)는 녹화 전에 배치를 돌리므로 로컬에서 mock Ollama(`mock-ollama.mjs`)로만 한다. 조회(`/api/shoes/{id}/summary`)는 DB 만 읽어 운영에서 불러도 GPU 를 쓰지 않는다.

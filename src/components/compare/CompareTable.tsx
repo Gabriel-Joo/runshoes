@@ -5,7 +5,7 @@ import TermTooltip from "../TermTooltip";
 import CompareDist from "./CompareDist";
 import { NONE, text, wideLabel, yesNo } from "../../utils/display";
 import { WIDE_TERM, stabilityTerm } from "../../utils/terms";
-import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
+import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, isConverted, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
 
 
 type RowKey = "purpose" | "stability" | "width" | "wide" | NumKey | "carbon" | "midsole" | "rating" | "likes";
@@ -125,13 +125,26 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
 
   const cell = (s: Shoe, k: RowKey): ReactNode => {
     if (k === "weight") {
+      // 원값이 먼저, 270mm 로 맞춘 값은 보조 줄 — 배지는 위치(밴드)와 "환산"(이 숫자가 그대로가 아님) 둘(2026-11-10 사용자)
       const mm = s.weightSize ? SIZE_MM[s.weightSize] : undefined;
       const v = numValue(s, "weight");
+      const conv = isConverted(s);
       return (
         <>
           {s.weight == null ? <span className="ctable__none">{NONE}</span> : `${s.weight}g`}
-          {s.weight != null && <span className="ctable__sub">{mm ? `${mm}mm 기준` : "기준 모름"}</span>}
-          {v != null && <span className="ctable__badge">{BAND_WORD.weight[rankIn(pops.weight, v).band]}</span>}
+          {s.weight != null && (
+            <span className="ctable__sub">
+              {v == null || !mm ? "기준 모름" : conv ? (
+                <><span className="nowrap">{mm}mm 기준 ·</span> <span className="nowrap">270mm로 약 {formatNum("weight", v)}</span></>   // 좁은 열에서는 "·" 뒤에서만 줄을 바꾼다
+              ) : `${mm}mm 기준`}
+            </span>
+          )}
+          {v != null && (
+            <span className="ctable__badges">
+              <span className="ctable__badge">{BAND_WORD.weight[rankIn(pops.weight, v).band]}</span>
+              {conv && <span className="ctable__badge is-conv">환산</span>}
+            </span>
+          )}
         </>
       );
     }
@@ -190,7 +203,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
             {g.rows.map((row) => {
               const diff = g.tint && new Set(shoes.map((s) => plain(s, row.key))).size > 1 ? "is-diff" : "";
               const term = termOf(row.term);
-              const sizes = new Set(shoes.map((s) => s.weightSize ?? "?"));
+              const converted = shoes.some(isConverted);
               return (
                 <div key={row.key} className="ctable__row">
                   <div className={`ctable__lab ${diff}`}>
@@ -223,10 +236,10 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
                     );
                   })}
                   {Array.from({ length: mobile ? (canAdd ? 1 : 0) : pad }, (_, i) => <div key={`pad${i}`} className="ctable__val is-pad" />)}
-                  {row.key === "weight" && sizes.size > 1 && (
+                  {row.key === "weight" && converted && (
                     <>
                       <div className="ctable__note" style={{ gridColumn: `1 / span ${cols.length + 1}` }}>
-                        기준 사이즈가 달라서 무게를 그대로 비교하기 어려워요
+                        기준 사이즈가 다른 신발이 있어서 환산값을 적용했어요
                       </div>
                       {!mobile && Array.from({ length: pad }, (_, i) => <div key={`np${i}`} className="ctable__val is-pad" />)}
                     </>

@@ -1,13 +1,13 @@
 import { useLayoutEffect, useRef } from "react";
 import type { Shoe } from "../../types";
-import { BAND_WORD, eunNeun, formatNum, NUM_TEXT, numValue, rankIn, SIZE_MM, type NumKey } from "../../utils/compare";
+import { BAND_WORD, formatNum, topic, isConverted, NUM_TEXT, numValue, rankIn, SIZE_MM, type NumKey } from "../../utils/compare";
 
 const W = 268, H = 64, BINS = 24;
 
 interface Props {
   shoe: Shoe;
   field: NumKey;
-  pop: number[];             // 그 칸의 모집단(무게는 270mm 로 잰 것)
+  pop: number[];             // 그 칸의 모집단(무게는 270mm 로 맞춘 값)
   others: Shoe[];            // 같이 비교 중인 다른 신발
   sheet: boolean;            // 휴대폰 — 아래에서 올라오는 시트
   right: boolean;            // 오른쪽 끝 열 — 왼쪽으로 펼친다
@@ -31,16 +31,13 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
   const cls = `cdist ${sheet ? "is-sheet" : ""} ${right ? "is-right" : ""}`;
   const v = numValue(shoe, field);
 
-  // 무게 — 270mm 로 재지 않은 신발은 그래프 대신 까닭만
+  // 무게 — 기준 사이즈를 모르면 270mm 로 맞출 수 없어 그래프 대신 까닭만
   if (field === "weight" && v == null) {
-    const mm = shoe.weightSize ? SIZE_MM[shoe.weightSize] : undefined;
     return (
       <div ref={ref} className={cls} onClick={(e) => e.stopPropagation()} role="dialog" aria-label="무게 설명">
         {sheet && <button className="cdist__close" onClick={onClose} aria-label="닫기">×</button>}
         <h4 className="cdist__title">무게 {shoe.weight}g</h4>
-        <p className="cdist__text">
-          {mm ? `${mm}mm 신발로 잰 무게예요.` : "몇 mm 신발로 잰 무게인지 알 수 없어요."} 다른 신발 대부분은 270mm로 재서, 같은 그래프에 놓으면 공정하지 않아 뺐어요.
-        </p>
+        <p className="cdist__text">몇 mm 신발로 잰 무게인지 알 수 없어서 그래프에 넣지 않았어요.</p>
       </div>
     );
   }
@@ -52,6 +49,10 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
   const max = Math.max(...counts), bw = W / BINS, x = (a: number) => ((a - lo) / span) * W;
   const otherVals = others.map((s) => numValue(s, field)).filter((a): a is number => a != null);
   const skipped = field === "weight" ? others.filter((s) => numValue(s, "weight") == null).map((s) => s.model) : [];
+  // 같이 보는 신발(코랄 눈금) 중 환산한 것 — 표의 "환산" 배지와 같은 사실을 그래프에서도 밝힌다(2026-11-10 사용자). 셋 이상이면 수로
+  const convOthers = field === "weight" ? others.filter(isConverted).map((s) => s.model) : [];
+  const meConv = field === "weight" && isConverted(shoe);
+  const mm = shoe.weightSize ? SIZE_MM[shoe.weightSize] : undefined;
   const short = (a: number) => formatNum(field, a);   // 가격도 "159,000원" 그대로(2026-11-09 사용자 — "159천원"은 쓰지 않는다)
   const edge = field === "price" ? 80 : 60;            // 끝 값과 이 신발 값이 겹치면 끝 값을 뺀다(가격 글자가 길다)
   const half = field === "price" ? 38 : 24;
@@ -60,7 +61,9 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
   return (
     <div ref={ref} className={cls} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={`${t.label} 분포`}>
       {sheet && <button className="cdist__close" onClick={onClose} aria-label="닫기">×</button>}
-      <h4 className="cdist__title">{t.label} {formatNum(field, v)} — {word}이에요</h4>
+      <h4 className="cdist__title">
+        {field === "weight" ? `무게 ${shoe.weight}g${meConv ? `(270mm로 약 ${formatNum(field, v)})` : ""}` : `${t.label} ${formatNum(field, v)}`} — {word}이에요
+      </h4>
       <svg viewBox={`0 0 ${W} ${H + 26}`} className="cdist__svg" aria-hidden="true">
         {counts.map((c, i) => (
           <rect key={i} x={i * bw + 1} y={H - (c / max) * (H - 6)} width={bw - 2} height={(c / max) * (H - 6)} className="cdist__bar" />
@@ -77,10 +80,16 @@ function CompareDist({ shoe, field, pop, others, sheet, right, onClose }: Props)
         {otherVals.length > 0 && <span className="is-other">같이 보는 신발</span>}
       </div>
       <p className="cdist__text">
+        {meConv && `${mm}mm 신발로 잰 무게예요. 270mm로 맞추면 약 ${formatNum(field, v)}이고, 그 값으로 그래프에 넣었어요. `}
         {t.pop} {pop.length}켤레를 {t.order}으로 세우면 <b>{r.order}번째</b>예요.
       </p>
+      {convOthers.length > 0 && (
+        <p className="cdist__note">
+          {convOthers.length <= 2 ? topic(convOthers) : `같이 보는 신발 중 ${convOthers.length}켤레는`} 270mm로 맞춘 값으로 놓았어요.
+        </p>
+      )}
       {skipped.length > 0 && (
-        <p className="cdist__note">{skipped.map(eunNeun).join(", ")} 270mm로 잰 무게가 아니라 그래프에 넣지 않았어요.</p>
+        <p className="cdist__note">{topic(skipped)} 기준 사이즈를 알 수 없어서 그래프에 넣지 않았어요.</p>
       )}
     </div>
   );

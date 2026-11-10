@@ -38,6 +38,7 @@ export interface Shoe {
   isCurrent?: boolean | null;
   gender?: "men" | "women" | "unisex" | null;
   weightSize?: string | null;
+  weightNorm270?: number | null;   // 270mm(M9)로 맞춘 무게(V15, 서버 계산) — 비교 · 등수는 이 값으로. 기준 모름이면 null
   // 스펙 출처(V6) — 칸마다 {code, url?}. 카본은 출처 면제
   specSources?: SpecSources | null;
   // 숨긴 때(V8) — 관리 화면의 숨긴 신발 목록에만 온다

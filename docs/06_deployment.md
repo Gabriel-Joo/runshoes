@@ -102,7 +102,7 @@ runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 | 5 | 자동 Sync 다시 켜기 | 사람 |
 | 6 | 필요하면 운영 적재(`scripts/load-prod.sh --apply`, `01c_catalog_loader.md`) | Claude, 사용자 승인 뒤 |
 
-- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다.
+- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다.
 - 운영 MySQL `exec` 와 Secret 읽기가 필요한 단계는 사람이 친다(2026-10-29 사용자). 운영 적재만은 `scripts/load-prod.sh` 안에서 Secret 을 읽는다(비밀번호는 스크립트 밖으로 나오지 않는다).
 - **되돌리기** — 인프라 리포의 태그 커밋을 `git revert` → push → Sync. 스키마는 되돌아가지 않는다 — 마이그레이션은 추가만 하므로 옛 이미지가 새 스키마에서 뜬다(`07_database.md` 1-5). 데이터가 잘못되면 덤프 복원(런북 "실패했을 때").
 

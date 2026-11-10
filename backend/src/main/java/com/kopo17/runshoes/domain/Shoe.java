@@ -8,8 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
 
 /**
@@ -59,6 +61,12 @@ public class Shoe {
 
 	@Column(name = "official_spec_size")
 	private String specSize;
+
+	// 270mm(M9)로 맞춘 무게(V15) — DB 생성 컬럼(official_weight_g · official_weight_size 로 계산), 쓰지 않고 읽기만.
+	// 저장 뒤 Hibernate 가 다시 읽어 와 응답에 새 값이 나온다. 다섯 사이즈 밖 · 기준 없음은 null
+	@Generated(event = {EventType.INSERT, EventType.UPDATE})
+	@Column(name = "weight_norm_270", insertable = false, updatable = false)
+	private Double weightNorm270;
 
 	// 실측값(V4) — 사람이 정한 것만(decisions.json measured_weight_g). 공시값과 따로 둔다
 	@Column(name = "measured_weight_g")
@@ -176,6 +184,7 @@ public class Shoe {
 	public String getGender() { return gender; }
 	public void setGender(String gender) { this.gender = gender; }
 	public String getWeightSize() { return weightSize; }
+	public Double getWeightNorm270() { return weightNorm270; }
 	public void setWeightSize(String weightSize) { this.weightSize = weightSize; }
 	public String getSpecSize() { return specSize; }
 	public void setSpecSize(String specSize) { this.specSize = specSize; }
