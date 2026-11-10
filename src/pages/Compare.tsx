@@ -10,7 +10,8 @@ import CompareCard from "../components/compare/CompareCard";
 import CompareTable from "../components/compare/CompareTable";
 import CompareLikes from "../components/compare/CompareLikes";
 import ComparePicker from "../components/compare/ComparePicker";
-import { autofill, eulReul, formatCols, MAX_COLS, parseCols, type Col } from "../utils/compare";
+import { eulReul, formatCols, MAX_COLS, parseCols, type Col } from "../utils/compare";
+import { fetchCompare, type CompareStats } from "../utils/compareApi";
 import { readLastCompare, writeLastCompare } from "../utils/compareStore";
 import "./Compare.css";
 
@@ -18,6 +19,7 @@ import "./Compare.css";
  * 비교하기 /compare(docs/08_compare.md) — 정해 둔 신발 2~5켤레를 점수 없이 나란히.
  * 구성은 주소가 정답(?ids=1,2&why=p,l), 마지막 구성만 이 브라우저에 기억한다. 로그인 없이 쓴다.
  * ?pick=id — 그 신발로 4켤레까지 채운다(상세 모달 "비교에 담기"). ?shoe=id — 상세 모달
+ * 자동 채우기 · 등수 · 밴드 · 그래프 모집단은 서버가 계산한다(GET /api/compare, 2026-11-10 작업 3). 원값 · 기준 사이즈는 /api/shoes 그대로
  */
 function Compare() {
   const [all, setAll] = useState<Shoe[] | null>(null);
@@ -61,13 +63,42 @@ function Compare() {
     [setParams],
   );
 
-  // ?pick= — 하나를 고르면 같은 라인 · 비슷한 신발로 넷까지
+  // 등수 · 밴드 · 그래프(서버). 구성이 바뀌는 동안은 직전 응답을 그대로 두고(새로 들어온 칸만 응답이 오면 배지가 붙는다),
+  // 실패하면 배지 · 그래프 없이 표만(2026-11-10 사용자 — 수십 ms 라 스피너는 두지 않는다)
+  const [stats, setStats] = useState<{ key: string; data: CompareStats } | null>(null);
+  const statsKey = cols.map((c) => c.id).join(",");
+  useEffect(() => {
+    if (cols.length < 2 || stats?.key === statsKey) return;
+    const ctrl = new AbortController();
+    fetchCompare({ ids: statsKey.split(",").map(Number) }, ctrl.signal)
+      .then((data) => setStats({ key: statsKey, data }))
+      .catch((e) => e.name !== "AbortError" && setStats(null));
+    return () => ctrl.abort();
+  }, [statsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 하나를 고르면 같은 라인 · 비슷한 신발로 넷까지 — 서버가 고른다(?pick=). 실패하면 그 한 켤레만
+  const runPick = useCallback((id: number) =>
+    fetchCompare({ pick: id })
+      .then((data) => {
+        const next = data.cols ?? [];
+        setStats({ key: next.map((c) => c.id).join(","), data });
+        setCols(next);
+      })
+      .catch(() => setCols([{ id, why: "pick" }])), [setCols]);
+  const [picking, setPicking] = useState(false);
+  const autofillFrom = (id: number) => {
+    setPicking(true);
+    runPick(id).finally(() => setPicking(false));
+  };
+
+  // ?pick= — 상세 모달 "비교에 담기"
   const pick = params.get("pick");
   useEffect(() => {
     if (!all || !pick) return;
     const id = Number(pick);
-    setCols(known.has(id) ? autofill(id, all) : []);
-  }, [all, pick, known, setCols]);
+    if (known.has(id)) runPick(id);      // 기다리는 동안은 ?pick= 이 남아 "불러오는 중이에요…"
+    else setCols([]);
+  }, [all, pick, known, setCols, runPick]);
 
   useEffect(() => {
     if (all && cols.length) writeLastCompare(cols);
@@ -113,7 +144,7 @@ function Compare() {
   const add = (id: number, at: number | null = null) => {
     setAdding(false);
     if (!all || cols.some((c) => c.id === id)) return;
-    if (cols.length === 0) return setCols(autofill(id, all));
+    if (cols.length === 0) return autofillFrom(id);
     if (at != null && at < cols.length) return setCols(cols.map((c, j) => (j === at ? { id, why: "user" } : c)));
     if (cols.length < MAX_COLS) setCols([...cols, { id, why: "user" }]);
   };
@@ -150,7 +181,7 @@ function Compare() {
   const guest = status !== "user";
 
   let main;
-  if (!all) main = <p className="compare__loading">불러오는 중이에요…</p>;
+  if (!all || picking || pick) main = <p className="compare__loading">불러오는 중이에요…</p>;
   else if (cols.length === 0) {
     main = (
       <div className="compare__pick">
@@ -183,7 +214,7 @@ function Compare() {
     );
   } else {
     main = (
-      <CompareTable cols={cols} shoes={shoes} all={all} terms={terms} guest={guest} mobile={mobile}
+      <CompareTable cols={cols} shoes={shoes} stats={stats?.data ?? null} terms={terms} guest={guest} mobile={mobile}
         onRemove={remove} onRebase={rebase} onAdd={() => setAdding(true)} onDrop={add} onOpen={openModal} />
     );
   }

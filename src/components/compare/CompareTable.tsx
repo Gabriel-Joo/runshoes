@@ -5,7 +5,8 @@ import TermTooltip from "../TermTooltip";
 import CompareDist from "./CompareDist";
 import { NONE, text, wideLabel, yesNo } from "../../utils/display";
 import { WIDE_TERM, stabilityTerm } from "../../utils/terms";
-import { BAND_WORD, MAX_COLS, SIZE_MM, formatNum, isConverted, numValue, population, rankIn, type Col, type NumKey } from "../../utils/compare";
+import { BASE_SIZE, MAX_COLS, SIZE_MM, formatNum, type Col, type NumKey } from "../../utils/compare";
+import type { CompareStats } from "../../utils/compareApi";
 
 
 type RowKey = "purpose" | "stability" | "width" | "wide" | NumKey | "carbon" | "midsole" | "rating" | "likes";
@@ -58,7 +59,7 @@ function plain(s: Shoe, k: RowKey): string {
 interface Props {
   cols: Col[];
   shoes: Shoe[];                 // cols 순서 그대로
-  all: Shoe[];                   // 모집단(310켤레)
+  stats: CompareStats | null;    // 서버가 센 등수 · 밴드 · 모집단(GET /api/compare). 없으면(불러오는 중 · 실패) 배지 · 그래프 없이 원값만
   terms: Term[];
   guest: boolean;
   mobile: boolean;
@@ -70,7 +71,7 @@ interface Props {
 }
 
 /** 머리는 찜 목록 카드 모양(사진 · 브랜드 · 모델 · 바코드), 아래는 줄 이름이 왼쪽에 있는 표(08 1-5) */
-function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onRebase, onAdd, onDrop, onOpen }: Props) {
+function CompareTable({ cols, shoes, stats, terms, guest, mobile, onRemove, onRebase, onAdd, onDrop, onOpen }: Props) {
   const [open, setOpen] = useState<{ id: number; key: NumKey } | null>(null);
   const [openTerm, setOpenTerm] = useState<string | null>(null);
   const [dropAt, setDropAt] = useState<number | "add" | null>(null);
@@ -102,7 +103,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   }, [cols.length, mobile]);
   const canAdd = cols.length < MAX_COLS;
   const pad = MAX_COLS - cols.length;
-  const pops = Object.fromEntries(NUM_KEYS.map((k) => [k, population(all, k)])) as Record<NumKey, number[]>;
+  const statOf = (id: number) => stats?.shoes.find((r) => r.id === id);
   const termOf = (key?: string): Term | undefined =>
     key === "wide" ? WIDE_TERM : key === "stabilityPair" ? stabilityTerm(terms) : terms.find((t) => t.key === key);
 
@@ -126,36 +127,38 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
   const cell = (s: Shoe, k: RowKey): ReactNode => {
     if (k === "weight") {
       // 원값이 먼저, 270mm 로 맞춘 값은 보조 줄 — 배지는 위치(밴드)와 "환산"(이 숫자가 그대로가 아님) 둘(2026-11-10 사용자)
+      // 보조 줄은 신발 데이터 그대로(기준 사이즈 · 270mm 로 맞춘 값 weightNorm270), 배지는 서버(위치 말 · 환산 여부)
       const mm = s.weightSize ? SIZE_MM[s.weightSize] : undefined;
-      const v = numValue(s, "weight");
-      const conv = isConverted(s);
+      const norm = s.weightNorm270;
+      const c = statOf(s.id)?.weight;
       return (
         <>
           {s.weight == null ? <span className="ctable__none">{NONE}</span> : `${s.weight}g`}
           {s.weight != null && (
             <span className="ctable__sub">
-              {v == null || !mm ? "기준 모름" : conv ? (
-                <><span className="nowrap">{mm}mm 기준 ·</span> <span className="nowrap">270mm로 약 {formatNum("weight", v)}</span></>   // 좁은 열에서는 "·" 뒤에서만 줄을 바꾼다
+              {norm == null || !mm ? "기준 모름" : s.weightSize !== BASE_SIZE ? (
+                <><span className="nowrap">{mm}mm 기준 ·</span> <span className="nowrap">270mm로 약 {formatNum("weight", norm)}</span></>   // 좁은 열에서는 "·" 뒤에서만 줄을 바꾼다
               ) : `${mm}mm 기준`}
             </span>
           )}
-          {v != null && (
+          {c?.word && (
             <span className="ctable__badges">
-              <span className="ctable__badge">{BAND_WORD.weight[rankIn(pops.weight, v).band]}</span>
-              {conv && <span className="ctable__badge is-conv">환산</span>}
+              <span className="ctable__badge">{c.word}</span>
+              {c.converted && <span className="ctable__badge is-conv">환산</span>}
             </span>
           )}
         </>
       );
     }
     if (isNum(k)) {
-      const v = numValue(s, k);
+      const v = s[k];
       if (v == null) return <span className="ctable__none">{NONE}</span>;
+      const word = statOf(s.id)?.[k].word;
       return (
         <>
           {formatNum(k, v)}
           <br />
-          <span className="ctable__badge">{BAND_WORD[k][rankIn(pops[k], v).band]}</span>
+          {word && <span className="ctable__badge">{word}</span>}
         </>
       );
     }
@@ -203,7 +206,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
             {g.rows.map((row) => {
               const diff = g.tint && new Set(shoes.map((s) => plain(s, row.key))).size > 1 ? "is-diff" : "";
               const term = termOf(row.term);
-              const converted = shoes.some(isConverted);
+              const converted = shoes.some((s) => statOf(s.id)?.weight.converted);
               return (
                 <div key={row.key} className="ctable__row">
                   <div className={`ctable__lab ${diff}`}>
@@ -217,7 +220,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
                     </span>
                   </div>
                   {shoes.map((s, i) => {
-                    const num = isNum(row.key) && (row.key === "weight" ? s.weight != null : numValue(s, row.key) != null);
+                    const num = isNum(row.key) && s[row.key] != null && !!statOf(s.id);   // 그래프는 서버 값이 온 칸만(불러오는 중 · 실패면 열지 않는다)
                     const here = open?.id === s.id && open.key === row.key;
                     return (
                       <div
@@ -229,7 +232,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
                       >
                         {cell(s, row.key)}
                         {here && !mobile && (
-                          <CompareDist shoe={s} field={row.key as NumKey} pop={pops[row.key as NumKey]} others={shoes.filter((o) => o.id !== s.id)}
+                          <CompareDist shoe={s} field={row.key as NumKey} stats={stats} others={shoes.filter((o) => o.id !== s.id)}
                             sheet={false} right={i >= 2 && i === cols.length - 1} onClose={() => setOpen(null)} />
                         )}
                       </div>
@@ -257,7 +260,7 @@ function CompareTable({ cols, shoes, all, terms, guest, mobile, onRemove, onReba
         return (
           <>
             <div className="cdist__dim" onClick={() => setOpen(null)} />
-            <CompareDist shoe={s} field={open.key} pop={pops[open.key]} others={shoes.filter((o) => o.id !== s.id)} sheet right={false} onClose={() => setOpen(null)} />
+            <CompareDist shoe={s} field={open.key} stats={stats} others={shoes.filter((o) => o.id !== s.id)} sheet right={false} onClose={() => setOpen(null)} />
           </>
         );
       })()}

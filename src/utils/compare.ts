@@ -1,11 +1,11 @@
 /**
- * 비교하기(docs/08_compare.md) — 화면과 떨어진 계산만. 시험: tests/compare.test.ts(npm test)
- * 점수는 매기지 않는다 — 자동 채우기의 "가까움"은 후보를 고르는 데만 쓰고 화면에 내지 않는다.
+ * 비교하기(docs/08_compare.md) — 화면 쪽 유틸만: 주소(?ids · ?why) 읽고 쓰기, 표시 변환(SIZE_MM · 숫자 · 은/는), 검색 결과 순서.
+ * 계산(자동 채우기 · 거리 · 등수 · 밴드 · 위치 말 · 환산 여부)은 서버로 옮겼다(2026-11-10 작업 3, compare/ComparePolicy · GET /api/compare).
+ * 옮기기 전 계산의 얼린 사본은 scripts/parity/reference/compare.mjs. 시험: tests/compare.test.ts(npm test)
  */
 import type { Shoe } from "../types/index.ts";
 
 export const MAX_COLS = 5;   // 비교는 다섯 켤레까지
-export const AUTO_COLS = 4;  // 하나를 고르면 네 켤레까지 채운다
 
 /** 열마다 붙는 이유 — 주소(?why=)에는 한 글자로 */
 export type Why = "pick" | "line" | "brand" | "stability" | "similar" | "user" | "rec";
@@ -46,76 +46,6 @@ export function formatCols(cols: Col[]): { ids: string; why: string | null } {
   };
 }
 
-type Spec = Pick<Shoe, "id" | "brand" | "purpose" | "stability" | "stackHeight" | "drop" | "weight" | "weightNorm270" | "carbon" | "lineKey" | "isCurrent">;
-
-/**
- * 비슷한 신발 거리에만 쓰는 무게 — 270mm 로 맞춘 값, 기준 모름(weightNorm270 null)이면 원값.
- * 일부러 여기만 원값을 쓴다(2026-11-10 사용자): 기준 모름 29켤레를 "무게 모름"으로 두면 거리가 스택 · 드롭으로만 갈려
- * 247g 신발 옆에 311g 을 "비슷한 신발"로 내놓았다. 기준을 몰라도 대표 사이즈는 거의 265~285mm 라(01a 1-3)
- * 원값의 오차는 많아야 약 ±7.4%(약 20g) — 무게를 버리는 것보다 작다.
- * 이 값은 저장하지도 보이지도 않는다 — 화면 · 등수 · 그래프 · API 의 무게 자리는 numValue(기준 모름이면 null)만 쓴다.
- */
-const distWeight = (s: Spec) => s.weightNorm270 ?? s.weight;
-
-function stdev(xs: number[]): number {
-  if (xs.length === 0) return 1;
-  const m = xs.reduce((a, b) => a + b, 0) / xs.length;
-  return Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / xs.length) || 1;
-}
-
-/** 스펙이 얼마나 가까운가 — 스택 + 드롭 × 0.7 + 무게(distWeight)(각각 전체 표준편차로 나눔), 카본이 서로 다르면 +2, 한쪽이 비면 그 칸은 1 */
-export function makeDistance(all: Spec[]) {
-  const sd = {
-    stackHeight: stdev(all.map((s) => s.stackHeight).filter((v): v is number => v != null)),
-    drop: stdev(all.map((s) => s.drop).filter((v): v is number => v != null)),
-    weight: stdev(all.map(distWeight).filter((v): v is number => v != null)),
-  };
-  return (a: Spec, b: Spec) => {
-    let d = 0;
-    for (const [k, w] of [["stackHeight", 1], ["drop", 0.7], ["weight", 1]] as const) {
-      const x = k === "weight" ? distWeight(a) : a[k], y = k === "weight" ? distWeight(b) : b[k];
-      d += w * (x == null || y == null ? 1 : Math.abs(x - y) / sd[k]);
-    }
-    if (a.carbon != null && b.carbon != null && a.carbon !== b.carbon) d += 2;
-    return d;
-  };
-}
-
-/**
- * 하나를 고르면 네 켤레까지(08 1-3): 고른 신발 → 같은 라인의 다른 세대 → 같은 브랜드 · 같은 안정성 1 →
- * 다른 브랜드 · 안정성이 다른 신발 1 → 다른 브랜드 · 같은 안정성 → (모자라면) 다른 브랜드 아무거나 → 아무거나.
- * 후보는 같은 용도 · 다른 라인 · 현행만(검색은 전체 — 여기만 현행). 다른 브랜드는 브랜드마다 하나.
- */
-export function autofill(pickId: number, all: Spec[]): Col[] {
-  const pick = all.find((s) => s.id === pickId);
-  if (!pick) return [];
-  const out: Col[] = [{ id: pick.id, why: "pick" }];
-  if (pick.lineKey) {
-    all.filter((s) => s.lineKey === pick.lineKey && s.id !== pick.id).forEach((s) => out.push({ id: s.id, why: "line" }));
-  }
-  const dist = makeDistance(all);
-  const pool = all
-    .filter((s) => s.id !== pick.id && (!pick.lineKey || s.lineKey !== pick.lineKey) && s.isCurrent && s.purpose === pick.purpose)
-    .sort((a, b) => dist(pick, a) - dist(pick, b) || a.id - b.id);
-  const used = new Set(out.map((c) => c.id));
-  const brands = new Set([pick.brand]);
-  const take = (ok: (s: Spec) => boolean, why: Why) => {
-    if (out.length >= AUTO_COLS) return false;
-    const s = pool.find((x) => !used.has(x.id) && ok(x));
-    if (!s) return false;
-    used.add(s.id);
-    brands.add(s.brand);
-    out.push({ id: s.id, why });
-    return true;
-  };
-  take((s) => s.brand === pick.brand && s.stability === pick.stability, "brand");
-  take((s) => !brands.has(s.brand) && s.stability !== pick.stability, "stability");
-  while (take((s) => !brands.has(s.brand) && s.stability === pick.stability, "similar"));
-  while (take((s) => !brands.has(s.brand), "similar"));
-  while (take(() => true, "similar"));
-  return out.slice(0, AUTO_COLS);
-}
-
 /* ───── 어디쯤인지(08 1-7) ───── */
 
 export type NumKey = "weight" | "stackHeight" | "drop" | "price";
@@ -123,47 +53,6 @@ export type NumKey = "weight" | "stackHeight" | "drop" | "price";
 /** 무게를 잰 사이즈 → mm(표시용). 무게 자리는 270mm(M9)로 맞춘 값으로 말한다(V15 weightNorm270, 환산 규칙 01a 1-3a) */
 export const SIZE_MM: Record<string, number> = { "M8.5": 265, M9: 270, "M9.5": 275, M10: 280, "M10.5": 285 };
 export const BASE_SIZE = "M9";
-
-type WeightSpec = Pick<Shoe, NumKey | "weightSize" | "weightNorm270">;
-
-/** 그 칸의 "자리를 말할 수 있는" 값 — 무게는 270mm 로 맞춘 값(기준 모름이면 null) */
-export function numValue(s: WeightSpec, key: NumKey): number | null {
-  if (key === "weight") return s.weightNorm270 ?? null;
-  return s[key];
-}
-
-/** 환산한 무게인가 — 270mm 로 맞춘 값이 있고 기준이 M9 가 아니다(표의 "환산" 배지 · 그래프 설명) */
-export function isConverted(s: Pick<Shoe, "weightSize" | "weightNorm270">): boolean {
-  return s.weightNorm270 != null && s.weightSize !== BASE_SIZE;
-}
-
-/** 모집단 — 그 칸의 값이 있는 신발(무게는 270mm 로 맞춘 값이 있는 것) */
-export function population(all: WeightSpec[], key: NumKey): number[] {
-  return all.map((s) => numValue(s, key)).filter((v): v is number => v != null);
-}
-
-export interface Rank {
-  less: number;   // 이 값보다 작은 신발 수
-  same: number;   // 같은 값(자기 포함)
-  more: number;   // 큰 신발 수
-  order: number;  // 작은 순으로 세웠을 때 몇 번째(1부터)
-  band: "low" | "mid" | "high";   // 하위 25% · 가운데 · 상위 25% — 동점은 가운데 순위로
-}
-
-export function rankIn(arr: number[], v: number): Rank {
-  const less = arr.filter((a) => a < v).length;
-  const same = arr.filter((a) => a === v).length;
-  const more = arr.length - less - same;
-  const p = arr.length ? (less + same / 2) / arr.length : 0.5;
-  return { less, same, more, order: less + 1, band: p < 0.25 ? "low" : p > 0.75 ? "high" : "mid" };
-}
-
-export const BAND_WORD: Record<NumKey, Record<Rank["band"], string>> = {
-  weight: { low: "가벼운 편", mid: "중간", high: "무거운 편" },
-  stackHeight: { low: "낮은 편", mid: "중간", high: "높은 편" },
-  drop: { low: "낮은 편", mid: "중간", high: "높은 편" },
-  price: { low: "낮은 편", mid: "중간", high: "높은 편" },
-};
 
 /** 그래프 설명 — 결론 먼저(2026-11-09 사용자): "무게 280g — 중간이에요" / "…를 가벼운 순으로 세우면 131번째예요." */
 export const NUM_TEXT: Record<NumKey, { label: string; pop: string; order: string }> = {
