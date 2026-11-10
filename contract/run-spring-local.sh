@@ -4,7 +4,7 @@
 #   contract/run-spring-local.sh v4          # V4(세대 구조) 새 기능 — 기준선 baseline/spring-v4. v3 · v3-search 는 V4 키를 --allow-added 로 "추가"만 허용해 옛 기준선과 비교
 #   contract/run-spring-local.sh v6          # V6~V9(스펙 출처 · 데모 관리자 · 숨김 · 탈퇴 · 300자) 새 기능 — 기준선 baseline/spring-v6
 #   contract/run-spring-local.sh v3-search   # 검색 24건 — 기준선 baseline/spring-v3-search
-#   contract/run-spring-local.sh v3-summary  # 요약 10건 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다. 기준선 baseline/spring-v3-summary(V14 전 — 이력)
+#   contract/run-spring-local.sh v3-summary  # 요약 10건 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다. 기준선 baseline/spring-v3-summary — 폐기(V14): 조회가 Ollama 를 부르던 시절의 계약, 지금 앱에서는 S2 · S3 · S7 FAIL
 #   contract/run-spring-local.sh v14-summary # 요약 V14 — 녹화 전에 배치(batch 프로필)를 한 번 돌리고, 녹화 중 조회가 Ollama 를 부르지 않는지 · 배치가 하나씩 보냈는지 본다. 기준선 baseline/spring-v14-summary
 #   main · summary · search                 # V3 전 기준선(node · node-summary · spring-search) — 이력. V3 뒤 앱에는 맞지 않는다(작성자 · 쓰기 401)
 #   IMAGE=runshoes:phase4 contract/run-spring-local.sh   # jar 대신 만든 이미지로(Phase 4 게이트)
