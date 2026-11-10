@@ -46,7 +46,16 @@ export function formatCols(cols: Col[]): { ids: string; why: string | null } {
   };
 }
 
-type Spec = Pick<Shoe, "id" | "brand" | "purpose" | "stability" | "stackHeight" | "drop" | "weightNorm270" | "carbon" | "lineKey" | "isCurrent">;
+type Spec = Pick<Shoe, "id" | "brand" | "purpose" | "stability" | "stackHeight" | "drop" | "weight" | "weightNorm270" | "carbon" | "lineKey" | "isCurrent">;
+
+/**
+ * 비슷한 신발 거리에만 쓰는 무게 — 270mm 로 맞춘 값, 기준 모름(weightNorm270 null)이면 원값.
+ * 일부러 여기만 원값을 쓴다(2026-11-10 사용자): 기준 모름 29켤레를 "무게 모름"으로 두면 거리가 스택 · 드롭으로만 갈려
+ * 247g 신발 옆에 311g 을 "비슷한 신발"로 내놓았다. 기준을 몰라도 대표 사이즈는 거의 265~285mm 라(01a 1-3)
+ * 원값의 오차는 많아야 약 ±7.4%(약 20g) — 무게를 버리는 것보다 작다.
+ * 이 값은 저장하지도 보이지도 않는다 — 화면 · 등수 · 그래프 · API 의 무게 자리는 numValue(기준 모름이면 null)만 쓴다.
+ */
+const distWeight = (s: Spec) => s.weightNorm270 ?? s.weight;
 
 function stdev(xs: number[]): number {
   if (xs.length === 0) return 1;
@@ -54,17 +63,17 @@ function stdev(xs: number[]): number {
   return Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / xs.length) || 1;
 }
 
-/** 스펙이 얼마나 가까운가 — 스택 + 드롭 × 0.7 + 무게(270mm 로 맞춘 값, V15)(각각 전체 표준편차로 나눔), 카본이 서로 다르면 +2, 한쪽이 비면 그 칸은 1 */
+/** 스펙이 얼마나 가까운가 — 스택 + 드롭 × 0.7 + 무게(distWeight)(각각 전체 표준편차로 나눔), 카본이 서로 다르면 +2, 한쪽이 비면 그 칸은 1 */
 export function makeDistance(all: Spec[]) {
   const sd = {
     stackHeight: stdev(all.map((s) => s.stackHeight).filter((v): v is number => v != null)),
     drop: stdev(all.map((s) => s.drop).filter((v): v is number => v != null)),
-    weightNorm270: stdev(all.map((s) => s.weightNorm270).filter((v): v is number => v != null)),
+    weight: stdev(all.map(distWeight).filter((v): v is number => v != null)),
   };
   return (a: Spec, b: Spec) => {
     let d = 0;
-    for (const [k, w] of [["stackHeight", 1], ["drop", 0.7], ["weightNorm270", 1]] as const) {
-      const x = a[k], y = b[k];
+    for (const [k, w] of [["stackHeight", 1], ["drop", 0.7], ["weight", 1]] as const) {
+      const x = k === "weight" ? distWeight(a) : a[k], y = k === "weight" ? distWeight(b) : b[k];
       d += w * (x == null || y == null ? 1 : Math.abs(x - y) / sd[k]);
     }
     if (a.carbon != null && b.carbon != null && a.carbon !== b.carbon) d += 2;

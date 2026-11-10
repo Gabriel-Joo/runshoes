@@ -56,7 +56,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - `ActivityCleanup` 이 매일(`app.activity.cleanup-cron`, Asia/Seoul) 지운다 — `auth.*` · `user.*` 90일, 나머지(`review.*` · `like.*` · `shoe.*` · `compare.*` …) 180일(`application.yml`).
 - 그래서 오래 남아야 하는 기록은 로그에 기대지 않는다 — 영구 삭제는 `shoe_purges`, 신발의 마지막 수정은 `shoes.last_change`.
 
-#### 1-4. 마이그레이션 V1~V15
+#### 1-4. 마이그레이션 V1~V16
 
 | V | 이름 | 무엇 | 운영 적용 |
 |---|---|---|---|
@@ -75,6 +75,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 13 | model en | `model_en` · `model_alias` | 2026-11-03 |
 | 14 | shoe summaries | 리뷰 요약 `shoe_summaries`(요약 · 만들 때 리뷰 수 · 반올림 전 평균 · stale · 만든 때). 3건 이상인 보이는 신발을 "아직 만들지 않은" 행으로 넣는다 — `09_chatbot_rag.md` 5절 | 2026-11-10 |
 | 15 | weight norm 270 | `weight_norm_270` — 공시 무게를 270mm(M9)로 맞춘 값, 생성 컬럼(VIRTUAL, 반 사이즈당 2.6%). 기준이 없거나 다섯 사이즈 밖이면 NULL — `01a_catalog_sources.md` 1-3a | 적용 전 |
+| 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 적용 전 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`)에 있다. 절차는 `06_deployment.md`.
 
