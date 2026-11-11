@@ -12,7 +12,8 @@
 //   - 용도 · 안정성이 안 맞으면 실제로 맞은 조건의 이름을 댄다(안 맞은 첫 줄에만), 맞은 것이 없으면 사실만
 //   - 값 뒤 조사는 받침을 보고 고른다(으로/로 · 이고/고 · 이지만/지만 · 이/가 · 은/는)
 //   - 옛 세대는 같은 라인의 현행 신발이 사이트에 있을 때만 notes 에 "지금은 다음 세대(…)가 나와 있어요"
-// 배점 · 경계는 이관 전(history/recommend-browser-20261110.mjs)과 같다.
+// 작업 3-4(2026-11-11 사용자) — 예산 배점 20 → 10. 다른 네 조건은 신발의 고정된 속성이고 예산만 발매가 기준이라 실제 살 값과 다를 수 있다(10_recommend.md 2-3b).
+// 그 밖의 배점 · 경계는 이관 전(history/recommend-browser-20261110.mjs)과 같다.
 // 가격의 toLocaleString() 은 ko-KR 로 고정해 돌린다(check.mjs · diff-reference.mjs).
 
 /** 끝 글자에 받침이 있나 — 숫자 · 영문은 읽는 소리로 어림(src/utils/compare.ts hasJong 과 같다) */
@@ -134,11 +135,11 @@ export function evaluate(shoe, answers, current = new Map()) {
   const cap = answers.price === "low" ? 200000 : answers.price === "mid" ? 300000 : null;
   if (cap !== null) {
     if (shoe.price !== null) {
-      max += 20; checked++;
+      max += 10; checked++;
       const p = shoe.price;
       // 가격 칸은 발매가(정가)만 담는다(01a 1-5) — 상세 모달 · 비교하기처럼 "발매가"로 부른다
       if (p <= cap) {
-        score += 20; hits.push("price");
+        score += 10; hits.push("price");
         reasons.push({ hit: true, text: `예산에 맞아요 (발매가 ${p.toLocaleString()}원)` });
       } else {
         misses.push("price");

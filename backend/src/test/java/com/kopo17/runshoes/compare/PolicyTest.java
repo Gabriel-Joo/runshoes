@@ -114,8 +114,8 @@ class PolicyTest {
 	void normalWidthIsNotACondition() {
 		// "보통"을 고르면 발볼을 보지 않는다 — 보통 신발도 점수 없음, 만점에도 없음(10_recommend.md)
 		var r = RecommendPolicy.evaluate(shoe(1, 40.0, 150000.0, "보통", false), ask("보통", "high", "low"));
-		assertEquals(110, r.score());
-		assertEquals(110, r.max());
+		assertEquals(100, r.score());   // 용도 40 + 안정성 30 + 쿠션 20 + 예산 10(작업 3-4)
+		assertEquals(100, r.max());
 		assertEquals("발볼은 보통으로 나왔어요", r.reasons().get(1).text());
 	}
 
@@ -137,7 +137,8 @@ class PolicyTest {
 		var edge = RecommendPolicy.evaluate(shoe(2, 40.0, 300000.0, "보통", false), ask("unknown", "high", "mid"));
 		assertEquals(edge.max(), edge.score());
 		var over = RecommendPolicy.evaluate(shoe(3, 40.0, 309000.0, "보통", false), ask("unknown", "high", "mid"));
-		assertEquals(over.max() - 20, over.score());
+		assertEquals(over.max() - RecommendPolicy.BUDGET, over.score());
+		assertEquals(10, RecommendPolicy.BUDGET);   // 작업 3-4 — 20 → 10
 		// high(화면에서 뺀 옛 값)는 "상관없어요"와 같다 — 조건이 아니라 만점에 없다
 		var any = RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "high"));
 		assertEquals(RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "unknown")), any);
