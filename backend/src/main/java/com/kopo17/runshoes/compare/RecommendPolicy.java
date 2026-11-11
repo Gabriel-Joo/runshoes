@@ -13,7 +13,7 @@ import java.util.Set;
  * 비율이 같으면 판단한 조건이 많은 쪽 먼저, 물어본 조건 중 못 본 것이 둘 이상이면 후보에서 뺀다, "보통" 발볼은 보지 않는다.
  * 결과(상위 3의 id · 순서 · score · max · checked · reasons · notes)는 scripts/parity/reference/recommend.mjs 와 === 로 같아야 한다.
  * 작업 3-3(2026-11-11 사용자)에서 문구만 고쳤다 — 발매가 표기, 쿠션 방향, 맞은 조건의 이름, 조사(Josa), 옛 세대 notes. 점수 · 순위는 그대로.
- * 배점 · 경계는 이관 전 그대로.
+ * 배점 · 경계는 이관 전 그대로 — 예산만 20 → 10(작업 3-4).
  */
 final class RecommendPolicy {
 
@@ -28,6 +28,9 @@ final class RecommendPolicy {
 			"price", Set.of("low", "mid", "high", "unknown"));   // high — 화면에서 뺀 옛 값, unknown 과 같게(작업 3-2)
 
 	record Reason(boolean hit, String text) {}
+
+	/** 예산 배점 — 작업 3-4(2026-11-11 사용자) 20 → 10. 다른 네 조건은 신발의 고정된 속성이고 예산만 발매가 기준이라 불확실하다(10_recommend.md 2-3b) */
+	static final int BUDGET = 10;
 
 	/** 조건 이름 — 맞은 조건을 댈 때(용도 · 발볼 · 안정성 · 쿠션 · 예산 순) */
 	private static final Map<String, String> COND = Map.of("purpose", "용도", "width", "발볼", "stability", "안정성", "cushion", "쿠션", "price", "예산");
@@ -168,12 +171,12 @@ final class RecommendPolicy {
 		if (cap != null && shoe.price() == null) {
 			skipped.add("price");
 		} else if (cap != null) {
-			max += 20;
+			max += BUDGET;
 			checked++;
 			double p = shoe.price();
 			// 가격 칸은 발매가(정가)만 담는다(01a 1-5) — 상세 모달 · 비교하기처럼 "발매가"로 부른다
 			if (p <= cap) {
-				score += 20;
+				score += BUDGET;
 				hits.add("price");
 				reasons.add(new Reason(true, "예산에 맞아요 (발매가 " + JsText.locale(p) + "원)"));
 			} else {
