@@ -23,7 +23,7 @@ final class RecommendPolicy {
 			"width", Set.of("넓음", "보통", "unknown"),
 			"stability", Set.of("안정화", "중립화", "중립화-outer", "unknown"),
 			"cushion", Set.of("high", "mid", "low", "unknown"),
-			"price", Set.of("low", "mid", "high", "unknown"));
+			"price", Set.of("low", "mid", "high", "unknown"));   // high — 화면에서 뺀 옛 값, unknown 과 같게(작업 3-2)
 
 	record Reason(boolean hit, String text) {}
 
@@ -127,22 +127,21 @@ final class RecommendPolicy {
 			reasons.add(new Reason(false, "쿠션 두께는 " + JsText.num(shoe.stackHeight()) + "mm예요"));
 		}
 
-		// 예산 — 경계 20만 · 30만
+		// 예산 — 상한(2026-11-11 사용자, 작업 3-2): low 20만원까지 · mid 30만원까지. high(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고
+		// unknown 과 같게 조건으로 보지 않는다(옛 값이라 받기는 한다). 상한 안의 신발은 모두 같게 본다 — 원하는 가격대가 아니라 넘으면 안 되는 선
 		String price = answers.get("price");
-		if (!"unknown".equals(price) && shoe.price() == null) {
+		Double cap = "low".equals(price) ? Double.valueOf(200000) : "mid".equals(price) ? Double.valueOf(300000) : null;
+		if (cap != null && shoe.price() == null) {
 			skipped.add("price");
-		} else if (!"unknown".equals(price)) {
+		} else if (cap != null) {
 			max += 20;
 			checked++;
 			double p = shoe.price();
-			boolean fit = ("low".equals(price) && p < 200000) || ("mid".equals(price) && p >= 200000 && p < 300000) || ("high".equals(price) && p >= 300000);
-			if (fit) {
+			if (p <= cap) {
 				score += 20;
 				reasons.add(new Reason(true, "예산에 맞아요 (" + JsText.locale(p) + "원)"));
-			} else if (("low".equals(price) && p >= 200000) || ("mid".equals(price) && p >= 300000)) {
-				reasons.add(new Reason(false, "예산보다 높지만 조건이 잘 맞아 함께 담았어요"));
 			} else {
-				reasons.add(new Reason(false, "생각하신 것보다 저렴해요 (" + JsText.locale(p) + "원)"));
+				reasons.add(new Reason(false, "예산보다 높지만 조건이 잘 맞아 함께 담았어요"));
 			}
 		} else if (shoe.price() != null) {
 			reasons.add(new Reason(false, JsText.locale(shoe.price()) + "원이에요"));

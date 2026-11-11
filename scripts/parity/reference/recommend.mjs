@@ -5,7 +5,8 @@
 //   - 하한선: 물어본 조건 중 못 본 것이 2개 이상이면 후보에서 뺀다
 //   - 발볼: "보통"을 고르면 발볼을 보지 않는다(정보 줄만). "넓음"은 그대로, 발볼 · 와이드 모두 모르면 못 본 조건
 //   - 못 본 조건은 notes 한 줄로 밝힌다(reasons 는 판단한 조건 · 정보 줄)
-// 문구 · 배점 · 경계는 이관 전(history/recommend-browser-20261110.mjs)과 같다 — 고칠 것은 10_recommend.md "남은 작업".
+//   - 예산은 상한(작업 3-2): 20만원까지 · 30만원까지, "30만원 이상도 괜찮아요"(high)는 조건이 아니다
+// 그 밖의 문구 · 배점 · 경계는 이관 전(history/recommend-browser-20261110.mjs)과 같다 — 고칠 것은 10_recommend.md "남은 한계".
 // 가격의 toLocaleString() 은 ko-KR 로 고정해 돌린다(check.mjs · diff-reference.mjs).
 
 const tie = (s) => s.rating * 20 * (s.reviewCount / (s.reviewCount + 3)) + s.likeCount * 0.5;
@@ -96,19 +97,18 @@ export function evaluate(shoe, answers) {
     reasons.push({ hit: false, text: `쿠션 두께는 ${shoe.stackHeight}mm예요` });
   }
 
-  // 예산 — 경계 20만 · 30만
-  if (answers.price !== "unknown") {
+  // 예산 — 상한(2026-11-11 사용자, 작업 3-2): low 20만원까지 · mid 30만원까지. "high"(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고
+  // "상관없어요"와 같게 조건으로 보지 않는다. 예산은 넘으면 안 되는 선이지 원하는 가격대가 아니다 — 상한 안의 신발은 모두 같게 본다
+  const cap = answers.price === "low" ? 200000 : answers.price === "mid" ? 300000 : null;
+  if (cap !== null) {
     if (shoe.price !== null) {
       max += 20; checked++;
       const p = shoe.price;
-      const fit = (answers.price === "low" && p < 200000) || (answers.price === "mid" && p >= 200000 && p < 300000) || (answers.price === "high" && p >= 300000);
-      if (fit) {
+      if (p <= cap) {
         score += 20;
         reasons.push({ hit: true, text: `예산에 맞아요 (${p.toLocaleString()}원)` });
-      } else if ((answers.price === "low" && p >= 200000) || (answers.price === "mid" && p >= 300000)) {
-        reasons.push({ hit: false, text: "예산보다 높지만 조건이 잘 맞아 함께 담았어요" });
       } else {
-        reasons.push({ hit: false, text: `생각하신 것보다 저렴해요 (${p.toLocaleString()}원)` });
+        reasons.push({ hit: false, text: "예산보다 높지만 조건이 잘 맞아 함께 담았어요" });
       }
     } else {
       skipped.push("price");
