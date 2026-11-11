@@ -68,12 +68,12 @@ export function formatNum(key: NumKey, v: number): string {
   return `${v}mm`;
 }
 
-/** 끝 글자에 받침이 있나 — 숫자 · 영문은 읽는 소리로 어림 */
+/** 끝 글자에 받침이 있나 — 숫자 · 영문은 읽는 소리로 어림(서버 compare/Josa 와 같다) */
 function hasJong(word: string): boolean {
   const c = word.trim().slice(-1);
   const code = c.charCodeAt(0);
   if (code >= 0xac00 && code <= 0xd7a3) return (code - 0xac00) % 28 !== 0;
-  if (/[0-9]/.test(c)) return "0136789".includes(c);
+  if (/[0-9]/.test(c)) return "013678".includes(c);   // 영 일 삼 육 칠 팔 — 이 사 오 구는 받침 없음(전에는 9 를 받침으로 봐 "본디 9은", 2026-11-11)
   return /[lmnr]/i.test(c);
 }
 export const eunNeun = (word: string) => word + (hasJong(word) ? "은" : "는");

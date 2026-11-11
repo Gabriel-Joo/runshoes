@@ -40,6 +40,14 @@
   line-height: 1.4;
 }
 
+/* 질문 아래 한 줄(예산 — 발매가 기준) */
+.recommend__qnote {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-weak);
+}
+
 /* 선택지 */
 .recommend__options {
   margin-top: 32px;

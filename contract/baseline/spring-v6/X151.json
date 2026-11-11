@@ -24,7 +24,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Wed, 11 Nov 2026 03:09:32 GMT",
+      "date": "Wed, 11 Nov 2026 04:33:34 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -37,20 +37,20 @@
           "checked": 4,
           "reasons": [
             {
-              "hit": true,
-              "text": "조깅·회복주에 맞는 신발이에요"
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "발볼이 넓게 나온 모델이에요"
+              "text": "발볼이 넓게 나온 모델이에요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "교정 장치가 없는 중립화예요"
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "예산에 맞아요 (189,000원)"
+              "text": "예산에 맞아요 (발매가 189,000원)",
+              "hit": true
             }
           ],
           "notes": [
@@ -64,24 +64,24 @@
           "checked": 5,
           "reasons": [
             {
-              "hit": true,
-              "text": "조깅·회복주에 맞는 신발이에요"
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "와이드 모델이 따로 있어요"
+              "text": "와이드 모델이 따로 있어요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "교정 장치가 없는 중립화예요"
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "쿠션 두께가 원하시는 정도예요 (40.5mm)"
+              "text": "쿠션 두께가 원하시는 정도예요 (40.5mm)",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "예산에 맞아요 (179,000원)"
+              "text": "예산에 맞아요 (발매가 179,000원)",
+              "hit": true
             }
           ],
           "notes": []
@@ -93,24 +93,24 @@
           "checked": 5,
           "reasons": [
             {
-              "hit": true,
-              "text": "조깅·회복주에 맞는 신발이에요"
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "발볼이 넓게 나온 모델이에요"
+              "text": "발볼이 넓게 나온 모델이에요",
+              "hit": true
             },
             {
-              "hit": true,
-              "text": "교정 장치가 없는 중립화예요"
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": true
             },
             {
-              "hit": false,
-              "text": "쿠션이 원하시는 것보다 얇아요 (36mm)"
+              "text": "쿠션이 원하시는 것보다 얇아요 (36mm)",
+              "hit": false
             },
             {
-              "hit": true,
-              "text": "예산에 맞아요 (179,000원)"
+              "text": "예산에 맞아요 (발매가 179,000원)",
+              "hit": true
             }
           ],
           "notes": []
