@@ -4,7 +4,7 @@
 
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
 
-- [ ] 4단계 model-service 분리(임베딩 · 리랭커, 펫퍼민트 영향) → `09_chatbot_rag.md` 2절
+- [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
 - [ ] 5단계 챗봇 RAG → `09_chatbot_rag.md`
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
 - [ ] `terms` id 12 중복(무게 · 아웃솔) — 챗봇이 용어를 참조할 때 → `07_database.md` 4절 · `09_chatbot_rag.md` 8절
