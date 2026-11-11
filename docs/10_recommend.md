@@ -1,4 +1,4 @@
-> 상태: 운영(2026-11-11, 작업 3-3 — 문구 정리: 발매가 표기 · 쿠션 방향 · 맞은 조건 · 조사 · 옛 세대 표시, 이미지 `fb901963820c`. 운영 대조 불일치 0), 로컬(2026-11-11, 작업 3-4 — 예산 배점 20 → 10). 계산은 서버 한 곳(`GET /api/recommend` · `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java` · `scripts/parity/reference/recommend.mjs`(기준 사본) · `src/pages/Recommend.tsx`(질문 · 그리기)
+> 상태: 운영(2026-11-11, 작업 3-4 — 예산 배점 20 → 10, 이미지 `4f57bc0e1537`. 운영 대조 불일치 0 · 3-3 대비 27 · 1 · 23). 계산은 서버 한 곳(`GET /api/recommend` · `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java` · `scripts/parity/reference/recommend.mjs`(기준 사본) · `src/pages/Recommend.tsx`(질문 · 그리기)
 
 #### 0. 한 줄 요약
 
