@@ -19,6 +19,7 @@ interface Option {
 interface Question {
   key: string;
   title: string;
+  note?: string;          // 질문 아래 한 줄 — 무엇과 견주는지
   options: Option[];
 }
 
@@ -122,6 +123,8 @@ const QUESTIONS: Question[] = [
   {
     key: "price",
     title: "예산은 어느 정도세요?",
+    // 가격 칸은 발매가(정가)만 담는다(01a 1-5) — 추천 이유도 "발매가"로 말한다(2026-11-11 사용자, 작업 3-3)
+    note: "발매가(정가) 기준이에요 — 할인가는 보지 않아요",
     // 예산은 넘으면 안 되는 선(상한) — 그 안의 신발은 가격으로 가르지 않는다(2026-11-11 사용자, docs/10_recommend.md)
     options: [
       {
@@ -239,6 +242,7 @@ function Recommend() {
         </div>
 
         <h2 className="recommend__question">{question.title}</h2>
+        {question.note && <p className="recommend__qnote">{question.note}</p>}
 
         <ul className="recommend__options">
           {question.options.map((option) => (

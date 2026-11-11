@@ -6,6 +6,7 @@ import com.kopo17.runshoes.domain.Shoe;
 record Spec(
 		long id,
 		String brand,
+		String model,
 		String purpose,
 		String stability,
 		Double stackHeight,
@@ -25,7 +26,7 @@ record Spec(
 		Integer likeCount) {
 
 	static Spec of(Shoe s) {
-		return new Spec(s.getId(), s.getBrand(), s.getPurpose(), s.getStability(), s.getStackHeight(), s.getDrop(),
+		return new Spec(s.getId(), s.getBrand(), s.getModel(), s.getPurpose(), s.getStability(), s.getStackHeight(), s.getDrop(),
 				s.getWeight(), s.getWeightNorm270(), s.getWeightSize(), s.getCarbon(), s.getLineKey(), s.getIsCurrent(),
 				s.getPrice(), s.getWidth(), s.getWideAvailable(), s.getWideScope(), s.getRating(), s.getReviewCount(), s.getLikeCount());
 	}
