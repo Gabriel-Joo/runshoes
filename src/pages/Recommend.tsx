@@ -122,26 +122,22 @@ const QUESTIONS: Question[] = [
   {
     key: "price",
     title: "예산은 어느 정도세요?",
+    // 예산은 넘으면 안 되는 선(상한) — 그 안의 신발은 가격으로 가르지 않는다(2026-11-11 사용자, docs/10_recommend.md)
     options: [
       {
         value: "low",
-        label: "20만원 미만",
-        desc: "부담 없이 신을 수 있는 가격대예요",
+        label: "20만원까지",
+        desc: "그보다 비싸면 부담돼요",
       },
       {
         value: "mid",
-        label: "20~30만원",
-        desc: "좋은 신발이라면 이 정도는 괜찮아요",
-      },
-      {
-        value: "high",
-        label: "30만원 이상도 괜찮아요",
-        desc: "성능이 확실하다면 가격은 상관없어요",
+        label: "30만원까지",
+        desc: "좋은 신발이라면 이 정도까지는 괜찮아요",
       },
       {
         value: "unknown",
-        label: "상관없어요",
-        desc: "가격은 나중에 생각할게요",
+        label: "가격은 상관없어요",
+        desc: "잘 맞는 신발이면 가격은 나중에 볼게요",
       },
     ],
   },

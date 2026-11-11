@@ -24,7 +24,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Tue, 10 Nov 2026 10:06:42 GMT",
+      "date": "Wed, 11 Nov 2026 03:09:32 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -32,7 +32,7 @@
       "results": [
         {
           "id": 3,
-          "score": 100,
+          "score": 120,
           "max": 120,
           "checked": 4,
           "reasons": [
@@ -49,8 +49,8 @@
               "text": "교정 장치가 없는 중립화예요"
             },
             {
-              "hit": false,
-              "text": "생각하신 것보다 저렴해요 (189,000원)"
+              "hit": true,
+              "text": "예산에 맞아요 (189,000원)"
             }
           ],
           "notes": [
@@ -59,7 +59,7 @@
         },
         {
           "id": 8,
-          "score": 110,
+          "score": 130,
           "max": 140,
           "checked": 5,
           "reasons": [
@@ -80,15 +80,15 @@
               "text": "쿠션 두께가 원하시는 정도예요 (40.5mm)"
             },
             {
-              "hit": false,
-              "text": "생각하신 것보다 저렴해요 (179,000원)"
+              "hit": true,
+              "text": "예산에 맞아요 (179,000원)"
             }
           ],
           "notes": []
         },
         {
           "id": 2,
-          "score": 100,
+          "score": 120,
           "max": 140,
           "checked": 5,
           "reasons": [
@@ -109,8 +109,8 @@
               "text": "쿠션이 원하시는 것보다 얇아요 (36mm)"
             },
             {
-              "hit": false,
-              "text": "생각하신 것보다 저렴해요 (179,000원)"
+              "hit": true,
+              "text": "예산에 맞아요 (179,000원)"
             }
           ],
           "notes": []

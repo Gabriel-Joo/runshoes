@@ -80,4 +80,18 @@ class PolicyTest {
 		assertEquals(List.of(1L, 2L), top.stream().map(x -> x.shoe().id()).toList());
 		assertEquals(List.of("가격 정보가 없어 예산은 보지 않았어요"), top.get(1).notes());
 	}
+
+	@Test
+	void budgetIsACeiling() {
+		// 30만원까지 — 19만원도 맞는다(전에는 20~30만 구간만). 상한은 포함, 넘으면 안 맞음
+		var cheap = RecommendPolicy.evaluate(shoe(1, 40.0, 199000.0, "보통", false), ask("unknown", "high", "mid"));
+		assertEquals("예산에 맞아요 (199,000원)", cheap.reasons().get(cheap.reasons().size() - 1).text());
+		var edge = RecommendPolicy.evaluate(shoe(2, 40.0, 300000.0, "보통", false), ask("unknown", "high", "mid"));
+		assertEquals(edge.max(), edge.score());
+		var over = RecommendPolicy.evaluate(shoe(3, 40.0, 309000.0, "보통", false), ask("unknown", "high", "mid"));
+		assertEquals(over.max() - 20, over.score());
+		// high(화면에서 뺀 옛 값)는 "상관없어요"와 같다 — 조건이 아니라 만점에 없다
+		var any = RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "high"));
+		assertEquals(RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "unknown")), any);
+	}
 }
