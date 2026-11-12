@@ -77,10 +77,10 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 14 | shoe summaries | 리뷰 요약 `shoe_summaries`(요약 · 만들 때 리뷰 수 · 반올림 전 평균 · stale · 만든 때). 3건 이상인 보이는 신발을 "아직 만들지 않은" 행으로 넣는다 — `09_chatbot_rag.md` 5절 | 2026-11-10 |
 | 15 | weight norm 270 | `weight_norm_270` — 공시 무게를 270mm(M9)로 맞춘 값, 생성 컬럼(VIRTUAL, 반 사이즈당 2.6%). 기준이 없거나 다섯 사이즈 밖이면 NULL — `01a_catalog_sources.md` 1-3a | 2026-11-10 |
 | 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 2026-11-10 |
-| 17 | terms outsole id | 아웃솔 용어의 id 12 → 13 — 챗봇이 용어를 id 로 참조할 때 둘이 섞이지 않게(`09_chatbot_rag.md` 8절). 첫 구문 가드 — 아웃솔이 id 12 인 행이 하나이고 13 이 비었을 때만 | 미적용 |
-| 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 미적용 |
+| 17 | terms outsole id | 아웃솔 용어의 id 12 → 13 — 챗봇이 용어를 id 로 참조할 때 둘이 섞이지 않게(`09_chatbot_rag.md` 8절). 첫 구문 가드 — 아웃솔이 id 12 인 행이 하나이고 13 이 비었을 때만 | 2026-11-12 |
+| 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 2026-11-12 |
 
-운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`)에 있다. 절차는 `06_deployment.md`.
+운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md`)에 있다. 절차는 `06_deployment.md`.
 
 #### 1-5. 마이그레이션을 쓰는 규칙
 
