@@ -27,6 +27,11 @@ SPEC_WORDS = (
 )
 # 이름 없이 직전 신발을 가리키는 말 — 이게 있어야 대화 상태의 신발로 스펙 · 비교를 정한다
 REFER_WORDS = ("그거", "그것", "그 신발", "그신발", "이거", "이 신발", "저거", "걔", "얘", "방금", "아까", "둘 다", "둘다", "두 개", "두개", "세 개", "셋 다")
+# 경험 · 후기(5-2) — 리뷰를 직접 말하면 신발이 없어도, 착용감 · 사이즈감처럼 겪어 봐야 아는 말은 신발이 하나 정해졌을 때만.
+# 통증 낱말만으로는 정하지 않는다 — 신발 없는 통증 질문은 라우터 LLM 이 특성 설명 · 추천으로 보낸다(경계 15문항)
+REVIEW_WORDS = ("후기", "리뷰", "평가", "평이", "신어 본", "신어본", "신어 보신", "써 본", "써본")
+FEEL_WORDS = ("착용감", "사이즈감", "내구", "닳", "편해", "편한가", "편하나", "편할까", "편안", "불편", "아파", "아프", "아픈", "물집",
+              "쓸려", "쓸림", "까져", "끼어", "끼나", "끼는", "조이", "헐렁", "치수", "정사이즈", "크게 나", "작게 나")
 DEFINE_WORDS = ("뭐예요", "뭐에요", "뭔가요", "뭐야", "뭐지", "뭡니까", "뜻", "의미", "란?", "이란", "란 ", "무슨 말", "설명해", "알려줘", "알려주세요")
 
 PURPOSES = ("조깅·회복주", "템포·인터벌", "LSD·장거리", "레이스", "트레일")
@@ -61,6 +66,7 @@ branch
   ("쿠션 좋은 신발 신으면 나을까요", "신발 바꾸면 달라질까요", "카본화는 입문자에게 안 좋죠?", "비싼 게 좋은 거 아닌가요",
    "이거 신으면 기록 줄어드나요", "안정화가 도움이 될까요", "큰 사이즈로 신어도 괜찮을까요")
 - experience: 착용감 · 내구성 · 사이즈감처럼 후기가 있어야 답할 수 있는 질문
+  ("발볼 끼어요?", "무릎 편하다는 후기 있는 신발", "오래 신으면 밑창 금방 닳아요?")
 - out_of_scope: 러닝화와 상관없는 질문
 - greeting: 인사 · 감사만 있고 질문이 없다
 
@@ -109,6 +115,9 @@ def rule_branch(text: str, n_shoes: int, n_state: int, n_terms: int) -> str | No
         return "compare"
     if has_any(text, RECOMMEND_WORDS):
         return "recommend"
+    one = n_shoes == 1 or (n_shoes == 0 and n_state >= 1 and refer)
+    if has_any(text, REVIEW_WORDS) or (one and has_any(text, FEEL_WORDS)):
+        return "experience"
     if (n_shoes == 1 or (n_shoes == 0 and n_state >= 1 and refer)) and has_any(text, SPEC_WORDS):
         return "spec"
     if n_terms >= 1 and n_shoes == 0 and has_any(text, DEFINE_WORDS):
