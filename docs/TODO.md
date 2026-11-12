@@ -6,6 +6,7 @@
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
 - [ ] 5단계 챗봇 RAG → `09_chatbot_rag.md`
+- [ ] `cc/runshoes-3`를 새 이력 위로 옮겨 합치기(사용자가 시킬 때), 합친 뒤 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
 - [ ] `terms` id 12 중복(무게 · 아웃솔) — 챗봇이 용어를 참조할 때 → `07_database.md` 4절 · `09_chatbot_rag.md` 8절
 - [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
