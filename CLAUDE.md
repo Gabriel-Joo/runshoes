@@ -41,7 +41,9 @@ Claude는 운영 DB에 직접 접근하지 않는다 — `kubectl exec … mysql
   - 바뀐 파일이 문서뿐인지(빌드를 건너뛰는지)
   - **바뀐 파일에 `backend/src/main/resources/db/migration/V*.sql`이 들었는지 먼저 보고 사람에게 알린다.** Flyway가 파드가 뜰 때 적용하므로(`spring.flyway.enabled: true`) 자동 Sync에서는 그 push가 곧 운영 DB 스키마 변경이다. **이미지 태그를 되돌려도 스키마는 돌아오지 않는다.** 마이그레이션 push에 따로 승인 단계는 두지 않는다(push가 이미 관리자를 거쳐 사람이 하는 일이라, 사용자 결정). 스키마를 바꾸는 배포 순서(자동 Sync 끄기 → push → 덤프 → Sync)는 `docs/06_deployment.md` 1-7과 infra `apps/runshoes/runbooks/`에 있다
   - push 뒤 FOREMAN 빌드 알림이 오는지. 「push했는데 빌드 없음」이면 Jenkins를 확인한다
-- **배포 되돌리기 방법(런슈즈 revert 뒤 다시 빌드 / 인프라 태그 커밋 되돌리기)은 정해지지 않음.** `docs/06_deployment.md` 1-7은 인프라 태그 커밋 revert를 적고 있다
+- **배포 되돌리기는 `docs/06_deployment.md` 1-7대로** — 인프라 저장소의 태그 커밋(`runshoes: 이미지 태그 …`)을 `git revert` → push → Sync(자동 Sync라 push가 곧 Sync). 인프라 관리자에게 부탁한다(사용자 2026-11-12). **스키마는 돌아오지 않는다** — 옛 이미지가 새 스키마에서 뜬다. 데이터가 잘못되면 덤프 복원(각 런북 「실패했을 때」)
+  - 2026-11-12 읽기로 확인: `apps/runshoes/app.yaml` 자동 Sync(prune · selfHeal 끔), 06이 적은 런북 9개 모두 있음(지금은 `reviews-1500.md`까지 10개), 태그 커밋 revert는 런북(`admin-demo-v6-v9.md` R2 · R3)에 실패 대비로만 있고 **실제로 해 본 적은 없다**(인프라 이력에 revert 커밋 0)
+  - 되돌린 뒤 다음 앱 push의 Jenkins 태그 커밋이 newTag를 다시 덮는다(`Jenkinsfile` 「매니페스트 태그」) — 그때까지 무엇을 고칠지는 정해지지 않음
 
 ## 사람 승인이 필요한 것
 
