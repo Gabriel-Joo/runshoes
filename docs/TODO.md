@@ -5,8 +5,7 @@
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
-- [ ] 5-1 운영 반영 — V17 · V18 마이그레이션(infra 런북) · 이미지 둘 → `09_chatbot_rag.md` 15절
-- [ ] 챗봇 경계 15문항(사용자) → `chatbot/eval/golden-boundary.jsonl`
+- [ ] 5-1 남은 한계 넷 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절
 - [ ] 5단계 챗봇 RAG 2단계부터(검색 · 경험·후기) → `09_chatbot_rag.md`
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
 - [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
