@@ -1,6 +1,8 @@
 package com.kopo17.runshoes.compare;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -142,5 +144,30 @@ class PolicyTest {
 		// high(화면에서 뺀 옛 값)는 "상관없어요"와 같다 — 조건이 아니라 만점에 없다
 		var any = RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "high"));
 		assertEquals(RecommendPolicy.evaluate(shoe(4, 40.0, 109000.0, "보통", false), ask("unknown", "high", "unknown")), any);
+	}
+
+	@Test
+	void budgetInWon() {
+		// budget(원) — 챗봇이 말한 금액(작업 5-1). 경계만 바뀌고 배점 · 문장은 price 칸과 같다
+		Map<String, String> b150 = new java.util.HashMap<>(ask("unknown", "high", "unknown"));
+		b150.remove("price");
+		b150.put("budget", "150000");
+		var in = RecommendPolicy.evaluate(shoe(1, 40.0, 150000.0, "보통", false), b150);
+		assertEquals(in.max(), in.score());                                  // 상한 포함
+		var over = RecommendPolicy.evaluate(shoe(2, 40.0, 159000.0, "보통", false), b150);
+		assertEquals(over.max() - RecommendPolicy.BUDGET, over.score());
+		assertEquals("발매가가 예산보다 높아요 (159,000원) — 지금 파는 값은 더 낮을 수 있어요", over.reasons().get(over.reasons().size() - 1).text());
+		// budget 200000 은 price=low 와, 300000 은 price=mid 와 같다
+		for (String[] pair : new String[][] {{"200000", "low"}, {"300000", "mid"}}) {
+			Map<String, String> b = new java.util.HashMap<>(ask("unknown", "high", "unknown"));
+			b.remove("price");
+			b.put("budget", pair[0]);
+			for (double p : new double[] {199000, 200000, 250000, 300000, 309000}) {
+				assertEquals(RecommendPolicy.evaluate(shoe(3, 40.0, p, "보통", false), ask("unknown", "high", pair[1])),
+						RecommendPolicy.evaluate(shoe(3, 40.0, p, "보통", false), b));
+			}
+		}
+		assertTrue(RecommendPolicy.validBudget("150000"));
+		for (String bad : new String[] {"0", "-1", "015", "1.5", "abc", "100000001", "", "9999999999"}) assertFalse(RecommendPolicy.validBudget(bad), bad);
 	}
 }

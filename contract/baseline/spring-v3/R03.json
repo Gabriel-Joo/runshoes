@@ -1,7 +1,7 @@
 {
   "id": "R03",
   "plan": 1,
-  "name": "terms 전체(id 12 중복 포함)",
+  "name": "terms 전체(V17 — 아웃솔 id 13, 전에는 id 12 중복)",
   "contract": true,
   "request": {
     "method": "GET",
@@ -23,7 +23,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Tue, 20 Oct 2026 23:23:24 GMT",
+      "date": "Thu, 12 Nov 2026 02:34:31 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -110,10 +110,10 @@
         "key": "weight",
         "name": "무게",
         "short": "신발 한 짝의 무게",
-        "description": "신발 한 짝의 무게입니다. 브랜드가 정한 대표 사이즈(보통 270~280mm) 기준으로 표기하기 때문에, 실제 신는 사이즈에 따라 달라집니다. 사이즈가 10mm 커질 때마다 5~10g 정도 늘어납니다. 220g 이하면 가벼운 편, 300g 이상이면 무거운 편입니다."
+        "description": "신발 한 짝의 무게입니다. 브랜드가 정한 대표 사이즈(대부분 270mm) 기준으로 표기하기 때문에, 실제 신는 사이즈에 따라 달라집니다. 사이즈가 5mm(반 치수) 커질 때마다 약 2.6% 정도 무거워집니다. 비교하기 페이지에서는 신발 무게를 비교할 때 270mm로 환산한 값을 씁니다. 통상적으로 240g 이하면 가벼운 편이고, 300g 이상이면 무거운 편입니다."
       },
       {
-        "id": 12,
+        "id": 13,
         "key": "outsole",
         "name": "아웃솔",
         "short": "지면에 닿는 겉창",

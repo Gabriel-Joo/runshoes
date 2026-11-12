@@ -5,12 +5,24 @@
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
-- [ ] 5단계 챗봇 RAG → `09_chatbot_rag.md`
-- [ ] `cc/runshoes-3`를 새 이력 위로 옮겨 합치기(사용자가 시킬 때), 합친 뒤 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
+- [ ] 5-1 운영 반영 — V17 · V18 마이그레이션(infra 런북) · 이미지 둘 → `09_chatbot_rag.md` 15절
+- [ ] 챗봇 경계 15문항(사용자) → `chatbot/eval/golden-boundary.jsonl`
+- [ ] 5단계 챗봇 RAG 2단계부터(검색 · 경험·후기) → `09_chatbot_rag.md`
+- [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
-- [ ] `terms` id 12 중복(무게 · 아웃솔) — 챗봇이 용어를 참조할 때 → `07_database.md` 4절 · `09_chatbot_rag.md` 8절
 - [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
 - [ ] 리랭커를 켤지 — 평가 결과를 보고 → `09_chatbot_rag.md` 2절
+
+#### 챗봇 — 나중에 재면 좋을 것(지금은 계측하지 않는다 — 모니터링은 챗봇 작업 뒤, 2026-11-12 사용자)
+
+- [ ] 갈래별 질문 수(용어 · 스펙 · 비교 · 추천 · 특성 · 경험 · 범위 밖 · 되묻기) → `09_chatbot_rag.md` 15절
+- [ ] 규칙이 정한 비율 · 라우터 LLM 이 정한 비율 · 라우터 실패(JSON 깨짐 · 시간 초과) 수 → `09` 15절
+- [ ] `health_context` true 비율 → `09` 7절
+- [ ] 응답 시간 — 한 턴 전체 · 라우터 LLM · 생성 LLM · `/api/shoes` 읽기(질문마다 약 1MB — 캐시를 할지 판단할 자료) → `09` 15절
+- [ ] 검사에 걸려 코드 답을 낸 비율과 까닭(사실에 없는 숫자 · 금칙어 · 잘림 · 신발이 몸에 도움) → `09` 15절
+- [ ] 거절 · 기록 건수 — 없는 신발 · 없는 용어 · 답하지 못한 특성(`chatbot_misses` kind 별) · 범위 밖 → `07_database.md` 1-1
+- [ ] "보러 가기" 버튼을 누른 비율(1켤레 · 비교하기) → `02_screens.md` 1-7
+- [ ] 동시 연결 수 · 연결당 대화 턴 수 · 용도 되묻기 뒤 이어서 답한 비율 → `09` 15절
 
 #### 카탈로그
 

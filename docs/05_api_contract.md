@@ -20,7 +20,9 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
 | `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
 | `GET /api/compare?pick=<id>` · `?ids=<id,…>` | 비교하기 계산(2026-11-10, 작업 3 — 브라우저에서 옮김). `pick` 이면 자동 채우기 `cols:[{id, why}]`(08 1-3)까지, `ids` 는 1~5켤레(숫자 아님 · 모르는 id · 겹침은 버림). 응답 `fields`(칸마다 모집단 `{n, values}` 오름차순 — 그래프 막대용) · `shoes`(칸마다 `{value, order, band, word}`, 무게는 `converted` — 등수를 말할 수 없으면 `value: null` 만). 둘 다 없거나 둘 다 있으면 400 `{}` | 누구나 |
-| `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | 추천받기 상위 3 `{results:[{id, score, max, checked, reasons:[{hit, text}], notes}]}` — `score` · `max` 는 판단한 조건의 점수 · 만점(데이터가 없어 못 본 조건은 빠진다), `checked` 판단한 조건 수, `notes` 못 본 조건 한 줄(`10_recommend.md`). `price` 는 low(20만원까지) · mid(30만원까지) · unknown, 옛 값 high 는 unknown 과 같게 받는다(작업 3-2). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
+| `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | `price` 대신 `budget=<원>`(1 ~ 1억 정수 — 챗봇이 말한 금액, 작업 5-1)도 받는다 — 둘 다 오거나 숫자가 아니면 400. 추천받기 상위 3 `{results:[{id, score, max, checked, reasons:[{hit, text}], notes}]}` — `score` · `max` 는 판단한 조건의 점수 · 만점(데이터가 없어 못 본 조건은 빠진다), `checked` 판단한 조건 수, `notes` 못 본 조건 한 줄(`10_recommend.md`). `price` 는 low(20만원까지) · mid(30만원까지) · unknown, 옛 값 high 는 unknown 과 같게 받는다(작업 3-2). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
+| `POST /api/internal/chatbot-misses` | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문 기록(V18, 작업 5-1). 본문 `{kind: "shoe"\|"term"\|"feature", query, message}` → 204, 잘못된 본문 400 `{}`. **같은 Pod 안에서 127.0.0.1 로 들어온 연결만** — 서버 쪽 주소(`localAddr`)를 본다. `remoteAddr` 는 믿지 않는다: Spring Boot 는 쿠버네티스에서 `X-Forwarded-For` 로 `remoteAddr` 를 바꾼다(127/8 · 내부 대역을 프록시로 믿는다 — `X-Forwarded-For: 127.0.0.1` 이면 루프백이 된다). 그 밖은 404 `{}` | 챗봇 사이드카 |
+| `GET /api/admin/chatbot-misses` | 위 기록을 `query` 로 묶어 센 목록 `[{kind, query, count, lastAt, lastMessage}]`, 최근 순 200개 | admin · 데모 관리자 |
 | `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
 
@@ -49,7 +51,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 - **숫자** — 스펙 · 가격 · 평점은 DOUBLE. 정수 값은 `300.0` 이 아니라 `300` 으로 낸다(`JacksonConfig`).
 - **`createdAt`** — 언제나 `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`(UTC, ms). 시드의 날짜만인 값은 그날 00:00:00.000Z.
 - **null** — 그대로 `null` 로 낸다(전역 NON_NULL 을 쓰지 않는다 — `midsole: null` 이 "정보 없음" 표시의 근거). 예외: 리뷰 `likeCount` 는 값이 없으면 키를 뺀다. `liked` 는 늘 `true/false`.
-- **`terms`** — 시드에 `id 12` 가 둘이고 응답도 그대로다. 읽기 전용(쓰기 405).
+- **`terms`** — 시드에 `id 12` 가 둘이었다(json-server 응답 그대로). V17 에서 아웃솔을 13 으로 — 계약 R03 을 다시 녹화했다. 읽기 전용(쓰기 405).
 - 스키마 쪽 이유는 `07_database.md`.
 
 #### 1-4. 로그인 뒤 — 권한과 서버가 정하는 값
