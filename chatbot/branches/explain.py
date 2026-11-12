@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from .. import prompt
 from ..facts import josa
-from ..reply import Reply, haeyo, plain_words
+from ..reply import Reply, drop_asks, haeyo, plain_words
 from ..terms import Dictionary
 from .common import generate
 
@@ -44,7 +44,7 @@ TASK = (
     "그 밖에는 질문에 맞게 바로 시작한다. "
     "효과를 약속하지 않는 것은 문장 전체로 지키고, 첫 문장으로 미리 방어하지 않는다. "
     "서너 문장으로, 같은 뜻을 두 번 쓰지 않는다. 특성은 [등록된 정보] 줄 첫머리의 이름(쿠션 높이 · 카본 플레이트 등)으로 부르고, "
-    "괄호로 다른 이름을 덧붙이지 않는다. 끝맺는 안내 문장은 따로 붙으니 쓰지 않는다."
+    "괄호로 다른 이름을 덧붙이지 않는다. 되묻지 않는다 — 끝맺는 안내 · 묻는 말은 따로 붙는다."
 )
 
 
@@ -74,9 +74,11 @@ def answer(question: str, dic: Dictionary, health: bool, history: list[dict], ex
     # 코드 답 — 사전 원문을 해요체 · 쉬운 말로(원문 그대로 내면 합니다체에 사전 용어가 섞인다)
     fallback = "관련된 신발 특성을 정리해 드릴게요.\n\n" + "\n\n".join(
         plain_words(f"{josa(PLAIN_NAME.get(e['key'], e['name']), '은', '는')} {haeyo(e['description'])}") for e in entries)
-    text, used = generate(question, lines, [], fallback, health, history, TASK, reference=False)
+    text, used = generate(question, lines, [], fallback, health, history, TASK, reference=False, shoes_given=False)
     # 보여 줄 신발이 없다 — LLM 이 예시를 따라 붙인 "보러 가실래요?"는 지운다
     text = "\n\n".join(p for p in (q.replace("보러 가실래요?", "").strip() for q in text.split("\n\n")) if p)
+    # 묻는 말은 코드가 붙인다(용도 — 추천으로 이어지는 길). LLM 이 따로 물으면 두 번 묻게 된다(B03) — 그 문장을 지운다
+    text = drop_asks(text) or fallback
     reply = Reply(text + ("\n\n" + tail if tail else ""), branch="explain", fallback_used=used)
     reply.explained = [e["key"] for e in entries]
     return reply

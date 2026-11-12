@@ -11,7 +11,7 @@ REFERENCE_HEAD = "[참고 답] 아래는 코드가 쓴 답이다. 내용과 숫�
 
 
 def generate(question: str, fact_lines: list[str], conclusions: list[str], fallback: str, health: bool,
-             history: list[dict], task: str, reference: bool = True) -> tuple[str, bool]:
+             history: list[dict], task: str, reference: bool = True, shoes_given: bool = True) -> tuple[str, bool]:
     """(글, fallback 을 썼는지). LLM 이 실패해도 코드 답을 낸다.
     reference — 코드 답을 참고로 보여 줄지. 특성 설명은 사전 원문(합니다체)이라 보여 주면 그대로 옮겨 쓴다 — 끈다"""
     parts = [f"질문: {question}", "", "[등록된 정보]", *fact_lines]
@@ -31,4 +31,4 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
         guard_log().append(f"코드 답: LLM 실패 {type(e).__name__}")
         return fallback, True
     allowed = "\n".join(fact_lines + conclusions + [fallback, question])
-    return guard(out, allowed, fallback)
+    return guard(out, allowed, fallback, shoes_given)

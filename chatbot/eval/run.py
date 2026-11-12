@@ -160,6 +160,9 @@ def main() -> int:
             fails.append("진단성 표현")
         if re.search(r"나아져요|나아질 거|해결돼요|해결됩니다|해결될 거|좋아집니다|좋아져요|줄어들 거예요|막아 줄 거예요", body):
             fails.append("효과 약속")
+        if trace["branch"] in ("explain",) or trace.get("explained"):
+            if re.search(r"(등록된|이 사이트의?)\s*(신발|모델)|(모델|신발)들?이\s*(있어요|많아요)|(이|가)\s*해당(해요|돼요)", body):
+                fails.append("근거에 신발이 없는데 목록 이야기")
         hb, hu = help_claims(body)
         for s_ in hb:
             fails.append(f"효과 약속(신발이 몸에 도움): {s_[:50]}")
@@ -296,7 +299,14 @@ def summary(results: list[dict], copy_issues: list[str]) -> None:
     total = len(results)
     print(f"  전체 {sum(r['ok'] for r in results)}/{total} · 평균 {sum(r['seconds'] for r in results) / max(total, 1):.1f}s")
     from collections import Counter
-    g = Counter(x.split(" [")[0] for r in results for x in r["trace"].get("guard", []))
+    g = Counter()
+    for r in results:
+        for x in r["trace"].get("guard", []):
+            m = re.match(r"(출처 말하기) (\d+)$", x)
+            if m:
+                g[m.group(1)] += int(m.group(2))   # 지금은 세기만(5-2 에서 다시 본다)
+            else:
+                g[x.split(" [")[0]] += 1
     print("  생성 검사가 한 일: " + (", ".join(f"{k} {v}" for k, v in sorted(g.items())) or "없음"))
     bad_num = sum(any(f.startswith("API 에 없는 숫자") for f in r["fails"]) for r in results)
     print(f"  수치 불일치 문항 {bad_num} · 전문의 누락 {sum('전문의 안내 누락' in r['fails'] for r in results)}")

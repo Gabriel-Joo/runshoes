@@ -161,6 +161,18 @@ class ReplyTest(unittest.TestCase):
         out, _ = guard("쿠션이 두터워요. 병원에 가 보세요.", "", "코드 답")
         self.assertEqual(with_doctor(out, True), "쿠션이 두터워요.\n\n" + DOCTOR)
 
+    def test_catalog_talk_without_shoes(self):
+        out, used = guard("등록된 신발 중에는 쿠션이 두꺼운 모델들이 있어요.", "", "코드 답", shoes_given=False)
+        self.assertEqual((out, used), ("코드 답", True))
+        self.assertTrue(guard("안정화를 찾으신다면 신발 목록에서 확인해 보실 수 있어요.", "", "코드 답", shoes_given=False)[1])   # B03
+        out, used = guard("아식스의 노바블라스트 5가 해당해요.", "5", "코드 답", shoes_given=True)
+        self.assertFalse(used)                                                     # 신발을 받았으면 된다
+
+    def test_drop_asks(self):
+        from chatbot.reply import drop_asks
+        self.assertEqual(drop_asks("안정화는 …예요. 발 유형을 알려주시면 찾아드릴게요."), "안정화는 …예요.")
+        self.assertEqual(drop_asks("카본 플레이트는 …예요.\n\n혹시 더 궁금한 점이 있으신가요?"), "카본 플레이트는 …예요.")
+
     def test_links(self):
         self.assertEqual(Reply("x", [{"id": 3}]).links(), [{"label": "보러 가기", "href": "/?shoe=3"}])
         self.assertEqual(Reply("x", [{"id": 3}, {"id": 5}]).links()[0]["href"], "/compare?ids=3,5")

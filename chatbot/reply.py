@@ -89,8 +89,26 @@ def guard_reset() -> None:
     _LOG.items = []
 
 
-def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool]:
-    """(낼 글, fallback 을 썼는지)"""
+# 사이트 목록에 대한 말 — 근거에 신발이 없을 때(특성 설명) 나오면 지어낸 것이다(2026-11-12 사용자 승인)
+_CATALOG = re.compile(r"(등록된|이 사이트의?|사이트에 있는)\s*(신발|모델)|(모델|신발)들?이\s*(있어요|있습니다|많아요)|(이|가)\s*해당(해요|돼요|합니다)|해당하는\s*(신발|모델)|(신발|모델)\s*목록|목록에서")
+# 출처를 밝히는 말 — 지금은 세기만 한다(5-2 에서 근거가 바뀌면 다시 본다)
+SOURCE_PHRASE = re.compile(r"등록된 정보에 (따르면|나와|있어|의하면)|(다|라)고 해요|(다|라)고 나와 있어요")
+_ASK = re.compile(r"(알려\s*주시면|말씀해\s*주시면|궁금하신지|어떠세요\?|할까요\?|실래요\?)")
+
+
+def drop_asks(text: str) -> str:
+    """묻는 문장을 지운다 — 묻는 말은 코드가 붙인다(특성 설명)"""
+    paras = []
+    for para in text.split("\n\n"):
+        sents = re.split(r"(?<=[.!?])\s+", para.strip())
+        kept = [s for s in sents if not _ASK.search(s) and not s.rstrip().endswith("?")]   # 묻는 문장은 모두(…싶으신가요? · …있나요?)
+        if kept:
+            paras.append(" ".join(kept))
+    return "\n\n".join(paras)
+
+
+def guard(generated: str, allowed_source: str, fallback: str, shoes_given: bool = True) -> tuple[str, bool]:
+    """(낼 글, fallback 을 썼는지). shoes_given — 근거에 신발이 있나(없으면 목록 이야기를 막는다)"""
     log = guard_log()
     text = _EMOJI.sub("", generated).strip()
     if text != generated.strip():
@@ -122,6 +140,13 @@ def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool
         print(f"[guard] 신발이 몸에 도움이 된다는 문장 {help_claims(text)[0]} — 코드 답으로")
         log.append("코드 답: 신발이 몸에 도움")
         return fallback, True
+    if not shoes_given and _CATALOG.search(text):
+        print(f"[guard] 근거에 신발이 없는데 목록 이야기 '{_CATALOG.search(text).group(0)}' — 코드 답으로")
+        log.append("코드 답: 목록 이야기")
+        return fallback, True
+    n = len(SOURCE_PHRASE.findall(text))
+    if n:
+        log.append(f"출처 말하기 {n}")
     return text, False
 
 
