@@ -5,12 +5,15 @@
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
-- [ ] 5-1 남은 한계 넷 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절
-- [ ] 5단계 챗봇 RAG 2단계부터(검색 · 경험·후기) → `09_chatbot_rag.md`
+- [ ] 5-1 남은 한계 넷 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절 · 16절
+- [ ] 5-2 경험·후기 15문항 — 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `09_chatbot_rag.md` 16절
+- [ ] 5-2 운영 반영(이미지만 — 새 마이그레이션 없음) → `09_chatbot_rag.md` 16절
+- [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기 — 지금은 5-1 처럼 거절 · 기록 → `09_chatbot_rag.md` 8절 · 16절
 - [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
 - [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
 - [ ] 리랭커를 켤지 — 평가 결과를 보고 → `09_chatbot_rag.md` 2절
+- [ ] 리뷰가 약 4,600건(두 Pod 동시 임베딩 30초)에 가까워지면 색인 파일 캐시용 저장공간(호스트 NFS RWX) → `09_chatbot_rag.md` 16절 「저장공간」
 
 #### 챗봇 — 나중에 재면 좋을 것(지금은 계측하지 않는다 — 모니터링은 챗봇 작업 뒤, 2026-11-12 사용자)
 
