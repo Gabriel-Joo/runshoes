@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/** terms — 시드에 id 12 가 둘이라 id 는 키가 아니다. 순서와 키는 row_no(V1__schema.sql). 읽기 전용(프런트에 쓰기 없음). */
+/** terms — 시드에 id 12 가 둘이었다(V17 에서 아웃솔을 13 으로). 순서와 키는 그대로 row_no(V1__schema.sql). 읽기 전용(프런트에 쓰기 없음). */
 @Entity
 @Table(name = "terms")
 public class Term {

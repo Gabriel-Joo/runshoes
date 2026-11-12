@@ -1,8 +1,10 @@
 FROM python:3.12-alpine
 WORKDIR /app
 
-COPY chatbot_server.py .
 RUN pip install --no-cache-dir websockets requests
+# 작업 5-1 — 한 파일(chatbot_server.py)에서 chatbot/ 패키지로. 평가(chatbot/eval) · 시험(chatbot/tests)은 이미지에 넣지 않는다
+COPY chatbot/ chatbot/
+RUN rm -rf chatbot/eval chatbot/tests
 
 EXPOSE 8766
-CMD ["python", "chatbot_server.py"]
+CMD ["python", "-m", "chatbot.server"]

@@ -1,8 +1,17 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ChatBot.css";
 import { CHATBOT_WS_URL } from "../api";
 
-type ChatMessage = { type: "user" | "bot"; text: string };
+/** 링크는 챗봇 서버의 코드가 붙인다(LLM 이 아니다) — 라벨은 언제나 "보러 가기", 1켤레는 상세 모달 · 2켤레 이상은 비교하기(작업 5-1) */
+type ChatLink = { label: string; href: string };
+type ChatMessage = { type: "user" | "bot"; text: string; links?: ChatLink[] };
+
+/** 사이트 안 주소만 — 서버가 다른 것을 보내도 버튼으로 만들지 않는다 */
+const internalLinks = (links: unknown): ChatLink[] =>
+  Array.isArray(links)
+    ? links.filter((l): l is ChatLink => typeof l?.label === "string" && typeof l?.href === "string" && l.href.startsWith("/") && !l.href.startsWith("//"))
+    : [];
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +21,7 @@ const ChatBot = () => {
   const [connected, setConnected] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   const connectSocket = () => {
     if (
@@ -30,7 +40,7 @@ const ChatBot = () => {
       const data = JSON.parse(event.data);
       setLoading(false);
       if (data.type === "system" || data.type === "message") {
-        setMessages((prev) => [...prev, { type: "bot", text: data.message }]);
+        setMessages((prev) => [...prev, { type: "bot", text: data.message, links: internalLinks(data.links) }]);
       }
     };
 
@@ -96,6 +106,23 @@ const ChatBot = () => {
                 className={`chatbot-message chatbot-message--${msg.type}`}
               >
                 {msg.text}
+                {msg.links && msg.links.length > 0 && (
+                  <div className="chatbot-links">
+                    {msg.links.map((l) => (
+                      <button
+                        key={l.href}
+                        className="chatbot-link"
+                        onClick={() => {
+                          // 창은 접기만 한다(대화 · 연결은 남긴다) — 열린 채면 상세 모달(z-index 100)이 창(1000) 뒤에 가린다
+                          setIsOpen(false);
+                          navigate(l.href);
+                        }}
+                      >
+                        {l.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {loading && (

@@ -106,6 +106,10 @@ v6 PASS 109 · FAIL 0 · v3 101/11(그대로) · v3-search 24 · v4 21 · v14-su
 **V16(2026-11-10) — 무게 용어 설명**: 무게 용어(`weight`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞췄다. spring-v3 **R03**(terms 전체)이 의도한 FAIL 로 바뀐다 — 다른 칸은 weight 의 description 하나, 용어 13개 · 순서 · id 12 중복은 그대로. v3 PASS 100 · FAIL 12(A06 · A11 · A16 · A20 · A21 · A26 · W46 · W47 · W51 · W52 · W52b · **R03**) · v6 109 · v3-search 24 · v4 21 · v14-summary 20.
 V16 첫 가드는 이미 고친 DB 에 다시 치면 `ERROR 1242` 로 멈추는 것을 확인했다(로컬).
 
+**V17 · V18(2026-11-12) — 용어 id · 챗봇 기록**: V17 이 아웃솔 용어의 id 를 12 → 13 으로 — spring-v3 **R03** 을 다시 녹화했다(사용자 승인). 다른 칸은 V16 의 무게 설명 하나, 용어 13개 · 순서는 그대로. V18 의 내부 POST · 관리 GET 은 시나리오에 넣지 않고 손으로 봤다(127.0.0.1 204 · 같은 본문 두 번 204 · 잘못된 kind 400 · 다른 주소 + `X-Forwarded-For: 127.0.0.1` 404 · 비로그인 GET 401 · admin GET 묶음 200). 다른 주소 + XFF 는 쿠버네티스 env(`KUBERNETES_SERVICE_HOST`)를 켜고도 봤다 — 켜면 Spring Boot 가 XFF 로 `remoteAddr` 를 바꿔, `remoteAddr` 를 보던 첫 구현은 204 로 뚫렸다. 지금은 `localAddr` 를 본다.
+v3 PASS 101 · FAIL 11(A06 · A11 · A16 · A20 · A21 · A26 · W46 · W47 · W51 · W52 · W52b — 그대로) · v6 116 · v3-search 24 · v4 21. 로컬 개발 DB 를 지우지 않으려고 이번에는 임시 MySQL(tmpfs, :3309)을 시드부터 띄워 같은 순서로 돌렸다.
+V17 가드는 이미 고친 DB 에 다시 치면 `ERROR 1242` 로 멈추는 것을 확인했다(로컬).
+
 **작업 3(2026-11-10) — 비교 · 추천 API**: spring-v6 에 X147 ~ X153(compare pick · ids 거르기 · 둘 다 없음 400 · 모르는 pick → cols [] · recommend 다섯 칸 · 모르는 값 400 · 칸 빠짐 400). 여기는 모양 · 상태코드만 — 값이 이관 전 브라우저 계산과 같은지는 `scripts/parity/check.mjs` 가 전수(신발마다 pick · 다섯 켤레씩 ids · 추천 960 조합)로 본다.
 v6 PASS 116 · FAIL 0 · v3 100/12(그대로) · v3-search 24 · v4 21 · v14-summary 20.
 

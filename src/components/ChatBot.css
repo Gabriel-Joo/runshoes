@@ -78,6 +78,31 @@
 .chatbot-message--bot {
   background: #f0f0f0;
   align-self: flex-start;
+  white-space: pre-line;              /* 챗봇 답은 단락을 빈 줄로 나눈다(작업 5-1) */
+}
+
+/* "보러 가기" — 답 아래에 조용히(작업 5-1). 색은 사용자 말풍선과 같은 청록 */
+.chatbot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  white-space: normal;
+}
+
+.chatbot-link {
+  padding: 5px 12px;
+  border: 1px solid #14807a;
+  border-radius: 999px;
+  background: #fff;
+  color: #14807a;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chatbot-link:hover {
+  background: #14807a;
+  color: #fff;
 }
 
 .chatbot-message--user {
