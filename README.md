@@ -78,7 +78,8 @@ docker compose up -d            # MySQL 8   127.0.0.1:3307
 # 백엔드 — backend/README.md (Maven, Java 21). 첫 기동에 Flyway 가 스키마 · 시드를 넣는다
 #   API  http://localhost:3000 — env JWT_SECRET(32바이트 이상)이 있어야 뜬다. 시드 계정 비밀번호는 SEED_USER_PASSWORD · ADMIN_PASSWORD
 yarn dev                        # Vite      http://localhost:5173 (/api 는 vite 프록시로 :3000)
-python chatbot_server.py        # (선택) 챗봇 ws://localhost:8766
+python -m chatbot.server        # (선택) 챗봇 ws://localhost:8766 — env RUNSHOES_API(기본 :3000) · OLLAMA_URL
+python -m chatbot.eval.run      # (선택) 챗봇 평가 — 운영 공개 API 를 읽기만, 로컬 Ollama
 ```
 
 - 개발 중에도 같은 출처의 `/api` 를 부르고 Vite 가 `:3000` 으로 넘긴다 — refresh 쿠키(`Path=/api/auth`)가 운영과 같게 붙는다.
@@ -91,12 +92,13 @@ python chatbot_server.py        # (선택) 챗봇 ws://localhost:8766
 ```
 runshoes/
 ├─ src/          React 화면 — pages · components · auth(메모리 토큰 · refresh)
-├─ backend/      Spring Boot — api · auth · activity · summary · config, db/migration(Flyway V1~V13)
+├─ backend/      Spring Boot — api · auth · activity · summary · compare · config, db/migration(Flyway V1~V18)
 ├─ catalog/      카탈로그 — candidates.csv · 수집기 · decisions.json(사람 판단) · build.mjs · load.mjs
 ├─ contract/     API 계약 녹화본 · 녹화 · 비교 도구
 ├─ scripts/      운영 적재(load-prod.sh) · 시드 생성 · 화면 점검(screen-shot.mjs)
 ├─ docs/         설계 문서(위 표) · archive/(옛 계획서 — 지우지 않고 남긴다)
-├─ chatbot_server.py · Dockerfile · Dockerfile.chatbot · Jenkinsfile · docker-compose.yml
+├─ chatbot/      챗봇 사이드카(파이썬) — 웹소켓 · 이름 찾기 · 라우터 · 갈래 · 평가(eval/)
+├─ Dockerfile · Dockerfile.chatbot · Jenkinsfile · docker-compose.yml
 └─ db.json · server.cjs   json-server 시절의 시드 · API — 계약 기준선을 다시 뜨는 용도(운영 이미지에는 없다)
 ```
 

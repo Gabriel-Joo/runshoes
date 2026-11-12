@@ -45,3 +45,6 @@ catalog/loads/
 
 # Claude Code 로컬 설정(이 기계의 권한 허용 규칙 등) — 사람마다 다르다, 커밋하지 않는다
 .claude/settings.local.json
+
+# 파이썬 캐시(챗봇 — 작업 5-1)
+__pycache__/

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /** /api 오류 본문은 {} — json-server 의 404 · 500 과 같다. 원인은 로그로만. 화면은 상태코드(401 · 403 · 409)로 문구를 고른다.
  *  새 오류(데모 관리자 403 · 숨긴 세대 409 · 스펙 출처 400)만 {code, message} — 화면이 문구를 그대로 띄운다 */
-@RestControllerAdvice(assignableTypes = {JsonServerController.class, LikeController.class, AdminController.class})
+@RestControllerAdvice(assignableTypes = {JsonServerController.class, LikeController.class, AdminController.class, ChatbotMissController.class})
 class ApiErrorHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(ApiErrorHandler.class);

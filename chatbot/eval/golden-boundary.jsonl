@@ -1,0 +1,1 @@
+{"id": "B00", "cat": "boundary", "draft": true, "q": "(예시 — 지우고 쓴다) 며칠 전부터 발 디딜 때마다 찌릿해요. 쿠션 좋은 신발 신으면 나을까요", "health": true, "branch": "recommend", "note": "경계 15 = 완전 거절 5 + 통증 · 우열 유도 10(09 12절). 키워드가 걸리지 않는 문장으로. 쓸 수 있는 칸: q · setup · branch · health · shoes · links(false = 버튼 없음) · miss · contains · not_contains. draft:true 인 줄은 건너뛴다"}

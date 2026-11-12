@@ -1,0 +1,45 @@
+{"id": "T01", "cat": "term", "q": "드롭이 뭐예요?", "branch": "term", "terms": ["drop"]}
+{"id": "T02", "cat": "term", "q": "스택하이트가 무슨 뜻이에요?", "branch": "term", "terms": ["stackHeight"]}
+{"id": "T03", "cat": "term", "q": "쿠션 높이가 뭐예요?", "branch": "term", "terms": ["stackHeight"]}
+{"id": "T04", "cat": "term", "q": "프로네이션이 뭐예요", "branch": "term", "terms": ["pronation"]}
+{"id": "T05", "cat": "term", "q": "카본 플레이트 뜻 알려주세요", "branch": "term", "terms": ["carbon"]}
+{"id": "T06", "cat": "term", "q": "와이드 모델이 뭐예요?", "branch": "term", "terms": ["wideAvailable"]}
+{"id": "T07", "cat": "term", "q": "안정성이 뭐예요?", "branch": "term", "terms": ["stabilityPair"]}
+{"id": "T08", "cat": "term", "q": "LSD가 뭐예요", "branch": "term", "terms": ["lsd"]}
+{"id": "T09", "cat": "term", "q": "아웃솔이 뭐예요?", "branch": "term", "terms": ["outsole"]}
+{"id": "T10", "cat": "term", "q": "갑피가 뭐예요?", "branch": "term", "terms": [], "miss": {"kind": "term", "query": "갑피"}}
+{"id": "S01", "cat": "spec", "q": "노바블라스트 5 무게 얼마예요?", "branch": "spec", "shoes": ["아식스 노바블라스트 5"]}
+{"id": "S02", "cat": "spec", "q": "젤 카야노 32 드롭이 몇이에요?", "branch": "spec", "shoes": ["아식스 젤 카야노 32"]}
+{"id": "S03", "cat": "spec", "q": "카야노 쿠션 높이 알려줘", "branch": "spec", "shoes": ["아식스 젤 카야노 33"], "contains": ["33세대"]}
+{"id": "S04", "cat": "spec", "q": "클리프톤 10 발매가 얼마예요", "branch": "spec", "shoes": ["호카 클리프톤 10"], "contains": ["발매가"]}
+{"id": "S05", "cat": "spec", "q": "페가수스 41 발볼 넓어요?", "branch": "spec", "shoes": ["나이키 페가수스 41"]}
+{"id": "S06", "cat": "spec", "q": "알파플라이 3 카본 들어있어요?", "branch": "spec", "shoes": ["나이키 알파플라이 3"]}
+{"id": "S07", "cat": "spec", "q": "880v15 무게 알려주세요", "branch": "spec", "shoes": ["뉴발란스 880 v15"]}
+{"id": "S08", "cat": "spec", "q": "슈퍼블라스트 3 무게 알려주세요", "branch": "spec", "shoes": ["아식스 슈퍼블라스트 3"], "contains": ["280mm", "약 230g"]}
+{"id": "S09", "cat": "spec", "q": "브룩스 레벨 스펙 알려줘", "branch": "spec", "shoes": ["브룩스 레벨 8"]}
+{"id": "S10", "cat": "spec", "q": "엔돌핀 스피드 4 무게는요?", "branch": "spec", "shoes": ["사우코니 엔돌핀 스피드 4"]}
+{"id": "C01", "cat": "compare", "q": "노바블라스트 5랑 클리프톤 10 비교해주세요", "branch": "compare", "shoes": ["아식스 노바블라스트 5", "호카 클리프톤 10"]}
+{"id": "C02", "cat": "compare", "q": "페가수스 41이랑 님버스 27 중에 뭐가 가벼워요?", "branch": "compare", "shoes": ["나이키 페가수스 41", "아식스 젤 님버스 27"], "weight_rule": "judge"}
+{"id": "C03", "cat": "compare", "q": "페가수스 42랑 클라우드러너 3 중에 뭐가 더 가벼워요?", "branch": "compare", "shoes": ["나이키 페가수스 42", "온 클라우드러너 3"], "weight_rule": "same"}
+{"id": "C04", "cat": "compare", "q": "노바블라스트 6, 고스트 18, 페가수스 42 비교해줘", "branch": "compare", "shoes": ["아식스 노바블라스트 6", "브룩스 고스트 18", "나이키 페가수스 42"]}
+{"id": "C05", "cat": "compare", "q": "알파플라이 3 vs 베이퍼플라이 4", "branch": "compare", "shoes": ["나이키 알파플라이 3", "나이키 베이퍼플라이 4"]}
+{"id": "C06", "cat": "compare", "setup": ["카야노 33 무게 알려줘"], "q": "그거랑 클리프톤 10 비교해줘", "branch": "compare", "shoes": ["아식스 젤 카야노 33", "호카 클리프톤 10"]}
+{"id": "C07", "cat": "compare", "q": "엔돌핀 스피드 4랑 노바블라스트 5 무게 비교", "branch": "compare", "shoes": ["사우코니 엔돌핀 스피드 4", "아식스 노바블라스트 5"], "weight_rule": "unknown_size"}
+{"id": "C08", "cat": "compare", "q": "젤 님버스 27이랑 젤 카야노 32 차이가 뭐예요?", "branch": "compare", "shoes": ["아식스 젤 님버스 27", "아식스 젤 카야노 32"]}
+{"id": "C09", "cat": "compare", "q": "노바블라스트 5랑 노바블라스트 6 비교해 주세요", "branch": "compare", "shoes": ["아식스 노바블라스트 5", "아식스 노바블라스트 6"]}
+{"id": "C10", "cat": "compare", "q": "글리세린 22, 본디 9, 젤 님버스 27, 클리프톤 10 중에 쿠션 높이 비교해줘", "branch": "compare", "shoes": ["브룩스 글리세린 22", "호카 본디 9", "아식스 젤 님버스 27", "호카 클리프톤 10"]}
+{"id": "R01", "cat": "recommend", "q": "러닝 입문인데 15만원 안쪽에서 매일 신을 거 찾아요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "budget_won": 150000}}
+{"id": "R02", "cat": "recommend", "q": "마라톤 대회용 신발 추천해줘", "branch": "recommend", "conditions": {"purpose": "레이스"}}
+{"id": "R03", "cat": "recommend", "q": "발볼이 넓은데 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "넓음"}}
+{"id": "R04", "cat": "recommend", "q": "발이 안쪽으로 무너지는 편이에요. 장거리용 골라 주세요", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "stability": "안정화"}}
+{"id": "R05", "cat": "recommend", "q": "트레일 러닝화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "트레일"}}
+{"id": "R06", "cat": "recommend", "q": "쿠션 푹신한 데일리 러닝화 추천해줘", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "cushion": "high"}}
+{"id": "R07", "cat": "recommend", "q": "템포런할 때 신을 얇은 신발 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "템포·인터벌", "cushion": "low"}}
+{"id": "R08", "cat": "recommend", "q": "30만원까지 레이스화 골라줘", "branch": "recommend", "conditions": {"purpose": "레이스", "budget_won": 300000}}
+{"id": "R09", "cat": "recommend", "q": "신발 추천해줘", "branch": "recommend", "ask_purpose": true}
+{"id": "R10", "cat": "recommend", "setup": ["신발 추천해줘"], "q": "트레일이요", "branch": "recommend", "conditions": {"purpose": "트레일"}}
+{"id": "R11", "cat": "recommend", "q": "인터벌 훈련할 때 신을 신발 뭐가 좋아요?", "branch": "recommend", "conditions": {"purpose": "템포·인터벌"}}
+{"id": "R12", "cat": "recommend", "q": "발볼은 보통이고 안정화가 필요해요. 조깅용 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "보통", "stability": "안정화"}}
+{"id": "R13", "cat": "recommend", "q": "20만원 이하로 장거리용 쿠션 많은 거 추천해줘", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "cushion": "high", "budget_won": 200000}}
+{"id": "R14", "cat": "recommend", "q": "밑창 바깥쪽이 많이 닳아요. 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "stability": "중립화-outer"}}
+{"id": "R15", "cat": "recommend", "q": "비싸도 괜찮으니 레이스용으로 골라 주세요", "branch": "recommend", "conditions": {"purpose": "레이스"}}

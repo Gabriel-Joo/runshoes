@@ -37,7 +37,7 @@ export const SCENARIOS = [
   // ---- 읽기 (plan 1~5, 13) ----
   { id: "01", plan: 1, name: "shoes 전체", method: "GET", path: "/api/shoes" },
   { id: "02", plan: 1, name: "reviews 전체", method: "GET", path: "/api/reviews" },
-  { id: "03", plan: 1, name: "terms 전체(id 12 중복 포함)", method: "GET", path: "/api/terms" },
+  { id: "03", plan: 1, name: "terms 전체(V17 — 아웃솔 id 13, 전에는 id 12 중복)", method: "GET", path: "/api/terms" },
   { id: "04", plan: 2, name: "shoe 4 — midsole null 출력", method: "GET", path: "/api/shoes/4" },
   { id: "05", plan: 2, name: "없는 shoe → 404 {}", method: "GET", path: "/api/shoes/9999" },
   { id: "06", plan: 3, name: "없는 컬렉션 → 404 {}", method: "GET", path: "/api/foo" },
