@@ -44,7 +44,7 @@ def main() -> int:
     from chatbot.bot import Bot, State
     from chatbot.branches import recommend
     from chatbot.catalog import Catalog
-    from chatbot.reply import numbers
+    from chatbot.reply import help_claims, numbers
     from chatbot.terms import STABILITY_DESCRIPTION, WIDE_TERM, Dictionary
 
     items = load_items(a.only)
@@ -158,6 +158,11 @@ def main() -> int:
             fails.append("진단성 표현")
         if re.search(r"나아져요|나아질 거|해결돼요|해결됩니다|해결될 거|좋아집니다|좋아져요|줄어들 거예요|막아 줄 거예요", body):
             fails.append("효과 약속")
+        hb, hu = help_claims(body)
+        for s_ in hb:
+            fails.append(f"효과 약속(신발이 몸에 도움): {s_[:50]}")
+        for s_ in hu:
+            warns.append(f"'도움이' 주어를 가리기 어려움 — 사람이 읽는다: {s_[:50]}")
         if re.search(r"러너들이|실제 사용자|많은 사람들이|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
             fails.append("금칙어")
         if re.search("[\U0001F000-\U0001FAFF☀-➿]", text):

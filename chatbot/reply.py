@@ -35,6 +35,22 @@ class Reply:
         return [{"label": LINK_LABEL, "href": href}]
 
 
+# "도움이 된다" — 주어로 가른다(사용자 2회차). 사람이 무엇을 하는 것이 도움이 되는 건 괜찮고, 신발이 몸에 도움이 된다는 건 효과 약속
+_HELP = re.compile(r"도움이\s*(될|돼|됩|되)")
+_PERSON_ACT = re.compile(r"(보시|해 보|해보|확인|살펴|비교해|비교하|고르시|고를 때|고려하|알아보|신어 보|참고하)")
+_SHOE_SUBJ = re.compile(r"(신발|쿠션|안정화|중립화|카본|플레이트|높이 차이|소재|발볼|폭|모델|버전|러닝화)")
+
+
+def help_claims(text: str) -> tuple[list[str], list[str]]:
+    """(효과 약속으로 보는 문장, 주어를 가리기 어려운 문장)"""
+    bad, unsure = [], []
+    for s in re.split(r"(?<=[.!?])\s+|\n+", text):
+        if not _HELP.search(s) or _PERSON_ACT.search(s):
+            continue
+        (bad if _SHOE_SUBJ.search(s[:_HELP.search(s).start()]) else unsure).append(s.strip())
+    return bad, unsure
+
+
 def numbers(text: str) -> set[str]:
     out = set()
     for m in _NUM.findall(text):
@@ -72,6 +88,9 @@ def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool
         return fallback, True
     if any(b in text for b in BANNED):
         print("[guard] 금칙어 — 코드 답으로")
+        return fallback, True
+    if help_claims(text)[0]:
+        print(f"[guard] 신발이 몸에 도움이 된다는 문장 {help_claims(text)[0]} — 코드 답으로")
         return fallback, True
     return text, False
 

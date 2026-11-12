@@ -26,14 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
  *                                    forward-headers-strategy 를 NATIVE 로 보고 X-Forwarded-For 로 remoteAddr 를 바꾼다(내부 대역 · 127/8 을
  *                                    프록시로 믿는다). 그래서 클러스터 · LAN 에서 "X-Forwarded-For: 127.0.0.1" 이면 remoteAddr 가 127.0.0.1 이 됐다
  *                                    (2026-11-12 로컬 재현). ingress 는 Pod IP 로 들어오므로 localAddr 가 루프백일 수 없다.
- *                                    본문 {kind: "shoe"|"term", query, message} → 204. 잘못된 본문 400 {}
+ *                                    본문 {kind: "shoe"|"term"|"feature", query, message} → 204. 잘못된 본문 400 {}
  * GET  /api/admin/chatbot-misses     관리 화면 — query 로 묶어 센 목록 [{kind, query, count, lastAt, lastMessage}], 최근 순 200개.
  *                                    admin · 데모 관리자(보기만)
  */
 @RestController
 class ChatbotMissController {
 
-	static final Set<String> KINDS = Set.of("shoe", "term");
+	static final Set<String> KINDS = Set.of("shoe", "term", "feature");
 	/** 다른 응답의 createdAt 과 같은 모양(UTC, ms) */
 	static final DateTimeFormatter AT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	static final int QUERY_MAX = 100, MESSAGE_MAX = 300, LIST_MAX = 200;

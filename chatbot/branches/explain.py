@@ -29,23 +29,28 @@ HINTS: dict[str, tuple[str, ...]] = {
     "tempo": ("템포", "인터벌"),
     "lsd": ("lsd", "장거리"),
 }
-# 사전 용어 → 챗봇 문장의 쉬운 말(8절)
+# 사전 용어 → 챗봇 문장에서 부르는 이름(8절 쉬운 말). 비어 있으면 LLM 이 정의 문장을 이름처럼 써서 같은 말을 되풀이했다(1회차 B06)
 PLAIN_NAME = {"stackHeight": "쿠션 높이", "drop": "앞뒤 높이 차이", "midsole": "쿠션 소재", "wideAvailable": "넓은 폭(2E·4E) 버전",
-              "pronation": "착지할 때 발이 안쪽으로 기우는 움직임", "stabilityPair": "안정화 · 중립화"}
+              "pronation": "착지할 때 발이 안쪽으로 기우는 움직임", "stabilityPair": "안정화와 중립화", "width": "발볼",
+              "carbon": "카본 플레이트", "weight": "무게", "neutral": "중립화", "stability": "안정화", "outsole": "겉창",
+              "trail": "트레일 러닝", "tempo": "템포런", "lsd": "LSD"}
 # 추천 조건 → 근거 용어(통증 + 추천인데 용도가 없을 때)
 FROM_CONDITION = {"cushion": "stackHeight", "stability": "stabilityPair", "width": "width"}
 
+# 첫 문장 틀은 두지 않는다(사용자 2회차) — 질문 유형별로 문장을 고르는 것도 키워드 규칙이라 쓰지 않고, LLM 이 질문에 맞게 시작한다.
+# 단정 유도만 예외(설명부터 하면 동의한 것처럼 읽힌다). 효과를 약속하지 않는 것은 문장 전체로 — 끝의 전문의 안내는 코드가 붙인다
 TASK = (
-    "첫 문장은 질문에 대한 답이다. 효과를 묻는 질문(나을까요 · 달라질까요 · 기록이 줄어드나요 · 도움이 될까요)에는 "
-    "\"신발만으로 그렇게 된다고 말씀드리긴 어려워요\"처럼 약속하지 않는 말로 먼저 답하고, 이어서 관련된 신발 특성을 설명한다. "
-    "예 · 아니오로 단정하지 않고 [등록된 정보]의 신발 특성으로 설명한다. 해요체로 서너 문장. "
+    "사용자가 단정하는 말투로 물으면, 먼저 그 단정에 동의하지 않는다고 짧게 밝히고 설명한다. "
+    "그 밖에는 질문에 맞게 바로 시작한다. "
+    "효과를 약속하지 않는 것은 문장 전체로 지키고, 첫 문장으로 미리 방어하지 않는다. "
+    "[등록된 정보]의 특성만 근거로, 해요체로 서너 문장. 같은 뜻을 두 번 쓰지 않는다. "
+    "특성은 [등록된 정보] 줄 첫머리의 이름(쿠션 높이 · 카본 플레이트 등)으로 부른다. 괄호로 다른 이름을 덧붙이지 않는다. "
+    "신발이나 특성이 몸에 \"도움이 된다\"고 쓰지 않는다(\"무릎에 도움이 될 수 있어요\" 금지). "
+    "사람이 무엇을 확인 · 비교하는 것이 도움이 된다는 말은 써도 된다. "
     "사용자의 말이나 상태를 되받지 않는다(\"~하셨네요\", \"~하신 것 같아요\", \"~찾으시는군요\" 금지). "
-    "\"~때문이에요\"로 원인을 말하지 않는다. \"보러 가실래요?\"는 쓰지 않는다(보여 줄 신발이 없다). "
-    "사전 용어를 괄호로 덧붙이지 않는다. "
-    "사전 용어는 쉬운 말로 바꿔 쓴다(괄호 안의 이름). 정보에 없는 특성 · 효과는 말하지 않는다. "
     "몸 상태를 판단하지 않는다 — 사용자가 말한 몸 이야기(체중 · 평발 등)를 \"~시니까\"로 다시 말하지 않는다. "
-    "\"좋다 · 나쁘다 · 무조건\"을 단정하지 않고 \"용도와 발에 맞는지가 기준\"으로 말한다. "
-    "마지막 문장은 쓰지 않는다(따로 붙는다)."
+    "\"~때문이에요\"로 원인을 말하지 않는다. 정보에 없는 특성 · 효과는 말하지 않는다. "
+    "\"보러 가실래요?\"와 마지막 안내 문장은 쓰지 않는다(따로 붙는다)."
 )
 
 
@@ -66,13 +71,12 @@ def answer(question: str, dic: Dictionary, health: bool, history: list[dict], ex
     entries = pick(dic, question, extra)
     if not entries:
         return Reply(prompt.NO_FEATURE, branch="explain")
+    # 근거는 설명(description)만 — 짧은 정의(short)까지 주면 같은 정의를 두 번 썼다(1회차). 사전 용어는 미리 쉬운 말로
     lines: list[str] = []
     for e in entries:
-        plain = PLAIN_NAME.get(e["key"], e["name"])
-        lines.append(f"{plain}(사전 용어: {e['name']}) — {e['short']}" if e.get("short") else f"{plain}(사전 용어: {e['name']})")
-        lines.append(f"  {e['description']}")
+        lines.append(f"{PLAIN_NAME.get(e['key'], e['name'])}: {plain_words(e['description'])}")
         for name, desc in e.get("values") or []:
-            lines.append(f"  · {name}: {desc}")
+            lines.append(f"  · {name}: {plain_words(desc)}")
     # 코드 답 — 사전 원문을 해요체 · 쉬운 말로(원문 그대로 내면 합니다체에 사전 용어가 섞인다)
     fallback = "관련된 신발 특성을 정리해 드릴게요.\n\n" + "\n\n".join(
         plain_words(f"{josa(PLAIN_NAME.get(e['key'], e['name']), '은', '는')} {haeyo(e['description'])}") for e in entries)

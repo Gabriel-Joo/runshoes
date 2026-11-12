@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from .. import facts, http
 from ..reply import Reply
 from .common import generate
@@ -13,9 +15,19 @@ TASK = (
 )
 
 
+# "뭐가 더 좋아요"처럼 우열을 물으면 첫 줄에 한 줄(사용자 2회차 승인) — 단정하지 않고 차이로 넘어간다
+VERDICT_ASKED = re.compile(r"좋|낫|나아|나을|최고|베스트")
+VERDICT_LINE = "어느 쪽이 더 좋다기보다는 쓰임에 따라 갈려요. 차이를 정리해 드릴게요."
+
+
 def answer(question: str, shoes: list[dict], health: bool, history: list[dict]) -> Reply:
     shoes = shoes[:5]
     api = http.get_json("/api/compare", {"ids": ",".join(str(s["id"]) for s in shoes)})
     lines, conclusions, fallback = facts.compare_facts(shoes, api)
-    text, used = generate(question, lines, conclusions, fallback, health, history, TASK)
+    if VERDICT_ASKED.search(question):
+        first, _, rest = fallback.partition("\n\n")
+        fallback = VERDICT_LINE + "\n\n" + rest
+        conclusions = [VERDICT_LINE] + conclusions
+    task = TASK + (" 답의 첫 줄은 [결론 문장]의 첫 문장 그대로다." if VERDICT_ASKED.search(question) else "")
+    text, used = generate(question, lines, conclusions, fallback, health, history, task)
     return Reply(text, shoes, fallback_used=used, branch="compare")
