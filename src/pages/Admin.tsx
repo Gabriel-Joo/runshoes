@@ -14,6 +14,9 @@ import "./Admin.css";
 
 // 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
 //   화면에서 정렬한다 — 목록은 늘 전부 받고, 최근 수정순의 "고친 적 없음(null)은 뒤에, id 순"은 서버의 _sort 로 나타낼 수 없다
+/** 챗봇이 찾지 못한 신발 · 용어(V18, GET /api/admin/chatbot-misses) — 이름으로 묶어 센 것 */
+type ChatbotMiss = { kind: "shoe" | "term" | "feature"; query: string; count: number; lastAt: string; lastMessage: string };
+
 type SortKey = "gaps" | "updated" | "id" | "brand" | "model";
 const SORTS: { key: SortKey; label: string }[] = [
   { key: "updated", label: "최근 수정순" },
@@ -102,8 +105,10 @@ function Admin() {
   const [hidden, setHidden] = useState<Shoe[]>([]);
   // 리뷰 요약(V14) — 다시 만들 것 · 아직 없는 것. 읽기만(만드는 것은 매일 03:30 CronJob — 화면에서 돌리지 않는다, 2026-11-10 사용자)
   const [summaries, setSummaries] = useState<{ stale: number; pending: number; generated: number; total: number } | null>(null);
+  // 챗봇이 찾지 못한 신발 · 용어(V18) — 다음에 무엇을 수집할지 보는 자료. 읽기만(2026-11-12 사용자, 작업 5-1)
+  const [misses, setMisses] = useState<ChatbotMiss[]>([]);
   // 등록된 신발 · 숨긴 신발 · 보완 필요(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에)
-  const [tab, setTab] = useState<"list" | "hidden" | "gaps">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps"] as const, "list"));
+  const [tab, setTab] = useState<"list" | "hidden" | "gaps" | "misses">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps", "misses"] as const, "list"));
   // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 적은 순)
   const [gapKey, setGapKey] = useState<string | null>(() => oneOf(params.get("gap"), GAPS.map((g) => g.key), "") || null);
   const [gapSort, setGapSort] = useState<SortKey>(() => oneOf(params.get("gsort"), ["gaps", ...SORT_KEYS] as const, "gaps"));
@@ -165,6 +170,10 @@ function Admin() {
       .then((res) => (res.ok ? res.json() : null))
       .then(setSummaries)
       .catch(() => setSummaries(null));
+    apiFetch("/admin/chatbot-misses")
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setMisses)
+      .catch(() => setMisses([]));
   }, [reload]);
 
   const getShoes = () => setReload((n) => n + 1);
@@ -280,7 +289,7 @@ function Admin() {
 
       <div className="admin__countbar">
         <p className="admin__count">
-          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : tab === "hidden" ? `숨긴 신발 ${hidden.length}개` : `보완 필요 ${gapList.length}개 / 전체 ${shoes.length}개`}
+          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : tab === "hidden" ? `숨긴 신발 ${hidden.length}개` : tab === "misses" ? `챗봇이 찾지 못한 이름 ${misses.length}개` : `보완 필요 ${gapList.length}개 / 전체 ${shoes.length}개`}
         </p>
         <div className="admin__tabs" role="tablist" aria-label="목록">
           <button role="tab" aria-selected={tab === "list"} className={`admin__tab ${tab === "list" ? "is-active" : ""}`} onClick={() => setTab("list")}>
@@ -291,6 +300,9 @@ function Admin() {
           </button>
           <button role="tab" aria-selected={tab === "gaps"} className={`admin__tab admin__tab--gaps ${tab === "gaps" ? "is-active" : ""}`} onClick={() => setTab("gaps")}>
             보완 필요 {lacking.length}
+          </button>
+          <button role="tab" aria-selected={tab === "misses"} className={`admin__tab ${tab === "misses" ? "is-active" : ""}`} onClick={() => setTab("misses")}>
+            챗봇 문의 {misses.length}
           </button>
         </div>
         {/* 새 등록 — 탭 줄 오른쪽, 탭 묶음과 띄운다(성격이 다른 버튼, 2026-11-01 사용자) */}
@@ -417,6 +429,26 @@ function Admin() {
               </li>
             ))}
           </ul>
+      )}
+
+      {tab === "misses" && (
+        <>
+          <p className="admin__missnote">챗봇에게 물었지만 등록되어 있지 않은 신발 · 사전에 없는 용어 · 답하지 못한 특성 질문이에요. 같은 이름은 묶어서 셉니다(최근 순 200개).</p>
+          <ul className="admin__list">
+            {misses.length === 0 && <li className="admin__empty">아직 기록이 없습니다.</li>}
+            {misses.map((m) => (
+              <li className="admin__row admin__row--miss" key={`${m.kind}:${m.query}`}>
+                <span className="admin__purpose">{m.kind === "shoe" ? "신발" : m.kind === "term" ? "용어" : "특성"}</span>
+                <div className="admin__names">
+                  <span className="admin__model">{m.query}</span>
+                  <span className="admin__brandname" title={m.lastMessage}>마지막 질문: {m.lastMessage}</span>
+                </div>
+                <span className="admin__misscount">{m.count}회</span>
+                <span className="admin__changeat">{m.lastAt.slice(0, 10)}</span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       {target && <HideShoeConfirm shoe={target} busy={busy} onConfirm={removeShoe} onCancel={() => setTarget(null)} />}

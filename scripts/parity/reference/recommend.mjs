@@ -14,6 +14,7 @@
 //   - 옛 세대는 같은 라인의 현행 신발이 사이트에 있을 때만 notes 에 "지금은 다음 세대(…)가 나와 있어요"
 // 작업 3-4(2026-11-11 사용자) — 예산 배점 20 → 10. 다른 네 조건은 신발의 고정된 속성이고 예산만 발매가 기준이라 실제 살 값과 다를 수 있다(10_recommend.md 2-3b).
 // 그 밖의 배점 · 경계는 이관 전(history/recommend-browser-20261110.mjs)과 같다.
+// 작업 5-1(2026-11-12 사용자) — 예산을 금액(budget, 원)으로도 받는다. 경계만 그 금액, price 칸의 결과는 그대로.
 // 가격의 toLocaleString() 은 ko-KR 로 고정해 돌린다(check.mjs · diff-reference.mjs).
 
 /** 끝 글자에 받침이 있나 — 숫자 · 영문은 읽는 소리로 어림(src/utils/compare.ts hasJong 과 같다) */
@@ -132,7 +133,9 @@ export function evaluate(shoe, answers, current = new Map()) {
 
   // 예산 — 상한(2026-11-11 사용자, 작업 3-2): low 20만원까지 · mid 30만원까지. "high"(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고
   // "상관없어요"와 같게 조건으로 보지 않는다. 예산은 넘으면 안 되는 선이지 원하는 가격대가 아니다 — 상한 안의 신발은 모두 같게 본다
-  const cap = answers.price === "low" ? 200000 : answers.price === "mid" ? 300000 : null;
+  // 작업 5-1(2026-11-12 사용자) — budget(원)이 오면 그 금액이 상한(price 대신). 배점 · 문장은 같다 — 챗봇이 "15만원"을 그대로 보낸다
+  const cap = answers.budget != null ? Number(answers.budget)
+    : answers.price === "low" ? 200000 : answers.price === "mid" ? 300000 : null;
   if (cap !== null) {
     if (shoe.price !== null) {
       max += 10; checked++;
