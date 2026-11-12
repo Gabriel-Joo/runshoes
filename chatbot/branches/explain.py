@@ -43,14 +43,8 @@ TASK = (
     "사용자가 단정하는 말투로 물으면, 먼저 그 단정에 동의하지 않는다고 짧게 밝히고 설명한다. "
     "그 밖에는 질문에 맞게 바로 시작한다. "
     "효과를 약속하지 않는 것은 문장 전체로 지키고, 첫 문장으로 미리 방어하지 않는다. "
-    "[등록된 정보]의 특성만 근거로, 해요체로 서너 문장. 같은 뜻을 두 번 쓰지 않는다. "
-    "특성은 [등록된 정보] 줄 첫머리의 이름(쿠션 높이 · 카본 플레이트 등)으로 부른다. 괄호로 다른 이름을 덧붙이지 않는다. "
-    "신발이나 특성이 몸에 \"도움이 된다\"고 쓰지 않는다(\"무릎에 도움이 될 수 있어요\" 금지). "
-    "사람이 무엇을 확인 · 비교하는 것이 도움이 된다는 말은 써도 된다. "
-    "사용자의 말이나 상태를 되받지 않는다(\"~하셨네요\", \"~하신 것 같아요\", \"~찾으시는군요\" 금지). "
-    "몸 상태를 판단하지 않는다 — 사용자가 말한 몸 이야기(체중 · 평발 등)를 \"~시니까\"로 다시 말하지 않는다. "
-    "\"~때문이에요\"로 원인을 말하지 않는다. 정보에 없는 특성 · 효과는 말하지 않는다. "
-    "\"보러 가실래요?\"와 마지막 안내 문장은 쓰지 않는다(따로 붙는다)."
+    "서너 문장으로, 같은 뜻을 두 번 쓰지 않는다. 특성은 [등록된 정보] 줄 첫머리의 이름(쿠션 높이 · 카본 플레이트 등)으로 부르고, "
+    "괄호로 다른 이름을 덧붙이지 않는다. 끝맺는 안내 문장은 따로 붙으니 쓰지 않는다."
 )
 
 
@@ -74,9 +68,9 @@ def answer(question: str, dic: Dictionary, health: bool, history: list[dict], ex
     # 근거는 설명(description)만 — 짧은 정의(short)까지 주면 같은 정의를 두 번 썼다(1회차). 사전 용어는 미리 쉬운 말로
     lines: list[str] = []
     for e in entries:
-        lines.append(f"{PLAIN_NAME.get(e['key'], e['name'])}: {plain_words(e['description'])}")
+        lines.append(f"{PLAIN_NAME.get(e['key'], e['name'])}: {plain_words(haeyo(e['description']))}")
         for name, desc in e.get("values") or []:
-            lines.append(f"  · {name}: {plain_words(desc)}")
+            lines.append(f"  · {name}: {plain_words(haeyo(desc))}")
     # 코드 답 — 사전 원문을 해요체 · 쉬운 말로(원문 그대로 내면 합니다체에 사전 용어가 섞인다)
     fallback = "관련된 신발 특성을 정리해 드릴게요.\n\n" + "\n\n".join(
         plain_words(f"{josa(PLAIN_NAME.get(e['key'], e['name']), '은', '는')} {haeyo(e['description'])}") for e in entries)

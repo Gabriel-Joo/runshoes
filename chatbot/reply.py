@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import re
+import threading
 from dataclasses import dataclass, field
 
 from .prompt import DOCTOR, LINK_LABEL
@@ -74,23 +75,52 @@ def strip_medical(text: str) -> str:
     return "\n\n".join(paras)
 
 
+# 이 턴에 검사가 한 일 — 지운 것 · 코드 답으로 바꾼 까닭. 턴마다 bot 이 비우고 trace 에 옮긴다(스레드마다 따로 — 서버는 턴을 스레드에서 돌린다)
+_LOG = threading.local()
+
+
+def guard_log() -> list[str]:
+    if not hasattr(_LOG, "items"):
+        _LOG.items = []
+    return _LOG.items
+
+
+def guard_reset() -> None:
+    _LOG.items = []
+
+
 def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool]:
     """(낼 글, fallback 을 썼는지)"""
+    log = guard_log()
     text = _EMOJI.sub("", generated).strip()
-    text = re.sub(r"\*\*|__|^#+\s*", "", text, flags=re.MULTILINE)
-    text = strip_medical(text)
-    text = plain_words(text)
+    if text != generated.strip():
+        log.append("이모지 지움")
+    md = re.sub(r"\*\*|__|^#+\s*", "", text, flags=re.MULTILINE)
+    if md != text:
+        log.append("마크다운 지움")
+    text = strip_medical(md)
+    if text != md:
+        log.append("의료 문장 지움")
+    pw = plain_words(text)
+    if pw != text:
+        log.append("사전 용어 → 쉬운 말")
+    text = pw
     if not text:
+        log.append("코드 답: 빈 글")
         return fallback, True
     bad = numbers(text) - numbers(allowed_source)
     if bad:
         print(f"[guard] 사실에 없는 숫자 {sorted(bad)} — 코드 답으로")
+        log.append(f"코드 답: 사실에 없는 숫자 {sorted(bad)}")
         return fallback, True
-    if any(b in text for b in BANNED):
+    hit = [b for b in BANNED if b in text]
+    if hit:
         print("[guard] 금칙어 — 코드 답으로")
+        log.append(f"코드 답: 금칙어 {hit}")
         return fallback, True
     if help_claims(text)[0]:
         print(f"[guard] 신발이 몸에 도움이 된다는 문장 {help_claims(text)[0]} — 코드 답으로")
+        log.append("코드 답: 신발이 몸에 도움")
         return fallback, True
     return text, False
 
@@ -110,7 +140,7 @@ def plain_words(text: str) -> str:
 
 
 _HAEYO = [("있습니다", "있어요"), ("없습니다", "없어요"), ("좋습니다", "좋아요"), ("했습니다", "했어요"), ("아닙니다", "아니에요"),
-          ("쓰입니다", "쓰여요"), ("붙입니다", "붙여요"), ("집니다", "져요"), ("줍니다", "줘요"), ("씁니다", "써요"), ("합니다", "해요")]
+          ("쓰입니다", "쓰여요"), ("붙입니다", "붙여요"), ("나눕니다", "나눠요"), ("집니다", "져요"), ("줍니다", "줘요"), ("씁니다", "써요"), ("합니다", "해요")]
 
 
 def haeyo(text: str) -> str:

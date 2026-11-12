@@ -19,7 +19,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | `activity_logs` | 10 | 인증 · 리뷰 · 찜 · 신발 조회 · 비교 · 관리 화면 쓰기 이력. 로그인 시도 제한도 여기서 센다 |
 | `shoe_purges` | 11 | 영구 삭제한 신발의 기록(행이 없으니 FK 아님) |
 | `terms` | 6 | 용어 설명(읽기 전용). `row_no` 가 키 — 시드에 `id 12` 가 둘이었고 V17 에서 아웃솔을 13 으로 |
-| `chatbot_misses` | 5 | 챗봇이 찾지 못한 신발 · 용어(V18) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리 화면이 이름으로 묶어 센다 |
+| `chatbot_misses` | 5 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리 화면이 이름으로 묶어 센다 |
 
 - 키 · 제약
   - `uk_shoes_line_generation_gender(line_key, generation, gender)` — 한 라인의 한 세대 · 한 성별은 한 행. 숨긴 행에도 걸린다(같은 세대는 새로 넣지 않고 되살린다, 409).
@@ -78,7 +78,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 15 | weight norm 270 | `weight_norm_270` — 공시 무게를 270mm(M9)로 맞춘 값, 생성 컬럼(VIRTUAL, 반 사이즈당 2.6%). 기준이 없거나 다섯 사이즈 밖이면 NULL — `01a_catalog_sources.md` 1-3a | 2026-11-10 |
 | 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 2026-11-10 |
 | 17 | terms outsole id | 아웃솔 용어의 id 12 → 13 — 챗봇이 용어를 id 로 참조할 때 둘이 섞이지 않게(`09_chatbot_rag.md` 8절). 첫 구문 가드 — 아웃솔이 id 12 인 행이 하나이고 13 이 비었을 때만 | 미적용 |
-| 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 미적용 |
+| 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 미적용 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`)에 있다. 절차는 `06_deployment.md`.
 

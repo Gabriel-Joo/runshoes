@@ -14,7 +14,7 @@ from . import http, prompt, router
 from .branches import compare, explain, recommend, spec, term
 from .catalog import Catalog, Mention, norm
 from .facts import josa
-from .reply import Reply, with_doctor
+from .reply import Reply, guard_log, guard_reset, with_doctor
 from .terms import Dictionary
 
 
@@ -65,7 +65,9 @@ class Bot:
         """(답, 기록 — 평가용: 갈래 · health · 찾은 신발)"""
         cat = self.load()
         dic = Dictionary(cat.terms)
+        guard_reset()
         reply, trace = self._turn(state, text, cat, dic)
+        trace["guard"] = list(guard_log())
         state.history += [{"role": "user", "content": text}, {"role": "assistant", "content": reply.text}]
         state.history = state.history[-6:]
         if reply.shoes:
