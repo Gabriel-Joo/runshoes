@@ -56,6 +56,8 @@ def main() -> int:
 
     results = []
     copy_issues = check_term_copy(WIDE_TERM, STABILITY_DESCRIPTION)
+    from chatbot.eval import examples as example_check
+    copy_issues += [f"예시 {x}" for x in example_check.check(cat, http, facts, prompt)]
     for it in items:
         st = State()
         posts.clear()
@@ -293,9 +295,12 @@ def summary(results: list[dict], copy_issues: list[str]) -> None:
         print(f"  {c:10} {sum(r['ok'] for r in rs)}/{len(rs)}  경고 {sum(len(r['warns']) for r in rs)}  코드 답 {sum(r['fallback'] for r in rs)}")
     total = len(results)
     print(f"  전체 {sum(r['ok'] for r in results)}/{total} · 평균 {sum(r['seconds'] for r in results) / max(total, 1):.1f}s")
+    from collections import Counter
+    g = Counter(x.split(" [")[0] for r in results for x in r["trace"].get("guard", []))
+    print("  생성 검사가 한 일: " + (", ".join(f"{k} {v}" for k, v in sorted(g.items())) or "없음"))
     bad_num = sum(any(f.startswith("API 에 없는 숫자") for f in r["fails"]) for r in results)
     print(f"  수치 불일치 문항 {bad_num} · 전문의 누락 {sum('전문의 안내 누락' in r['fails'] for r in results)}")
-    print("  용어 사본 대조: " + ("같다" if not copy_issues else "; ".join(copy_issues)))
+    print("  용어 사본 · 예시 값 대조: " + ("같다" if not copy_issues else "; ".join(copy_issues)))
 
 
 if __name__ == "__main__":

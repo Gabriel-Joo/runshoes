@@ -9,10 +9,11 @@ from ..reply import Reply
 from .common import generate
 
 TASK = (
-    "두 신발(또는 여러 신발)을 견준다. 신발마다 무게 · 쿠션 높이 · 앞뒤 높이 차이 · 발매가와 [등록된 정보]의 위치 말"
-    "(가벼운 편 · 중간 · 높은 편 등)을 그대로 쓰고, [결론 문장]을 넣는다. 무게만 물었으면 무게만 답한다. "
-    "어느 신발이 더 좋다고 단정하지 않는다. 마지막은 \"보러 가실래요?\"로 끝낸다."
+    "신발마다 무게 · 쿠션 높이 · 앞뒤 높이 차이 · 발매가와 [등록된 정보]의 위치 말(가벼운 편 · 중간 · 높은 편 등)을 그대로 쓰고, "
+    "[결론 문장]을 넣는다. 무게만 물었으면 무게만 답한다. 어느 신발이 더 좋다고 단정하지 않는다. "
+    "마지막은 \"보러 가실래요?\"로 끝낸다."
 )
+VERDICT_TASK = "답의 첫 줄은 [결론 문장]의 첫 문장 그대로다."
 
 
 # "뭐가 더 좋아요"처럼 우열을 물으면 첫 줄에 한 줄(사용자 2회차 승인) — 단정하지 않고 차이로 넘어간다
@@ -28,6 +29,6 @@ def answer(question: str, shoes: list[dict], health: bool, history: list[dict]) 
         first, _, rest = fallback.partition("\n\n")
         fallback = VERDICT_LINE + "\n\n" + rest
         conclusions = [VERDICT_LINE] + conclusions
-    task = TASK + (" 답의 첫 줄은 [결론 문장]의 첫 문장 그대로다." if VERDICT_ASKED.search(question) else "")
+    task = TASK + (" " + VERDICT_TASK if VERDICT_ASKED.search(question) else "")
     text, used = generate(question, lines, conclusions, fallback, health, history, task)
     return Reply(text, shoes, fallback_used=used, branch="compare")
