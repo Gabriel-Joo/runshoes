@@ -491,4 +491,8 @@ export const V6_SCENARIOS = [
   W("X151", "추천 다섯 칸 → 상위 3 · score · reasons", "GET", "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=%EB%84%93%EC%9D%8C&stability=%EC%A4%91%EB%A6%BD%ED%99%94-outer&cushion=high&price=mid", { expect: 200 }),
   W("X152", "추천 모르는 값 → 400", "GET", "/api/recommend?purpose=x&width=unknown&stability=unknown&cushion=unknown&price=unknown", { expect: 400 }),
   W("X153", "추천 칸 빠짐 → 400", "GET", "/api/recommend?purpose=%EB%A0%88%EC%9D%B4%EC%8A%A4", { expect: 400 }),
+  // 작업 5-1(2026-11-12) — 예산 금액(budget, 원). price 대신 — 챗봇이 말한 금액 그대로
+  W("X154", "추천 budget=150000(price 없이) → 상한 15만원", "GET", "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=unknown&stability=unknown&cushion=unknown&budget=150000", { expect: 200 }),
+  W("X155", "추천 price 와 budget 둘 다 → 400", "GET", "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=unknown&stability=unknown&cushion=unknown&price=low&budget=150000", { expect: 400 }),
+  W("X156", "추천 budget 숫자 아님 → 400", "GET", "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=unknown&stability=unknown&cushion=unknown&budget=15만원", { expect: 400 }),
 ];

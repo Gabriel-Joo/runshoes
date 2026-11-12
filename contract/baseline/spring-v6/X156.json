@@ -1,0 +1,32 @@
+{
+  "id": "X156",
+  "plan": null,
+  "name": "추천 budget 숫자 아님 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "GET",
+    "path": "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=unknown&stability=unknown&cushion=unknown&budget=15%EB%A7%8C%EC%9B%90",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 12 Nov 2026 05:39:24 GMT",
+      "connection": "close"
+    },
+    "body": {}
+  }
+}

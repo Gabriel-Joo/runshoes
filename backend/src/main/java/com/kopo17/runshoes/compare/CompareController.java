@@ -56,12 +56,23 @@ class CompareController {
 		return ResponseEntity.ok(ComparePolicy.result(ComparePolicy.parseIds(ids, known), null, all));
 	}
 
-	/** ?purpose=…&width=…&stability=…&cushion=…&price=… — 다섯 칸 모두, 화면 선택지의 값만. 상위 3 */
+	/**
+	 * ?purpose=…&width=…&stability=…&cushion=…&price=… — 다섯 칸 모두, 화면 선택지의 값만. 상위 3.
+	 * price 대신 budget=<원>(1 ~ 1억, 숫자만)을 보내면 그 금액이 예산 상한이다 — 챗봇이 "15만원"을 그대로 보낸다(작업 5-1).
+	 * 둘 중 하나만: 둘 다 오거나 budget 이 숫자가 아니면 400. budget 이 없으면 지금과 같다(화면은 price 만 보낸다).
+	 */
 	@GetMapping("/api/recommend")
 	@Transactional(readOnly = true)
 	ResponseEntity<Object> recommend(@RequestParam Map<String, String> query) {
 		Map<String, String> answers = new LinkedHashMap<>();
+		String budget = query.get("budget");
+		if (budget != null) {
+			if (query.containsKey("price")) return badRequest("recommend — price 와 budget 은 하나만");
+			if (!RecommendPolicy.validBudget(budget)) return badRequest("recommend — budget 은 1 ~ 100000000 정수(원)");
+			answers.put("budget", budget);
+		}
 		for (var e : RecommendPolicy.ANSWERS.entrySet()) {
+			if (budget != null && "price".equals(e.getKey())) continue;
 			String v = query.get(e.getKey());
 			if (v == null || !e.getValue().contains(v)) return badRequest("recommend — " + e.getKey() + " 값이 없거나 모르는 값");
 			answers.put(e.getKey(), v);

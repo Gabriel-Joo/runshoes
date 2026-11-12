@@ -28,7 +28,7 @@
 {"id": "C08", "cat": "compare", "q": "젤 님버스 27이랑 젤 카야노 32 차이가 뭐예요?", "branch": "compare", "shoes": ["아식스 젤 님버스 27", "아식스 젤 카야노 32"]}
 {"id": "C09", "cat": "compare", "q": "노바블라스트 5랑 노바블라스트 6 비교해 주세요", "branch": "compare", "shoes": ["아식스 노바블라스트 5", "아식스 노바블라스트 6"]}
 {"id": "C10", "cat": "compare", "q": "글리세린 22, 본디 9, 젤 님버스 27, 클리프톤 10 중에 쿠션 높이 비교해줘", "branch": "compare", "shoes": ["브룩스 글리세린 22", "호카 본디 9", "아식스 젤 님버스 27", "호카 클리프톤 10"]}
-{"id": "R01", "cat": "recommend", "q": "러닝 입문인데 15만원 안쪽에서 매일 신을 거 찾아요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "budget_won": 150000}}
+{"id": "R01", "cat": "recommend", "q": "러닝 입문인데 15만원 안쪽에서 매일 신을 거 찾아요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "budget_won": 150000}, "not_contains": ["20만원까지"]}
 {"id": "R02", "cat": "recommend", "q": "마라톤 대회용 신발 추천해줘", "branch": "recommend", "conditions": {"purpose": "레이스"}}
 {"id": "R03", "cat": "recommend", "q": "발볼이 넓은데 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "넓음"}}
 {"id": "R04", "cat": "recommend", "q": "발이 안쪽으로 무너지는 편이에요. 장거리용 골라 주세요", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "stability": "안정화"}}
@@ -38,8 +38,8 @@
 {"id": "R08", "cat": "recommend", "q": "30만원까지 레이스화 골라줘", "branch": "recommend", "conditions": {"purpose": "레이스", "budget_won": 300000}}
 {"id": "R09", "cat": "recommend", "q": "신발 추천해줘", "branch": "recommend", "ask_purpose": true}
 {"id": "R10", "cat": "recommend", "setup": ["신발 추천해줘"], "q": "트레일이요", "branch": "recommend", "conditions": {"purpose": "트레일"}}
-{"id": "R11", "cat": "recommend", "q": "인터벌 훈련할 때 신을 신발 뭐가 좋아요?", "branch": "recommend", "conditions": {"purpose": "템포·인터벌"}}
+{"id": "R11", "cat": "recommend", "q": "인터벌 훈련할 때 신을 저렴한 신발 뭐가 좋아요?", "branch": "recommend", "conditions": {"purpose": "템포·인터벌", "price_level": "low"}, "contains": ["20만원까지"]}
 {"id": "R12", "cat": "recommend", "q": "발볼은 보통이고 안정화가 필요해요. 조깅용 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "보통", "stability": "안정화"}}
 {"id": "R13", "cat": "recommend", "q": "20만원 이하로 장거리용 쿠션 많은 거 추천해줘", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "cushion": "high", "budget_won": 200000}}
 {"id": "R14", "cat": "recommend", "q": "밑창 바깥쪽이 많이 닳아요. 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "stability": "중립화-outer"}}
-{"id": "R15", "cat": "recommend", "q": "비싸도 괜찮으니 레이스용으로 골라 주세요", "branch": "recommend", "conditions": {"purpose": "레이스"}}
+{"id": "R15", "cat": "recommend", "q": "비싸도 괜찮으니 레이스용으로 골라 주세요", "branch": "recommend", "conditions": {"purpose": "레이스", "price_level": "any"}}

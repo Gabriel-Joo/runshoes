@@ -1,0 +1,119 @@
+{
+  "id": "X154",
+  "plan": null,
+  "name": "추천 budget=150000(price 없이) → 상한 15만원",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/recommend?purpose=%EC%A1%B0%EA%B9%85%C2%B7%ED%9A%8C%EB%B3%B5%EC%A3%BC&width=unknown&stability=unknown&cushion=unknown&budget=150000",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Thu, 12 Nov 2026 05:39:24 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "results": [
+        {
+          "id": 2,
+          "score": 40,
+          "max": 50,
+          "checked": 2,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "발볼은 넓음으로 나왔어요",
+              "hit": false
+            },
+            {
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": false
+            },
+            {
+              "text": "쿠션 두께는 36mm예요",
+              "hit": false
+            },
+            {
+              "text": "발매가가 예산보다 높아요 (179,000원) — 지금 파는 값은 더 낮을 수 있어요",
+              "hit": false
+            }
+          ],
+          "notes": []
+        },
+        {
+          "id": 3,
+          "score": 40,
+          "max": 50,
+          "checked": 2,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "발볼은 넓음, 와이드 모델도 있어요",
+              "hit": false
+            },
+            {
+              "text": "교정 장치가 없는 중립화예요",
+              "hit": false
+            },
+            {
+              "text": "발매가가 예산보다 높아요 (189,000원) — 지금 파는 값은 더 낮을 수 있어요",
+              "hit": false
+            }
+          ],
+          "notes": []
+        },
+        {
+          "id": 1,
+          "score": 40,
+          "max": 50,
+          "checked": 2,
+          "reasons": [
+            {
+              "text": "조깅·회복주에 맞는 신발이에요",
+              "hit": true
+            },
+            {
+              "text": "발볼은 보통으로 나왔어요",
+              "hit": false
+            },
+            {
+              "text": "안정화예요 — 발이 안쪽으로 무너지는 걸 잡아줍니다",
+              "hit": false
+            },
+            {
+              "text": "쿠션 두께는 40mm예요",
+              "hit": false
+            },
+            {
+              "text": "발매가가 예산보다 높아요 (199,000원) — 지금 파는 값은 더 낮을 수 있어요",
+              "hit": false
+            }
+          ],
+          "notes": []
+        }
+      ]
+    }
+  }
+}

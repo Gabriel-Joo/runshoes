@@ -135,6 +135,21 @@ class RouterTest(unittest.TestCase):
         self.assertEqual(c, {"width": "넓음", "budget_won": 150000})
 
 
+class BudgetTest(unittest.TestCase):
+    def test_amount_goes_as_budget(self):
+        from chatbot.branches import recommend
+        p, notes = recommend.params({"purpose": "레이스", "budget_won": 150000})
+        self.assertEqual((p.get("budget"), "price" in p, notes), ("150000", False, []))   # 칸으로 바꾸지 않는다
+        p, notes = recommend.params({"purpose": "레이스", "price_level": "low"})
+        self.assertEqual(p["price"], "low")
+        self.assertIn("20만원까지", notes[0])                                            # 칸으로 맞췄으면 밝힌다
+        p, notes = recommend.params({"purpose": "레이스", "price_level": "any"})
+        self.assertEqual(p["price"], "unknown")
+        self.assertIn("상관없다고", notes[0])
+        c = router.clean_conditions({"budget_won": 150000, "price_level": "low"})
+        self.assertEqual(c, {"budget_won": 150000})                                        # 금액이 이긴다
+
+
 class ReplyTest(unittest.TestCase):
     def test_guard_numbers(self):
         out, used = guard("무게는 300g이에요.", "무게: 298g", "코드 답")
