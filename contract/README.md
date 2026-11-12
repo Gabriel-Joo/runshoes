@@ -30,7 +30,7 @@ run-spring-local.sh     로컬 Spring 을 시드에서 띄워 녹화 · 비교 �
 # Node 기준선 (이미 녹화됨 — 다시 할 일 없음)
 node contract/record.mjs --base http://192.168.122.240 --host runshoes.ronanlab.dev --out contract/baseline/node
 
-# Spring — 로컬(compose MySQL, Flyway 시드 직후)에서
+# Spring — 로컬(빈 MySQL, Flyway 시드 직후)에서 — run-spring-local.sh 는 계약 전용 임시 MySQL(:3309)을 쓴다
 node contract/record.mjs --base http://127.0.0.1:3000 --host runshoes.ronanlab.dev --out contract/run/spring
 node contract/diff.mjs contract/baseline/node contract/run/spring
 
@@ -44,7 +44,7 @@ node contract/record.mjs --base http://127.0.0.1:3000 --set search --out contrac
 node contract/diff.mjs contract/baseline/spring-search contract/run/spring-search
 ```
 
-로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary|v4|v6]` 가 DB 를 시드로 되돌리고 위를 한 번에 한다.
+로컬에서는 `contract/run-spring-local.sh [v3|v3-search|v3-summary|v4|v6]` 가 계약 전용 임시 MySQL(`runshoes-mysql-contract` :3309, tmpfs — 개발 DB 가 아니다)을 새로 띄워 시드부터 위를 한 번에 한다.
 V3 세트는 로그인해야 하므로 비밀번호를 env(`SEED_USER_PASSWORD` · `ADMIN_PASSWORD`)로 앱과 record.mjs 에 같이 준다 — 스크립트가 매번 새로 만든다(Secret 과 상관없다).
 기록에는 비밀번호 · JWT · refresh 쿠키 값을 남기지 않는다(`<가림>` · `<jwt>`). 시나리오의 `expect`(상태코드)가 다르면 record.mjs 가 표시하고 exit 1,
 `volatile: ["createdAt"]` · `["retryAfter"]` 은 서버가 그때 정하는 값이라 diff 가 형식(날짜 · 숫자)만 본다.
@@ -109,6 +109,9 @@ V16 첫 가드는 이미 고친 DB 에 다시 치면 `ERROR 1242` 로 멈추는 
 **V17 · V18(2026-11-12) — 용어 id · 챗봇 기록**: V17 이 아웃솔 용어의 id 를 12 → 13 으로 — spring-v3 **R03** 을 다시 녹화했다(사용자 승인). 다른 칸은 V16 의 무게 설명 하나, 용어 13개 · 순서는 그대로. V18 의 내부 POST · 관리 GET 은 시나리오에 넣지 않고 손으로 봤다(127.0.0.1 204 · 같은 본문 두 번 204 · 잘못된 kind 400 · 다른 주소 + `X-Forwarded-For: 127.0.0.1` 404 · 비로그인 GET 401 · admin GET 묶음 200). 다른 주소 + XFF 는 쿠버네티스 env(`KUBERNETES_SERVICE_HOST`)를 켜고도 봤다 — 켜면 Spring Boot 가 XFF 로 `remoteAddr` 를 바꿔, `remoteAddr` 를 보던 첫 구현은 204 로 뚫렸다. 지금은 `localAddr` 를 본다.
 v3 PASS 101 · FAIL 11(A06 · A11 · A16 · A20 · A21 · A26 · W46 · W47 · W51 · W52 · W52b — 그대로) · v6 116 · v3-search 24 · v4 21. 로컬 개발 DB 를 지우지 않으려고 이번에는 임시 MySQL(tmpfs, :3309)을 시드부터 띄워 같은 순서로 돌렸다.
 V17 가드는 이미 고친 DB 에 다시 치면 `ERROR 1242` 로 멈추는 것을 확인했다(로컬).
+
+**예산 금액(2026-11-12, 작업 5-1)**: spring-v6 에 X154 ~ X156(`budget=150000` 200 · `price` 와 함께 400 · `budget=15만원` 400). v6 PASS 119 · v3 101/11(그대로).
+**녹화 DB 를 나눴다(2026-11-12 사용자)**: `run-spring-local.sh` 는 이제 계약 전용 임시 MySQL(`runshoes-mysql-contract`, 127.0.0.1:3309, tmpfs)을 매번 새로 띄워 시드부터 녹화하고 끝나면 내린다. 로컬 개발 DB(compose `runshoes-mysql-dev` :3307 — 운영 스냅숏 310켤레)는 지우지도 쓰지도 않는다. 전에는 `docker compose down -v` 로 그 볼륨을 지우고 시작했다.
 
 **작업 3(2026-11-10) — 비교 · 추천 API**: spring-v6 에 X147 ~ X153(compare pick · ids 거르기 · 둘 다 없음 400 · 모르는 pick → cols [] · recommend 다섯 칸 · 모르는 값 400 · 칸 빠짐 400). 여기는 모양 · 상태코드만 — 값이 이관 전 브라우저 계산과 같은지는 `scripts/parity/check.mjs` 가 전수(신발마다 pick · 다섯 켤레씩 ids · 추천 960 조합)로 본다.
 v6 PASS 116 · FAIL 0 · v3 100/12(그대로) · v3-search 24 · v4 21 · v14-summary 20.

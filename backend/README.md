@@ -23,8 +23,8 @@ docker run --rm --network host --cpus=4 --cpu-shares=2 --user $(id -u):$(id -g) 
   maven:3.9-eclipse-temurin-21 nice -n 19 mvn -q -B package
 
 cd .. && docker compose up -d          # MySQL 127.0.0.1:3307 (3306 은 다른 프로젝트)
-yarn build                             # dist/ — SPA 시나리오(21~23)에 쓴다
-contract/run-spring-local.sh v3          # DB 를 비우고 Flyway 시드부터 → :3200 에 띄워 녹화 → 기준선(spring-v3) diff. JWT · 비밀번호는 매번 임시 값
+npm run build                          # dist/ — SPA 시나리오(21~23)에 쓴다
+contract/run-spring-local.sh v3          # 계약 전용 임시 MySQL(:3309, 개발 DB 아님)을 새로 띄워 Flyway 시드부터 → :3200 에 띄워 녹화 → 기준선(spring-v3) diff. JWT · 비밀번호는 매번 임시 값
 contract/run-spring-local.sh v3-summary  # 요약 — mock-ollama(:3109). 진짜 Ollama 는 부르지 않는다
 contract/run-spring-local.sh v3-search   # 검색
 ```

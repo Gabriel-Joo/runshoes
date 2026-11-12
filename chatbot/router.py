@@ -46,7 +46,8 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
     "width": "넓음" | "보통" | null,
     "stability": "안정화" | "중립화" | "중립화-outer" | null,
     "cushion": "high" | "mid" | "low" | null,
-    "budget_won": 숫자(원) 또는 null
+    "budget_won": 숫자(원) 또는 null,
+    "price_level": "low" | "mid" | "any" | null
   }}
 }}
 
@@ -73,7 +74,8 @@ conditions — 추천에 쓸 조건. 문장에 드러난 것만, 짐작하지 �
 - width: 발볼이 넓다 → "넓음", 보통 → "보통"
 - stability: 발이 안쪽으로 무너진다 · 평발 · 안정감 → "안정화", 중립 → "중립화", 밑창 바깥쪽(새끼발가락 쪽)이 닳는다 → "중립화-outer"
 - cushion: 푹신 · 쿠션 많이 → "high", 적당 → "mid", 얇게 · 지면 느낌 → "low"
-- budget_won: "15만원" → 150000, "20만원 이하" → 200000
+- budget_won: 금액을 말했을 때만. "15만원" → 150000, "20만원 이하" → 200000
+- price_level: 금액 없이 가격만 말했을 때. 저렴한 · 싼 · 가성비 → "low", 적당한 가격 → "mid", 비싸도 괜찮다 · 가격 상관없다 → "any". 금액을 말했으면 null
 """
 
 
@@ -125,7 +127,24 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
     health = data.get("health_context") if ok and isinstance(data.get("health_context"), bool) else True
     names = [n.strip() for n in data.get("shoe_names") or [] if isinstance(n, str) and n.strip()][:5]
     term = data.get("term") if isinstance(data.get("term"), str) and data.get("term").strip() else None
-    return Route(branch, health, rule is not None, names, term, clean_conditions(data.get("conditions")), ok)
+    if branch == "term" and not term:
+        term = guess_term(text)   # LLM 이 용어 이름을 비워 보낼 때가 있다 — 기록(V18)이 빠지지 않게
+    cond = clean_conditions(data.get("conditions"))
+    # 가격 조건은 문장에 가격 이야기가 있을 때만 — LLM 이 말하지 않은 "가격 상관없음"을 붙이는 일이 있었다(2026-11-12 평가)
+    if not has_any(text, PRICE_WORDS):
+        cond.pop("price_level", None)
+    if not re.search(r"\d|만\s*원|천\s*원", text):
+        cond.pop("budget_won", None)
+    return Route(branch, health, rule is not None, names, term, cond, ok)
+
+
+PRICE_WORDS = ("가격", "값", "원", "싼", "싸", "저렴", "비싸", "비싼", "가성비", "예산", "돈", "부담", "상관없", "얼마")
+
+
+def guess_term(text: str) -> str | None:
+    """"갑피가 뭐예요" → "갑피" — 뜻을 묻는 말 앞의 낱말"""
+    m = re.match(r"\s*([0-9A-Za-z가-힣·\- ]{1,20}?)\s*(?:이|가|은|는|란|이란)?\s*(?:뭐|무슨|뜻|의미|어떤)", text)
+    return m.group(1).strip() if m and m.group(1).strip() else None
 
 
 def clean_conditions(raw) -> dict:
@@ -142,7 +161,9 @@ def clean_conditions(raw) -> dict:
         out["cushion"] = c["cushion"]
     b = c.get("budget_won")
     if isinstance(b, (int, float)) and 10000 <= b <= 5000000:
-        out["budget_won"] = int(b)
+        out["budget_won"] = int(b)                     # API budget 은 1 ~ 1억 — 말이 안 되는 금액은 버린다
+    elif c.get("price_level") in ("low", "mid", "any"):
+        out["price_level"] = c["price_level"]          # 금액이 있으면 금액이 이긴다
     return out
 
 

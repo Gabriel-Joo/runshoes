@@ -29,6 +29,13 @@ final class RecommendPolicy {
 
 	record Reason(boolean hit, String text) {}
 
+	/** budget — 숫자만, 1 ~ 1억(원). 앞의 0 · 부호 · 소수점은 받지 않는다 */
+	static boolean validBudget(String s) {
+		if (s == null || !s.matches("[1-9][0-9]{0,8}")) return false;
+		long v = Long.parseLong(s);
+		return v <= 100_000_000L;
+	}
+
 	/** 예산 배점 — 작업 3-4(2026-11-11 사용자) 20 → 10. 다른 네 조건은 신발의 고정된 속성이고 예산만 발매가 기준이라 불확실하다(10_recommend.md 2-3b) */
 	static final int BUDGET = 10;
 
@@ -166,8 +173,11 @@ final class RecommendPolicy {
 
 		// 예산 — 상한(2026-11-11 사용자, 작업 3-2): low 20만원까지 · mid 30만원까지. high(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고
 		// unknown 과 같게 조건으로 보지 않는다(옛 값이라 받기는 한다). 상한 안의 신발은 모두 같게 본다 — 원하는 가격대가 아니라 넘으면 안 되는 선
+		// budget(원) — 챗봇이 말한 금액 그대로(작업 5-1, 2026-11-12 사용자). price 대신 온다(둘 다 오면 컨트롤러가 400). 경계만 바뀌고 배점 · 문장은 같다
 		String price = answers.get("price");
-		Double cap = "low".equals(price) ? Double.valueOf(200000) : "mid".equals(price) ? Double.valueOf(300000) : null;
+		String budget = answers.get("budget");
+		Double cap = budget != null ? Double.valueOf(budget)
+				: "low".equals(price) ? Double.valueOf(200000) : "mid".equals(price) ? Double.valueOf(300000) : null;
 		if (cap != null && shoe.price() == null) {
 			skipped.add("price");
 		} else if (cap != null) {

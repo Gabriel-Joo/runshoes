@@ -8,8 +8,13 @@
 #   contract/run-spring-local.sh v14-summary # 요약 V14 — 녹화 전에 배치(batch 프로필)를 한 번 돌리고, 녹화 중 조회가 Ollama 를 부르지 않는지 · 배치가 하나씩 보냈는지 본다. 기준선 baseline/spring-v14-summary
 #   main · summary · search                 # V3 전 기준선(node · node-summary · spring-search) — 이력. V3 뒤 앱에는 맞지 않는다(작성자 · 쓰기 401)
 #   IMAGE=runshoes:phase4 contract/run-spring-local.sh   # jar 대신 만든 이미지로(Phase 4 게이트)
-# 먼저 backend/target/runshoes-0.1.0.jar 와 dist/(yarn build)를 만든다(backend/README.md). MySQL 은 docker compose(:3307), 앱은 :3200.
-# 시나리오가 쓰기를 섞으므로 매번 DB 를 비우고(compose down -v) Flyway 시드부터 시작한다.
+# 먼저 backend/target/runshoes-0.1.0.jar 와 dist/(npm run build)를 만든다(backend/README.md). 앱은 :3200.
+#
+# DB — 계약 전용 임시 MySQL 컨테이너 runshoes-mysql-contract(127.0.0.1:3309, 데이터는 tmpfs)를 매번 새로 띄우고 끝나면 내린다.
+#   시나리오가 쓰기를 섞으므로 빈 DB 에서 Flyway 시드부터 시작해야 한다. 지우는 것은 이 임시 컨테이너뿐이다(끄면 메모리에서 사라진다).
+#   로컬 개발 DB(docker compose 의 runshoes-mysql-dev, :3307, 볼륨 runshoes-mysql-dev — 운영 스냅숏 310켤레)에는 닿지 않는다.
+#   전에는 여기서 docker compose down -v 로 개발 DB 볼륨을 지우고 시작했다 — 한 번 잘못 돌리면 310켤레가 날아가 나눴다(2026-11-12 사용자).
+#   포트는 CONTRACT_DB_PORT 로 바꿀 수 있다(:3308 은 이 호스트의 다른 것이 쓴다).
 # 같은 호스트의 다른 작업을 밀지 않게 컨테이너 CPU 를 낮게 잡는다(cpu-shares 2, nice 19).
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -22,15 +27,24 @@ if [ -z "${IMAGE:-}" ]; then
   [ -f dist/index.html ] || { echo "dist/ 가 없다 — 먼저 yarn build(SPA 시나리오 21~23)"; exit 2; }
 fi
 
+CONTRACT_DB=runshoes-mysql-contract
+CONTRACT_DB_PORT=${CONTRACT_DB_PORT:-3309}
 cleanup() {
   docker stop runshoes-spring-dev >/dev/null 2>&1 || true
+  docker stop "$CONTRACT_DB" >/dev/null 2>&1 || true   # --rm · tmpfs — 멈추면 컨테이너와 데이터가 함께 사라진다
   [ -n "${MOCK_PID:-}" ] && kill "$MOCK_PID" 2>/dev/null || true
 }
 trap cleanup EXIT
 
-docker compose down -v >/dev/null 2>&1
-docker compose up -d >/dev/null 2>&1
-until [ "$(docker inspect -f '{{.State.Health.Status}}' runshoes-mysql-dev)" = healthy ]; do sleep 1; done
+# 지난 실행이 남긴 임시 DB 가 있으면 내린다(이름이 runshoes-mysql-contract 인 것만 — 개발 DB 가 아니다)
+docker stop "$CONTRACT_DB" >/dev/null 2>&1 || true
+# 설정은 docker-compose.yml 의 개발 DB 와 같다(버전 · utf8mb4 · UTC · performance_schema 끔). 볼륨 없이 tmpfs
+docker run -d --rm --name "$CONTRACT_DB" -p "127.0.0.1:$CONTRACT_DB_PORT:3306" --tmpfs /var/lib/mysql --cpus=1 --cpu-shares=2 --memory=1g \
+  -e MYSQL_ROOT_PASSWORD=runshoes-root-dev -e MYSQL_DATABASE=runshoes -e MYSQL_USER=runshoes -e MYSQL_PASSWORD=runshoes -e TZ=UTC \
+  mysql:8.0.46 --innodb-buffer-pool-size=256M --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci \
+  --default-time-zone=+00:00 --performance-schema=OFF >/dev/null
+until docker exec "$CONTRACT_DB" mysql -urunshoes -prunshoes -e 'select 1' runshoes >/dev/null 2>&1; do sleep 1; done
+DB_URL="jdbc:mysql://127.0.0.1:$CONTRACT_DB_PORT/runshoes?useSSL=false&allowPublicKeyRetrieval=true&connectionTimeZone=UTC"
 
 OLLAMA=http://127.0.0.1:9            # 본 시나리오는 Ollama 를 부르지 않는다 — 부르면 바로 실패하게 닫힌 포트
 # 로그인(V3~) — 녹화마다 새로 만든 임시 값. Secret runshoes-auth 와 상관없다. 비밀번호는 record.mjs 도 env 로 받는다(기록에는 <가림>)
@@ -45,10 +59,10 @@ fi
 if [ -n "${IMAGE:-}" ]; then
   # Phase 4 — 만든 이미지 그대로(정적 파일 · 사용자 · ENTRYPOINT 까지). 메모리는 클러스터 limit(1Gi)과 같게
   docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --memory=1g \
-    -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" "${AUTH_ENV[@]}" "$IMAGE" >/dev/null
+    -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e SPRING_DATASOURCE_URL="$DB_URL" "${AUTH_ENV[@]}" "$IMAGE" >/dev/null
 else
   docker run -d --rm --name runshoes-spring-dev --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" \
-    -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" "${AUTH_ENV[@]}" -e APP_STATIC=/static \
+    -e HOME=/tmp -e TZ=UTC -e SERVER_PORT=3200 -e OLLAMA_URL="$OLLAMA" -e SPRING_DATASOURCE_URL="$DB_URL" "${AUTH_ENV[@]}" -e APP_STATIC=/static \
     -v "$PWD/backend/target":/app:ro -v "$PWD/dist":/static:ro \
     maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
 fi
@@ -61,9 +75,9 @@ done
 # V14 요약 — 녹화 전에 배치를 한 번(웹과 같은 jar · 이미지, --spring.profiles.active=batch). 실패 · 겹침이 아니면 exit 0
 if [ "$SET" = v14-summary ]; then
   if [ -n "${IMAGE:-}" ]; then
-    docker run --rm --network host --cpus=2 --cpu-shares=2 --memory=1g -e OLLAMA_URL="$OLLAMA" "${AUTH_ENV[@]}" "$IMAGE" --spring.profiles.active=batch > /tmp/runshoes-summary-batch.log 2>&1 || { echo "배치 실패 — /tmp/runshoes-summary-batch.log"; exit 1; }
+    docker run --rm --network host --cpus=2 --cpu-shares=2 --memory=1g -e OLLAMA_URL="$OLLAMA" -e SPRING_DATASOURCE_URL="$DB_URL" "${AUTH_ENV[@]}" "$IMAGE" --spring.profiles.active=batch > /tmp/runshoes-summary-batch.log 2>&1 || { echo "배치 실패 — /tmp/runshoes-summary-batch.log"; exit 1; }
   else
-    docker run --rm --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" -e HOME=/tmp -e TZ=UTC -e OLLAMA_URL="$OLLAMA" "${AUTH_ENV[@]}" \
+    docker run --rm --network host --cpus=2 --cpu-shares=2 --user "$(id -u):$(id -g)" -e HOME=/tmp -e TZ=UTC -e OLLAMA_URL="$OLLAMA" -e SPRING_DATASOURCE_URL="$DB_URL" "${AUTH_ENV[@]}" \
       -v "$PWD/backend/target":/app:ro maven:3.9-eclipse-temurin-21 nice -n 19 java -jar /app/runshoes-0.1.0.jar --spring.profiles.active=batch > /tmp/runshoes-summary-batch.log 2>&1 \
       || { echo "배치 실패 — /tmp/runshoes-summary-batch.log"; exit 1; }
   fi

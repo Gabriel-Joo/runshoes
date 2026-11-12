@@ -2,13 +2,14 @@
 
 자유 문장의 조건은 라우터 LLM 이 뽑고(router.clean_conditions 가 API 값 밖을 버린다) 나머지는 "잘 모르겠어요"(unknown).
 용도는 API 가 늘 요구한다 — 없으면 하나만 되묻는다.
-예산은 화면의 두 칸(20만원까지 · 30만원까지)으로 맞추고, 말한 금액이 그보다 낮으면 그 사실을 문장으로 밝힌다(점수는 그대로).
+예산은 말한 금액 그대로 보낸다 — budget=<원>(작업 5-1, 2026-11-12 사용자. 화면은 드롭다운이라 칸 셋이지만 챗봇은 자유 문장이다).
+금액이 없는 말("저렴한 걸로" · "비싸도 괜찮아요")만 화면의 칸으로 맞추고 그렇게 밝힌다.
 """
 
 from __future__ import annotations
 
 from .. import facts, http
-from ..facts import ieyo, josa, won
+from ..facts import ieyo, josa
 from ..reply import Reply
 from .common import generate
 
@@ -24,26 +25,30 @@ TASK = (
 
 
 def params(cond: dict) -> tuple[dict, list[str]]:
-    """API 인자 · 예산 문장"""
+    """API 인자 · 예산 문장. 금액이 있으면 budget, 없으면 price 칸(금액이 없는 말만)"""
     p = {
         "purpose": cond["purpose"],
         "width": cond.get("width", "unknown"),
         "stability": cond.get("stability", "unknown"),
         "cushion": cond.get("cushion", "unknown"),
-        "price": "unknown",
     }
     notes: list[str] = []
     b = cond.get("budget_won")
+    level = cond.get("price_level")
     if b is not None:
-        if b <= CAP["low"]:
-            p["price"] = "low"
-        elif b <= CAP["mid"]:
-            p["price"] = "mid"
-        else:
-            notes.append("말씀하신 예산이 30만원을 넘어서 가격은 따로 보지 않았어요.")
-        if p["price"] != "unknown" and b < CAP[p["price"]]:
-            notes.append(f"예산은 추천받기와 같은 기준인 '{CAP[p['price']] // 10000}만원까지'로 찾았어요.")
+        p["budget"] = str(b)
+    elif level in CAP:
+        p["price"] = level
+        notes.append(f"금액을 말씀하지 않으셔서 예산은 추천받기의 '{CAP[level] // 10000}만원까지'로 봤어요.")
+    else:
+        p["price"] = "unknown"
+        if level == "any":
+            notes.append("가격은 상관없다고 하셔서 따로 보지 않았어요.")
     return p, notes
+
+
+def capped(p: dict) -> bool:
+    return "budget" in p or p.get("price") in CAP
 
 
 def _skipped(shoe: dict, p: dict) -> set[str]:
@@ -53,7 +58,7 @@ def _skipped(shoe: dict, p: dict) -> set[str]:
         s.add("width")
     if p["cushion"] != "unknown" and shoe.get("stackHeight") is None:
         s.add("cushion")
-    if p["price"] != "unknown" and shoe.get("price") is None:
+    if capped(p) and shoe.get("price") is None:
         s.add("price")
     return s
 
@@ -62,27 +67,26 @@ def _asked(p: dict) -> set[str]:
     out = {"purpose"}
     if p["width"] == "넓음":           # 보통 · 모르겠어요는 발볼을 보지 않는다(10_recommend 1-1)
         out.add("width")
-    for k in ("stability", "cushion", "price"):
+    for k in ("stability", "cushion"):
         if p[k] != "unknown":
             out.add(k)
+    if capped(p):
+        out.add("price")
     return out
 
 
 def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]) -> Reply:
     p, budget_notes = params(cond)
-    # 말한 금액이 화면 칸보다 낮으면 — 셈은 칸 기준이라 "N개 중 N개" 옆에 기준을 밝힌다
-    budget_cap_note = f"{CAP[p['price']] // 10000}만원까지" if p["price"] in CAP and cond.get("budget_won", CAP[p["price"]]) < CAP[p["price"]] else None
-    budget_notes = [n for n in budget_notes if "추천받기와 같은 기준" not in n]
     res = http.get_json("/api/recommend", p).get("results", [])
     shoes = [catalog.by_id[r["id"]] for r in res if r["id"] in catalog.by_id]
     if not shoes:
         return Reply("조건에 맞는 신발을 찾지 못했어요. 조건을 하나 줄여서 다시 찾아볼까요?", branch="recommend")
     asked = _asked(p)
     # 말하지 않은 조건과, 말했지만 추천받기가 보지 않는 조건(발볼 보통 — 10_recommend 1-1)을 나눠 말한다
-    said = {"width": "width" in cond, "stability": "stability" in cond, "cushion": "cushion" in cond, "price": "budget_won" in cond}
+    said = {"width": "width" in cond, "stability": "stability" in cond, "cushion": "cushion" in cond,
+            "price": "budget_won" in cond or "price_level" in cond}
     unasked = [COND_NAME[k] for k in ORDER if k != "purpose" and not said[k]]
     said_unchecked = ["발볼은 보통이라고 하셔서 따로 보지 않았어요."] if cond.get("width") == "보통" else []
-    b = cond.get("budget_won")
 
     lines: list[str] = []
     paras: list[str] = ["조건에 맞춰 찾아봤어요!"]
@@ -90,25 +94,18 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
         name = f"{shoe['brand']}의 {shoe['model']}"
         hits = sum(1 for x in r["reasons"] if x.get("hit"))
         lines.append(f"{rank}위: {name}")
-        lines.append(f"  확인한 조건 {r['checked']}개 중 {hits}개가 맞아요" + (f"(예산은 추천받기와 같은 '{budget_cap_note}'로 봤어요)" if budget_cap_note else ""))
+        lines.append(f"  확인한 조건 {r['checked']}개 중 {hits}개가 맞아요")
         keys = [k for k in ORDER if k not in _skipped(shoe, p)]
         aligned = len(keys) == len(r["reasons"])
-        over_budget = b is not None and shoe.get("price") is not None and shoe["price"] > b and p["price"] != "unknown"
         reasons_hit: list[str] = []
         for i, x in enumerate(r["reasons"]):
             k = keys[i] if aligned else None
             text = x["text"]
-            if k == "price" and over_budget and x.get("hit"):
-                # 점수는 API 그대로(20만원 칸에서는 맞음) — 말한 금액을 넘는다는 사실만 문장으로
-                text = f"발매가 {won(shoe['price'])}으로 말씀하신 {manwon(b)}보다는 높아요"
-                label = "참고"
-            elif k is not None and k not in asked:
+            if k is not None and k not in asked:
                 label = "참고"
             else:
                 label = "맞음" if x.get("hit") else ("안 맞음" if aligned else "참고")
             if label == "맞음":
-                reasons_hit.append(text)
-            elif rank == 1 and k == "price" and over_budget:
                 reasons_hit.append(text)
             lines.append(f"  {label}: {text}")
         for n in r.get("notes") or []:
@@ -116,8 +113,6 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
         lines.append(f"  " + "; ".join(x for x in facts.shoe_facts(shoe)[3:7]))
         if rank == 1:
             para = f"1위는 {ieyo(name)}. 확인한 조건 {r['checked']}개 중 {hits}개가 맞아요."
-            if budget_cap_note:
-                para = para[:-1] + f"(예산은 추천받기와 같은 '{budget_cap_note}'로 봤어요)."
             if reasons_hit:
                 para += " " + " ".join(t if t.endswith(("요", ".")) else t + "." for t in reasons_hit)
             paras.append(para)
@@ -140,11 +135,6 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
     unasked_line = ([f"보지 않은 조건: {', '.join(unasked)}(말씀하지 않으셔서)"] if unasked else []) + [f"보지 않은 조건: {x}" for x in said_unchecked]
     text, used = generate(question, lines + unasked_line, conclusions, fallback, health, history, TASK)
     return Reply(text, shoes, fallback_used=used, branch="recommend")
-
-
-def manwon(x: int) -> str:
-    """사용자가 말한 예산 — 15만원처럼(만 원 단위가 아니면 150,500원)"""
-    return f"{x // 10000}만원" if x % 10000 == 0 else won(x)
 
 
 def _among(shoes: list[dict]) -> list[str]:

@@ -6,6 +6,7 @@
 //   1. 대상 서버의 /api/shoes 를 읽어 reference 로 계산한다(화면이 받던 그 목록 · 그 순서).
 //   2. 비교 — 신발마다 ?pick=<id>(자동 채우기 cols · 그 칸들의 값 · 등수 · 밴드 · 말 · 환산 여부), 다섯 켤레씩 ?ids=, 모집단(fields).
 //   3. 추천 — 5 × 3 × 4 × 4 × 4 = 960 조합의 상위 3(id · 순서 · score · reasons 의 hit · text).
+//   3a. 예산 금액(budget, 작업 5-1) — 200000 · 300000 이 price=low · mid 와 응답까지 같은지(480) + 금액 넷 × 60 조합을 기준 사본과(240).
 //   4. 끝에 /api/shoes 를 다시 읽어 그 사이 바뀌었으면(찜 · 평점) 처음부터 다시(3번까지).
 // 비교는 === 뿐이다 — 숫자에 허용 오차를 두지 않는다. 하나라도 다르면 목록을 내고 exit 1.
 // 가격 문구: 이관 전 toLocaleString() 은 브라우저 언어를 따랐다 — 여기서는 ko-KR 로 고정해 계산한다(서버도 한국 표기).
@@ -110,8 +111,33 @@ async function round() {
     diff({ results: recommend(all, a) }, got, `recommend?${q}`, out);
     bad.push(...out);
   }
+  // 추천 — 예산 금액(budget, 작업 5-1). ① budget 200000 · 300000 이 price=low · mid 와 응답까지 같다(서버끼리)
+  // ② 금액 넷 × 용도 다섯 × 발볼 · 쿠션 조합을 기준 사본과 대조
+  let budgeted = 0;
+  for (const a of combos.filter((c) => c.price === "low" || c.price === "mid")) {
+    const { price, ...rest } = a;
+    const q = new URLSearchParams({ ...rest, budget: price === "low" ? "200000" : "300000" }).toString();
+    const got = await get(`/api/recommend?${q}`, "recommend");
+    const same = await get(`/api/recommend?${new URLSearchParams(a)}`, "recommend");
+    const out = [];
+    diff(same, got, `recommend?${q} ≡ price=${price}`, out);
+    bad.push(...out);
+    budgeted++;
+  }
+  for (const budget of ["100000", "150000", "189000", "250000"]) {
+    for (const a of combos.filter((c) => c.price === "unknown" && c.stability === "unknown")) {
+      const { price, ...rest } = a;
+      const b = { ...rest, budget };
+      const q = new URLSearchParams(b).toString();
+      const got = await get(`/api/recommend?${q}`, "recommend");
+      const out = [];
+      diff({ results: recommend(all, b) }, got, `recommend?${q}`, out);
+      bad.push(...out);
+      budgeted++;
+    }
+  }
   const after = await get("/api/shoes");
-  return { changed: JSON.stringify(after) !== JSON.stringify(all), bad, n: { shoes: all.length, compare: compared, recommend: combos.length } };
+  return { changed: JSON.stringify(after) !== JSON.stringify(all), bad, n: { shoes: all.length, compare: compared, recommend: combos.length, budget: budgeted } };
 }
 
 let r;
@@ -122,7 +148,7 @@ for (let i = 1; i <= 3; i++) {
   console.log(`대조 중 /api/shoes 가 바뀌었다(찜 · 평점) — 다시(${i}/3)`);
 }
 const q = (xs, p) => { const s = [...xs].sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.floor(p * s.length))].toFixed(1) : "-"; };
-console.log(`대상 ${BASE} — 신발 ${r.n.shoes} · 비교 호출 ${r.n.compare} · 추천 조합 ${r.n.recommend}`);
+console.log(`대상 ${BASE} — 신발 ${r.n.shoes} · 비교 호출 ${r.n.compare} · 추천 조합 ${r.n.recommend} · 예산 금액 조합 ${r.n.budget}`);
 console.log(`응답 시간(ms, 대조 스크립트에서 잰 왕복) — compare 중앙 ${q(times.compare, 0.5)} · 95% ${q(times.compare, 0.95)} · 최대 ${q(times.compare, 1)} / recommend 중앙 ${q(times.recommend, 0.5)} · 95% ${q(times.recommend, 0.95)} · 최대 ${q(times.recommend, 1)}`);
 if (r.changed) { console.log("세 번 모두 대조 중에 목록이 바뀌었다 — 결과를 믿을 수 없다"); process.exit(2); }
 if (r.bad.length) {

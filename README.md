@@ -84,8 +84,8 @@ python -m chatbot.eval.run      # (선택) 챗봇 평가 — 운영 공개 API �
 
 - 개발 중에도 같은 출처의 `/api` 를 부르고 Vite 가 `:3000` 으로 넘긴다 — refresh 쿠키(`Path=/api/auth`)가 운영과 같게 붙는다.
 - 이미지: `docker build -t runshoes .`(Vite → Maven → jlink JRE → alpine, 252MB). 실행 env 는 `backend/README.md`.
-- 계약 시험: `contract/run-spring-local.sh v6`(로컬 DB 를 지우고 V1 부터 올려 녹화 · 비교).
-- 빈 DB 로: `docker compose down -v && docker compose up -d`.
+- 계약 시험: `contract/run-spring-local.sh v6`(전용 임시 MySQL `runshoes-mysql-contract` :3309 를 새로 띄워 V1 부터 올려 녹화 · 비교 — 개발 DB 는 건드리지 않는다).
+- 빈 DB 로: `docker compose down -v && docker compose up -d` — **로컬 개발 DB(운영 스냅숏 310켤레)를 지운다.** 계약 시험은 이 DB 를 쓰지 않는다(전용 임시 MySQL :3309).
 
 ## 저장소
 
