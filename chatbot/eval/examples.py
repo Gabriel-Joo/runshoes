@@ -28,12 +28,11 @@ def check(cat, http, facts, prompt) -> list[str]:
         issues.append("①: 마하 7 이 없거나 리뷰가 없다")
     need("①", "마하 8은 아직 이 사이트에 등록되어 있지")
     need("①", "같은 라인의 마하 7은 스펙이랑 리뷰가")
-    # ③ 쿠션 높이
-    g = shoe("글리세린 22")
-    if not g:
-        issues.append("③: 글리세린 22 가 없다")
-    else:
-        need("③", f"글리세린 22가 쿠션 높이 {facts.num(g['stackHeight'])}mm")
+    # ③ 쿠션 높이 — 사전의 "두꺼운 편" 경계(신발은 들지 않는다)
+    st = next((t for t in cat.terms if t.get("key") == "stackHeight"), None)
+    if not st or "40mm 이상이면 두꺼운 편" not in st["description"]:
+        issues.append("③: 사전(스택하이트)의 '40mm 이상이면 두꺼운 편'이 바뀌었다")
+    need("③", "쿠션 높이가 40mm 이상이면 두꺼운 편")
     # ④ 무게 — 원값 · 기준 · 환산 · 8g 규칙 결론
     a, b = shoe("페가수스 41"), shoe("젤 님버스 27")
     if a and b:
