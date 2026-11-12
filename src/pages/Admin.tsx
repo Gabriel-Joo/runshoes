@@ -15,7 +15,7 @@ import "./Admin.css";
 // 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
 //   화면에서 정렬한다 — 목록은 늘 전부 받고, 최근 수정순의 "고친 적 없음(null)은 뒤에, id 순"은 서버의 _sort 로 나타낼 수 없다
 /** 챗봇이 찾지 못한 신발 · 용어(V18, GET /api/admin/chatbot-misses) — 이름으로 묶어 센 것 */
-type ChatbotMiss = { kind: "shoe" | "term"; query: string; count: number; lastAt: string; lastMessage: string };
+type ChatbotMiss = { kind: "shoe" | "term" | "feature"; query: string; count: number; lastAt: string; lastMessage: string };
 
 type SortKey = "gaps" | "updated" | "id" | "brand" | "model";
 const SORTS: { key: SortKey; label: string }[] = [
@@ -433,12 +433,12 @@ function Admin() {
 
       {tab === "misses" && (
         <>
-          <p className="admin__missnote">챗봇에게 물었지만 등록되어 있지 않은 신발 · 사전에 없는 용어예요. 같은 이름은 묶어서 셉니다(최근 순 200개).</p>
+          <p className="admin__missnote">챗봇에게 물었지만 등록되어 있지 않은 신발 · 사전에 없는 용어 · 답하지 못한 특성 질문이에요. 같은 이름은 묶어서 셉니다(최근 순 200개).</p>
           <ul className="admin__list">
             {misses.length === 0 && <li className="admin__empty">아직 기록이 없습니다.</li>}
             {misses.map((m) => (
               <li className="admin__row admin__row--miss" key={`${m.kind}:${m.query}`}>
-                <span className="admin__purpose">{m.kind === "shoe" ? "신발" : "용어"}</span>
+                <span className="admin__purpose">{m.kind === "shoe" ? "신발" : m.kind === "term" ? "용어" : "특성"}</span>
                 <div className="admin__names">
                   <span className="admin__model">{m.query}</span>
                   <span className="admin__brandname" title={m.lastMessage}>마지막 질문: {m.lastMessage}</span>

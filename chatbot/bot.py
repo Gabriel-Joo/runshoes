@@ -212,7 +212,10 @@ class Bot:
         """특성 설명 — 끝에 "어떤 달리기에 신으실지…"를 붙이고, 다음 답이 용도면 추천으로 잇는다"""
         reply = explain.answer(text, dic, r.health, state.history)
         trace["explained"] = reply.explained
-        if reply.explained:
+        if not reply.explained:
+            # 사전에 걸리는 특성이 없어 답하지 못했다 — 무엇을 궁금해하는지 남긴다(사용자 2회차, kind feature)
+            record_miss(state, "feature", r.feature or text[:40], text, self.post)
+        else:
             state.pending = {"kind": "purpose", "cond": dict(r.conditions), "question": text, "health": r.health}
         reply.text = with_doctor(reply.text, r.health)
         return reply

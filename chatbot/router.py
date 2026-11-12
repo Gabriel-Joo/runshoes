@@ -41,6 +41,7 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
   "health_context": true | false,
   "shoe_names": ["문장에 나온 신발 모델 이름 그대로"],
   "term": "뜻을 물은 러닝화 용어(없으면 null)",
+  "feature": "신발 특성을 물었다면 그 특성을 짧은 명사구로(예: 뒤꿈치 쓸림, 힐컵, 통기성). 없으면 null",
   "conditions": {{
     "purpose": {json.dumps(list(PURPOSES), ensure_ascii=False)} 중 하나 또는 null,
     "width": "넓음" | "보통" | null,
@@ -92,6 +93,7 @@ class Route:
     term: str | None = None
     conditions: dict = field(default_factory=dict)
     llm_ok: bool = True
+    feature: str | None = None
 
 
 def has_any(text: str, words: tuple[str, ...]) -> bool:
@@ -131,6 +133,7 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
     health = data.get("health_context") if ok and isinstance(data.get("health_context"), bool) else True
     names = [n.strip() for n in data.get("shoe_names") or [] if isinstance(n, str) and n.strip()][:5]
     term = data.get("term") if isinstance(data.get("term"), str) and data.get("term").strip() else None
+    feature = data.get("feature").strip()[:40] if isinstance(data.get("feature"), str) and data.get("feature").strip() else None
     if branch == "term" and not term:
         term = guess_term(text)   # LLM 이 용어 이름을 비워 보낼 때가 있다 — 기록(V18)이 빠지지 않게
     cond = clean_conditions(data.get("conditions"))
@@ -139,7 +142,7 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
         cond.pop("price_level", None)
     if not re.search(r"\d|만\s*원|천\s*원", text):
         cond.pop("budget_won", None)
-    return Route(branch, health, rule is not None, names, term, cond, ok)
+    return Route(branch, health, rule is not None, names, term, cond, ok, feature)
 
 
 PRICE_WORDS = ("가격", "값", "원", "싼", "싸", "저렴", "비싸", "비싼", "가성비", "예산", "돈", "부담", "상관없", "얼마")
