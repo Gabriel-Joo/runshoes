@@ -11,11 +11,19 @@ import threading
 from dataclasses import dataclass, field
 
 from . import http, prompt, router
-from .branches import compare, recommend, spec, term
+from .branches import compare, explain, recommend, spec, term
 from .catalog import Catalog, Mention, norm
 from .facts import josa
 from .reply import Reply, with_doctor
 from .terms import Dictionary
+
+
+# 신발 종류 이름 — 모델이 아니다. 라우터 LLM 이 "카본화"를 shoe_names 에 넣어 "등록되지 않은 모델"로 답한 일이 있었다(경계 평가)
+_CATEGORY = re.compile(r"^(카본|안정|중립|쿠션|러닝|레이스|레이싱|트레일|입문|조깅|마라톤|데일리|맥시멀|미니멀|경량|와이드|슈퍼)\s*(화|슈즈|신발|러닝화)$")
+
+
+def is_category(name: str) -> bool:
+    return bool(_CATEGORY.match(name.strip()))
 
 
 @dataclass
@@ -101,7 +109,7 @@ class Bot:
         context = state_shoes if router.has_any(text, router.REFER_WORDS) else []
 
         r = router.route(text, len(found) + len(ambiguous) + len(unregistered), len(state_shoes), len(terms_found), state.history, self.ask)
-        trace = {"branch": r.branch, "health": r.health, "by_rule": r.by_rule, "llm_ok": r.llm_ok,
+        trace = {"explained": [], "branch": r.branch, "health": r.health, "by_rule": r.by_rule, "llm_ok": r.llm_ok,
                  "shoes": [s["id"] for s in found], "shoe_names": r.shoe_names, "term": r.term, "conditions": r.conditions}
 
         # 추천 — 용도를 되물은 뒤의 답
@@ -140,9 +148,11 @@ class Bot:
         if b == "greeting" and not found:
             return Reply(prompt.GREETING, branch="greeting"), trace
         if b == "out_of_scope" and not found:
-            if r.health:
-                return Reply(with_doctor(prompt.HEALTH_GENERAL, True), branch="health"), trace
+            if r.health:   # 몸 이야기가 섞였으면 거절하지 않고 특성으로(7절)
+                return self._explain(state, text, dic, r, trace), trace
             return Reply(prompt.OUT_OF_SCOPE, links_off=True, branch="out_of_scope"), trace
+        if b == "explain" and not found:
+            return self._explain(state, text, dic, r, trace), trace
         if b == "term":
             reply, miss = term.answer(dic, terms_found, r.term)
             if miss:
@@ -169,9 +179,16 @@ class Bot:
                 cond["purpose"] = router.purpose_by_rule(text)
             if not cond.get("purpose"):
                 cond.pop("purpose", None)
+                if r.health:
+                    # 통증 + 추천인데 용도가 없으면 되묻기 전에 특성을 먼저 말한다(사용자 2026-11-12)
+                    extra = tuple(explain.FROM_CONDITION[k] for k in ("cushion", "stability", "width") if k in cond)
+                    reply = explain.answer(text, dic, True, state.history, extra, tail=prompt.ASK_PURPOSE_CALM)
+                    trace["explained"] = reply.explained
+                    state.pending = {"kind": "purpose", "cond": cond, "question": text, "health": True}
+                    reply.text = with_doctor(reply.text, True)
+                    return reply, trace
                 state.pending = {"kind": "purpose", "cond": cond, "question": text, "health": r.health}
-                ask = prompt.ASK_PURPOSE_CALM if r.health else prompt.ASK_PURPOSE   # 통증이면 톤을 낮춘다
-                return Reply(with_doctor(ask, r.health), branch="recommend"), trace
+                return Reply(prompt.ASK_PURPOSE, branch="recommend"), trace
             trace["conditions_used"] = cond
             return self._recommend(state, text, cond, cat, r.health), trace
         if b == "spec":
@@ -181,12 +198,25 @@ class Bot:
             reply = spec.answer(text, [(s, notes.get(s["id"], False)) for s in shoes], r.health, state.history)
             reply.text = with_doctor(reply.text, r.health)
             return reply, trace
+        if b == "explain":   # 신발 이름이 함께 나온 특성 질문 — 그 신발의 값으로 답한다
+            reply = spec.answer(text, [(s, notes.get(s["id"], False)) for s in found], r.health, state.history)
+            reply.text = with_doctor(reply.text, r.health)
+            return reply, trace
         # 경험·후기 — 5-1 에서는 준비 중(5-2에서 제거)
-        if r.health and not found:
-            return Reply(with_doctor(prompt.HEALTH_GENERAL, True), branch="health"), trace
+        if r.health and not found:   # 몸 이야기가 섞였으면 준비 중으로 돌려보내지 않고 특성으로
+            return self._explain(state, text, dic, r, trace), trace
         return Reply(with_doctor(prompt.EXPERIENCE_PENDING, r.health), found, branch="experience"), trace
 
     # ------------------------------------------------------------------
+    def _explain(self, state: State, text: str, dic: Dictionary, r, trace: dict) -> Reply:
+        """특성 설명 — 끝에 "어떤 달리기에 신으실지…"를 붙이고, 다음 답이 용도면 추천으로 잇는다"""
+        reply = explain.answer(text, dic, r.health, state.history)
+        trace["explained"] = reply.explained
+        if reply.explained:
+            state.pending = {"kind": "purpose", "cond": dict(r.conditions), "question": text, "health": r.health}
+        reply.text = with_doctor(reply.text, r.health)
+        return reply
+
     def _recommend(self, state: State, question: str, cond: dict, cat: Catalog, health: bool) -> Reply:
         reply = recommend.answer(question, cond, cat, health, state.history)
         reply.text = with_doctor(reply.text, health)
@@ -226,7 +256,7 @@ class Bot:
         out = []
         for n in names:
             k = norm(n)
-            if n in brands or not k or cat.find(n) or any(k in f for f in found_names):
+            if n in brands or not k or cat.find(n) or any(k in f for f in found_names) or is_category(n):
                 continue
             out.append(n)
         return out

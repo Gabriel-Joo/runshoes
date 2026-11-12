@@ -74,6 +74,8 @@ def main() -> int:
         # 갈래
         if it.get("branch") and trace["branch"] != it["branch"]:
             fails.append(f"갈래 {trace['branch']} ≠ {it['branch']}")
+        if it.get("branch_any") and trace["branch"] not in it["branch_any"]:
+            fails.append(f"갈래 {trace['branch']} ∉ {it['branch_any']}")
         if "health" in it and trace["health"] != it["health"]:
             fails.append(f"health_context {trace['health']} ≠ {it['health']}")
         # 이름 찾기
@@ -128,6 +130,13 @@ def main() -> int:
         for c in it.get("not_contains", []):
             if c in text:
                 fails.append(f"'{c}' 있음")
+        # 특성 설명이 있는가 — 사전 용어를 근거로 쓴 설명이 되묻기 · 안내 문장 말고 실제로 있는지(사용자 2026-11-12)
+        if it.get("explain"):
+            core = text.replace(prompt.DOCTOR, "").replace(prompt.EXPLAIN_TAIL, "").replace(prompt.ASK_PURPOSE_CALM, "").replace(prompt.ASK_PURPOSE, "").strip()
+            if not trace.get("explained"):
+                fails.append("특성 설명 없음(근거로 쓴 사전 용어가 없다)")
+            elif len(core) < 40:
+                fails.append(f"특성 설명이 너무 짧다({len(core)}자)")
         for rx in it.get("not_regex", []):          # 경계 문항 — 몸 판단 · 단정 · 1등 고르기(사용자 2026-11-12)
             if re.search(rx, text):
                 fails.append(f"/{rx}/ 걸림")

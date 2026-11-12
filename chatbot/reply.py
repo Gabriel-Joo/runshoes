@@ -24,6 +24,7 @@ class Reply:
     links_off: bool = False                           # 범위 밖 등 — 버튼을 붙이지 않는다
     fallback_used: bool = False                       # 검사에 걸려 코드 답을 냈는지(로그 · 평가)
     branch: str = ""
+    explained: list[str] = field(default_factory=list)   # 특성 설명의 근거로 쓴 사전 용어(평가가 본다)
 
     def links(self) -> list[dict]:
         """1켤레 → 상세 모달, 2켤레 이상 → 비교하기. 라벨은 언제나 "보러 가기"(사용자 7절)"""
@@ -62,6 +63,7 @@ def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool
     text = _EMOJI.sub("", generated).strip()
     text = re.sub(r"\*\*|__|^#+\s*", "", text, flags=re.MULTILINE)
     text = strip_medical(text)
+    text = plain_words(text)
     if not text:
         return fallback, True
     bad = numbers(text) - numbers(allowed_source)
@@ -72,6 +74,36 @@ def guard(generated: str, allowed_source: str, fallback: str) -> tuple[str, bool
         print("[guard] 금칙어 — 코드 답으로")
         return fallback, True
     return text, False
+
+
+# 사전 용어 → 쉬운 말(8절). 생성한 글에서 코드가 바꾼다 — 프롬프트로만 지키면 설명문 · 사전을 옮길 때 섞였다(경계 평가)
+PLAIN = {"스택하이트": "쿠션 높이", "드롭": "앞뒤 높이 차이", "미드솔": "쿠션 소재"}
+_PARTICLE = {"은": "는", "이": "가", "을": "를", "과": "와", "으로": "로", "이에요": "예요", "이고": "고"}
+
+
+def plain_words(text: str) -> str:
+    """"미드솔은" → "쿠션 소재는", "(스택하이트)" 괄호는 지운다. 바꾼 말은 모두 받침이 없어 조사를 맞춘다"""
+    text = re.sub(r"\s*\((?:" + "|".join(PLAIN) + r")\)", "", text)
+    def sub(m: re.Match) -> str:
+        p = m.group(2) or ""
+        return PLAIN[m.group(1)] + _PARTICLE.get(p, p)
+    return re.sub(r"(" + "|".join(PLAIN) + r")(으로|이에요|이고|은|는|이|가|을|를|과|와|로|의|에서|에|도|만)?", sub, text)
+
+
+_HAEYO = [("있습니다", "있어요"), ("없습니다", "없어요"), ("좋습니다", "좋아요"), ("했습니다", "했어요"), ("아닙니다", "아니에요"),
+          ("쓰입니다", "쓰여요"), ("붙입니다", "붙여요"), ("집니다", "져요"), ("줍니다", "줘요"), ("씁니다", "써요"), ("합니다", "해요")]
+
+
+def haeyo(text: str) -> str:
+    """사전 원문(합니다체) → 해요체 — 코드 답(특성 설명)에 쓴다"""
+    for a, b in _HAEYO:
+        text = text.replace(a + ".", b + ".")
+    def ip(m: re.Match) -> str:
+        w = m.group(1)
+        base = re.sub(r"\([^()]*\)$", "", w) or w      # "차이(mm)입니다" — 괄호 앞 글자로 고른다
+        c = base[-1]
+        return w + ("이에요." if (("가" <= c <= "힣") and (ord(c) - 0xAC00) % 28) or c in "0136789" else "예요.")
+    return re.sub(r"(\S+)입니다\.", ip, text)
 
 
 def with_doctor(text: str, health: bool) -> str:

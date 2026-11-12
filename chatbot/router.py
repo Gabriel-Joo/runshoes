@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 
 from . import llm
 
-BRANCHES = ("term", "spec", "compare", "recommend", "experience", "out_of_scope", "greeting")
+BRANCHES = ("term", "spec", "compare", "recommend", "explain", "experience", "out_of_scope", "greeting")
 
 COMPARE_WORDS = ("비교", "vs", "차이")
 RECOMMEND_WORDS = ("추천", "골라", "뭐가 좋")
@@ -37,7 +37,7 @@ CUSHIONS = ("high", "mid", "low")
 ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. 사용자 문장을 읽고 JSON 하나만 낸다. 설명은 쓰지 않는다.
 
 {{
-  "branch": "term" | "spec" | "compare" | "recommend" | "experience" | "out_of_scope" | "greeting",
+  "branch": "term" | "spec" | "compare" | "recommend" | "explain" | "experience" | "out_of_scope" | "greeting",
   "health_context": true | false,
   "shoe_names": ["문장에 나온 신발 모델 이름 그대로"],
   "term": "뜻을 물은 러닝화 용어(없으면 null)",
@@ -55,7 +55,10 @@ branch
 - term: 러닝화 용어의 뜻을 묻는다("드롭이 뭐예요", "PEBA가 뭐야")
 - spec: 특정 신발 하나의 스펙 · 특징을 묻는다
 - compare: 신발 둘 이상을 견준다
-- recommend: 조건에 맞는 신발을 골라 달라고 한다("입문용 찾아요", "발볼 넓은데 뭐 신어요")
+- recommend: 신발을 골라 달라고 한다("입문용 찾아요", "발볼 넓은데 뭐 신어요", "~한 신발 추천해 주세요"). 묻는 것이 특성 · 효과라면 recommend 가 아니다
+- explain: 신발의 특성 · 원리 · 효과를 묻는다. 특정 신발 하나의 값도, 골라 달라는 요청도 아니다
+  ("쿠션 좋은 신발 신으면 나을까요", "신발 바꾸면 달라질까요", "카본화는 입문자에게 안 좋죠?", "비싼 게 좋은 거 아닌가요",
+   "이거 신으면 기록 줄어드나요", "안정화가 도움이 될까요", "큰 사이즈로 신어도 괜찮을까요")
 - experience: 착용감 · 내구성 · 사이즈감처럼 후기가 있어야 답할 수 있는 질문
 - out_of_scope: 러닝화와 상관없는 질문
 - greeting: 인사 · 감사만 있고 질문이 없다
@@ -66,7 +69,8 @@ health_context
 - 그런 이야기가 없으면 false
 
 shoe_names
-- 문장에 나온 러닝화 모델 이름을 세대 숫자까지 그대로 적는다("호카 마하 7" → "마하 7"). 브랜드만 나오면 넣지 않는다. 없으면 []
+- 문장에 나온 러닝화 모델 이름을 세대 숫자까지 그대로 적는다("호카 마하 7" → "마하 7"). 브랜드만 나오면 넣지 않는다.
+  "카본화 · 안정화 · 쿠션화 · 트레일화"처럼 신발 종류는 모델이 아니다 — 넣지 않는다. 없으면 []
 
 conditions — 추천에 쓸 조건. 문장에 드러난 것만, 짐작하지 않는다
 - purpose: 조깅 · 회복주 · 입문 · 매일 · 데일리 → "조깅·회복주", 템포 · 인터벌 · 스피드 훈련 → "템포·인터벌",
