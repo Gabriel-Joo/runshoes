@@ -15,6 +15,7 @@ import websockets
 
 from .bot import Bot, State
 from .prompt import GREETING
+from .search.service import Searcher
 
 FALLBACK_ERROR = "지금은 답을 만들지 못했어요. 잠시 뒤에 다시 물어봐 주세요."
 
@@ -57,7 +58,10 @@ async def handler(websocket, bot: Bot):
 
 
 async def main():
-    bot = Bot()
+    # 색인은 뒤에서 만든다 — 포트는 바로 연다(준비 전에는 경험·후기만 "잠시 뒤", 5-2 사용자 6)
+    searcher = Searcher()
+    searcher.start()
+    bot = Bot(searcher=searcher)
     host, port = "0.0.0.0", 8766
     async with websockets.serve(lambda ws: handler(ws, bot), host, port):
         print(f"챗봇 서버 실행 중: ws://{host}:{port}")

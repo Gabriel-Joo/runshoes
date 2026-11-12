@@ -1,7 +1,8 @@
 FROM python:3.12-alpine
 WORKDIR /app
 
-RUN pip install --no-cache-dir websockets requests
+# numpy — 작업 5-2 검색 색인(float32 행렬). 이미지 94.9MB → 195MB, 받을 때(gzip) 23MB → 45MB(2026-11-12 측정)
+RUN pip install --no-cache-dir websockets requests numpy
 # 작업 5-1 — 한 파일(chatbot_server.py)에서 chatbot/ 패키지로. 평가(chatbot/eval) · 시험(chatbot/tests)은 이미지에 넣지 않는다
 COPY chatbot/ chatbot/
 RUN rm -rf chatbot/eval chatbot/tests

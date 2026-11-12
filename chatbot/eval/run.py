@@ -52,7 +52,11 @@ def main() -> int:
     dic = Dictionary(cat.terms)
     by_name = {f"{s['brand']} {s['model']}": s for s in cat.shoes}
     posts: list[dict] = []
-    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body))
+    # 검색 색인(5-2) — 평가가 읽는 API 로 한 번 만든다(model-service 를 부른다). 갱신 스레드는 띄우지 않는다
+    from chatbot.search.service import Searcher
+    searcher = Searcher()
+    print(f"색인 {searcher.sync()}")
+    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body), searcher=searcher)
 
     results = []
     copy_issues = check_term_copy(WIDE_TERM, STABILITY_DESCRIPTION)
@@ -143,8 +147,23 @@ def main() -> int:
             if re.search(rx, text):
                 fails.append(f"/{rx}/ 걸림")
 
+        # 경험·후기(5-2) — 분모 · 세 칸 합 · Hit@5
+        review_src = ""
+        if trace["branch"] == "experience":
+            counts = {s["id"]: http.get_json("/api/reviews", {"shoeId": s["id"]}) for s in reply.shoes}
+            review_src = " ".join(r["content"] for rs in counts.values() for r in rs) + " " + " ".join(str(len(v)) for v in counts.values())
+            fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
+            # 집계 숫자(언급 · 긍정 · 부정 · 나머지)는 코드가 센 것 — 위 분모 · 세 칸 검사가 따로 본다
+            review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg", "rest"))
+        if it.get("hit_any"):
+            want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
+            top5 = (trace.get("ranked") or [])[:5]
+            if not want & set(top5):
+                fails.append(f"Hit@5 실패 — 상위 5 {top5} 에 정답 {sorted(want)} 없음")
+
         # 수치 — API 원값과 대조
-        allowed = allowed_numbers(it["q"], reply.shoes, dic, rec_reasons, facts) | numbers(" ".join(it.get("setup", [])))
+        allowed = (allowed_numbers(it["q"], reply.shoes, dic, rec_reasons, facts) | numbers(" ".join(it.get("setup", [])))
+                   | numbers(review_src) | ({"30", "10"} if trace["branch"] == "experience" else set()))
         bad = numbers(text) - allowed
         if bad:
             fails.append(f"API 에 없는 숫자 {sorted(bad)}")
@@ -160,7 +179,7 @@ def main() -> int:
             fails.append("진단성 표현")
         if re.search(r"나아져요|나아질 거|해결돼요|해결됩니다|해결될 거|좋아집니다|좋아져요|줄어들 거예요|막아 줄 거예요", body):
             fails.append("효과 약속")
-        if trace["branch"] in ("explain",) or trace.get("explained"):
+        if (trace["branch"] in ("explain",) or trace.get("explained")) and not reply.shoes:   # 설명문에서 신발을 받았으면 된다(5-2)
             if re.search(r"(등록된|이 사이트의?)\s*(신발|모델)|(모델|신발)들?이\s*(있어요|많아요)|(이|가)\s*해당(해요|돼요)", body):
                 fails.append("근거에 신발이 없는데 목록 이야기")
         hb, hu = help_claims(body)
@@ -168,7 +187,7 @@ def main() -> int:
             fails.append(f"효과 약속(신발이 몸에 도움): {s_[:50]}")
         for s_ in hu:
             warns.append(f"'도움이' 주어를 가리기 어려움 — 사람이 읽는다: {s_[:50]}")
-        if re.search(r"러너들이|실제 사용자|많은 사람들이|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
+        if re.search(r"러너들이|실제 사용자|많은 사람들|대부분의 사용자|사용자들|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
             fails.append("금칙어")
         if re.search("[\U0001F000-\U0001FAFF☀-➿]", text):
             fails.append("이모지")
@@ -220,7 +239,7 @@ def main() -> int:
 
 def load_items(only: str | None) -> list[dict]:
     items = []
-    for name in ("golden.jsonl", "golden-boundary.jsonl"):
+    for name in ("golden.jsonl", "golden-boundary.jsonl", "golden-experience.jsonl"):
         p = HERE / name
         if not p.exists():
             continue
@@ -233,6 +252,35 @@ def load_items(only: str | None) -> list[dict]:
         keep = set(only.split(","))
         items = [i for i in items if i["id"] in keep]
     return items
+
+
+_DENOM = re.compile(r"리뷰\s*(\d+)건\s*(?:중|가운데)|(\d+)건 중 \d+건에서만|리뷰가\s*(\d+)건")
+_CELLS = re.compile(r"언급이\s*(\d+)건,?\s*긍정\s*(\d+)건,?\s*부정\s*(\d+)건,?\s*나머지\s*(\d+)건")
+
+
+def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) -> list[str]:
+    """분모는 늘 전체(사용자 3 · 9) — 답의 「리뷰 N건 중」이 API 건수인지, 긍정 + 부정 = 언급, 언급 + 나머지 = N 인지"""
+    from chatbot import prompt
+    fails = []
+    if prompt.EXPERIENCE_WAIT in text:
+        return ["색인 준비 전 답(잠시 뒤)"]
+    ns = set(counts.values())
+    found = [int(next(g for g in m.groups() if g)) for m in _DENOM.finditer(text)]
+    for n in found:
+        if n not in ns:
+            fails.append(f"분모 {n}건 ≠ API {sorted(ns)}")
+    if it.get("denom") and not found and any(ns):
+        fails.append("분모(리뷰 N건) 없음")
+    for m in _CELLS.finditer(text):
+        k, p, q, rest = map(int, m.groups())
+        if p + q != k or k + rest not in ns:
+            fails.append(f"세 칸 합이 맞지 않음 — 언급 {k} = 긍정 {p} + 부정 {q}, 언급 + 나머지 {k + rest} ∉ {sorted(ns)}")
+    for t in trace.get("tally") or []:
+        if t["labeled"] and t["pos"] + t["neg"] + t["rest"] != t["n"]:
+            fails.append(f"집계 대조 실패 {t}")
+        if t["n"] != counts.get(t["shoe_id"], t["n"]):
+            fails.append(f"집계 N {t['n']} ≠ API {counts.get(t['shoe_id'])}")
+    return fails
 
 
 def sentences(text: str) -> list[str]:
