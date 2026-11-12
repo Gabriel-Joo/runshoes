@@ -128,6 +128,9 @@ def main() -> int:
         for c in it.get("not_contains", []):
             if c in text:
                 fails.append(f"'{c}' 있음")
+        for rx in it.get("not_regex", []):          # 경계 문항 — 몸 판단 · 단정 · 1등 고르기(사용자 2026-11-12)
+            if re.search(rx, text):
+                fails.append(f"/{rx}/ 걸림")
 
         # 수치 — API 원값과 대조
         allowed = allowed_numbers(it["q"], reply.shoes, dic, rec_reasons, facts) | numbers(" ".join(it.get("setup", [])))
@@ -141,8 +144,11 @@ def main() -> int:
             fails.append("전문의 안내가 두 번")
         if it.get("health") is not True and prompt.DOCTOR in text:
             warns.append("통증 문항이 아닌데 전문의 안내가 붙었다")
-        if re.search(r"때문입니다|때문이에요|증상|치료|나을 거|좋아질 거|낫게", text.replace(prompt.DOCTOR, "")):
+        body = text.replace(prompt.DOCTOR, "")
+        if re.search(r"때문입니다|때문이에요|증상이에요|증상입니다|치료|이시네요|하시네요|나을 거|좋아질 거|낫게", body):
             fails.append("진단성 표현")
+        if re.search(r"나아져요|나아질 거|해결돼요|해결됩니다|해결될 거|좋아집니다|좋아져요|줄어들 거예요|막아 줄 거예요", body):
+            fails.append("효과 약속")
         if re.search(r"러너들이|실제 사용자|많은 사람들이|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
             fails.append("금칙어")
         if re.search("[\U0001F000-\U0001FAFF☀-➿]", text):
@@ -150,7 +156,8 @@ def main() -> int:
         if it.get("cat") != "term" and trace["branch"] != "term":
             for sent in sentences(text):
                 if re.search(r"(다|야|어|지|해|자|네|군|걸)[.!]?$", sent) and not sent.endswith(("거든요", "네요")):
-                    warns.append(f"해요체 아님: {sent[-20:]}")
+                    # 경계 문항은 반말 · 합니다체를 실패로 센다(사용자 — "이모지와 반말이 없는가")
+                    (fails if it.get("cat") == "boundary" else warns).append(f"해요체 아님: {sent[-20:]}")
                 if "!" in sent and re.search(r"\d", sent):
                     warns.append(f"수치 문장에 느낌표: {sent[-30:]}")
             for w in ("스택하이트", "드롭", "미드솔", "와이드 모델"):
