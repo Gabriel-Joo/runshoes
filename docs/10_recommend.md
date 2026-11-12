@@ -147,7 +147,7 @@
 
 #### 5. 검증 항목
 
-- `node scripts/parity/check.mjs --base <주소>` — 서버가 기준 사본(`scripts/parity/reference/`)과 960 조합(+ 비교하기) `===` 일치. 불일치면 exit 1.
+- `node scripts/parity/check.mjs --base <주소>` — 서버가 기준 사본(`scripts/parity/reference/`)과 960 조합(+ 비교하기) `===` 일치. 불일치면 exit 1. 허용 오차는 두지 않는다 — 의도하지 않은 불일치가 하나라도 나오면 "반올림 차이라 괜찮다"처럼 혼자 판단해 넘기지 않고 멈추고 보고한다(2026-11-10 사용자).
 - 규칙을 바꿀 때: 기준 사본을 먼저 고치고 `node scripts/parity/diff-reference.mjs --base <주소>` 로 옛 사본(`reference/history/`)과의 차이를 센다 — 작업 3-1 은 자리 1,317 · 1위 337 · 구성 502(운영 310켤레, 11-10), 작업 3-2 는 `--old reference/history/recommend-neutral-20261110.mjs` 로 979 · 254 · 378. 그다음 서버를 고쳐 `check.mjs`.
 - 작업 3-4 는 `--old reference/history/recommend-copy-20261111.mjs` 로 27 · 1 · 23.
 - 작업 3-3 처럼 문장만 바꿀 때: 옛 사본과 견줘 id · 순서 · 점수 · `hit` 가 0곳 바뀌는지, 바뀐 문장을 갈래별로 센다(3절의 숫자).
