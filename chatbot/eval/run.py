@@ -157,9 +157,10 @@ def main() -> int:
             review_src = " ".join(r["content"] for rs in counts.values() for r in rs) + " " + " ".join(str(len(v)) for v in counts.values())
             fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
             # 집계 숫자(언급 · 좋다 · 아쉽다)는 코드가 센 것 — 위 분모 · 칸 검사가 따로 본다.
-            # LLM 글의 숫자는 check_experience 가 따로 본다(5차 수정 — 하나도 없어야 한다)
+            # LLM 글의 숫자는 check_experience 가 리뷰 원문만으로 따로 본다(6차 수정 3 — 건수 없이, 리뷰 속 숫자만)
+            contents = " ".join(r["content"] for rs in counts.values() for r in rs)
             review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg"))
-            fails += check_experience(text, reply, trace)
+            fails += check_experience(text, reply, trace, contents)
         if it.get("hit_any"):
             want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
             top5 = (trace.get("ranked") or [])[:5]
@@ -335,7 +336,7 @@ def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) 
     return fails
 
 
-def check_experience(text: str, reply, trace: dict) -> list[str]:
+def check_experience(text: str, reply, trace: dict, review_src: str = "") -> list[str]:
     """경험·후기 1차 수정(사용자 2026-11-13) — 두루뭉술한 양 · 내부 말 · 순위 · 최소 건수 · 피하려는 질문"""
     from chatbot.branches import experience as ex
     fails = []
@@ -345,13 +346,15 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
             fails.append(f"양을 짐작하는 말 '{w}'")
     if "분류" in outside:
         fails.append("내부 말 '분류'")
-    # LLM 글에 숫자가 없어야 한다(5차 수정 1-1 — 숫자는 코드 집계만). 신발 이름의 숫자는 뺀다. 코드가 지운 뒤의 글을 본다 —
-    # 지운 횟수는 trace guard 의 "숫자 문장 지움"으로 따로 센다(지워서 0인지 보이게)
-    from chatbot.reply import has_digit, name_forms
+    # LLM 글의 숫자(5차 수정 1-1 → 6차 수정 3): 건수("N건")는 없어야 하고, 다른 숫자는 그 답 신발들의 리뷰 원문에 있는 것만.
+    # 신발 이름의 숫자는 뺀다. 코드가 지운 뒤의 글을 본다 — 지운 횟수는 trace guard 의 "근거에 없는 숫자 문장 지움"으로 센다.
+    # 코드는 신발마다 그 신발에 준 근거 리뷰로 가르고, 평가는 답 신발들의 리뷰 전부로 본다(더 느슨하다)
+    from chatbot.reply import bad_digits, name_forms
     names = [n for s in reply.shoes for n in name_forms(s)]
     for g in trace.get("generated") or []:
-        if has_digit(g, names):
-            fails.append(f"LLM 글에 숫자: {g[:40]}")
+        for s_ in re.split(r"(?<=[.!?])\s+|\n+", g):
+            if bad_digits(s_, names, review_src):
+                fails.append(f"LLM 글에 건수 · 리뷰에 없는 숫자: {s_[:40]}")
     tally = trace.get("tally") or []
     multi = bool(trace.get("ranked"))
     want = trace.get("want")

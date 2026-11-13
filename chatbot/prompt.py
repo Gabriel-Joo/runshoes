@@ -3,6 +3,8 @@
 예시의 숫자는 틀을 보이려는 것이다. 답의 숫자는 늘 사실 문장(facts)에서만 — 코드가 검사한다(guard).
 """
 
+import re
+
 # ------------------------------------------------------------------ 고정 문구 — 코드가 그대로 낸다(생성하지 않는다)
 GREETING = "안녕하세요! 러닝화 스펙이나 비교, 추천이 궁금하면 편하게 물어보세요."
 NO_SHOE = "그 모델은 이 사이트에 등록되어 있지 않아요. 비슷한 모델로 찾아볼까요?"
@@ -144,11 +146,19 @@ EXAMPLES = """### ① 인사 + 등록되지 않은 신발
 좋은 신발 만나시길 바랄게요!
 """
 
-SYSTEM = TONE + "\n아래는 말투의 기준이 되는 예시다. 예시의 신발 · 숫자는 답에 옮기지 말고, 숫자는 늘 이번 [등록된 정보]에서만 가져온다.\n\n" + EXAMPLES
+EXAMPLES_HEAD = "\n아래는 말투의 기준이 되는 예시다. 예시의 신발 · 숫자는 답에 옮기지 말고, 숫자는 늘 이번 [등록된 정보]에서만 가져온다.\n\n"
+SYSTEM = TONE + EXAMPLES_HEAD + EXAMPLES
+
+# 예시를 갈래에 맞게(6차 수정 2 — 사용자 2026-11-13). 예시 글은 그대로, 어느 것을 주는지만 고른다.
+# 경험·후기는 숫자 없는 ① · ②만 — ③ ~ ⑥의 숫자(40mm · 255g · 169,000원 …)를 끌어와 그 문장이 지워졌다(4차 E06 · E15, 5차 숫자 문장 지움).
+# 나머지 생성 갈래(스펙 · 비교 · 추천 · 특성 설명)는 여섯 모두 그대로
+_EXAMPLE_PARTS = {m.group(1): m.group(0).strip() for m in re.finditer(r"### ([①-⑥])[\s\S]*?(?=\n### |\Z)", EXAMPLES)}
+EXAMPLES_NO_NUMBERS = "\n\n\n".join(_EXAMPLE_PARTS[k] for k in ("①", "②")) + "\n"
 
 
-def system(health: bool) -> str:
-    return SYSTEM + ("\n" + HEALTH if health else "")
+def system(health: bool, examples: str | None = None) -> str:
+    base = SYSTEM if examples is None else TONE + EXAMPLES_HEAD + examples
+    return base + ("\n" + HEALTH if health else "")
 
 
 def dump() -> str:
@@ -173,6 +183,7 @@ def dump() -> str:
                                        __import__("chatbot.branches.common", fromlist=["x"]).attached_note([DOCTOR], [EXPLAIN_TAIL, "보러 가실래요?"]),
                                        __import__("chatbot.branches.common", fromlist=["x"]).REFERENCE_HEAD])),
         ("경험·후기 — 앞에 나간 것 알림", experience.BEFORE_NOTE),
+        ("경험·후기에 주는 말투 예시(숫자 없는 ① · ② — 다른 생성 갈래는 여섯 모두)", EXAMPLES_NO_NUMBERS),
         ("경험·후기 — 코드가 LLM 글 뒤에 붙이는 설명문 단락 머리(LLM 에 주지 않는다)", experience.DESC_LEAD),
     ]
     out = []

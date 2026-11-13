@@ -25,6 +25,7 @@ from ..search.index import like_rerank, rank_shoes
 from .common import generate
 
 CAP = 30                 # 답에 넣는 리뷰 상한(사용자 2026-11-12)
+CAP_NO_ASPECT = 10       # 관점이 없는 질문("후기 어때요")에 근거로 쓰는 리뷰(인용 포함) — 6차 수정 1, 건수별 문장 수를 재서 정함(09 16절)
 CAP_PER_SHOE_MULTI = 10  # 신발을 말하지 않아 여러 켤레를 볼 때 켤레당(30 을 셋으로 — Claude 가 정함, 사용자 확인 2026-11-13)
 MULTI_SHOES = 3
 MULTI_POOL = 5           # 여러 켤레 — 긍부정을 세 볼 후보 신발. 반대 쪽이 많은 신발을 빼도 셋이 남게(Claude 가 정함)
@@ -63,14 +64,14 @@ _ASPECT = dict(ASPECTS)
 # 앞뒤에 붙는 것은 문장을 보여 주지 않고 무엇인지만 알린다(BEFORE_NOTE · common.attached_note — 3차 수정, 보여 주면 따라 썼다).
 # 금지 예시는 따옴표로 들지 않는다 — 보여 주면 따라 쓴다(1차 "이렇게 확인해 봤어요"). 4차 수정: 낱말 금지 대신 원칙으로.
 # 5차 수정(사용자 2026-11-13): 코드와 LLM 의 역할을 나눈다 — 집계 · 인용 · 설명문은 코드가, LLM 은 리뷰 여러 건을 묶어 말하기만.
-# 근거에서 건수 · 설명문을 뺐다(4차에 준 건수를 엉뚱한 말에 붙였다 — E03 "발볼이 눌린다는 이야기가 3건"). 숫자가 든 문장은 코드가 지운다
+# 근거에서 건수 · 설명문을 뺐다(4차에 준 건수를 엉뚱한 말에 붙였다 — E03 "발볼이 눌린다는 이야기가 3건").
+# 6차 수정 3: "숫자를 쓰지 않는다"가 리뷰 속 "9월"까지 "아홉월"로 바꾸게 했다 — 막는 것은 건수 · 양만, 리뷰 속 숫자는 그대로.
+# 코드는 근거 리뷰에 없는 숫자 · "N건"이 든 문장만 지운다
 TASK = (
     "[리뷰]에 있는 이야기를 리뷰 하나하나 전한다 — \"한 리뷰에서는 …다는 이야기가 있어요\", \"다른 리뷰에서는 …\"처럼 "
     "리뷰에서 나온 말이라는 꼴로 쓰고, 리뷰 문장을 그대로 옮기거나 리뷰 내용을 네 말로 단정하지 않는다. "
     "[리뷰]에 있는 내용만 말한다. [리뷰]에 없는 것은 없다고도 말하지 않는다. "
-    "숫자는 쓰지 않는다 — 몇 건인지는 앞의 집계가 이미 말했고, 리뷰 속 거리 · 시간 · 페이스 같은 숫자도 옮기지 않는다"
-    "(글자로 바꿔 쓰지도 않는다 — 그런 내용은 숫자 없이 뜻만 전한다). "
-    "얼마나 많이 나왔는지도 말하지 않는다. "
+    "건수나 양을 세지 않는다 — 몇 건인지는 앞의 집계가 이미 말했다. 리뷰에 있는 숫자는 그대로 써도 된다. "
     "좋다는 쪽과 아쉽다는 쪽이 다 있으면 둘 다 말한다. "
     "문단마다 앞에서 하지 않은 새 이야기가 있어야 한다. 할 말이 없으면 그 문단을 쓰지 않는다 — 쓸 것이 하나도 없으면 아무것도 쓰지 않아도 된다."
 )
@@ -301,7 +302,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         if not tallies:
             return Reply(NO_MATCH, links_off=True, branch="experience")
 
-    cap = CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
+    # 관점이 없는 질문은 LLM 에 주는 리뷰를 줄인다(6차 수정 1 — 30건을 주니 30건을 다 말하려 했다, E15 21문장)
+    cap = CAP_NO_ASPECT if not aspect else CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
     named = multi or len(tallies) > 1   # 챗봇이 고른 신발은 하나만 남아도 이름을 앞에(무슨 신발 이야기인지 모른다)
     sections: list[list[str]] = []   # 신발마다 코드가 쓰는 글 — 집계 문장 + 소개, 인용 블록(꼭 들어갈 문장은 코드가, 2차 수정 2 · 5)
     jobs: list[tuple | None] = []    # 신발마다 LLM 에 줄 근거
@@ -319,7 +321,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         pool = t.mentioned() if aspect else by_likes(t.reviews)
         shown = pool[:cap]
         cut = len(pool) > cap
-        # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3)
+        # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3). "봤다"는 이 답이 근거로 쓴 리뷰 수 = 인용 한 건 + LLM 에 준 리뷰
+        # (6차 수정 — 관점 없는 질문은 30 → 10건이라 이 문장의 수도 10 이 된다)
         read_note = (None if not cut else f"리뷰 {t.n}건 중 추천이 많은 {len(shown)}건을 봤어요." if not aspect else
                      f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
         summ = summary_lines(t) or [f"{name}에는 리뷰가 {t.n}건 있어요."]
@@ -331,11 +334,12 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         # 인용한 리뷰는 근거에서 뺀다 — 근거에 남기면 인용 바로 아래에서 리뷰 말투째 다시 풀어 썼다(3차 수정 2, E16)
         shown_ids = {r["id"] for r in shown} - ({q[2]} if q else set())
         ev = evidence(t, pool, shown_ids, aspect, focus)
-        jobs.append((t, ev) if ev else None)
+        # LLM 글에 써도 되는 숫자의 출처 — 이 신발에 준 근거 리뷰 + 인용 블록(6차 수정 3)
+        jobs.append((t, ev, "\n".join(ev + ([q[1]] if q else []))) if ev else None)
         # 설명문 — LLM 에 주지 않고 코드가 LLM 글 뒤에 붙인다(5차 수정 1-2 — 주면 설명문으로 시작해 설명문으로 끝냈다, E11).
-        # 그 신발 · 질문 관점 낱말이 든 문장만(4차 수정 2), 없으면 줄째 없다. 관점이 없는 질문 · 피하려는 질문 ·
-        # 통증 질문(코드가 붙이는 글은 생성 검사를 거치지 않는다 — 몸에 대한 말이 섞일 수 있다, Claude 가 정함)에는 붙이지 않는다
-        desc = [] if avoid or health or not aspect else desc_lines(searcher, qvec, qtext, [t.shoe["id"]], aspect)
+        # 그 신발 · 질문 관점 낱말이 든 문장만(4차 수정 2), 없으면 줄째 없다. 관점이 없는 질문 · 피하려는 질문에는 붙이지 않는다.
+        # 통증이면 챗봇이 고른 신발(여러 켤레)에만 붙이지 않는다 — 사용자가 지목한 신발은 그대로(6차 수정 4, 2차 기준과 같게)
+        desc = [] if avoid or not aspect or (health and multi) else desc_lines(searcher, qvec, qtext, [t.shoe["id"]], aspect)
         descs.append(DESC_LEAD + " ".join(desc) if desc else "")
 
     head = (AVOID_HEAD if avoid else "말씀하신 부분을 리뷰에서 찾아봤어요.") if multi else ""
@@ -350,11 +354,13 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         guard_reset()
         if job is None:
             return "", False, []
-        t, ev = job
+        t, ev, src = job
         lines = [f"[{shoe_name(t.shoe)}]", *ev]
-        # 숫자가 든 문장은 검사 전에 지운다(신발 이름의 숫자는 뺀다 — 5차 수정 1-1)
+        # 근거 리뷰에 없는 숫자 · 건수("N건")가 든 문장은 검사 전에 지운다(5차 수정 1-1 → 6차 수정 3에서 좁힘).
+        # 말투 예시는 숫자 없는 것만(6차 수정 2)
         body, used = generate(question, lines, [], "", health, [], task, reference=False, before=before,
-                              before_note=BEFORE_NOTE, tails=tails, no_digits=name_forms(t.shoe))
+                              before_note=BEFORE_NOTE, tails=tails, no_digits=name_forms(t.shoe), digit_source=src,
+                              examples=prompt.EXAMPLES_NO_NUMBERS)
         if used:
             # 검사에 걸리면 LLM 글만 뺀다 — 집계 · 인용과 끝은 코드가 쓴 그대로. 빈 글(쓸 것이 없음)은 걸린 것이 아니다
             empty = guard_log()[-1:] == ["코드 답: 빈 글"]
