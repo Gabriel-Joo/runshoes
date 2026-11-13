@@ -25,7 +25,11 @@ from ..search.index import like_rerank, rank_shoes
 from .common import generate
 
 CAP = 30                 # 답에 넣는 리뷰 상한(사용자 2026-11-12)
-CAP_NO_ASPECT = 10       # 관점이 없는 질문("후기 어때요")에 근거로 쓰는 리뷰(인용 포함) — 6차 수정 1, 건수별 문장 수를 재서 정함(09 16절)
+# 관점이 없는 질문("후기 어때요") — 리뷰를 주제로 묶어 준다(7차 수정, 사용자 2026-11-13). 6차의 CAP_NO_ASPECT(10건)는 뺐다
+THEMES_MAX = 3           # 주제 수 — 추천 많은 리뷰(상한 안)에서 자주 나오는 순
+THEME_REVIEWS = 2        # 주제마다 LLM 에 주는 리뷰(추천 많은 순, 다른 주제에 이미 쓴 리뷰는 빼고 — Claude 가 정함).
+                         # 3건이면 리뷰마다 한 문장씩 써 묶음이 2~3문장, 노바블라스트 6 이 7~9문장이었다(7차 첫 평가)
+THEME_SKIP = ("착용감",)  # "편하다 · 불편하다"는 무엇이든 걸려 주제가 되지 못한다(30건 중 7~12건, 다른 주제와 겹침 — Claude 가 정함)
 CAP_PER_SHOE_MULTI = 10  # 신발을 말하지 않아 여러 켤레를 볼 때 켤레당(30 을 셋으로 — Claude 가 정함, 사용자 확인 2026-11-13)
 MULTI_SHOES = 3
 MULTI_POOL = 5           # 여러 켤레 — 긍부정을 세 볼 후보 신발. 반대 쪽이 많은 신발을 빼도 셋이 남게(Claude 가 정함)
@@ -67,14 +71,20 @@ _ASPECT = dict(ASPECTS)
 # 근거에서 건수 · 설명문을 뺐다(4차에 준 건수를 엉뚱한 말에 붙였다 — E03 "발볼이 눌린다는 이야기가 3건").
 # 6차 수정 3: "숫자를 쓰지 않는다"가 리뷰 속 "9월"까지 "아홉월"로 바꾸게 했다 — 막는 것은 건수 · 양만, 리뷰 속 숫자는 그대로.
 # 코드는 근거 리뷰에 없는 숫자 · "N건"이 든 문장만 지운다
-TASK = (
-    "[리뷰]에 있는 이야기를 리뷰 하나하나 전한다 — \"한 리뷰에서는 …다는 이야기가 있어요\", \"다른 리뷰에서는 …\"처럼 "
+# 7차 수정: 앞머리만 갈린다 — 관점 있는 질문은 리뷰 하나하나(TASK_EACH, 그대로), 관점 없는 질문은 주제 묶음마다(TASK_THEMES)
+TASK_EACH = "[리뷰]에 있는 이야기를 리뷰 하나하나 전한다 — \"한 리뷰에서는 …다는 이야기가 있어요\", \"다른 리뷰에서는 …\"처럼 "
+TASK_THEMES = (
+    "[리뷰]는 주제별로 묶여 있다. 묶음마다 그 주제 이야기만, 묶음 순서대로 쓴다. 한 묶음은 한두 문장 — "
+    "좋다는 이야기와 아쉽다는 이야기가 다 있으면 두 문장, 한쪽만 있으면 한 문장. \"~다는 이야기가 있어요\"처럼 "
+)
+TASK_BODY = (
     "리뷰에서 나온 말이라는 꼴로 쓰고, 리뷰 문장을 그대로 옮기거나 리뷰 내용을 네 말로 단정하지 않는다. "
     "[리뷰]에 있는 내용만 말한다. [리뷰]에 없는 것은 없다고도 말하지 않는다. "
     "건수나 양을 세지 않는다 — 몇 건인지는 앞의 집계가 이미 말했다. 리뷰에 있는 숫자는 그대로 써도 된다. "
     "좋다는 쪽과 아쉽다는 쪽이 다 있으면 둘 다 말한다. "
     "문단마다 앞에서 하지 않은 새 이야기가 있어야 한다. 할 말이 없으면 그 문단을 쓰지 않는다 — 쓸 것이 하나도 없으면 아무것도 쓰지 않아도 된다."
 )
+TASK = TASK_EACH + TASK_BODY
 # 피하려는 질문(라우터 avoid) — 고른 신발을 권하는 모양이 되지 않게(사용자 2026-11-13, E12)
 AVOID_TASK = (
     " 사용자는 이런 이야기가 나온 신발을 피하려고 묻는다. 신발을 권하거나 좋게 말하지 말고, 어느 신발 리뷰에서 그 이야기가 나왔는지만 알린다."
@@ -302,8 +312,9 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         if not tallies:
             return Reply(NO_MATCH, links_off=True, branch="experience")
 
-    # 관점이 없는 질문은 LLM 에 주는 리뷰를 줄인다(6차 수정 1 — 30건을 주니 30건을 다 말하려 했다, E15 21문장)
-    cap = CAP_NO_ASPECT if not aspect else CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
+    # 관점이 없는 질문은 이 리뷰에서 주제 셋을 고르고 주제마다 몇 건만 LLM 에 준다(7차 수정 — evidence · theme_groups).
+    # 6차엔 LLM 에 주는 리뷰를 10건으로 줄였는데 길이가 줄지 않았다 — 건수가 아니라 묶을 축이 없는 것이 원인
+    cap = CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
     named = multi or len(tallies) > 1   # 챗봇이 고른 신발은 하나만 남아도 이름을 앞에(무슨 신발 이야기인지 모른다)
     sections: list[list[str]] = []   # 신발마다 코드가 쓰는 글 — 집계 문장 + 소개, 인용 블록(꼭 들어갈 문장은 코드가, 2차 수정 2 · 5)
     jobs: list[tuple | None] = []    # 신발마다 LLM 에 줄 근거
@@ -321,8 +332,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         pool = t.mentioned() if aspect else by_likes(t.reviews)
         shown = pool[:cap]
         cut = len(pool) > cap
-        # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3). "봤다"는 이 답이 근거로 쓴 리뷰 수 = 인용 한 건 + LLM 에 준 리뷰
-        # (6차 수정 — 관점 없는 질문은 30 → 10건이라 이 문장의 수도 10 이 된다)
+        # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3). "봤다"는 이 답이 고른 범위 = 인용과 근거를 고른 리뷰 수.
+        # 관점 없는 질문(7차 수정)은 이 30건에서 인용 · 주제 셋을 고르고, LLM 에는 주제마다 몇 건만 준다
         read_note = (None if not cut else f"리뷰 {t.n}건 중 추천이 많은 {len(shown)}건을 봤어요." if not aspect else
                      f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
         summ = summary_lines(t) or [f"{name}에는 리뷰가 {t.n}건 있어요."]
@@ -346,7 +357,9 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
     before = [x for sec in sections for x in sec]
     tails = [] if avoid else [CLOSE]
     # 길이 — 신발마다 따로 쓰니 여러 켤레면 짧게(한데 쓸 때의 "한두~서너 문장"을 신발마다 맞춤)
-    task = TASK + (" 두세 문장, 한 문단으로." if len(tallies) > 1 else " 두 문장에서 네 문장으로.") + (AVOID_TASK if avoid else "")
+    # 관점 없는 질문은 주제 묶음이 길이를 정한다(셋 × 한두 문장 — 7차 수정)
+    task = (TASK_THEMES + TASK_BODY if not aspect else
+            TASK + (" 두세 문장, 한 문단으로." if len(tallies) > 1 else " 두 문장에서 네 문장으로.")) + (AVOID_TASK if avoid else "")
 
     def comment(job) -> tuple[str, bool, list[str]]:
         """신발 하나의 LLM 글 — 신발마다 따로 부른다(4차 수정 3: 한데 쓰게 하면 어느 신발 이야기인지 이름이 빠졌다).
@@ -420,11 +433,30 @@ def evidence(t: Tally, pool: list[dict], shown_ids: set[int], aspect: str | None
                 lines.append(f"[{aspect} — {SIDE_NAME[side]} 리뷰]")
                 lines += [f"- {r['content']}" for r in members]
     else:
-        reviews = [r for r in pool if r["id"] in shown_ids]
-        if reviews:
-            lines.append("[리뷰]")
-            lines += [f"- {r['content']}" for r in reviews]
+        # 관점이 없으면 주제로 묶는다(7차 수정) — 머리는 "[쿠션 이야기]"만, 건수 없이(5차 기준 그대로)
+        for theme, members in theme_groups([r for r in pool if r["id"] in shown_ids]):
+            lines.append(f"[{theme} 이야기]")
+            lines += [f"- {r['content']}" for r in members]
     return lines
+
+
+def theme_groups(reviews: list[dict]) -> list[tuple[str, list[dict]]]:
+    """관점 없는 질문의 주제 묶음 — 관점 사전 낱말로 나눈다(LLM 분류 호출 없이, 7차 수정).
+    주제 순서: 이 리뷰들(추천 많은 순 · 상한 안 · 인용 뺌)에서 그 낱말이 든 리뷰가 많은 순, 같으면 관점 표 순서. 셋까지(THEMES_MAX).
+    리뷰 고르기: 주제 순서대로, 그 낱말이 든 리뷰 가운데 아직 다른 묶음에 들지 않은 것을 추천 많은 순으로 THEME_REVIEWS 건 —
+    한 리뷰가 여러 주제에 걸리면 앞 주제 묶음에만 든다(같은 리뷰를 두 번 풀어 쓰지 않게). 어느 주제에도 안 걸린 리뷰 ·
+    셋 밖 주제에만 걸린 리뷰는 근거에 주지 않는다. 착용감(THEME_SKIP)은 주제로 세지 않는다"""
+    names = [a for a, _ in ASPECTS if a not in THEME_SKIP]
+    count = {a: sum(1 for r in reviews if mentions_by_words(a, r["content"])) for a in names}
+    order = sorted((a for a in names if count[a]), key=lambda a: (-count[a], names.index(a)))[:THEMES_MAX]
+    used: set[int] = set()
+    out = []
+    for a in order:
+        members = [r for r in reviews if r["id"] not in used and mentions_by_words(a, r["content"])][:THEME_REVIEWS]
+        used |= {r["id"] for r in members}
+        if members:
+            out.append((a, members))
+    return out
 
 
 def tidy(body: str) -> str:
