@@ -176,7 +176,13 @@ class TallyTest(unittest.TestCase):
 
     def test_quote_most_liked(self):
         t = self.tally(lambda cs: ["positive" if "편해" in c else "negative" if "아파" in c else "none" for c in cs])
-        self.assertEqual(ex.quote_line(t), "무릎 이야기를 한 리뷰 가운데 가장 많은 추천을 받은 리뷰에서는 이런 이야기가 나와요. \"오래 뛰면 무릎이 아파요.\"")
+        self.assertEqual(ex.quote(t), ("무릎 이야기를 한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", "> 오래 뛰면 무릎이 아파요."))
+        # 찾는 쪽이 긍정이면 긍정 리뷰에서(추천 3 — 그 무리에서 가장 많다)
+        self.assertEqual(ex.quote(t, "positive"), ("무릎 이야기를 좋게 한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", "> 무릎이 편해요."))
+
+    def test_quote_block_lines(self):
+        self.assertEqual(ex.quote_block("앞은 넉넉한데 뒤꿈치가 넓어서 계속 헐떡임. 끈 조여도 물집 생김. 실망.", None),
+                         "> 앞은 넉넉한데 뒤꿈치가 넓어서 계속 헐떡임.\n> 끈 조여도 물집 생김. 실망.")
 
     def test_counts_kept(self):
         t = ex.Tally(SHOES[0], [{"id": i, "content": "", "likeCount": 0} for i in range(14)], "무릎")

@@ -106,6 +106,8 @@ def drop_asks(text: str) -> str:
     for para in text.split("\n\n"):
         sents = re.split(r"(?<=[.!?])\s+", para.strip())
         kept = [s for s in sents if not _ASK.search(s) and not s.rstrip().endswith("?")]   # 묻는 문장은 모두(…싶으신가요? · …있나요?)
+        if len(kept) < len([s for s in sents if s]):
+            guard_log().append("묻는 문장 지움")   # 뒤에 붙는 문장을 알려 준 뒤에도 얼마나 남는지 센다(2차 수정)
         if kept:
             paras.append(" ".join(kept))
     return "\n\n".join(paras)
@@ -117,7 +119,8 @@ def guard(generated: str, allowed_source: str, fallback: str, shoes_given: bool 
     text = _EMOJI.sub("", generated).strip()
     if text != generated.strip():
         log.append("이모지 지움")
-    md = re.sub(r"\*\*|__|^#+\s*", "", text, flags=re.MULTILINE)
+    # 화면은 마크다운을 그리지만(2차 수정) LLM 글에는 쓰지 않는다 — 인용 블록은 코드만 붙인다. 굵게 · 머리 · 목록 · 인용 표시를 지운다
+    md = re.sub(r"\*\*|__|^#+\s*|^\s*(?:[-*+]|\d+\.)\s+|^>\s?", "", text, flags=re.MULTILINE)
     if md != text:
         log.append("마크다운 지움")
     text = strip_medical(md)

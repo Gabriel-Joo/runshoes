@@ -18,7 +18,7 @@ import numpy as np
 
 from .. import http, llm, prompt
 from ..facts import PRICE_NOTE
-from ..reply import Reply, drop_asks, guard_log
+from ..reply import Reply, drop_asks, guard_log, haeyo, plain_words
 from ..search.index import like_rerank, rank_shoes
 from .common import generate
 
@@ -57,14 +57,20 @@ ASPECTS: list[tuple[str, tuple[str, ...]]] = [
 ]
 _ASPECT = dict(ASPECTS)
 
+# 집계 문장 · 인용은 코드가 앞에 붙이고(2차 수정 — 꼭 들어갈 문장은 코드가), LLM 은 그 밖의 이야기만 잇는다.
+# 끝에 붙는 문장은 [네 답 뒤에 그대로 붙는 문장]으로 보여 준다(common.generate) — 1차의 "질문으로 끝내지 않는다" 금지 문구는 뺐다.
+# 금지 예시는 따옴표로 들지 않는다 — "이렇게 확인해 봤어요"를 들었더니 15문항 중 4~7문항이 그대로 붙였다(1차 수정 평가)
 TASK = (
-    "[결론 문장]의 집계 문장은 숫자 · 건수를 바꾸지 말고 그대로 넣는다. 리뷰를 옮길 때는 \"등록된 리뷰에서는\"처럼 리뷰라는 것을 밝히고, "
-    "[리뷰]에 있는 내용만 쓴다. 얼마나 나왔는지는 [결론 문장]에 센 건수로만 말한다. 세지 않은 이야기는 \"~다는 이야기가 있어요\"로 끝내고, "
+    "집계와 인용은 [네 답 앞에 그대로 붙는 글]에 이미 있다. 그것을 되풀이하지 말고, [리뷰]에서 그 밖에 나온 이야기를 이어서 쓴다. "
+    "리뷰에서 온 말은 \"등록된 리뷰에서는\"처럼 리뷰라는 것을 밝히고, 리뷰 원문을 따옴표로 옮기지 않는다. "
+    "얼마나 나왔는지는 센 건수로만 말한다. 세지 않은 이야기는 \"~다는 이야기가 있어요\"로 끝내고, "
     "\"많아요 · 대부분 · 전반적으로 · 주로 · 흔히 · 대체로 · 자주\"처럼 양을 짐작하는 말을 쓰지 않는다. 긍정과 부정이 다 있으면 둘 다 말한다. "
-    "[설명문]이 있으면 신발의 구조로 한 문장 덧붙여도 된다. 네다섯 문장으로. "
-    "답 끝에 안내 문장이 자동으로 붙으니 질문으로 끝내지 않고, 끝맺는 인사 · 정리 문장도 따로 쓰지 않는다."
-    # 금지 예시를 따옴표로 들었더니("이렇게 확인해 봤어요") 15문항 중 4~7문항이 그 문장을 그대로 붙였다(1차 수정 평가) — 예시를 들지 않는다
+    "[설명문]은 이 사이트가 쓴 신발 설명이고 리뷰가 아니다 — 옮길 때는 \"신발 설명을 보면\"처럼 리뷰와 갈라 말한다. "
+    "한두 문장에서 서너 문장으로 쓰고, 할 말이 적으면 짧게 끝낸다. 어느 신발에나 해당하는 당연한 말로 채우지 않는다. "
+    "[설명문]에 질문의 답이 되는 내용이 없으면 설명문 이야기는 하지 않는다."
 )
+# 여러 켤레 — LLM 글은 모든 신발의 집계 · 인용 뒤에 한데 붙는다. 이름 없이 "리뷰에서는"으로 쓰면 어느 신발 이야기인지 모른다(2차 수정 평가 E11)
+MULTI_TASK = " 신발이 여럿이다 — 문단마다 어느 신발 리뷰인지 신발 이름으로 밝힌다."
 # 피하려는 질문(라우터 avoid) — 고른 신발을 권하는 모양이 되지 않게(사용자 2026-11-13, E12)
 AVOID_TASK = (
     " 사용자는 이런 이야기가 나온 신발을 피하려고 묻는다. 신발을 권하거나 좋게 말하지 말고, 어느 신발 리뷰에서 그 이야기가 나왔는지만 알린다."
@@ -168,34 +174,52 @@ def summary_lines(t: Tally) -> list[str]:
     return out
 
 
-def quote_line(t: Tally, want: str | None = None) -> str | None:
-    """인용 — 관점이 있으면 그 이야기를 한 리뷰 가운데, 없으면 등록된 리뷰 가운데 추천이 가장 많은 것.
-    want — 질문이 찾는 쪽(positive · negative). 있으면 그쪽 리뷰에서 고른다(편하다는 리뷰를 물었는데 쓸린다는 인용이 나가지 않게)"""
-    full = t.mentioned() if t.aspect else by_likes(t.reviews)
-    pool = full
+QUOTE_MAX = 220   # 인용 블록 글자 수 상한 — 넘으면 관점 낱말이 든 문장 위주로 줄인다
+
+
+def quote(t: Tally, want: str | None = None) -> tuple[str, str] | None:
+    """인용 — (소개 문장, 인용 블록). 코드가 고르고 코드가 붙인다(2차 수정 — 리뷰 원문을 문장 속에 넣으면 원문의 마침표에 엉켰다, E12).
+    관점이 있으면 그 이야기를 한 리뷰 가운데, 찾는 쪽(want)이 있으면 그쪽 리뷰 가운데(avoid 는 부정), 없으면 등록된 리뷰 가운데.
+    관점 낱말이 든 리뷰를 먼저, 그 안에서 추천 많은 순. 리뷰는 통째로 옮긴다 — 한 문장만 떼면 "발이 넓어 와이드로 신습니다"처럼 뜻이 빠졌다(E11)"""
+    pool = t.mentioned() if t.aspect else by_likes(t.reviews)
+    side = None
     if want and any(t.labels.get(r["id"]) == want for r in pool):
         pool = [r for r in pool if t.labels.get(r["id"]) == want]
-    if t.aspect:   # 관점 낱말이 그대로 든 리뷰를 먼저 — 인용만 보고도 무슨 이야기인지 알게
+        side = want
+    if t.aspect:
         pool = [r for r in pool if mentions_by_words(t.aspect, r["content"])] + [r for r in pool if not mentions_by_words(t.aspect, r["content"])]
     if not pool:
         return None
     r = pool[0]
     likes = r.get("likeCount") or 0
-    top = likes > 0 and likes >= max((x.get("likeCount") or 0) for x in full)   # 「가장 많은 추천」은 정말 그럴 때만(그 이야기를 한 리뷰 전체에서)
-    q = aspect_sentence(r["content"], t.aspect)
+    top = likes > 0 and likes >= max((x.get("likeCount") or 0) for x in pool)   # 「가장 많은 추천」은 소개한 무리 안에서 정말 그럴 때만
     if t.aspect:
-        head = f"{t.aspect} 이야기를 한 리뷰 가운데 가장 많은 추천을 받은 리뷰에서는" if top else f"{t.aspect} 이야기를 한 리뷰에서는"
+        group = {"positive": f"{t.aspect} 이야기를 좋게 한 리뷰", "negative": f"{t.aspect} 이야기를 아쉽게 한 리뷰"}.get(side, f"{t.aspect} 이야기를 한 리뷰")
     else:
-        head = "등록된 리뷰 가운데 가장 많은 추천을 받은 리뷰에서는" if likes > 0 else "등록된 리뷰에서는"
-    # 따옴표 뒤에 조사를 붙이지 않는다 — 인용 끝이 마침표 · 말줄임이라 「…주문."라고」가 됐다
-    return f"{head} 이런 이야기가 나와요. \"{q}\""
+        group = "등록된 리뷰"
+    intro = f"{group} 가운데 가장 많은 추천을 받은 리뷰예요." if top else f"{group} 가운데 하나예요."
+    return intro, quote_block(r["content"], t.aspect)
 
 
-def aspect_sentence(content: str, aspect: str | None, limit: int = 90) -> str:
-    """인용할 문장 — 관점 낱말이 든 첫 문장, 없으면 첫 문장"""
-    sents = [s for s in re.split(r"(?<=[.!?요])\s+", content.strip()) if s]
-    pick = next((s for s in sents if aspect and mentions_by_words(aspect, s)), sents[0] if sents else content)
-    return pick if len(pick) <= limit else pick[:limit].rstrip() + "…"
+def quote_block(content: str, aspect: str | None) -> str:
+    """"> " 인용 블록 — 문장마다 한 줄(짧은 꼬리 "실망." 같은 것은 앞 줄에 붙인다)"""
+    sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+|\n+", content.strip()) if s.strip()]
+    if len(" ".join(sents)) > QUOTE_MAX:
+        keep = [s for s in sents if aspect and mentions_by_words(aspect, s)] or sents[:1]
+        out, n = [], 0
+        for s in keep:
+            if n + len(s) > QUOTE_MAX and out:
+                break
+            out.append(s)
+            n += len(s)
+        sents = out[:-1] + [out[-1].rstrip(".") + " …"] if out else sents[:1]
+    lines: list[str] = []
+    for s in sents:
+        if lines and len(s) < 8:
+            lines[-1] += " " + s
+        else:
+            lines.append(s)
+    return "\n".join("> " + x for x in lines)
 
 
 def strip_names(question: str, shoes: list[dict]) -> str:
@@ -252,15 +276,12 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
 
     cap = CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
     named = multi or len(tallies) > 1   # 챗봇이 고른 신발은 하나만 남아도 이름을 앞에(무슨 신발 이야기인지 모른다)
-    lines: list[str] = []
-    conclusions: list[str] = []
-    paras: list[str] = []
+    lines: list[str] = []    # LLM 에 주는 근거(리뷰 원문 · 설명문)
+    blocks: list[str] = []   # 코드가 쓰는 앞 글 — 집계 문장 · 인용(꼭 들어갈 문장은 코드가, 2차 수정 2 · 5)
     for t in tallies:
         name = shoe_name(t.shoe)
         if t.n == 0:
-            c = [f"{name}에는 아직 등록된 리뷰가 없어요."]
-            conclusions += c
-            paras.append(" ".join(c))
+            blocks.append(f"{name}에는 아직 등록된 리뷰가 없어요.")
             continue
         # 관점을 물었는데 말한 리뷰가 없으면 리뷰를 넣지 않는다 — 넣으면 LLM 이 다른 이야기로 채운다
         pool = t.mentioned() if aspect else by_likes(t.reviews)
@@ -269,43 +290,37 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3)
         read_note = (None if not cut else f"리뷰 {t.n}건 중 추천이 많은 {len(shown)}건을 봤어요." if not aspect else
                      f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
-        summ = summary_lines(t)
-        if not aspect:
-            summ = [f"{name}에는 리뷰가 {t.n}건 있어요."]
-        quote = quote_line(t, want)
-        c = summ + ([quote] if quote and (not aspect or t.k) else []) + ([read_note] if read_note else [])
-        conclusions += [f"{name}: {x}" if named else x for x in c]
+        summ = summary_lines(t) or [f"{name}에는 리뷰가 {t.n}건 있어요."]
+        q = quote(t, want) if (not aspect or t.k) else None
+        blocks.append((f"{name}: " if named and aspect else "") + " ".join(summ + ([read_note] if read_note else []) + ([q[0]] if q else [])))
+        if q:
+            blocks.append(q[1])
         # 근거 머리 — 내부 말("분류" · "관점")을 쓰지 않는다. LLM 이 그대로 옮겼다(E09 "내구성 분류에 대한 언급이 없어요")
         lines.append(f"[{name}] 리뷰 {t.n}건" + (f" — {aspect} 이야기: 좋다 {t.pos}건 · 아쉽다 {t.neg}건 · 그 이야기 없음 {t.rest}건" if aspect and t.labeled else ""))
         lines.append("[리뷰]" if shown else f"[리뷰] {aspect or '그 부분'} 이야기를 한 리뷰 없음")
         for r in shown:
             tag = {"positive": "긍정", "negative": "부정"}.get(t.labels.get(r["id"]), "")
             lines.append(f"- (별점 {r.get('rating')} · 추천 {r.get('likeCount') or 0}{' · ' + tag if tag else ''}) {r['content']}")
-        para = (f"{name}: " if named else "") + " ".join(summ)
-        if quote and (not aspect or t.k):
-            para += " " + quote
-        if read_note:
-            para += " " + read_note
-        paras.append(para)
 
     desc = [] if avoid else desc_lines(searcher, qvec, qtext, [t.shoe["id"] for t in tallies], aspect)   # 피할 신발의 구조 설명은 권하는 말이 된다
     if desc:
-        lines += ["[설명문]", *desc]
+        lines += [DESC_HEAD, *desc]
     head = (AVOID_HEAD if avoid else "말씀하신 부분을 리뷰에서 찾아봤어요.") if multi else ""
-    fallback = "\n\n".join(([head] if head else []) + paras)
-    text, used = generate(question, lines, conclusions, fallback, health, history, TASK + (AVOID_TASK if avoid else ""))
-    if not used:
-        # 양을 짐작하는 말이 든 문장은 지운다 — 답 전체를 코드 답으로 바꾸면 짧고 딱딱해진다(5-1 B03). 센 숫자가 지워지면 아래 검사가 잡는다
-        text = drop_vague(text)
-        # 이 갈래는 가격을 다루지 않는다 — 말투 예시의 발매가 문장을 그대로 옮겨 붙였다(1차 수정 평가 E01 · E06 · E11)
-        text = "\n\n".join(p for p in (q.replace(PRICE_NOTE, "").strip() for q in text.split("\n\n")) if p)
-    if not used and not counts_kept(text, tallies):
-        guard_log().append("코드 답: 집계 숫자가 바뀜")
-        text, used = fallback, True
-    # 묻는 말은 코드가 끝에 한 번 — LLM 이 "더 궁금한 점 있으신가요?"로 끝내면 질문이 둘 됐다(E14)
-    text = drop_asks(text) or fallback
-    if not avoid:
-        text += "\n\n" + CLOSE
+    before = ([head] if head else []) + blocks
+    tails = [] if avoid else [CLOSE]
+    body, used = "", False
+    if any(l.startswith("- (") for l in lines) or desc:   # 집계 · 인용 밖에 말할 거리가 있을 때만 LLM 을 부른다(0건이면 코드 글로 끝)
+        task = TASK + (MULTI_TASK if len(tallies) > 1 else "") + (AVOID_TASK if avoid else "")
+        body, used = generate(question, lines, [], "", health, history, task,
+                              reference=False, before=before, tails=tails)
+        if used:
+            body = ""   # 검사에 걸리면 LLM 글만 뺀다 — 앞 글(집계 · 인용)과 끝은 코드가 쓴 그대로
+        else:
+            body = tidy(drop_repeats(body, before))
+            if not counts_kept(body, tallies, need_denominator=False):
+                guard_log().append("LLM 글 뺌: 집계에 없는 건수")
+                body, used = "", True
+    text = "\n\n".join(before + ([body] if body else []) + tails)
     reply = Reply(text, [t.shoe for t in tallies], links_off=avoid, fallback_used=used, branch="experience")
     reply.ranked = order[:10] if multi else []
     reply.tally = [{"shoe_id": t.shoe["id"], "n": t.n, "k": t.k, "pos": t.pos, "neg": t.neg, "rest": t.rest, "labeled": t.labeled} for t in tallies]
@@ -315,6 +330,38 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
 
 AVOID_HEAD = "말씀하신 이야기가 나온 리뷰를 찾아봤어요. 아래 신발은 등록된 리뷰에 그런 이야기가 있었어요."
 NO_MATCH = "말씀하신 이야기가 나온 리뷰를 등록된 리뷰에서 찾지 못했어요. 신발 이름을 알려주시면 그 신발 리뷰를 살펴볼게요."
+
+
+DESC_HEAD = "[설명문] 이 사이트가 쓴 신발 설명이다(리뷰가 아니다)"
+
+
+def tidy(body: str) -> str:
+    """LLM 글 다듬기 — 양 짐작 문장 · 발매가 문장 · 묻는 문장을 지우고 해요체로"""
+    # 양을 짐작하는 말이 든 문장은 지운다 — 답 전체를 코드 답으로 바꾸면 짧고 딱딱해진다(5-1 B03)
+    body = drop_vague(body)
+    # 이 갈래는 가격을 다루지 않는다 — 말투 예시의 발매가 문장을 그대로 옮겨 붙였다(1차 수정 평가 E01 · E06 · E11)
+    body = "\n\n".join(p for p in (q.replace(PRICE_NOTE, "").strip() for q in body.split("\n\n")) if p)
+    # 묻는 말은 코드가 끝에 붙인다 — 남은 묻는 문장은 지운다(뒤에 붙는 문장을 보여 준 뒤에도 남는지 guard 로그로 센다)
+    body = drop_asks(body)
+    return haeyo(body)
+
+
+def _key(s: str) -> str:
+    return re.sub(r"[\s\"'>.,!?·—:-]", "", s)
+
+
+def drop_repeats(body: str, before: list[str]) -> str:
+    """앞 글(코드가 쓴 집계 · 인용)을 LLM 이 그대로 다시 쓴 문장을 지운다 — 앞부분이라고 알려 줘도 옮겨 썼다(2차 수정 평가 E11 · E12)"""
+    seen = {_key(s) for b in before for s in re.split(r"(?<=[.!?])\s+|\n+", b) if len(_key(s)) >= 6}
+    paras = []
+    for para in body.split("\n\n"):
+        kept = [s for s in re.split(r"(?<=[.!?])\s+", para.strip()) if _key(s) not in seen or len(_key(s)) < 6]
+        # 한 문장에 앞 글 두 문장이 붙어 온 것("…없음이에요. 발볼 이야기를…")도 위에서 문장으로 나뉘어 걸린다
+        if len(kept) < len([s for s in re.split(r"(?<=[.!?])\s+", para.strip()) if s]):
+            guard_log().append("앞 글 되풀이 지움")
+        if kept:
+            paras.append(" ".join(kept))
+    return "\n\n".join(paras)
 
 
 def drop_vague(text: str) -> str:
@@ -435,19 +482,21 @@ def desc_lines(searcher, qvec, question: str, shoe_ids: list[int], aspect: str |
     out = []
     for h in hits:
         if mentions_by_words(aspect, h.text) and (h.cosine or 0) >= DESC_COS and len(out) < DESC_MAX:
-            out.append(f"- {h.meta.get('model')}: {h.text}")
+            # 설명문 원문은 합니다체 · 사전 용어 — 해요체 · 쉬운 말로 바꿔 준다(2차 수정 6 — 여러 켤레 답에 "평이 있습니다"가 샜다)
+            out.append(f"- {h.meta.get('model')}: {plain_words(haeyo(h.text))}")
     return out
 
 
 _COUNT = re.compile(r"(\d+)\s*건")
 
 
-def counts_kept(text: str, tallies: list[Tally]) -> bool:
-    """답 속 「N건」이 집계에 있는 수인지 · 각 신발의 분모가 들어 있는지(분모가 숨으면 안 된다 — 6절)"""
+def counts_kept(text: str, tallies: list[Tally], need_denominator: bool = True) -> bool:
+    """답 속 「N건」이 집계에 있는 수인지 · 각 신발의 분모가 들어 있는지(분모가 숨으면 안 된다 — 6절).
+    need_denominator=False — LLM 글만 볼 때(분모는 코드가 쓴 앞 글에 있다)"""
     allowed = set()
     for t in tallies:
         allowed |= {t.n, t.k, t.pos, t.neg, t.rest, min(t.n, CAP), min(t.k, CAP), CAP_PER_SHOE_MULTI, len(t.mentioned())}
     found = {int(x) for x in _COUNT.findall(text)}
     if found - allowed:
         return False
-    return all(t.n == 0 or str(t.n) in text for t in tallies)
+    return not need_denominator or all(t.n == 0 or str(t.n) in text for t in tallies)

@@ -180,6 +180,12 @@ def main() -> int:
         asks = [s for s in sentences(text) if s.endswith("?")]
         if len(asks) > 1:
             (fails if trace["branch"] == "experience" else warns).append(f"묻는 말 {len(asks)}개: {' / '.join(a[-25:] for a in asks)}")
+        # 겹침(2차 수정 4) — 코드가 붙인 문장과 LLM 글이 겹치는지 센다: "다만" 두 번 · 리뷰 원문을 따옴표로 옮김(인용은 코드 블록)
+        plain = "\n".join(l for l in text.split("\n") if not l.startswith(">"))
+        if plain.count("다만") > 1:
+            warns.append(f"'다만' {plain.count('다만')}번")
+        if trace["branch"] == "experience" and re.search(r"\"[^\"]{8,}\"", plain):
+            warns.append("리뷰 원문을 따옴표로 옮김")
         if it.get("health") is not True and prompt.DOCTOR in text:
             warns.append("통증 문항이 아닌데 전문의 안내가 붙었다")
         body = text.replace(prompt.DOCTOR, "")
@@ -300,11 +306,11 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
     """경험·후기 1차 수정(사용자 2026-11-13) — 두루뭉술한 양 · 내부 말 · 순위 · 최소 건수 · 피하려는 질문"""
     from chatbot.branches import experience as ex
     fails = []
-    outside = re.sub(r"\"[^\"]*\"", "", text)   # 인용(리뷰 원문)은 빼고
+    outside = re.sub(r"\"[^\"]*\"", "", "\n".join(l for l in text.split("\n") if not l.startswith(">")))   # 인용(리뷰 원문)은 빼고
     for w in ex.VAGUE:
         if w in outside:
             fails.append(f"양을 짐작하는 말 '{w}'")
-    if "분류" in text:
+    if "분류" in outside:
         fails.append("내부 말 '분류'")
     tally = trace.get("tally") or []
     multi = bool(trace.get("ranked"))
@@ -332,6 +338,8 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
 def sentences(text: str) -> list[str]:
     out = []
     for para in text.split("\n"):
+        if para.lstrip().startswith(">"):   # 인용 블록 — 리뷰 원문(말투 검사 밖)
+            continue
         for s in re.split(r"(?<=[.!?])\s+", para.strip()):
             if s and not s.startswith("·"):
                 out.append(s.strip())
