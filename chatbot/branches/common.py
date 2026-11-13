@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 
 from .. import llm, prompt
-from ..reply import drop_repeats, guard, guard_log
+from ..reply import drop_digit_sentences, drop_repeats, guard, guard_log
 
 
 CONCLUSION_HEAD = "[결론 문장] — 뜻과 숫자를 바꾸지 말고 넣는다"
@@ -54,11 +54,14 @@ def _drop_leaks(text: str) -> str:
 
 def generate(question: str, fact_lines: list[str], conclusions: list[str], fallback: str, health: bool,
              history: list[dict], task: str, reference: bool = True, shoes_given: bool = True,
-             before: list[str] = (), before_note: str = "", tails: list[str] = ()) -> tuple[str, bool]:
+             before: list[str] = (), before_note: str = "", tails: list[str] = (),
+             no_digits: list[str] | None = None) -> tuple[str, bool]:
     """(글, fallback 을 썼는지). LLM 이 실패해도 코드 답을 낸다.
     reference — 코드 답을 참고로 보여 줄지. 특성 설명은 사전 원문(합니다체)이라 보여 주면 그대로 옮겨 쓴다 — 끈다.
     before — 코드가 이 글 앞에 붙이는 글(경험·후기의 집계 · 인용). 보여 주지 않고 before_note 로 무엇이 나갔는지만 알린다.
-    숫자 검사 · 되풀이 지우기에는 쓴다. tails — 코드가 뒤에 붙이는 끝 단락(의료 안내는 health 로 더한다)"""
+    숫자 검사 · 되풀이 지우기에는 쓴다. tails — 코드가 뒤에 붙이는 끝 단락(의료 안내는 health 로 더한다).
+    no_digits — 숫자를 쓰면 안 되는 글(경험·후기, 5차 수정)이면 신발 이름 꼴 목록. 숫자가 든 문장을 검사 전에 지운다 —
+    검사(guard)는 사실에 없는 숫자면 글 전체를 코드 답으로 바꾸므로, 그 전에 문장만 덜어 낸다"""
     parts = [f"질문: {question}", "", "[등록된 정보]", *fact_lines]
     if conclusions:
         parts += ["", CONCLUSION_HEAD, *conclusions]
@@ -79,6 +82,11 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
         print(f"[generate] LLM 실패: {e}")
         guard_log().append(f"코드 답: LLM 실패 {type(e).__name__}")
         return fallback, True
+    if no_digits is not None and out.strip():
+        out = drop_digit_sentences(out, no_digits)
+        if not out:
+            guard_log().append("코드 답: 숫자 문장만")
+            return fallback, True
     allowed = "\n".join(fact_lines + conclusions + list(before) + [fallback, question])
     text, used = guard(out, allowed, fallback, shoes_given)
     if not used:

@@ -151,7 +151,7 @@ class TallyTest(unittest.TestCase):
 
     def test_counts_sum_to_n(self):
         t = self.tally(lambda cs: ["positive" if "편해" in c else "negative" if "아파" in c else "none" for c in cs])
-        self.assertEqual((t.n, t.k, t.pos, t.neg, t.rest), (3, 2, 1, 1, 1))
+        self.assertEqual((t.n, t.k, t.pos, t.neg), (3, 2, 1, 1))
         self.assertTrue(t.check())
         lines = ex.summary_lines(t)
         self.assertEqual(lines, ["리뷰 근거가 많지 않아요 — 3건 중 2건에서만 나온 이야기예요.", "하나는 좋다는, 하나는 아쉽다는 이야기였어요."])
@@ -160,9 +160,12 @@ class TallyTest(unittest.TestCase):
         t = ex.Tally(SHOES[0], [{"id": i, "content": "무릎", "likeCount": i} for i in range(14)], "무릎")
         t.labeled = True
         t.labels = {0: "positive", 1: "positive", 2: "positive", 3: "negative", 4: "negative"}
-        self.assertEqual(ex.summary_lines(t)[0], "리뷰 14건 중 무릎 관련 언급이 5건, 긍정 3건 부정 2건, 나머지 9건은 언급 없음이에요.")
+        # 5차 수정 — "나머지 N건은 언급 없음"을 빼고 좋다 · 아쉽다로
+        self.assertEqual(ex.summary_lines(t), ["리뷰 14건 중 무릎 이야기가 5건이고, 그중 좋다는 쪽이 3건 아쉽다는 쪽이 2건이에요."])
         t.labels = {0: "positive", 1: "positive", 2: "positive"}
-        self.assertEqual(ex.summary_lines(t)[1], "부정 언급은 없었어요.")    # 한쪽만 말하지 않는다
+        self.assertEqual(ex.summary_lines(t), ["리뷰 14건 중 무릎 이야기가 3건이고, 모두 좋다는 쪽이에요."])
+        t.labels = {0: "negative", 1: "negative", 2: "negative"}
+        self.assertEqual(ex.summary_lines(t), ["리뷰 14건 중 무릎 이야기가 3건이고, 모두 아쉽다는 쪽이에요."])
         t.labels = {}
         self.assertEqual(ex.summary_lines(t), ["이 신발 리뷰 14건 가운데 그 부분을 말한 리뷰는 없었어요."])
 
@@ -192,24 +195,34 @@ class TallyTest(unittest.TestCase):
         self.assertEqual(ex.quote_block("발이 넓어 와이드로 신습니다. 롱런 후반에도 발이 편해요. 다만 반발은 아쉬워요.", ("와이드",)),
                          "> 발이 넓어 와이드로 신습니다.\n> 롱런 후반에도 발이 편해요.")
 
-    def test_evidence_counts(self):
-        # 근거 묶음 — 쪽마다, 그 안의 다른 이야기별 건수(4차 수정 4). 인용한 리뷰는 줄에서 빠지지만 건수에는 든다
-        t = ex.Tally(SHOES[0], [{"id": 1, "content": "무릎이 편하고 쿠션이 좋아요", "likeCount": 2},
-                                {"id": 2, "content": "무릎 편해요. 쿠션 말랑", "likeCount": 1},
-                                {"id": 3, "content": "무릎이 아파요", "likeCount": 0}], "무릎")
+    def test_evidence_has_no_numbers(self):
+        # 근거 — 쪽마다 리뷰 원문만, 건수 · 별점 · 추천 수 없이(5차 수정 1-1). 인용한 리뷰(1)는 shown_ids 에서 빠져 줄에 없다
+        t = ex.Tally(SHOES[0], [{"id": 1, "content": "무릎이 편하고 쿠션이 좋아요", "likeCount": 2, "rating": 5},
+                                {"id": 2, "content": "무릎 편해요. 쿠션 말랑", "likeCount": 1, "rating": 4},
+                                {"id": 3, "content": "무릎이 아파요", "likeCount": 0, "rating": 2}], "무릎")
         t.labeled, t.labels = True, {1: "positive", 2: "positive", 3: "negative"}
-        lines, counts = ex.evidence(t, t.mentioned(), {2, 3}, 1, "무릎", ())
-        self.assertEqual(lines[0], "[무릎 — 좋다는 쪽 2건, 1건은 앞에 인용함] 이 쪽 리뷰 가운데 쿠션 이야기 2건 · 착용감 이야기 2건")
-        self.assertEqual(lines[1], ex.QUOTED_ROW)                            # 인용한 리뷰는 내용 없이 자리만
-        self.assertIn(2, counts)
-        self.assertNotIn("무릎이 편하고 쿠션이 좋아요", "\n".join(lines))
+        lines = ex.evidence(t, t.mentioned(), {2, 3}, "무릎", ())
+        self.assertEqual(lines, ["[무릎 — 좋다는 쪽 리뷰]", "- 무릎 편해요. 쿠션 말랑", "[무릎 — 아쉽다는 쪽 리뷰]", "- 무릎이 아파요"])
+        self.assertFalse(any(ch.isdigit() for ch in "".join(lines)))
 
-    def test_counts_kept(self):
-        t = ex.Tally(SHOES[0], [{"id": i, "content": "", "likeCount": 0} for i in range(14)], "무릎")
-        t.labeled, t.labels = True, {0: "positive", 1: "negative"}
-        self.assertTrue(ex.counts_kept("리뷰 14건 중 2건에서만…", [t]))
-        self.assertFalse(ex.counts_kept("리뷰 15건 중 2건에서만…", [t]))      # 분모가 바뀜
-        self.assertFalse(ex.counts_kept("2건에서만 나온 이야기예요", [t]))    # 분모가 숨음
+    def test_digit_sentences(self):
+        # LLM 글에서 숫자가 든 문장만 지운다 — 신발 이름의 숫자는 숫자로 보지 않는다(5차 수정)
+        from chatbot.reply import drop_digit_sentences, name_forms
+        names = name_forms({"model": "젤 카야노 33", "modelEn": "Gel-Kayano 33", "modelAlias": ""})
+        self.assertIn("카야노 33", names)
+        self.assertNotIn("33", names)
+        text = "카야노 33은 무릎이 편하다는 이야기가 있어요. 10km 넘게 뛰어도 편하다는 이야기도 있어요.\n\n다른 리뷰에서는 무겁다는 이야기가 있어요."
+        self.assertEqual(drop_digit_sentences(text, names), "카야노 33은 무릎이 편하다는 이야기가 있어요.\n\n다른 리뷰에서는 무겁다는 이야기가 있어요.")
+        self.assertEqual(drop_digit_sentences("33건이 있어요.", names), "")
+
+    def test_haeyo_general(self):
+        # 설명문을 코드가 그대로 붙이게 되어(5차 수정 1-2) 일반 규칙으로 — 받침 ㅆ · ㅂ 불규칙 · 모음 어울림 · 르 · ㅅ · ㄹ 탈락
+        from chatbot.reply import haeyo
+        pairs = {"늘었습니다.": "늘었어요.", "가볍습니다.": "가벼워요.", "좁습니다.": "좁아요.", "않습니다.": "않아요.",
+                 "적습니다.": "적어요.", "버팁니다.": "버텨요.", "됩니다.": "돼요.", "다릅니다.": "달라요.", "튑니다.": "튀어요.",
+                 "낫습니다.": "나아요.", "깁니다.": "길어요.", "돕습니다.": "도와요.", "씁니다.": "써요.", "모델입니다.": "모델이에요."}
+        for a, b in pairs.items():
+            self.assertEqual(haeyo("발볼은 " + a), "발볼은 " + b)
 
 
 class PickShoesTest(unittest.TestCase):

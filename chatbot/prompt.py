@@ -166,7 +166,6 @@ def dump() -> str:
         ("[할 일] 특성 설명", explain.TASK),
         ("특성 설명 — 설명문 문장 머리", explain.DESC_HEAD),
         ("[할 일] 경험·후기", experience.TASK),
-        ("[할 일] 경험·후기 — 설명문을 줄 때 더함", experience.DESC_TASK),
         ("[할 일] 경험·후기 — 피하려는 질문일 때 더함", experience.AVOID_TASK),
         ("경험·후기 — 긍부정 분류 시스템(JSON, temperature 0)", experience.POLARITY_SYSTEM),
         ("생성 사용자 메시지 머리", "\n".join(["질문: …", "[등록된 정보] …", __import__("chatbot.branches.common", fromlist=["x"]).CONCLUSION_HEAD,
@@ -174,7 +173,7 @@ def dump() -> str:
                                        __import__("chatbot.branches.common", fromlist=["x"]).attached_note([DOCTOR], [EXPLAIN_TAIL, "보러 가실래요?"]),
                                        __import__("chatbot.branches.common", fromlist=["x"]).REFERENCE_HEAD])),
         ("경험·후기 — 앞에 나간 것 알림", experience.BEFORE_NOTE),
-        ("경험·후기 — 설명문 머리", experience.DESC_HEAD),
+        ("경험·후기 — 코드가 LLM 글 뒤에 붙이는 설명문 단락 머리(LLM 에 주지 않는다)", experience.DESC_LEAD),
     ]
     out = []
     for title, body in parts:

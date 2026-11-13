@@ -156,10 +156,9 @@ def main() -> int:
             counts = {s["id"]: http.get_json("/api/reviews", {"shoeId": s["id"]}) for s in reply.shoes}
             review_src = " ".join(r["content"] for rs in counts.values() for r in rs) + " " + " ".join(str(len(v)) for v in counts.values())
             fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
-            # 집계 숫자(언급 · 긍정 · 부정 · 나머지)는 코드가 센 것 — 위 분모 · 세 칸 검사가 따로 본다
-            review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg", "rest"))
-            # 근거 묶음의 건수(4차 수정 — 이야기별 건수를 근거로 준다)도 코드가 센 것
-            review_src += " " + " ".join(str(n) for n in trace.get("evidence_counts") or [])
+            # 집계 숫자(언급 · 좋다 · 아쉽다)는 코드가 센 것 — 위 분모 · 칸 검사가 따로 본다.
+            # LLM 글의 숫자는 check_experience 가 따로 본다(5차 수정 — 하나도 없어야 한다)
+            review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg"))
             fails += check_experience(text, reply, trace)
         if it.get("hit_any"):
             want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
@@ -298,11 +297,15 @@ def load_items(only: str | None) -> list[dict]:
 
 
 _DENOM = re.compile(r"리뷰\s*(\d+)건\s*(?:중|가운데)|(\d+)건 중 \d+건에서만|리뷰가\s*(\d+)건")
-_CELLS = re.compile(r"언급이\s*(\d+)건,?\s*긍정\s*(\d+)건,?\s*부정\s*(\d+)건,?\s*나머지\s*(\d+)건")
+# 집계 문장(5차 수정 — "나머지 N건은 언급 없음"을 뺐다): "리뷰 N건 중 관점 이야기가 K건이고, 그중 좋다는 쪽이 P건 아쉽다는 쪽이 Q건이에요"
+# 또는 "…K건이고, 모두 좋다는 쪽이에요"
+_CELLS = re.compile(r"리뷰\s*(\d+)건 중 \S+ 이야기가\s*(\d+)건이고, 그중 좋다는 쪽이\s*(\d+)건 아쉽다는 쪽이\s*(\d+)건")
+_ALL_ONE = re.compile(r"리뷰\s*(\d+)건 중 \S+ 이야기가\s*(\d+)건이고, 모두 (좋다는|아쉽다는) 쪽이에요")
 
 
 def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) -> list[str]:
-    """분모는 늘 전체(사용자 3 · 9) — 답의 「리뷰 N건 중」이 API 건수인지, 긍정 + 부정 = 언급, 언급 + 나머지 = N 인지"""
+    """분모는 늘 전체(사용자 3 · 9) — 답의 「리뷰 N건 중」이 API 건수인지, 좋다 + 아쉽다 = 관점 이야기, 관점 이야기 ≤ N 인지.
+    5차 수정 전에는 긍정 + 부정 + 언급 없음 = N(세 칸)을 봤다 — 언급 없음 칸이 없어져 두 칸 합과 ≤ 로 바꿨다"""
     from chatbot import prompt
     fails = []
     if prompt.EXPERIENCE_WAIT in text:
@@ -314,12 +317,18 @@ def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) 
             fails.append(f"분모 {n}건 ≠ API {sorted(ns)}")
     if it.get("denom") and not found and any(ns):
         fails.append("분모(리뷰 N건) 없음")
+    tallies = trace.get("tally") or []
     for m in _CELLS.finditer(text):
-        k, p, q, rest = map(int, m.groups())
-        if p + q != k or k + rest not in ns:
-            fails.append(f"세 칸 합이 맞지 않음 — 언급 {k} = 긍정 {p} + 부정 {q}, 언급 + 나머지 {k + rest} ∉ {sorted(ns)}")
-    for t in trace.get("tally") or []:
-        if t["labeled"] and t["pos"] + t["neg"] + t["rest"] != t["n"]:
+        n, k, p, q = map(int, m.groups())
+        if p + q != k or k > n or not any((t["n"], t["k"], t["pos"], t["neg"]) == (n, k, p, q) for t in tallies):
+            fails.append(f"칸이 맞지 않음 — 이야기 {k} = 좋다 {p} + 아쉽다 {q}, {k} ≤ {n}, 집계와 같은지")
+    for m in _ALL_ONE.finditer(text):
+        n, k, side = int(m.group(1)), int(m.group(2)), m.group(3)
+        want = (k, 0) if side == "좋다는" else (0, k)
+        if k > n or not any((t["n"], t["k"], t["pos"], t["neg"]) == (n, k, *want) for t in tallies):
+            fails.append(f"'모두 {side} 쪽'이 집계와 다름 — {n}건 중 {k}건")
+    for t in tallies:
+        if t["labeled"] and not (t["pos"] + t["neg"] == t["k"] <= t["n"]):
             fails.append(f"집계 대조 실패 {t}")
         if t["n"] != counts.get(t["shoe_id"], t["n"]):
             fails.append(f"집계 N {t['n']} ≠ API {counts.get(t['shoe_id'])}")
@@ -336,6 +345,13 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
             fails.append(f"양을 짐작하는 말 '{w}'")
     if "분류" in outside:
         fails.append("내부 말 '분류'")
+    # LLM 글에 숫자가 없어야 한다(5차 수정 1-1 — 숫자는 코드 집계만). 신발 이름의 숫자는 뺀다. 코드가 지운 뒤의 글을 본다 —
+    # 지운 횟수는 trace guard 의 "숫자 문장 지움"으로 따로 센다(지워서 0인지 보이게)
+    from chatbot.reply import has_digit, name_forms
+    names = [n for s in reply.shoes for n in name_forms(s)]
+    for g in trace.get("generated") or []:
+        if has_digit(g, names):
+            fails.append(f"LLM 글에 숫자: {g[:40]}")
     tally = trace.get("tally") or []
     multi = bool(trace.get("ranked"))
     want = trace.get("want")
@@ -369,7 +385,7 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
         cur = None
         for p in text.split("\n\n"):
             p = p.strip()
-            if not p or p.startswith(">") or p in code_paras:
+            if not p or p.startswith(">") or p in code_paras or p.startswith(ex.DESC_LEAD):   # 설명문 단락도 코드가 붙인다(5차)
                 continue
             head = next((s for s in shoes if p.startswith(f"{s['brand']}의 {s['model']}:")), None)
             if head:
