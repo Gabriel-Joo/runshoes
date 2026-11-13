@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from .. import facts, http
 from ..facts import ieyo, josa
-from ..reply import Reply
+from ..reply import Reply, guard_log
 from .common import generate
 
 ORDER = ("purpose", "width", "stability", "cushion", "price")
@@ -133,7 +133,13 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
     paras.append("좋은 신발 만나시길 바랄게요!")
     fallback = "\n\n".join(paras)
     unasked_line = ([f"보지 않은 조건: {', '.join(unasked)}(말씀하지 않으셔서)"] if unasked else []) + [f"보지 않은 조건: {x}" for x in said_unchecked]
-    text, used = generate(question, lines + unasked_line, conclusions, fallback, health, history, TASK)
+    # 순위 문장은 [결론 문장]으로 준다 — 참고 답에만 있으면 15문항 중 2~3문항에서 "1위는"이 빠졌다(5-2 4차 수정 7, R04)
+    ranks = [f"{rank}위는 {ieyo(s['brand'] + '의 ' + s['model'])}." for rank, s in enumerate(shoes, start=1)]
+    text, used = generate(question, lines + unasked_line, ranks + conclusions, fallback, health, history, TASK, branch="recommend")
+    if not used and not all(f"{rank}위" in text for rank in range(1, len(shoes) + 1)):
+        # 그래도 빠지면 코드 답(순위가 든 사용자 예시 ⑥의 꼴)으로 — 순위는 화면(추천받기)과 같은 답의 뼈대다
+        guard_log().append("코드 답: 순위 빠짐")
+        text, used = fallback, True
     return Reply(text, shoes, fallback_used=used, branch="recommend")
 
 

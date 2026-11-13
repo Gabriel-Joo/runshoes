@@ -200,8 +200,11 @@ class Catalog:
     @staticmethod
     def _generation_after(text: str, j: int) -> tuple[int | None, int]:
         """이름 바로 뒤(공백 · 하이픈 · v 를 건너)의 숫자 하나 — 단위가 붙은 숫자(270mm · 15만원 · 3켤레)는 세대가 아니다"""
-        g = re.match(r"[\s\-]*[vV]?\s*(\d{1,3})(?![\d.,]\d|\d|\s*(?:mm|㎜|g\b|그램|km|만|천|원|켤레|분|초|살|개|번|위|%|사이즈|cm))", text[j:])
+        g = re.match(r"[\s\-]*[vV]?\s*(\d{1,3})(?![\d.,]\d|\d|\s*(?:mm|㎜|g\b|그램|km|만|천|원|켤레|분|초|살|개|번|위|%|cm))", text[j:])
         if not g:
+            return None, j
+        # "270 사이즈"는 발 크기지만 "젤 카야노 32 사이즈 어때요"의 32 는 세대다 — 사이즈 앞 숫자는 신발 크기(200 이상)만 뺀다(5-2 평가에서 찾음)
+        if int(g.group(1)) >= 200 and re.match(r"\s*사이즈", text[j + g.end():]):
             return None, j
         return int(g.group(1)), j + g.end()
 

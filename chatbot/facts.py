@@ -14,7 +14,8 @@ import math
 
 from .catalog import SIZE_MM
 
-PRICE_NOTE = "다만 가격은 발매가 기준이라 지금은 더 저렴할 수 있어요."
+# "다만"을 뺐다(5-2 3차 수정, 사용자) — 통증 답에서 바로 뒤 의료 안내("다만 지속되는 통증은 …")와 "다만"이 두 번 이어졌다(R04)
+PRICE_NOTE = "가격은 발매가 기준이라 지금은 더 저렴할 수 있어요."
 SAME_WEIGHT_G = 8   # 환산 뒤 이 차이 미만이면 "거의 같은 수준"(09 4절 — 모델별 편차 1.66~3.60% 안)
 
 FIELD_NAME = {"weight": "무게", "stackHeight": "쿠션 높이", "drop": "앞뒤 높이 차이", "price": "가격"}

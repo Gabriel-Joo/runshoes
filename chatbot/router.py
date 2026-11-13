@@ -27,6 +27,11 @@ SPEC_WORDS = (
 )
 # 이름 없이 직전 신발을 가리키는 말 — 이게 있어야 대화 상태의 신발로 스펙 · 비교를 정한다
 REFER_WORDS = ("그거", "그것", "그 신발", "그신발", "이거", "이 신발", "저거", "걔", "얘", "방금", "아까", "둘 다", "둘다", "두 개", "두개", "세 개", "셋 다")
+# 경험 · 후기(5-2) — 리뷰를 직접 말하면 신발이 없어도, 착용감 · 사이즈감처럼 겪어 봐야 아는 말은 신발이 하나 정해졌을 때만.
+# 통증 낱말만으로는 정하지 않는다 — 신발 없는 통증 질문은 라우터 LLM 이 특성 설명 · 추천으로 보낸다(경계 15문항)
+REVIEW_WORDS = ("후기", "리뷰", "평가", "평이", "신어 본", "신어본", "신어 보신", "써 본", "써본")
+FEEL_WORDS = ("착용감", "사이즈감", "내구", "닳", "편해", "편한가", "편하나", "편할까", "편안", "불편", "아파", "아프", "아픈", "물집",
+              "쓸려", "쓸림", "까져", "끼어", "끼나", "끼는", "조이", "헐렁", "치수", "정사이즈", "크게 나", "작게 나")
 DEFINE_WORDS = ("뭐예요", "뭐에요", "뭔가요", "뭐야", "뭐지", "뭡니까", "뜻", "의미", "란?", "이란", "란 ", "무슨 말", "설명해", "알려줘", "알려주세요")
 
 PURPOSES = ("조깅·회복주", "템포·인터벌", "LSD·장거리", "레이스", "트레일")
@@ -39,6 +44,7 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
 {{
   "branch": "term" | "spec" | "compare" | "recommend" | "explain" | "experience" | "out_of_scope" | "greeting",
   "health_context": true | false,
+  "avoid": true | false,
   "shoe_names": ["문장에 나온 신발 모델 이름 그대로"],
   "term": "뜻을 물은 러닝화 용어(없으면 null)",
   "feature": "신발 특성을 물었다면 그 특성을 짧은 명사구로(예: 뒤꿈치 쓸림, 힐컵, 통기성). 없으면 null",
@@ -61,13 +67,21 @@ branch
   ("쿠션 좋은 신발 신으면 나을까요", "신발 바꾸면 달라질까요", "카본화는 입문자에게 안 좋죠?", "비싼 게 좋은 거 아닌가요",
    "이거 신으면 기록 줄어드나요", "안정화가 도움이 될까요", "큰 사이즈로 신어도 괜찮을까요")
 - experience: 착용감 · 내구성 · 사이즈감처럼 후기가 있어야 답할 수 있는 질문
+  ("발볼 끼어요?", "무릎 편하다는 후기 있는 신발", "오래 신으면 밑창 금방 닳아요?")
 - out_of_scope: 러닝화와 상관없는 질문
 - greeting: 인사 · 감사만 있고 질문이 없다
 
 health_context
 - 문장에 통증 · 부상 · 몸의 불편함이 조금이라도 드러나면 true. 낱말이 아니라 뜻으로 본다
-  ("발 디딜 때마다 찌릿해요", "오래 뛰면 다리가 못 버텨요", "무릎이 시큰거려요" 모두 true)
+  ("발 디딜 때마다 찌릿해요", "오래 뛰면 다리가 못 버텨요", "무릎이 시큰거려요", "발에 물집이 잘 잡혀요" 모두 true)
+- 피하려는 질문(avoid)이어도 몸 이야기가 있으면 true — 둘은 따로 정한다
 - 그런 이야기가 없으면 false
+
+avoid
+- 피하다 · 빼다 · 거르다 · 안 사고 싶다처럼 그런 신발을 피하겠다는 뜻을 문장에서 직접 말할 때만 true
+  ("쓸린다는 후기 있는 신발은 피하고 싶어요", "발볼 좁다는 평 있는 건 빼 주세요", "물집 잡힌다는 신발은 거를래요")
+- 그런 후기가 있는지 · 신발이 어떤지 묻는 것은 false
+  ("쓸렸다는 후기 있어요?", "덥다는 후기 있는 신발 있어요?", "무릎 편하다는 후기 있는 신발", "밑창 금방 닳아요?")
 
 shoe_names
 - 문장에 나온 러닝화 모델 이름을 세대 숫자까지 그대로 적는다("호카 마하 7" → "마하 7"). 브랜드만 나오면 넣지 않는다.
@@ -95,6 +109,7 @@ class Route:
     conditions: dict = field(default_factory=dict)
     llm_ok: bool = True
     feature: str | None = None
+    avoid: bool = False   # 피하려는 질문(경험·후기 — 버튼을 붙이지 않고 그 이야기가 나온 신발만, 사용자 2026-11-13)
 
 
 def has_any(text: str, words: tuple[str, ...]) -> bool:
@@ -109,6 +124,9 @@ def rule_branch(text: str, n_shoes: int, n_state: int, n_terms: int) -> str | No
         return "compare"
     if has_any(text, RECOMMEND_WORDS):
         return "recommend"
+    one = n_shoes == 1 or (n_shoes == 0 and n_state >= 1 and refer)
+    if has_any(text, REVIEW_WORDS) or (one and has_any(text, FEEL_WORDS)):
+        return "experience"
     if (n_shoes == 1 or (n_shoes == 0 and n_state >= 1 and refer)) and has_any(text, SPEC_WORDS):
         return "spec"
     if n_terms >= 1 and n_shoes == 0 and has_any(text, DEFINE_WORDS):
@@ -143,7 +161,8 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
         cond.pop("price_level", None)
     if not re.search(r"\d|만\s*원|천\s*원", text):
         cond.pop("budget_won", None)
-    return Route(branch, health, rule is not None, names, term, cond, ok, feature)
+    avoid = ok and data.get("avoid") is True
+    return Route(branch, health, rule is not None, names, term, cond, ok, feature, avoid)
 
 
 PRICE_WORDS = ("가격", "값", "원", "싼", "싸", "저렴", "비싸", "비싼", "가성비", "예산", "돈", "부담", "상관없", "얼마")
