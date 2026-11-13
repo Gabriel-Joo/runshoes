@@ -12,7 +12,7 @@ CONCLUSION_HEAD = "[결론 문장] — 뜻과 숫자를 바꾸지 말고 넣는�
 REFERENCE_HEAD = "[참고 답] 아래는 코드가 쓴 답이다. 내용과 숫자는 그대로 두고 말투만 예시처럼 자연스럽게 다듬어도 된다."
 # 코드가 네 답 앞뒤에 붙이는 것 — 그 턴에 실제로 붙는 것을 "무엇인지"만 알린다(5-2 3차 수정, 사용자 2026-11-13).
 # 2차 때는 붙는 문장을 통째로 보여 줬더니 LLM 이 그대로 따라 썼다(용도 묻기 두 번 B05 · B09, 집계 다시 말하기 E03 · E08).
-AFTER_HEAD = "[참고 — 답에 옮기지 않는다] 네 답이 끝난 뒤에 따로 붙는 것:"
+NOTE_HEAD = "[참고 — 답에 옮기지 않는다]"
 AFTER_TAIL = "너는 이것들을 쓰지 않고, 묻지 않는다."
 # 지시 · 근거 머리가 답에 새면 지운다(3차 수정 평가 B09 — "코드가 붙는다"가 답 한 줄로 나갔다)
 _LEAK = re.compile(r"코드가|\[(참고|이미|등록된|리뷰|설명문|할 일|결론|네 답)")
@@ -26,14 +26,18 @@ TAIL_KIND = {
 }
 
 
-def after_lines(health: bool, tails: list[str] = ()) -> list[str]:
-    """답 뒤에 붙을 문장 — 의료 안내(통증)는 코드 끝 단락 앞(reply.with_doctor 와 같은 자리)"""
-    return ([prompt.DOCTOR] if health else []) + [t for t in tails if t]
+def attached(health: bool, tails: list[str] = ()) -> tuple[list[str], list[str]]:
+    """(답 앞에 붙는 문장, 뒤에 붙는 문장) — 의료 안내(통증)는 맨 앞(reply.with_doctor, 4차 수정)"""
+    return ([prompt.DOCTOR] if health else []), [t for t in tails if t]
 
 
-def after_note(after: list[str]) -> str:
-    kinds = list(dict.fromkeys(TAIL_KIND.get(t, "안내 문장") for t in after))
-    return f"{AFTER_HEAD} {' · '.join(kinds)}. {AFTER_TAIL}"
+def attached_note(front: list[str], after: list[str]) -> str:
+    parts = []
+    if front:
+        parts.append("네 답 앞에 따로 붙는 것: " + " · ".join(dict.fromkeys(TAIL_KIND.get(t, "안내 문장") for t in front)) + ".")
+    if after:
+        parts.append("네 답이 끝난 뒤에 따로 붙는 것: " + " · ".join(dict.fromkeys(TAIL_KIND.get(t, "안내 문장") for t in after)) + ".")
+    return f"{NOTE_HEAD} {' '.join(parts)} {AFTER_TAIL}"
 
 
 def _drop_leaks(text: str) -> str:
@@ -61,9 +65,9 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
     if before_note:
         parts += ["", before_note]
     parts += ["", f"[할 일] {task}"]
-    after = after_lines(health, list(tails))
-    if after:
-        parts += ["", after_note(after)]
+    front, after = attached(health, list(tails))
+    if front or after:
+        parts += ["", attached_note(front, after)]
     if reference:
         parts += ["", REFERENCE_HEAD, fallback]
     user = "\n".join(parts)
@@ -79,7 +83,7 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
     text, used = guard(out, allowed, fallback, shoes_given)
     if not used:
         # 코드가 앞뒤에 붙이는 문장과 같은 문장은 지운다(문장 통째로) — 알리기만 해도 가끔 따라 쓴다
-        text = drop_repeats(text, list(before) + after)
+        text = drop_repeats(text, list(before) + front + after)
         text = _drop_leaks(text)
         if not text:
             return fallback, True
