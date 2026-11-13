@@ -128,21 +128,31 @@ def name_forms(shoe: dict) -> list[str]:
     return sorted((x for x in out if x and re.search(r"\D", x)), key=len, reverse=True)
 
 
-def has_digit(sentence: str, names: list[str]) -> bool:
+_COUNT_WORD = re.compile(r"\d+\s*건")
+
+
+def bad_digits(sentence: str, names: list[str], source: str = "") -> bool:
+    """신발 이름 꼴을 뺀 뒤 — 건수("N건")가 있거나, source(근거 리뷰)에 없는 숫자가 있으면 True.
+    source 가 비면 숫자가 하나라도 있으면 True(5차 기준)"""
     for n in names:
         sentence = sentence.replace(n, "")
-    return bool(re.search(r"\d", sentence))
+    if not re.search(r"\d", sentence):
+        return False
+    if _COUNT_WORD.search(sentence):
+        return True
+    return bool(numbers(sentence) - numbers(source))
 
 
-def drop_digit_sentences(text: str, names: list[str]) -> str:
-    """숫자가 든 문장을 지운다(신발 이름의 숫자는 뺀다) — 경험·후기 LLM 글(5-2 5차 수정, 사용자 2026-11-13).
-    숫자는 코드 집계가 말한다. 근거에 있는 숫자인지를 보던 4차 검사는 숫자가 맞아도 엉뚱한 말에 붙는 것(E03)을 못 막았다.
-    리뷰 속 숫자(6분 20초 · 30km)와 말투 예시의 숫자(169,000원 · 255g, 4차 E06 · E15)도 같이 지운다 — 문장째"""
+def drop_digit_sentences(text: str, names: list[str], source: str = "") -> str:
+    """경험·후기 LLM 글에서 숫자가 문제인 문장을 지운다 — 문장째(5-2 5차 수정, 사용자 2026-11-13).
+    건수는 코드 집계만 말한다 — "N건"이 든 문장은 늘 지운다(4차 E03: 근거에 있는 건수를 엉뚱한 말에 붙였다).
+    6차 수정 3: 리뷰 속 숫자(9월 · 30km · 6분 20초)는 통과 — source(그 신발에 준 근거 리뷰 + 인용)에 있는 숫자면 둔다.
+    5차엔 숫자를 모두 지웠더니 LLM 이 "9월"을 "아홉월"로 바꿔 썼다. 말투 예시의 숫자(169,000원 · 255g)는 여전히 지워진다"""
     paras = []
     for para in text.split("\n\n"):
         sents = [s for s in re.split(r"(?<=[.!?])\s+|\n+", para.strip()) if s]
-        kept = [s for s in sents if not has_digit(s, names)]
-        guard_log().extend(["숫자 문장 지움"] * (len(sents) - len(kept)))
+        kept = [s for s in sents if not bad_digits(s, names, source)]
+        guard_log().extend(["근거에 없는 숫자 문장 지움"] * (len(sents) - len(kept)))
         if kept:
             paras.append(" ".join(kept))
     return "\n\n".join(paras)

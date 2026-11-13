@@ -214,6 +214,12 @@ class TallyTest(unittest.TestCase):
         text = "카야노 33은 무릎이 편하다는 이야기가 있어요. 10km 넘게 뛰어도 편하다는 이야기도 있어요.\n\n다른 리뷰에서는 무겁다는 이야기가 있어요."
         self.assertEqual(drop_digit_sentences(text, names), "카야노 33은 무릎이 편하다는 이야기가 있어요.\n\n다른 리뷰에서는 무겁다는 이야기가 있어요.")
         self.assertEqual(drop_digit_sentences("33건이 있어요.", names), "")
+        # 6차 수정 3 — 근거 리뷰에 있는 숫자는 둔다, 건수("N건")와 리뷰에 없는 숫자는 지운다
+        src = "- 9월에도 발이 너무 더워요\n- 10km 넘게 뛰어도 편해요"
+        self.assertEqual(drop_digit_sentences(text, names, src), text)
+        self.assertEqual(drop_digit_sentences("9월에도 덥다는 이야기가 있어요. 255g이라 가볍다는 이야기도 있어요.", names, src),
+                         "9월에도 덥다는 이야기가 있어요.")
+        self.assertEqual(drop_digit_sentences("이런 이야기가 10건 있어요.", names, src), "")
 
     def test_haeyo_general(self):
         # 설명문을 코드가 그대로 붙이게 되어(5차 수정 1-2) 일반 규칙으로 — 받침 ㅆ · ㅂ 불규칙 · 모음 어울림 · 르 · ㅅ · ㄹ 탈락
