@@ -44,7 +44,7 @@ TASK = (
     "그 밖에는 질문에 맞게 바로 시작한다. "
     "효과를 약속하지 않는 것은 문장 전체로 지키고, 첫 문장으로 미리 방어하지 않는다. "
     "서너 문장으로, 같은 뜻을 두 번 쓰지 않는다. 특성은 [등록된 정보] 줄 첫머리의 이름(쿠션 높이 · 카본 플레이트 등)으로 부르고, "
-    "괄호로 다른 이름을 덧붙이지 않는다. 되묻지 않는다 — 끝맺는 안내 · 묻는 말은 따로 붙는다."
+    "괄호로 다른 이름을 덧붙이지 않는다. 되묻지 않는다."
 )
 
 
@@ -103,7 +103,8 @@ def answer(question: str, dic: Dictionary, health: bool, history: list[dict], ex
         h = desc[0]
         paras.append(plain_words(f"{h.meta.get('brand')}의 {josa(h.meta.get('model'), '은', '는')} 설명에 이런 내용이 있어요. {haeyo(h.text)}"))
     fallback = "관련된 신발 특성을 정리해 드릴게요.\n\n" + "\n\n".join(paras)
-    text, used = generate(question, lines, [], fallback, health, history, TASK, reference=False, shoes_given=bool(desc))
+    text, used = generate(question, lines, [], fallback, health, history, TASK, reference=False, shoes_given=bool(desc),
+                          tails=[tail] if tail else [])
     # 생성한 글도 해요체 표로 — 근거가 사전뿐(통증 질문)이면 LLM 이 "무난하다고 합니다"처럼 원문 말투를 따랐다(1차 수정 평가 B04 · B05)
     text = haeyo(text)
     # 보여 줄 신발 — 답에 이름이 나온 설명문의 신발만. 그 밖에는 LLM 이 예시를 따라 붙인 "보러 가실래요?"를 지운다

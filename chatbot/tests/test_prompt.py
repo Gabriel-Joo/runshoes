@@ -26,9 +26,14 @@ class PromptTest(unittest.TestCase):
             self.assertIn("보러 가실래요?", t)
         self.assertNotIn("보러 가실래요", prompt.TONE)
         self.assertNotIn("보러 가실래요", explain.TASK)
-        # 경험·후기는 코드가 끝에 붙인다 — [할 일]은 질문으로 끝내지 말라고만(2026-11-13, E14 묻는 말 둘)
+        # 경험·후기는 코드가 끝에 붙인다 — 금지 문구 대신 붙는 문장을 보여 준다(2차 수정, common.AFTER_HEAD)
         self.assertNotIn("보러 가실래요", experience.TASK)
-        self.assertIn("질문으로 끝내지 않고", experience.TASK)
+        self.assertNotIn("질문으로 끝내지", experience.TASK)
+
+    def test_after_lines_show_what_code_adds(self):
+        from chatbot.branches.common import after_lines
+        self.assertEqual(after_lines(True, ["보러 가실래요?"]), [prompt.DOCTOR, "보러 가실래요?"])
+        self.assertEqual(after_lines(False, []), [])
 
     def test_health_has_help_rule(self):
         self.assertIn("도움이 된다", prompt.HEALTH)
