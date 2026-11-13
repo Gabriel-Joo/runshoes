@@ -100,14 +100,38 @@ SOURCE_PHRASE = re.compile(r"등록된 정보에 (따르면|나와|있어|의하
 _ASK = re.compile(r"(알려\s*주시면|말씀해\s*주시면|궁금하신지|어떠세요\?|할까요\?|실래요\?)")
 
 
+def _key(s: str) -> str:
+    return re.sub(r"[\s\"'>.,!?·—:-]", "", s)
+
+
+def drop_repeats(body: str, attached: list[str]) -> str:
+    """코드가 앞뒤에 붙이는 글(집계 · 인용 · 의료 안내 · 용도 묻기 …)과 같은 문장을 LLM 글에서 지운다 — 문장 통째로.
+    붙는 것을 알려 줘도 옮겨 썼다(5-2 2차 · 3차 평가 E11 · E12 · B05 · B09)"""
+    seen = {_key(s) for b in attached for s in re.split(r"(?<=[.!?])\s+|\n+", b) if len(_key(s)) >= 6}
+    paras = []
+    for para in body.split("\n\n"):
+        sents = [s for s in re.split(r"(?<=[.!?])\s+", para.strip()) if s]
+        kept = [s for s in sents if _key(s) not in seen]
+        if len(kept) < len(sents):
+            guard_log().append("붙는 글 되풀이 지움")
+        if kept:
+            paras.append(" ".join(kept))
+    return "\n\n".join(paras)
+
+
 def drop_asks(text: str) -> str:
     """묻는 문장을 지운다 — 묻는 말은 코드가 붙인다(특성 설명)"""
     paras = []
     for para in text.split("\n\n"):
         sents = re.split(r"(?<=[.!?])\s+", para.strip())
-        kept = [s for s in sents if not _ASK.search(s) and not s.rstrip().endswith("?")]   # 묻는 문장은 모두(…싶으신가요? · …있나요?)
-        if len(kept) < len([s for s in sents if s]):
-            guard_log().append("묻는 문장 지움")   # 뒤에 붙는 문장을 알려 준 뒤에도 얼마나 남는지 센다(2차 수정)
+        sents = [s for s in sents if s]
+        asks = [i for i, s in enumerate(sents) if _ASK.search(s) or s.rstrip().endswith("?")]   # 묻는 문장은 모두(…싶으신가요? · …있나요?)
+        kept = [s for i, s in enumerate(sents) if i not in asks]
+        if asks:
+            guard_log().append("묻는 문장 지움")   # 뒤에 붙는 것을 알려 준 뒤에도 얼마나 남는지 센다(2차 수정)
+            # 묻는 문장으로 시작한 단락에 한 문장만 남으면 그 물음에 딸린 꼬리다("… 가운데 하나면 돼요." — 3차 수정 B05 · B09) — 단락째 지운다
+            if asks[0] == 0 and len(kept) <= 1:
+                kept = []
         if kept:
             paras.append(" ".join(kept))
     return "\n\n".join(paras)
