@@ -20,5 +20,5 @@ def answer(question: str, shoes: list[tuple[dict, bool]], health: bool, history:
         lines += facts.shoe_facts(shoe, note) + [""]
         fb.append(facts.spec_fallback(shoe, note, question))
     fallback = "\n\n".join(fb)
-    text, used = generate(question, lines, [], fallback, health, history, TASK)
+    text, used = generate(question, lines, [], fallback, health, history, TASK, branch="spec")
     return Reply(text, [s for s, _ in shoes[:3]], fallback_used=used, branch="spec")

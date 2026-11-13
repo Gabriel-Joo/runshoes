@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 
 from chatbot import prompt, router
-from chatbot.branches import compare, explain, recommend, spec
+from chatbot.branches import compare, experience, explain, recommend, spec
 
 SNAPSHOT = Path(__file__).with_name("prompt_snapshot.txt")
 
@@ -26,6 +26,18 @@ class PromptTest(unittest.TestCase):
             self.assertIn("보러 가실래요?", t)
         self.assertNotIn("보러 가실래요", prompt.TONE)
         self.assertNotIn("보러 가실래요", explain.TASK)
+        # 경험·후기는 코드가 끝에 붙인다 — 금지 문구 대신 붙는 문장을 보여 준다(2차 수정, common.AFTER_HEAD)
+        self.assertNotIn("보러 가실래요", experience.TASK)
+        self.assertNotIn("질문으로 끝내지", experience.TASK)
+
+    def test_attached_front_and_after(self):
+        # 의료 안내는 앞, 끝 안내는 뒤(4차 수정) — 문장이 아니라 종류만 알린다
+        from chatbot.branches.common import attached, attached_note
+        self.assertEqual(attached(True, ["보러 가실래요?"]), ([prompt.DOCTOR], ["보러 가실래요?"]))
+        self.assertEqual(attached(False, []), ([], []))
+        note = attached_note([prompt.DOCTOR], ["보러 가실래요?"])
+        self.assertIn("앞에 따로 붙는 것: 통증", note)
+        self.assertNotIn(prompt.DOCTOR, note)
 
     def test_health_has_help_rule(self):
         self.assertIn("도움이 된다", prompt.HEALTH)

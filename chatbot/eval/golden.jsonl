@@ -31,7 +31,7 @@
 {"id": "R01", "cat": "recommend", "q": "러닝 입문인데 15만원 안쪽에서 매일 신을 거 찾아요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "budget_won": 150000}, "not_contains": ["20만원까지"]}
 {"id": "R02", "cat": "recommend", "q": "마라톤 대회용 신발 추천해줘", "branch": "recommend", "conditions": {"purpose": "레이스"}}
 {"id": "R03", "cat": "recommend", "q": "발볼이 넓은데 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "넓음"}}
-{"id": "R04", "cat": "recommend", "q": "발이 안쪽으로 무너지는 편이에요. 장거리용 골라 주세요", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "stability": "안정화"}}
+{"id": "R04", "cat": "recommend", "q": "발이 안쪽으로 무너지는 편이에요. 장거리용 골라 주세요", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "stability": "안정화"}, "health": true, "note": "발 유형도 통증으로 본다 — 임시(사용자 2026-11-13, TODO 발 유형 · 증상 가르기)"}
 {"id": "R05", "cat": "recommend", "q": "트레일 러닝화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "트레일"}}
 {"id": "R06", "cat": "recommend", "q": "쿠션 푹신한 데일리 러닝화 추천해줘", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "cushion": "high"}}
 {"id": "R07", "cat": "recommend", "q": "템포런할 때 신을 얇은 신발 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "템포·인터벌", "cushion": "low"}}

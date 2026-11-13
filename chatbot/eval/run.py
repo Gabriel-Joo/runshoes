@@ -33,12 +33,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--api", default="https://runshoes.ronanlab.dev", help="런슈즈 API(읽기만 한다)")
     ap.add_argument("--ollama", default="http://127.0.0.1:11434")
+    ap.add_argument("--model-service", default=os.environ.get("MODEL_SERVICE_URL") or "http://192.168.122.1:8200",
+                    help="임베딩(model-service) — 챗봇 코드에는 기본값이 없다(env 로만)")
     ap.add_argument("--only", help="문항 id 들(쉼표)")
     ap.add_argument("--out", help="결과 JSON")
     ap.add_argument("--verbose", action="store_true")
     a = ap.parse_args()
     os.environ["RUNSHOES_API"] = a.api
     os.environ["OLLAMA_URL"] = a.ollama
+    os.environ["MODEL_SERVICE_URL"] = a.model_service
 
     from chatbot import facts, http, prompt  # noqa: E402 — 주소를 정한 뒤에 읽는다
     from chatbot.bot import Bot, State
@@ -52,7 +55,11 @@ def main() -> int:
     dic = Dictionary(cat.terms)
     by_name = {f"{s['brand']} {s['model']}": s for s in cat.shoes}
     posts: list[dict] = []
-    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body))
+    # 검색 색인(5-2) — 평가가 읽는 API 로 한 번 만든다(model-service 를 부른다). 갱신 스레드는 띄우지 않는다
+    from chatbot.search.service import Searcher
+    searcher = Searcher()
+    print(f"색인 {searcher.sync()}")
+    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body), searcher=searcher)
 
     results = []
     copy_issues = check_term_copy(WIDE_TERM, STABILITY_DESCRIPTION)
@@ -143,8 +150,26 @@ def main() -> int:
             if re.search(rx, text):
                 fails.append(f"/{rx}/ 걸림")
 
+        # 경험·후기(5-2) — 분모 · 세 칸 합 · Hit@5
+        review_src = ""
+        if trace["branch"] == "experience":
+            counts = {s["id"]: http.get_json("/api/reviews", {"shoeId": s["id"]}) for s in reply.shoes}
+            review_src = " ".join(r["content"] for rs in counts.values() for r in rs) + " " + " ".join(str(len(v)) for v in counts.values())
+            fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
+            # 집계 숫자(언급 · 좋다 · 아쉽다)는 코드가 센 것 — 위 분모 · 칸 검사가 따로 본다.
+            # LLM 글의 숫자는 check_experience 가 리뷰 원문만으로 따로 본다(6차 수정 3 — 건수 없이, 리뷰 속 숫자만)
+            contents = " ".join(r["content"] for rs in counts.values() for r in rs)
+            review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg"))
+            fails += check_experience(text, reply, trace, contents)
+        if it.get("hit_any"):
+            want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
+            top5 = (trace.get("ranked") or [])[:5]
+            if not want & set(top5):
+                fails.append(f"Hit@5 실패 — 상위 5 {top5} 에 정답 {sorted(want)} 없음")
+
         # 수치 — API 원값과 대조
-        allowed = allowed_numbers(it["q"], reply.shoes, dic, rec_reasons, facts) | numbers(" ".join(it.get("setup", [])))
+        allowed = (allowed_numbers(it["q"], reply.shoes, dic, rec_reasons, facts) | numbers(" ".join(it.get("setup", [])))
+                   | numbers(review_src) | ({"30", "10"} if trace["branch"] == "experience" else set()))
         bad = numbers(text) - allowed
         if bad:
             fails.append(f"API 에 없는 숫자 {sorted(bad)}")
@@ -153,6 +178,34 @@ def main() -> int:
             fails.append("전문의 안내 누락")
         if text.count(prompt.DOCTOR) > 1:
             fails.append("전문의 안내가 두 번")
+        # 묻는 말이 둘(E14 · 5-1 B02 와 같은 문제 — 사용자 2026-11-13) — 모든 갈래 실패.
+        # 2차까지는 "?"로 끝나는 문장만 셌다 — 용도 묻기("…알려주시면 그에 맞춰 찾아볼게요.")는 마침표라 B05 · B09 의 두 번을 놓쳤다(3차 수정)
+        one_ask = text   # 코드 고정 문구 하나(용도 묻기 두 문장)는 묻는 말 하나로
+        for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM):
+            one_ask = one_ask.replace(c, "용도를 묻는다?")
+        asks = [s for s in sentences(one_ask) if s.endswith("?") or re.search(r"알려\s*주시면|말씀해\s*주시면", s)]
+        if len(asks) > 1:
+            fails.append(f"묻는 말 {len(asks)}개: {' / '.join(a[-25:] for a in asks)}")
+        # 코드가 붙이는 문장을 LLM 이 따라 씀 · 지우다 남은 조각(3차 수정 5) — 코드 고정 문구의 문장이 두 번 나오면.
+        # 여러 켤레의 소개 문장처럼 코드가 신발마다 같은 꼴로 쓰는 문장은 보지 않는다(일부러 되풀이한다)
+        def _k(s: str) -> str:
+            return re.sub(r"[\s\"'.,!?·—:>-]", "", s)
+        keys = [_k(s) for s in sentences(text)]
+        fixed = {_k(s) for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM, prompt.EXPLAIN_TAIL, prompt.DOCTOR, facts.PRICE_NOTE, "보러 가실래요?")
+                 for s in re.split(r"(?<=[.!?])\s+", c)}
+        dup = sorted(k for k in fixed if keys.count(k) > 1)
+        if dup:
+            fails.append(f"코드 문장이 두 번: {dup[0][:25]}")
+        # 인용을 다시 씀(3차 수정 2) — 인용 블록의 문장이 인용 밖에 또 나오면
+        quoted = {_k(s) for l in text.split("\n") if l.startswith(">") for s in re.split(r"(?<=[.!?])\s+", l[1:].strip()) if len(_k(s)) >= 8}
+        if quoted & set(keys):
+            fails.append("인용한 문장을 인용 밖에서 다시 씀")
+        # 겹침(2차 수정 4) — 코드가 붙인 문장과 LLM 글이 겹치는지 센다: "다만" 두 번 · 리뷰 원문을 따옴표로 옮김(인용은 코드 블록)
+        plain = "\n".join(l for l in text.split("\n") if not l.startswith(">"))
+        if plain.count("다만") > 1:
+            warns.append(f"'다만' {plain.count('다만')}번")
+        if trace["branch"] == "experience" and re.search(r"\"[^\"]{8,}\"", plain):
+            warns.append("리뷰 원문을 따옴표로 옮김")
         if it.get("health") is not True and prompt.DOCTOR in text:
             warns.append("통증 문항이 아닌데 전문의 안내가 붙었다")
         body = text.replace(prompt.DOCTOR, "")
@@ -160,7 +213,7 @@ def main() -> int:
             fails.append("진단성 표현")
         if re.search(r"나아져요|나아질 거|해결돼요|해결됩니다|해결될 거|좋아집니다|좋아져요|줄어들 거예요|막아 줄 거예요", body):
             fails.append("효과 약속")
-        if trace["branch"] in ("explain",) or trace.get("explained"):
+        if (trace["branch"] in ("explain",) or trace.get("explained")) and not reply.shoes:   # 설명문에서 신발을 받았으면 된다(5-2)
             if re.search(r"(등록된|이 사이트의?)\s*(신발|모델)|(모델|신발)들?이\s*(있어요|많아요)|(이|가)\s*해당(해요|돼요)", body):
                 fails.append("근거에 신발이 없는데 목록 이야기")
         hb, hu = help_claims(body)
@@ -168,8 +221,12 @@ def main() -> int:
             fails.append(f"효과 약속(신발이 몸에 도움): {s_[:50]}")
         for s_ in hu:
             warns.append(f"'도움이' 주어를 가리기 어려움 — 사람이 읽는다: {s_[:50]}")
-        if re.search(r"러너들이|실제 사용자|많은 사람들이|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
+        if re.search(r"러너들이|실제 사용자|많은 사람들|대부분의 사용자|사용자들|전문가|완벽한 선택|죄송합니다만", text):
             fails.append("금칙어")
+        # "카본" 없는 "플레이트"는 리뷰에서 온 말일 때만 막는다 — 설명문 · 스펙에는 "판(플레이트)은 나일론"이 실제로 있다
+        # (엔돌핀 스피드 4, 3차 수정 S10). 리뷰를 말하는 문장(경험·후기 갈래에서 "리뷰"가 든 문장)만 본다
+        if trace["branch"] == "experience" and any(re.search(r"(?<!카본 )플레이트", s) and "리뷰" in s for s in sentences(text)):
+            fails.append("금칙어(리뷰에서 카본 없는 플레이트)")
         if re.search("[\U0001F000-\U0001FAFF☀-➿]", text):
             fails.append("이모지")
         if it.get("cat") != "term" and trace["branch"] != "term":
@@ -194,10 +251,15 @@ def main() -> int:
             fails.append("범위 밖 답에 버튼")
         if len(set(ids)) == 1 and links and not links[0]["href"].startswith("/?shoe="):
             fails.append("1켤레인데 상세 모달이 아니다")
-        if len(set(ids)) >= 2 and not links[0]["href"].startswith("/compare?ids="):
+        if len(set(ids)) >= 2 and links and not links[0]["href"].startswith("/compare?ids="):
             fails.append("2켤레 이상인데 비교하기가 아니다")
         if it.get("links") is False and links:
             fails.append("버튼이 없어야 한다")
+        # 통증 질문에 챗봇이 고른 신발(설명문) — 이름 · 버튼을 내지 않는다(사용자 2026-11-13). 경험·후기의 지목 · 리뷰 집계는 따로
+        if trace["health"] and trace["branch"] in ("explain", "out_of_scope") and reply.shoes:
+            fails.append(f"통증 질문에 챗봇이 고른 신발 {ids}")
+        if trace["health"] and trace.get("explained") and any(str(x).startswith("desc:") for x in trace["explained"]):
+            fails.append("통증 질문에 설명문 근거")
         if any(l["label"] != prompt.LINK_LABEL for l in links):
             fails.append("버튼 라벨이 '보러 가기'가 아니다")
 
@@ -220,7 +282,7 @@ def main() -> int:
 
 def load_items(only: str | None) -> list[dict]:
     items = []
-    for name in ("golden.jsonl", "golden-boundary.jsonl"):
+    for name in ("golden.jsonl", "golden-boundary.jsonl", "golden-experience.jsonl"):
         p = HERE / name
         if not p.exists():
             continue
@@ -235,9 +297,117 @@ def load_items(only: str | None) -> list[dict]:
     return items
 
 
+_DENOM = re.compile(r"리뷰\s*(\d+)건\s*(?:중|가운데)|(\d+)건 중 \d+건에서만|리뷰가\s*(\d+)건")
+# 집계 문장(5차 수정 — "나머지 N건은 언급 없음"을 뺐다): "리뷰 N건 중 관점 이야기가 K건이고, 그중 좋다는 쪽이 P건 아쉽다는 쪽이 Q건이에요"
+# 또는 "…K건이고, 모두 좋다는 쪽이에요"
+_CELLS = re.compile(r"리뷰\s*(\d+)건 중 \S+ 이야기가\s*(\d+)건이고, 그중 좋다는 쪽이\s*(\d+)건 아쉽다는 쪽이\s*(\d+)건")
+_ALL_ONE = re.compile(r"리뷰\s*(\d+)건 중 \S+ 이야기가\s*(\d+)건이고, 모두 (좋다는|아쉽다는) 쪽이에요")
+
+
+def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) -> list[str]:
+    """분모는 늘 전체(사용자 3 · 9) — 답의 「리뷰 N건 중」이 API 건수인지, 좋다 + 아쉽다 = 관점 이야기, 관점 이야기 ≤ N 인지.
+    5차 수정 전에는 긍정 + 부정 + 언급 없음 = N(세 칸)을 봤다 — 언급 없음 칸이 없어져 두 칸 합과 ≤ 로 바꿨다"""
+    from chatbot import prompt
+    fails = []
+    if prompt.EXPERIENCE_WAIT in text:
+        return ["색인 준비 전 답(잠시 뒤)"]
+    ns = set(counts.values())
+    found = [int(next(g for g in m.groups() if g)) for m in _DENOM.finditer(text)]
+    for n in found:
+        if n not in ns:
+            fails.append(f"분모 {n}건 ≠ API {sorted(ns)}")
+    if it.get("denom") and not found and any(ns):
+        fails.append("분모(리뷰 N건) 없음")
+    tallies = trace.get("tally") or []
+    for m in _CELLS.finditer(text):
+        n, k, p, q = map(int, m.groups())
+        if p + q != k or k > n or not any((t["n"], t["k"], t["pos"], t["neg"]) == (n, k, p, q) for t in tallies):
+            fails.append(f"칸이 맞지 않음 — 이야기 {k} = 좋다 {p} + 아쉽다 {q}, {k} ≤ {n}, 집계와 같은지")
+    for m in _ALL_ONE.finditer(text):
+        n, k, side = int(m.group(1)), int(m.group(2)), m.group(3)
+        want = (k, 0) if side == "좋다는" else (0, k)
+        if k > n or not any((t["n"], t["k"], t["pos"], t["neg"]) == (n, k, *want) for t in tallies):
+            fails.append(f"'모두 {side} 쪽'이 집계와 다름 — {n}건 중 {k}건")
+    for t in tallies:
+        if t["labeled"] and not (t["pos"] + t["neg"] == t["k"] <= t["n"]):
+            fails.append(f"집계 대조 실패 {t}")
+        if t["n"] != counts.get(t["shoe_id"], t["n"]):
+            fails.append(f"집계 N {t['n']} ≠ API {counts.get(t['shoe_id'])}")
+    return fails
+
+
+def check_experience(text: str, reply, trace: dict, review_src: str = "") -> list[str]:
+    """경험·후기 1차 수정(사용자 2026-11-13) — 두루뭉술한 양 · 내부 말 · 순위 · 최소 건수 · 피하려는 질문"""
+    from chatbot.branches import experience as ex
+    fails = []
+    outside = re.sub(r"\"[^\"]*\"", "", "\n".join(l for l in text.split("\n") if not l.startswith(">")))   # 인용(리뷰 원문)은 빼고
+    for w in ex.VAGUE:
+        if w in outside:
+            fails.append(f"양을 짐작하는 말 '{w}'")
+    if "분류" in outside:
+        fails.append("내부 말 '분류'")
+    # LLM 글의 숫자(5차 수정 1-1 → 6차 수정 3): 건수("N건")는 없어야 하고, 다른 숫자는 그 답 신발들의 리뷰 원문에 있는 것만.
+    # 신발 이름의 숫자는 뺀다. 코드가 지운 뒤의 글을 본다 — 지운 횟수는 trace guard 의 "근거에 없는 숫자 문장 지움"으로 센다.
+    # 코드는 신발마다 그 신발에 준 근거 리뷰로 가르고, 평가는 답 신발들의 리뷰 전부로 본다(더 느슨하다)
+    from chatbot.reply import bad_digits, name_forms
+    names = [n for s in reply.shoes for n in name_forms(s)]
+    for g in trace.get("generated") or []:
+        for s_ in re.split(r"(?<=[.!?])\s+|\n+", g):
+            if bad_digits(s_, names, review_src):
+                fails.append(f"LLM 글에 건수 · 리뷰에 없는 숫자: {s_[:40]}")
+    tally = trace.get("tally") or []
+    multi = bool(trace.get("ranked"))
+    want = trace.get("want")
+    if multi:
+        for t in tally:
+            if t["n"] < ex.MIN_REVIEWS:
+                fails.append(f"리뷰 {t['n']}건 신발이 목록에({t['shoe_id']})")
+            if want and t["labeled"]:
+                w, o = (t["pos"], t["neg"]) if want == "positive" else (t["neg"], t["pos"])
+                if (o >= w) if trace.get("avoid") else (o > w or w == 0):
+                    fails.append(f"찾는 쪽({want}) {w}건 · 반대 {o}건인 신발이 목록에({t['shoe_id']})")
+        if want and tally:
+            ws = [t["pos"] if want == "positive" else t["neg"] for t in tally]
+            if ws != sorted(ws, reverse=True):
+                fails.append(f"찾는 쪽 건수 순이 아님 {ws}")
+    if trace.get("avoid"):
+        if reply.links():
+            fails.append("피하려는 질문에 보러 가기 버튼")
+        if ex.CLOSE in text:
+            fails.append("피하려는 질문에 '보러 가실래요?'")
+    # 여러 켤레 — 어느 신발 이야기인지(3차 수정 6 · 4차 수정 3). 4차부터 LLM 글은 신발마다 따로 쓰여 그 신발 블록
+    # ("브랜드의 모델: 집계 …" + 인용) 바로 아래에 붙는다 — 그래서 이름이 없어도 어느 신발인지 정해진다.
+    # 검사: ① 첫 신발 블록 앞에 LLM 문단이 없을 것 ② 신발 블록 아래 문단이 다른 신발의 이름을 말하지 않을 것(섞임).
+    # 모델명 전체(또는 그 목록에서 하나뿐인 세대 뗀 이름)로 본다 — 이름 일부로 통과 · 걸림이 나지 않게
+    shoes = reply.shoes
+    if len(shoes) > 1:
+        from chatbot import prompt
+        code_paras = {ex.AVOID_HEAD, "말씀하신 부분을 리뷰에서 찾아봤어요.", ex.CLOSE, prompt.DOCTOR}
+        bases = [re.sub(r"\s*v?\d+\s*$", "", s["model"]) for s in shoes]
+        names = {s["id"]: {s["model"]} | ({b} if bases.count(b) == 1 else set()) for s, b in zip(shoes, bases)}
+        cur = None
+        for p in text.split("\n\n"):
+            p = p.strip()
+            if not p or p.startswith(">") or p in code_paras or p.startswith(ex.DESC_LEAD):   # 설명문 단락도 코드가 붙인다(5차)
+                continue
+            head = next((s for s in shoes if p.startswith(f"{s['brand']}의 {s['model']}:")), None)
+            if head:
+                cur = head
+                continue
+            if cur is None:
+                fails.append(f"여러 켤레인데 신발 블록 앞에 LLM 문단: {p[:30]}")
+                continue
+            others = [s["model"] for s in shoes if s["id"] != cur["id"] and any(n in p for n in names[s["id"]])]
+            if others:
+                fails.append(f"{cur['model']} 아래 문단이 다른 신발({others[0]}) 이야기: {p[:30]}")
+    return fails
+
+
 def sentences(text: str) -> list[str]:
     out = []
     for para in text.split("\n"):
+        if para.lstrip().startswith(">"):   # 인용 블록 — 리뷰 원문(말투 검사 밖)
+            continue
         for s in re.split(r"(?<=[.!?])\s+", para.strip()):
             if s and not s.startswith("·"):
                 out.append(s.strip())

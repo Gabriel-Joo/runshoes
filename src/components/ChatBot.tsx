@@ -1,7 +1,27 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Markdown, { type MarkdownToJSX } from "markdown-to-jsx/react";
 import "./ChatBot.css";
 import { CHATBOT_WS_URL } from "../api";
+
+/**
+ * 챗봇 답은 마크다운으로 그린다(5-2 2차 수정) — 인용 블록(리뷰 원문, 코드가 붙인다) · 굵게 · 목록 모두.
+ * 무엇을 쓸지는 챗봇 서버가 정한다(지금 프롬프트는 인용만 — 나머지는 서버 검사가 지운다).
+ * 답에는 리뷰 원문이 들어가므로 원시 HTML 은 그리지 않는다: HTML 을 파싱하지 않고(disableParsingRawHTML · ignoreHTMLBlocks)
+ * 글자 그대로 둔다. 링크 · 이미지는 그리지 않는다 — 신발 링크는 아래 "보러 가기" 버튼(서버 links)만 쓴다.
+ * 사용자가 친 글은 마크다운으로 읽지 않는다.
+ */
+const MD_OPTIONS: MarkdownToJSX.Options = {
+  disableParsingRawHTML: true,
+  ignoreHTMLBlocks: true,
+  disableAutoLink: true,
+  forceBlock: true,
+  wrapper: null,
+  overrides: {
+    a: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
+    img: () => null,
+  },
+};
 
 /** 링크는 챗봇 서버의 코드가 붙인다(LLM 이 아니다) — 라벨은 언제나 "보러 가기", 1켤레는 상세 모달 · 2켤레 이상은 비교하기(작업 5-1) */
 type ChatLink = { label: string; href: string };
@@ -105,7 +125,13 @@ const ChatBot = () => {
                 key={i}
                 className={`chatbot-message chatbot-message--${msg.type}`}
               >
-                {msg.text}
+                {msg.type === "bot" ? (
+                  <div className="chatbot-md">
+                    <Markdown options={MD_OPTIONS}>{msg.text}</Markdown>
+                  </div>
+                ) : (
+                  msg.text
+                )}
                 {msg.links && msg.links.length > 0 && (
                   <div className="chatbot-links">
                     {msg.links.map((l) => (

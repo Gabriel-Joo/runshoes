@@ -11,7 +11,7 @@ import threading
 from dataclasses import dataclass, field
 
 from . import http, prompt, router
-from .branches import compare, explain, recommend, spec, term
+from .branches import compare, experience, explain, recommend, spec, term
 from .catalog import Catalog, Mention, norm
 from .facts import josa
 from .reply import Reply, guard_log, guard_reset, with_doctor
@@ -56,10 +56,11 @@ def record_miss(state: State, kind: str, query: str, message: str, post=None) ->
 
 
 class Bot:
-    def __init__(self, load=Catalog.load, ask=router.ask_llm, post=None):
+    def __init__(self, load=Catalog.load, ask=router.ask_llm, post=None, searcher=None):
         self.load = load
         self.ask = ask
         self.post = post
+        self.searcher = searcher   # search.service.Searcher — 없거나 준비 전이면 경험·후기는 "잠시 뒤", 특성 설명은 사전만
 
     def turn(self, state: State, text: str) -> tuple[Reply, dict]:
         """(답, 기록 — 평가용: 갈래 · health · 찾은 신발)"""
@@ -151,10 +152,10 @@ class Bot:
             return Reply(prompt.GREETING, branch="greeting"), trace
         if b == "out_of_scope" and not found:
             if r.health:   # 몸 이야기가 섞였으면 거절하지 않고 특성으로(7절)
-                return self._explain(state, text, dic, r, trace), trace
+                return self._explain(state, text, dic, r, trace, cat), trace
             return Reply(prompt.OUT_OF_SCOPE, links_off=True, branch="out_of_scope"), trace
         if b == "explain" and not found:
-            return self._explain(state, text, dic, r, trace), trace
+            return self._explain(state, text, dic, r, trace, cat), trace
         if b == "term":
             reply, miss = term.answer(dic, terms_found, r.term)
             if miss:
@@ -184,7 +185,8 @@ class Bot:
                 if r.health:
                     # 통증 + 추천인데 용도가 없으면 되묻기 전에 특성을 먼저 말한다(사용자 2026-11-12)
                     extra = tuple(explain.FROM_CONDITION[k] for k in ("cushion", "stability", "width") if k in cond)
-                    reply = explain.answer(text, dic, True, state.history, extra, tail=prompt.ASK_PURPOSE_CALM)
+                    reply = explain.answer(text, dic, True, state.history, extra, tail=prompt.ASK_PURPOSE_CALM,
+                                           searcher=self.searcher, catalog=cat)
                     trace["explained"] = reply.explained
                     state.pending = {"kind": "purpose", "cond": cond, "question": text, "health": True}
                     reply.text = with_doctor(reply.text, True)
@@ -204,15 +206,35 @@ class Bot:
             reply = spec.answer(text, [(s, notes.get(s["id"], False)) for s in found], r.health, state.history)
             reply.text = with_doctor(reply.text, r.health)
             return reply, trace
-        # 경험·후기 — 5-1 에서는 준비 중(5-2에서 제거)
-        if r.health and not found:   # 몸 이야기가 섞였으면 준비 중으로 돌려보내지 않고 특성으로
-            return self._explain(state, text, dic, r, trace), trace
-        return Reply(with_doctor(prompt.EXPERIENCE_PENDING, r.health), found, branch="experience"), trace
+        # 경험·후기(5-2) — 리뷰 집계. 색인 준비 전 · model-service 실패면 "잠시 뒤"(다른 갈래는 그대로)
+        shoes = (found or context)[:3]
+        ready = self.searcher is not None and self.searcher.ready
+        if r.health and not shoes and not router.has_any(text, router.REVIEW_WORDS):
+            # 몸 이야기 + 신발 없음 + 후기를 직접 묻지 않음 — 특성으로(5-1 과 같다). "저려서 큰 사이즈로 신는데 괜찮을까요"에
+            # 여러 신발의 리뷰 목록을 내면 물음을 비켜 간다(5-2 평가 경계 B06 · B08)
+            return self._explain(state, text, dic, r, trace, cat), trace
+        if not ready:
+            trace["experience"] = "not_ready"
+            return Reply(with_doctor(prompt.EXPERIENCE_WAIT, r.health), shoes, branch="experience"), trace
+        try:
+            reply = experience.answer(text, shoes, cat, self.searcher, r.health, state.history, avoid=r.avoid)
+        except Exception as e:   # noqa: BLE001 — model-service · API 가 안 되면 기다려 달라고 한다
+            print(f"[experience] 실패: {e!r}")
+            trace["experience"] = f"error {type(e).__name__}"
+            return Reply(with_doctor(prompt.EXPERIENCE_WAIT, r.health), shoes, branch="experience"), trace
+        trace["shoes"] = [s["id"] for s in reply.shoes]
+        trace["ranked"] = reply.ranked
+        trace["tally"] = reply.tally
+        trace["want"] = reply.want
+        trace["generated"] = reply.generated
+        trace["avoid"] = r.avoid
+        reply.text = with_doctor(reply.text, r.health)
+        return reply, trace
 
     # ------------------------------------------------------------------
-    def _explain(self, state: State, text: str, dic: Dictionary, r, trace: dict) -> Reply:
+    def _explain(self, state: State, text: str, dic: Dictionary, r, trace: dict, cat: Catalog | None = None) -> Reply:
         """특성 설명 — 끝에 "어떤 달리기에 신으실지…"를 붙이고, 다음 답이 용도면 추천으로 잇는다"""
-        reply = explain.answer(text, dic, r.health, state.history)
+        reply = explain.answer(text, dic, r.health, state.history, searcher=self.searcher, catalog=cat)
         trace["explained"] = reply.explained
         if not reply.explained:
             # 사전에 걸리는 특성이 없어 답하지 못했다 — 무엇을 궁금해하는지 남긴다(사용자 2회차, kind feature)
