@@ -388,7 +388,7 @@ def check_experience(text: str, reply, trace: dict, review_src: str = "") -> lis
         cur = None
         for p in text.split("\n\n"):
             p = p.strip()
-            if not p or p.startswith(">") or p in code_paras or p.startswith(ex.DESC_LEAD):   # 설명문 단락도 코드가 붙인다(5차)
+            if not p or p.startswith(">") or p in code_paras:
                 continue
             head = next((s for s in shoes if p.startswith(f"{s['brand']}의 {s['model']}:")), None)
             if head:

@@ -204,7 +204,6 @@ def dump() -> str:
                                        __import__("chatbot.branches.common", fromlist=["x"]).REFERENCE_HEAD])),
         ("경험·후기 — 앞에 나간 것 알림", experience.BEFORE_NOTE),
         ("갈래마다 주는 말투 예시(EXAMPLES_BY_BRANCH — 9차)", "\n".join(f"{b}: {' '.join(v) or '없음'}" for b, v in EXAMPLES_BY_BRANCH.items())),
-        ("경험·후기 — 코드가 LLM 글 뒤에 붙이는 설명문 단락 머리(LLM 에 주지 않는다)", experience.DESC_LEAD),
     ]
     out = []
     for title, body in parts:

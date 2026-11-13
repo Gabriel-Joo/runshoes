@@ -5,8 +5,9 @@
 2. 집계 — 그 신발 리뷰를 API 에서 새로 읽는다(분모는 늘 지금 값). 관점(무릎 · 발볼 …)을 물었으면
    그 관점을 말한 리뷰 후보(낱말 묶음 + 임베딩 유사도)를 LLM 에 JSON 으로 한 번 묻고(temperature 0) 코드가 센다.
    좋다 + 아쉽다 = 그 이야기가 나온 리뷰 ≤ N 을 코드가 맞춰 본다. 별점으로 대신하지 않는다
-3. 답 — 틀리면 안 되는 것(집계 · 인용 · 설명문)은 코드가 쓰고, LLM 은 리뷰 여러 건을 묶어 말하기만(5차 수정).
-   LLM 근거에는 숫자 · 설명문이 없고, LLM 글에 숫자가 든 문장은 지운다. 리뷰는 30건까지(넘으면 추천 많은 순, 잘랐다고 밝힌다)
+3. 답 — 틀리면 안 되는 것(집계 · 인용)은 코드가 쓰고, LLM 은 리뷰 여러 건을 묶어 말하기만(5차 수정).
+   LLM 근거에는 건수가 없고, 근거 리뷰에 없는 숫자 · 건수가 든 문장은 지운다. 설명문은 이 갈래에서 쓰지 않는다(운영 뒤).
+   리뷰는 30건까지(넘으면 추천 많은 순, 잘랐다고 밝힌다)
 
 리뷰는 가상 유저 200명이 만든 데이터다 — "등록된 리뷰"로 말한다(러너들이 · 실제 사용자 · 많은 사람들 금지, 코드가 막는다).
 """
@@ -19,8 +20,9 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 
 from .. import http, llm, prompt
-from ..facts import PRICE_NOTE, josa
-from ..reply import Reply, drop_asks, guard_log, guard_reset, haeyo, name_forms, plain_words
+from ..facts import (PRICE_NOTE, STABILITY_PLAIN, WIDE_SCOPE, WIDTH_PLAIN, euro, josa, jong, num, weight_converted,
+                     weight_phrase)
+from ..reply import Reply, drop_asks, guard_log, guard_reset, haeyo, name_forms
 from ..search.index import like_rerank, rank_shoes
 from .common import generate
 
@@ -38,8 +40,8 @@ VAGUE = ("많아요", "대부분", "전반적으로", "주로", "흔히")
 CLOSE = "보러 가실래요?"   # 끝 안내 — 코드가 붙인다(LLM 이 쓰면 묻는 말이 둘 됐다, E14)
 MENTION_COS = 0.60       # 낱말이 든 리뷰가 없을 때 임베딩만으로 후보에 넣는 문턱(candidates 참고)
 EXTRA = 5                # 임베딩으로 더하는 후보 상한(신발마다)
-DESC_COS = 0.50          # 설명문 문장을 붙일 문턱
-DESC_MAX = 2             # 코드가 붙이는 설명문 문장 수(5차 수정 3 → 2 — 다듬을 수 없는 원문이라 짧게. Claude 가 정함)
+# 설명문은 이 갈래에서 쓰지 않는다(5-2 운영 뒤, 사용자 2026-11-13 — "밑창 금방 닳아요?"에 갑피 · 통기성 · 텅 이야기까지 붙었다.
+# 리뷰로 답이 되고 설명문은 상세 페이지에 있다). 5차부터 코드가 LLM 글 뒤에 붙이던 "신발 설명을 보면 …"을 걷었다. 특성 설명 갈래는 그대로
 
 # 관점 — 질문에서 가장 앞에 나온 것 하나. 리뷰 후보를 고르는 낱말 묶음이기도 하다
 ASPECTS: list[tuple[str, tuple[str, ...]]] = [
@@ -334,7 +336,6 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
     named = multi or len(tallies) > 1   # 챗봇이 고른 신발은 하나만 남아도 이름을 앞에(무슨 신발 이야기인지 모른다)
     sections: list[list[str]] = []   # 신발마다 코드가 쓰는 글 — 집계 문장 + 소개, 인용 블록(꼭 들어갈 문장은 코드가, 2차 수정 2 · 5)
     jobs: list[tuple | None] = []    # 신발마다 LLM 에 줄 근거
-    descs: list[str] = []            # 신발마다 코드가 LLM 글 뒤에 붙이는 설명문 단락(없으면 "")
     # 통증은 낱말 묶음이 넓다(아프 · 물집 · 쓸림 · 저림 …) — 질문의 낱말("물집" · "쓸리")이 든 리뷰만 인용 · 근거로(3차 수정 3, E12)
     focus = tuple(w for w in _ASPECT[aspect] if w in question) if aspect == "통증" else ()
     for t in tallies:
@@ -342,7 +343,6 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         if t.n == 0:
             sections.append([f"{name}에는 아직 등록된 리뷰가 없어요."])
             jobs.append(None)
-            descs.append("")
             continue
         # 관점을 물었는데 말한 리뷰가 없으면 리뷰를 넣지 않는다 — 넣으면 LLM 이 다른 이야기로 채운다
         pool = t.mentioned() if aspect else by_likes(t.reviews)
@@ -353,6 +353,11 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         read_note = (None if not cut else f"리뷰 {t.n}건 중 추천이 많은 {len(shown)}건을 봤어요." if not aspect else
                      f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
         summ = summary_lines(t) or [f"{name}에는 리뷰가 {t.n}건 있어요."]
+        # 그 관점 이야기가 0건이면 스펙으로 답할 수 있는 관점만 스펙 한 줄(운영 뒤, 사용자 승인 — 0건이 흔해 답이 자주 비었다)
+        if aspect in SPEC_ASPECTS and t.n and t.k == 0:
+            line = spec_line(t.shoe, aspect)
+            if line:
+                summ = summ + [line]
         q = quote(t, want, focus) if (not aspect or t.k) else None
         sec = [(f"{name}: " if named and aspect else "") + " ".join(summ + ([read_note] if read_note else []) + ([q[0]] if q else []))]
         if q:
@@ -367,11 +372,6 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         ev = evidence(t, pool, shown_ids, aspect, focus, t.sides)
         # LLM 글에 써도 되는 숫자의 출처 — 이 신발에 준 근거 리뷰 + 인용 블록(6차 수정 3)
         jobs.append((t, ev, "\n".join(ev + ([q[1]] if q else []))) if ev else None)
-        # 설명문 — LLM 에 주지 않고 코드가 LLM 글 뒤에 붙인다(5차 수정 1-2 — 주면 설명문으로 시작해 설명문으로 끝냈다, E11).
-        # 그 신발 · 질문 관점 낱말이 든 문장만(4차 수정 2), 없으면 줄째 없다. 관점이 없는 질문 · 피하려는 질문에는 붙이지 않는다.
-        # 통증이면 챗봇이 고른 신발(여러 켤레)에만 붙이지 않는다 — 사용자가 지목한 신발은 그대로(6차 수정 4, 2차 기준과 같게)
-        desc = [] if avoid or not aspect or (health and multi) else desc_lines(searcher, qvec, qtext, [t.shoe["id"]], aspect)
-        descs.append(DESC_LEAD + " ".join(desc) if desc else "")
 
     head = (AVOID_HEAD if avoid else "말씀하신 부분을 리뷰에서 찾아봤어요.") if multi else ""
     before = [x for sec in sections for x in sec]
@@ -390,7 +390,7 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         t, ev, src = job
         lines = [f"[{shoe_name(t.shoe)}]", *ev]
         # 근거 리뷰에 없는 숫자 · 건수("N건")가 든 문장은 검사 전에 지운다(5차 수정 1-1 → 6차 수정 3에서 좁힘).
-        # 말투 예시는 숫자 없는 것만(6차 수정 2)
+        # 말투 예시는 주지 않는다(9차 수정 — prompt.EXAMPLES_BY_BRANCH)
         body, used = generate(question, lines, [], "", health, [], task, reference=False, before=before,
                               before_note=BEFORE_NOTE, tails=tails, no_digits=name_forms(t.shoe), digit_source=src,
                               branch="experience")
@@ -410,9 +410,9 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         guard_log()[:0] = mine   # comment 가 이 스레드의 로그를 비웠다 — 앞의 것을 되돌린다
     used = False
     parts = [head] if head else []
-    for sec, (body, u, logs), desc in zip(sections, outs, descs):
-        # 신발마다: 집계 + 인용(코드) → 리뷰 이야기(LLM) → 설명문(코드). 한 켤레도 같은 자리(5차 수정 1-2)
-        parts += sec + ([body] if body else []) + ([desc] if desc else [])
+    for sec, (body, u, logs) in zip(sections, outs):
+        # 신발마다: 집계 + 인용(코드) → 리뷰 이야기(LLM). 5차부터 붙이던 설명문 단락은 뺐다(운영 뒤)
+        parts += sec + ([body] if body else [])
         used = used or u
         if sum(j is not None for j in jobs) > 1:
             guard_log().extend(logs)
@@ -427,12 +427,64 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
     return reply
 
 
+# 0건일 때 스펙 한 줄(운영 뒤, 사용자 승인 2026-11-13) — 스펙으로 답할 수 있는 관점만. LLM 을 부르지 않는다.
+# 0건 고정 문장("이 신발 리뷰 N건 가운데 그 부분을 말한 리뷰는 없었어요.") 바로 뒤에 붙으므로 "리뷰에는 없지만"을 되풀이하지 않고
+# "등록된 스펙으로는"으로 리뷰와 가른다(Claude 가 정함). 숫자 · 위치 말은 스펙 갈래 · 비교하기와 같은 출처(facts · GET /api/compare)
+SPEC_ASPECTS = ("쿠션", "무게", "발볼", "안정감")
+SPEC_HEAD = "등록된 스펙으로는 "
+
+
+def spec_words(shoe: dict) -> dict:
+    """비교하기와 같은 위치 말(무게 · 쿠션 높이의 "높은 편" · "중간" …) — 한 켤레로 /api/compare. 실패하면 말 없이"""
+    try:
+        rows = http.get_json("/api/compare", {"ids": str(shoe["id"])}).get("shoes", [])
+        r = next((x for x in rows if x.get("id") == shoe["id"]), {})
+        return {k: (r.get(k) or {}).get("word") for k in ("weight", "stackHeight")}
+    except Exception as e:   # noqa: BLE001
+        print(f"[experience] 위치 말 읽기 실패: {e!r}")
+        return {}
+
+
+def spec_line(shoe: dict, aspect: str, words: dict | None = None) -> str | None:
+    """쿠션 → 쿠션 높이 + 위치 말 · 무게 → 무게(기준 사이즈) + 270mm 환산 + 위치 말 · 발볼 → 발볼 칸 + 넓은 폭 버전 ·
+    안정감 → 안정성 칸. 값이 비어 있으면 None(붙이지 않는다)"""
+    if aspect == "쿠션":
+        v = shoe.get("stackHeight")
+        if v is None:
+            return None
+        w = (words if words is not None else spec_words(shoe)).get("stackHeight")
+        return f"{SPEC_HEAD}쿠션 높이가 {num(v)}mm" + (f"로 {w}이에요." if w else "예요.")
+    if aspect == "무게":
+        p = weight_phrase(shoe)
+        if p is None:
+            return None
+        c = weight_converted(shoe)
+        w = (words if words is not None else spec_words(shoe)).get("weight")
+        body = p + (f", 270mm로 환산하면 약 {c}g" if c is not None else "")
+        return f"{SPEC_HEAD}무게가 {body}" + (f"으로 {w}이에요." if w else "이에요.")
+    if aspect == "발볼":
+        width = WIDTH_PLAIN.get(shoe.get("width"))
+        wide = shoe.get("wideAvailable")
+        wide_s = (f"넓은 폭(2E·4E) 버전은 {WIDE_SCOPE.get(shoe.get('wideScope'), '있어요')}" if wide is True
+                  else "넓은 폭(2E·4E) 버전은 따로 없어요" if wide is False else None)
+        if width and wide_s:
+            return f"{SPEC_HEAD}발볼이 {euro(width)} 나와 있고, {wide_s}."
+        if width:
+            return f"{SPEC_HEAD}발볼이 {euro(width)} 나와 있어요."
+        return f"발볼은 등록된 스펙에 없지만, {wide_s}." if wide_s else None   # "스펙으로는 … 버전은"처럼 "는"이 겹치지 않게
+    if aspect == "안정감":
+        v = shoe.get("stability")
+        if not v:
+            return None
+        # "중립화(교정 장치 없이 …)" — 조사는 괄호 앞 낱말로 고른다
+        return f"{SPEC_HEAD}{STABILITY_PLAIN.get(v, v)}{'으로' if jong(v) and jong(v) != 8 else '로'} 나와 있어요."
+    return None
+
+
 AVOID_HEAD = "말씀하신 이야기가 나온 리뷰를 찾아봤어요. 아래 신발은 등록된 리뷰에 그런 이야기가 있었어요."
 NO_MATCH = "말씀하신 이야기가 나온 리뷰를 등록된 리뷰에서 찾지 못했어요. 신발 이름을 알려주시면 그 신발 리뷰를 살펴볼게요."
 
 
-# 코드가 LLM 글 뒤에 붙이는 설명문 단락의 머리(5차 수정 1-2 — 4차까지 LLM 이 쓰던 꼴 그대로)
-DESC_LEAD = "신발 설명을 보면 "
 # 앞에 나간 것 — 글은 보여 주지 않고 무엇이 나갔는지만(3차 수정 5 — 통째로 보여 주니 "이야기가 총 3건 …"처럼 다시 썼다)
 BEFORE_NOTE = ("[이미 앞에 나간 것] 이 신발의 이름 · 리뷰 수 · 질문한 이야기의 집계 문장과 인용 리뷰 한 건은 코드가 바로 앞에 썼다. "
                "그 집계 문장을 다시 쓰지 않는다. 인용한 리뷰는 [리뷰]에서 뺐다 — 그 리뷰 이야기도 다시 쓰지 않는다. "
@@ -658,18 +710,3 @@ def split_sides(reviews: list[dict], classify_sides) -> dict[int, str] | None:
     return None
 
 
-def desc_lines(searcher, qvec, question: str, shoe_ids: list[int], aspect: str | None) -> list[str]:
-    """그 신발 설명문에서 관점을 말한 문장 — 관점 낱말이 든 것만(같은 신발 문장은 유사도가 다 높아 문턱으로 못 가른다).
-    유사도 순으로 DESC_MAX 개를 골라 설명문 안 순서대로 둔다. 코드가 그대로 붙이니 해요체 · 쉬운 말로 바꾼다.
-    관점이 없는 질문("후기 어때요")에는 넣지 않는다 — 설명문 요약이 리뷰 이야기를 밀어냈다"""
-    if not aspect:
-        return []
-    hits = searcher.index.search(qvec, question, 40, {"kind": "desc", "shoe_id": shoe_ids})
-    picked = [h for h in hits if mentions_by_words(aspect, h.text) and (h.cosine or 0) >= DESC_COS][:DESC_MAX]
-    picked.sort(key=lambda h: h.meta.get("sentence") or 0)
-    # 설명문 원문은 합니다체 · 사전 용어 — 해요체 · 쉬운 말로(2차 수정 6 · 5차 수정 1-2).
-    # "와이드 모델 → 넓은 폭(2E·4E) 버전"(공통 말투 규칙)은 여기서만 — LLM 글에 넣으면 2E 가 숫자로 걸린다
-    return [_WIDE.sub(lambda m: "넓은 폭(2E·4E) 버전" + ("으로" if m.group(1) else ""), plain_words(haeyo(h.text))) for h in picked]
-
-
-_WIDE = re.compile(r"와이드 모델(로)?")

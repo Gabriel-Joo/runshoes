@@ -101,6 +101,68 @@ class RankTest(unittest.TestCase):
         self.assertEqual(max(bm.scores("발볼 넓은").items(), key=lambda kv: kv[1])[0], 0)
 
 
+class _Stop(BaseException):
+    """_loop 의 except Exception 을 빠져나가 무한 루프를 끊는다"""
+
+
+class BackendWaitTest(unittest.TestCase):
+    """첫 동기화 전 같은 Pod 백엔드 준비 기다리기(5-2 운영 뒤) — 가짜 시계 · 가짜 확인"""
+
+    def make(self, ready_at: float | None, refresh: int = 600):
+        clock = {"t": 0.0, "checks": 0}
+
+        def ready():
+            clock["checks"] += 1
+            return ready_at is not None and clock["t"] >= ready_at
+
+        def sleep(sec):
+            if sec == refresh:
+                raise _Stop()   # 첫 동기화 뒤 10분 쉬려는 자리에서 멈춘다
+            clock["t"] += sec
+
+        s, _ = searcher(ready_check=ready, now=lambda: clock["t"], sleep=sleep, refresh_sec=refresh)
+        return s, clock
+
+    def run_loop(self, s):
+        import contextlib
+        import io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), self.assertRaises(_Stop):
+            s._loop()
+        return out.getvalue()
+
+    def test_waits_then_syncs_once(self):
+        s, clock = self.make(ready_at=6)
+        log = self.run_loop(s)
+        self.assertEqual(clock["checks"], 4)                       # 0 · 2 · 4 · 6초
+        self.assertIn("[search] 백엔드 준비 확인 — 6초 기다림", log)
+        self.assertTrue(s.ready)                                     # 준비 뒤 sync 한 번
+        self.assertNotIn("실패", log)                                 # 기다리는 동안 실패 줄 없음
+
+    def test_gives_up_after_wait_then_old_loop(self):
+        from chatbot.search import service
+        s, clock = self.make(ready_at=None)
+        log = self.run_loop(s)
+        self.assertEqual(clock["checks"], service.READY_WAIT_SEC // service.READY_EVERY_SEC + 1)   # 0 ~ 180초
+        self.assertIn("기다리지 못했다", log)
+        self.assertTrue(s.ready)                                     # 그 뒤는 지금 루프 그대로(가짜 fetch 라 성공)
+
+    def test_ready_request_failure_is_silent(self):
+        import contextlib
+        import io
+        from unittest import mock
+
+        import requests
+
+        from chatbot import http
+        from chatbot.search import service
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), mock.patch.object(http.requests, "get", side_effect=requests.ConnectionError("refused")):
+            self.assertIsNone(http.status(service.READY_PATH))
+            self.assertFalse(service.backend_ready())
+        self.assertEqual(out.getvalue(), "")
+
+
 class IndexTest(unittest.TestCase):
     def test_sync_only_changed(self):
         s, data = searcher()
@@ -218,6 +280,21 @@ class TallyTest(unittest.TestCase):
         # 쪽 가르기가 두 번 다 실패하면 추천 많은 리뷰 한 묶음
         self.assertIsNone(ex.split_sides(rs, lambda cs: ["positive"]))
         self.assertEqual(ex.evidence(ex.Tally(SHOES[0], rs, None), rs, {r["id"] for r in rs}, None, (), None)[0], "[리뷰]")
+
+    def test_spec_line(self):
+        # 0건일 때 스펙 한 줄(운영 뒤) — 위치 말은 비교하기와 같은 출처(여기서는 넘겨 준다), 값이 없으면 None
+        s = {"id": 1, "stackHeight": 41.5, "weight": 297, "weightSize": "M10", "weightNorm270": 282.2, "width": "보통",
+             "wideAvailable": True, "wideScope": "domestic", "stability": "중립화"}
+        w = {"stackHeight": "높은 편", "weight": "중간"}
+        self.assertEqual(ex.spec_line(s, "쿠션", w), "등록된 스펙으로는 쿠션 높이가 41.5mm로 높은 편이에요.")
+        self.assertEqual(ex.spec_line(s, "무게", w), "등록된 스펙으로는 무게가 297g(280mm 기준), 270mm로 환산하면 약 282g으로 중간이에요.")
+        self.assertEqual(ex.spec_line(s, "발볼", w), "등록된 스펙으로는 발볼이 보통으로 나와 있고, 넓은 폭(2E·4E) 버전은 국내에서 살 수 있어요.")
+        self.assertEqual(ex.spec_line(s, "안정감", w), "등록된 스펙으로는 중립화(교정 장치 없이 쿠션을 고르게 둔 신발)로 나와 있어요.")
+        self.assertEqual(ex.spec_line({**s, "width": None}, "발볼", w), "발볼은 등록된 스펙에 없지만, 넓은 폭(2E·4E) 버전은 국내에서 살 수 있어요.")
+        self.assertIsNone(ex.spec_line({**s, "width": None, "wideAvailable": None}, "발볼", w))
+        self.assertIsNone(ex.spec_line({**s, "stackHeight": None}, "쿠션", w))
+        self.assertEqual(ex.spec_line(s, "쿠션", {}), "등록된 스펙으로는 쿠션 높이가 41.5mm예요.")   # 위치 말을 못 읽으면 말 없이
+        self.assertIsNone(ex.spec_line(s, "무릎", w))                                                 # 붙일 스펙이 없는 관점
 
     def test_diverse(self):
         # 이야기가 다른 리뷰 먼저(하나도 안 겹쳐야), 남은 자리는 추천 순 — 관점이 안 걸리는 리뷰는 남은 자리에서만(9차 수정)

@@ -16,6 +16,14 @@ def get_json(path: str, params: dict | None = None):
     return r.json()
 
 
+def status(path: str, timeout: float = 2) -> int | None:
+    """GET 상태 코드만 — 닿지 않으면 None(예외 · 로그 없이). 같은 Pod 백엔드 준비 확인용(search.service)"""
+    try:
+        return requests.get(f"{API}{path}", timeout=timeout).status_code
+    except requests.RequestException:
+        return None
+
+
 def post_json(path: str, body: dict) -> int:
     r = requests.post(f"{API}{path}", json=body, timeout=TIMEOUT)
     return r.status_code
