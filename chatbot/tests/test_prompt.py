@@ -22,10 +22,13 @@ class PromptTest(unittest.TestCase):
 
     def test_see_it_only_where_shoes_are(self):
         # "보러 가실래요?" — 신발을 말하는 갈래의 [할 일]에만(공통 규칙 · 특성 설명에는 없다)
-        for t in (spec.TASK, compare.TASK, recommend.TASK, experience.TASK):
+        for t in (spec.TASK, compare.TASK, recommend.TASK):
             self.assertIn("보러 가실래요?", t)
         self.assertNotIn("보러 가실래요", prompt.TONE)
         self.assertNotIn("보러 가실래요", explain.TASK)
+        # 경험·후기는 코드가 끝에 붙인다 — [할 일]은 질문으로 끝내지 말라고만(2026-11-13, E14 묻는 말 둘)
+        self.assertNotIn("보러 가실래요", experience.TASK)
+        self.assertIn("질문으로 끝내지 않고", experience.TASK)
 
     def test_health_has_help_rule(self):
         self.assertIn("도움이 된다", prompt.HEALTH)

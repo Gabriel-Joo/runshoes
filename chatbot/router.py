@@ -44,6 +44,7 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
 {{
   "branch": "term" | "spec" | "compare" | "recommend" | "explain" | "experience" | "out_of_scope" | "greeting",
   "health_context": true | false,
+  "avoid": true | false,
   "shoe_names": ["문장에 나온 신발 모델 이름 그대로"],
   "term": "뜻을 물은 러닝화 용어(없으면 null)",
   "feature": "신발 특성을 물었다면 그 특성을 짧은 명사구로(예: 뒤꿈치 쓸림, 힐컵, 통기성). 없으면 null",
@@ -72,8 +73,15 @@ branch
 
 health_context
 - 문장에 통증 · 부상 · 몸의 불편함이 조금이라도 드러나면 true. 낱말이 아니라 뜻으로 본다
-  ("발 디딜 때마다 찌릿해요", "오래 뛰면 다리가 못 버텨요", "무릎이 시큰거려요" 모두 true)
+  ("발 디딜 때마다 찌릿해요", "오래 뛰면 다리가 못 버텨요", "무릎이 시큰거려요", "발에 물집이 잘 잡혀요" 모두 true)
+- 피하려는 질문(avoid)이어도 몸 이야기가 있으면 true — 둘은 따로 정한다
 - 그런 이야기가 없으면 false
+
+avoid
+- 피하다 · 빼다 · 거르다 · 안 사고 싶다처럼 그런 신발을 피하겠다는 뜻을 문장에서 직접 말할 때만 true
+  ("쓸린다는 후기 있는 신발은 피하고 싶어요", "발볼 좁다는 평 있는 건 빼 주세요", "물집 잡힌다는 신발은 거를래요")
+- 그런 후기가 있는지 · 신발이 어떤지 묻는 것은 false
+  ("쓸렸다는 후기 있어요?", "덥다는 후기 있는 신발 있어요?", "무릎 편하다는 후기 있는 신발", "밑창 금방 닳아요?")
 
 shoe_names
 - 문장에 나온 러닝화 모델 이름을 세대 숫자까지 그대로 적는다("호카 마하 7" → "마하 7"). 브랜드만 나오면 넣지 않는다.
@@ -101,6 +109,7 @@ class Route:
     conditions: dict = field(default_factory=dict)
     llm_ok: bool = True
     feature: str | None = None
+    avoid: bool = False   # 피하려는 질문(경험·후기 — 버튼을 붙이지 않고 그 이야기가 나온 신발만, 사용자 2026-11-13)
 
 
 def has_any(text: str, words: tuple[str, ...]) -> bool:
@@ -152,7 +161,8 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
         cond.pop("price_level", None)
     if not re.search(r"\d|만\s*원|천\s*원", text):
         cond.pop("budget_won", None)
-    return Route(branch, health, rule is not None, names, term, cond, ok, feature)
+    avoid = ok and data.get("avoid") is True
+    return Route(branch, health, rule is not None, names, term, cond, ok, feature, avoid)
 
 
 PRICE_WORDS = ("가격", "값", "원", "싼", "싸", "저렴", "비싸", "비싼", "가성비", "예산", "돈", "부담", "상관없", "얼마")

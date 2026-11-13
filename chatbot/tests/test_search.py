@@ -186,6 +186,39 @@ class TallyTest(unittest.TestCase):
         self.assertFalse(ex.counts_kept("2건에서만 나온 이야기예요", [t]))    # 분모가 숨음
 
 
+class PickShoesTest(unittest.TestCase):
+    """1차 수정(사용자 2026-11-13) — 찾는 쪽 건수 순 · 반대가 많은 신발 빼기 · 피하려는 질문"""
+    def t(self, sid, pos, neg, n=20):
+        t = ex.Tally({"id": sid, "brand": "b", "model": f"m{sid}"}, [{"id": i, "content": "", "likeCount": 0} for i in range(n)], "발볼")
+        t.labeled = True
+        t.labels = {**{i: "positive" for i in range(pos)}, **{100 + i: "negative" for i in range(neg)}}
+        return t
+
+    def test_find_positive(self):
+        out = ex.pick_shoes([self.t(1, 2, 0), self.t(2, 6, 7), self.t(3, 5, 1), self.t(4, 0, 0)], "positive", False)
+        self.assertEqual([x.shoe["id"] for x in out], [3, 1])          # 6:7(부정이 많음) · 0건은 뺀다, 긍정 건수 순
+
+    def test_avoid_keeps_negative_only(self):
+        out = ex.pick_shoes([self.t(1, 1, 2), self.t(2, 2, 0), self.t(3, 1, 1)], "negative", True)
+        self.assertEqual([x.shoe["id"] for x in out], [1])             # 긍정 리뷰 신발 · 같은 수는 뺀다
+
+    def test_unknown_side_keeps_order(self):
+        out = ex.pick_shoes([self.t(1, 0, 3), self.t(2, 3, 0)], None, False)
+        self.assertEqual([x.shoe["id"] for x in out], [1, 2])
+
+    def test_with_doctor_before_code_tail(self):
+        from chatbot.prompt import DOCTOR
+        from chatbot.reply import with_doctor
+        self.assertEqual(with_doctor("본문.\n\n보러 가실래요?", True), f"본문.\n\n{DOCTOR}\n\n보러 가실래요?")
+        self.assertEqual(with_doctor("봤는데, 보러 가실래요?", True), f"봤는데, 보러 가실래요?\n\n{DOCTOR}")   # 단락 전체가 아니면 끝에
+        self.assertTrue(DOCTOR.startswith("다만 "))
+
+    def test_embedder_needs_url(self):
+        from chatbot.search.embed import Embedder
+        with self.assertRaises(ValueError):
+            Embedder(url="")
+
+
 class AspectRouteTest(unittest.TestCase):
     def test_aspect(self):
         self.assertEqual(ex.aspect_of("노바블라스트 6 신으면 무릎 아파요?"), "무릎")

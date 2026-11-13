@@ -217,7 +217,7 @@ class Bot:
             trace["experience"] = "not_ready"
             return Reply(with_doctor(prompt.EXPERIENCE_WAIT, r.health), shoes, branch="experience"), trace
         try:
-            reply = experience.answer(text, shoes, cat, self.searcher, r.health, state.history)
+            reply = experience.answer(text, shoes, cat, self.searcher, r.health, state.history, avoid=r.avoid)
         except Exception as e:   # noqa: BLE001 — model-service · API 가 안 되면 기다려 달라고 한다
             print(f"[experience] 실패: {e!r}")
             trace["experience"] = f"error {type(e).__name__}"
@@ -225,6 +225,8 @@ class Bot:
         trace["shoes"] = [s["id"] for s in reply.shoes]
         trace["ranked"] = reply.ranked
         trace["tally"] = reply.tally
+        trace["want"] = reply.want
+        trace["avoid"] = r.avoid
         reply.text = with_doctor(reply.text, r.health)
         return reply, trace
 

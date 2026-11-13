@@ -33,12 +33,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--api", default="https://runshoes.ronanlab.dev", help="런슈즈 API(읽기만 한다)")
     ap.add_argument("--ollama", default="http://127.0.0.1:11434")
+    ap.add_argument("--model-service", default=os.environ.get("MODEL_SERVICE_URL") or "http://192.168.122.1:8200",
+                    help="임베딩(model-service) — 챗봇 코드에는 기본값이 없다(env 로만)")
     ap.add_argument("--only", help="문항 id 들(쉼표)")
     ap.add_argument("--out", help="결과 JSON")
     ap.add_argument("--verbose", action="store_true")
     a = ap.parse_args()
     os.environ["RUNSHOES_API"] = a.api
     os.environ["OLLAMA_URL"] = a.ollama
+    os.environ["MODEL_SERVICE_URL"] = a.model_service
 
     from chatbot import facts, http, prompt  # noqa: E402 — 주소를 정한 뒤에 읽는다
     from chatbot.bot import Bot, State
@@ -155,6 +158,7 @@ def main() -> int:
             fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
             # 집계 숫자(언급 · 긍정 · 부정 · 나머지)는 코드가 센 것 — 위 분모 · 세 칸 검사가 따로 본다
             review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg", "rest"))
+            fails += check_experience(text, reply, trace)
         if it.get("hit_any"):
             want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
             top5 = (trace.get("ranked") or [])[:5]
@@ -172,6 +176,10 @@ def main() -> int:
             fails.append("전문의 안내 누락")
         if text.count(prompt.DOCTOR) > 1:
             fails.append("전문의 안내가 두 번")
+        # 묻는 말이 둘(E14 · 5-1 B02 와 같은 문제 — 사용자 2026-11-13). 경험·후기는 실패, 다른 갈래는 경고로 센다
+        asks = [s for s in sentences(text) if s.endswith("?")]
+        if len(asks) > 1:
+            (fails if trace["branch"] == "experience" else warns).append(f"묻는 말 {len(asks)}개: {' / '.join(a[-25:] for a in asks)}")
         if it.get("health") is not True and prompt.DOCTOR in text:
             warns.append("통증 문항이 아닌데 전문의 안내가 붙었다")
         body = text.replace(prompt.DOCTOR, "")
@@ -213,10 +221,15 @@ def main() -> int:
             fails.append("범위 밖 답에 버튼")
         if len(set(ids)) == 1 and links and not links[0]["href"].startswith("/?shoe="):
             fails.append("1켤레인데 상세 모달이 아니다")
-        if len(set(ids)) >= 2 and not links[0]["href"].startswith("/compare?ids="):
+        if len(set(ids)) >= 2 and links and not links[0]["href"].startswith("/compare?ids="):
             fails.append("2켤레 이상인데 비교하기가 아니다")
         if it.get("links") is False and links:
             fails.append("버튼이 없어야 한다")
+        # 통증 질문에 챗봇이 고른 신발(설명문) — 이름 · 버튼을 내지 않는다(사용자 2026-11-13). 경험·후기의 지목 · 리뷰 집계는 따로
+        if trace["health"] and trace["branch"] in ("explain", "out_of_scope") and reply.shoes:
+            fails.append(f"통증 질문에 챗봇이 고른 신발 {ids}")
+        if trace["health"] and trace.get("explained") and any(str(x).startswith("desc:") for x in trace["explained"]):
+            fails.append("통증 질문에 설명문 근거")
         if any(l["label"] != prompt.LINK_LABEL for l in links):
             fails.append("버튼 라벨이 '보러 가기'가 아니다")
 
@@ -280,6 +293,39 @@ def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) 
             fails.append(f"집계 대조 실패 {t}")
         if t["n"] != counts.get(t["shoe_id"], t["n"]):
             fails.append(f"집계 N {t['n']} ≠ API {counts.get(t['shoe_id'])}")
+    return fails
+
+
+def check_experience(text: str, reply, trace: dict) -> list[str]:
+    """경험·후기 1차 수정(사용자 2026-11-13) — 두루뭉술한 양 · 내부 말 · 순위 · 최소 건수 · 피하려는 질문"""
+    from chatbot.branches import experience as ex
+    fails = []
+    outside = re.sub(r"\"[^\"]*\"", "", text)   # 인용(리뷰 원문)은 빼고
+    for w in ex.VAGUE:
+        if w in outside:
+            fails.append(f"양을 짐작하는 말 '{w}'")
+    if "분류" in text:
+        fails.append("내부 말 '분류'")
+    tally = trace.get("tally") or []
+    multi = bool(trace.get("ranked"))
+    want = trace.get("want")
+    if multi:
+        for t in tally:
+            if t["n"] < ex.MIN_REVIEWS:
+                fails.append(f"리뷰 {t['n']}건 신발이 목록에({t['shoe_id']})")
+            if want and t["labeled"]:
+                w, o = (t["pos"], t["neg"]) if want == "positive" else (t["neg"], t["pos"])
+                if (o >= w) if trace.get("avoid") else (o > w or w == 0):
+                    fails.append(f"찾는 쪽({want}) {w}건 · 반대 {o}건인 신발이 목록에({t['shoe_id']})")
+        if want and tally:
+            ws = [t["pos"] if want == "positive" else t["neg"] for t in tally]
+            if ws != sorted(ws, reverse=True):
+                fails.append(f"찾는 쪽 건수 순이 아님 {ws}")
+    if trace.get("avoid"):
+        if reply.links():
+            fails.append("피하려는 질문에 보러 가기 버튼")
+        if ex.CLOSE in text:
+            fails.append("피하려는 질문에 '보러 가실래요?'")
     return fails
 
 

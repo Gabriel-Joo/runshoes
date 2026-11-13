@@ -10,7 +10,7 @@ import re
 import threading
 from dataclasses import dataclass, field
 
-from .prompt import DOCTOR, LINK_LABEL
+from .prompt import ASK_PURPOSE, ASK_PURPOSE_CALM, DOCTOR, EXPLAIN_TAIL, LINK_LABEL
 
 # 리뷰는 가상 유저 200명이 만든 데이터다 — 실제 사람들의 반응처럼 말하는 낱말을 막는다(09 6절, 5-2 에서 셋 더함)
 BANNED = ("전문가", "완벽한 선택", "죄송합니다만", "러너들이", "실제 사용자", "많은 사람들", "대부분의 사용자", "사용자들")
@@ -29,6 +29,7 @@ class Reply:
     explained: list[str] = field(default_factory=list)   # 특성 설명의 근거로 쓴 사전 용어 · 설명문 문장(평가가 본다)
     ranked: list[int] = field(default_factory=list)      # 경험·후기 — 신발을 말하지 않았을 때 검색이 고른 신발 순위(Hit@5)
     tally: list[dict] = field(default_factory=list)      # 경험·후기 — 신발마다 N · 언급 · 긍정 · 부정 · 언급 없음(평가 · 로그)
+    want: str | None = None                              # 경험·후기 — 질문이 찾는 쪽(positive · negative). 여러 켤레 순위의 기준
 
     def links(self) -> list[dict]:
         """1켤레 → 상세 모달, 2켤레 이상 → 비교하기. 라벨은 언제나 "보러 가기"(사용자 7절)"""
@@ -186,5 +187,16 @@ def haeyo(text: str) -> str:
     return re.sub(r"(\S+)입니다\.", ip, text)
 
 
+# 코드가 붙이는 끝 단락 — 의료 안내는 이 앞에 넣는다(7절 "전문의 안내 1회. 그 뒤 사이트 쪽으로 돌아온다").
+# 코드 자신의 고정 문구만 본다(LLM 문장을 보고 자리를 고르지 않는다). 한 단락 전체가 이 문구일 때만
+_TAILS = (EXPLAIN_TAIL, ASK_PURPOSE_CALM, ASK_PURPOSE, "보러 가실래요?")
+
+
 def with_doctor(text: str, health: bool) -> str:
-    return f"{text}\n\n{DOCTOR}" if health else text
+    if not health:
+        return text
+    for tail in _TAILS:
+        if text == tail or text.endswith("\n\n" + tail):
+            head = text[: -len(tail)].rstrip()
+            return (f"{head}\n\n" if head else "") + f"{DOCTOR}\n\n{tail}"
+    return f"{text}\n\n{DOCTOR}"
