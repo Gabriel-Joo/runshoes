@@ -205,18 +205,19 @@ class TallyTest(unittest.TestCase):
         self.assertEqual(lines, ["[무릎 — 좋다는 쪽 리뷰]", "- 무릎 편해요. 쿠션 말랑", "[무릎 — 아쉽다는 쪽 리뷰]", "- 무릎이 아파요"])
         self.assertFalse(any(ch.isdigit() for ch in "".join(lines)))
 
-    def test_theme_groups(self):
-        # 관점 없는 질문 — 낱말로 주제 셋, 주제마다 아직 쓰지 않은 리뷰, 착용감은 주제가 아니다(7차 수정)
-        rs = [{"id": 1, "content": "쿠션이 푹신하고 발볼도 넉넉해요"}, {"id": 2, "content": "쿠션이 단단해요"},
-              {"id": 3, "content": "발볼이 좁아요"}, {"id": 4, "content": "무게가 가벼워요"}, {"id": 5, "content": "접지가 좋아요"},
-              {"id": 6, "content": "발이 편해요"}, {"id": 7, "content": "쿠션 좋고 가벼워요"}]
-        groups = ex.theme_groups(rs)
-        self.assertEqual([g for g, _ in groups], ["쿠션", "발볼", "무게"])        # 쿠션 3 · 발볼 2 · 무게 2(접지 1은 셋 밖)
-        # 주제마다 둘까지 — 1은 쿠션에만(발볼에 다시 넣지 않는다), 7은 쿠션 자리가 차서 무게로
-        self.assertEqual([[r["id"] for r in m] for _, m in groups], [[1, 2], [3], [4, 7]])
-        lines = ex.evidence(ex.Tally(SHOES[0], rs, None), rs, {r["id"] for r in rs}, None, ())
-        self.assertEqual(lines[0], "[쿠션 이야기]")
-        self.assertFalse(any(ch.isdigit() for ch in "".join(lines)))
+    def test_sides(self):
+        # 관점 없는 질문 — 좋다 · 아쉽다 묶음, 쪽마다 추천 많은 순으로 상한까지, 건수 없이(8차 수정)
+        rs = [{"id": i, "content": f"리뷰{chr(0xAC00 + i)}", "likeCount": 10 - i} for i in range(1, 9)]
+        sides = ex.split_sides(rs, lambda cs: ["positive", "mixed", "negative", "positive", "none", "positive", "mixed", "negative"])
+        self.assertEqual(sides, {1: "positive", 2: "mixed", 3: "negative", 4: "positive", 6: "positive", 7: "mixed", 8: "negative"})
+        lines = ex.evidence(ex.Tally(SHOES[0], rs, None), rs, {r["id"] for r in rs}, None, (), sides)
+        self.assertEqual(lines[0], "[좋다는 쪽 리뷰]")
+        bad = lines[lines.index("[아쉽다는 쪽 리뷰]") + 1:]
+        # 아쉬움이 중심인 리뷰(3 · 8) 먼저, 그다음 섞인 리뷰(2 · 7) — 각각 추천 많은 순
+        self.assertEqual(bad, [f"- 리뷰{chr(0xAC00 + i)}" for i in (3, 8, 2, 7)][:ex.SIDE_BAD])
+        # 쪽 가르기가 두 번 다 실패하면 추천 많은 리뷰 한 묶음
+        self.assertIsNone(ex.split_sides(rs, lambda cs: ["positive"]))
+        self.assertEqual(ex.evidence(ex.Tally(SHOES[0], rs, None), rs, {r["id"] for r in rs}, None, (), None)[0], "[리뷰]")
 
     def test_digit_sentences(self):
         # LLM 글에서 숫자가 든 문장만 지운다 — 신발 이름의 숫자는 숫자로 보지 않는다(5차 수정)
