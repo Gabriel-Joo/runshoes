@@ -30,5 +30,5 @@ def answer(question: str, shoes: list[dict], health: bool, history: list[dict]) 
         fallback = VERDICT_LINE + "\n\n" + rest
         conclusions = [VERDICT_LINE] + conclusions
     task = TASK + (" " + VERDICT_TASK if VERDICT_ASKED.search(question) else "")
-    text, used = generate(question, lines, conclusions, fallback, health, history, task)
+    text, used = generate(question, lines, conclusions, fallback, health, history, task, branch="compare")
     return Reply(text, shoes, fallback_used=used, branch="compare")

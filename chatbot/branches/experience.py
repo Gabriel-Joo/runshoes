@@ -393,7 +393,7 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         # 말투 예시는 숫자 없는 것만(6차 수정 2)
         body, used = generate(question, lines, [], "", health, [], task, reference=False, before=before,
                               before_note=BEFORE_NOTE, tails=tails, no_digits=name_forms(t.shoe), digit_source=src,
-                              examples=prompt.EXAMPLES_NO_NUMBERS)
+                              branch="experience")
         if used:
             # 검사에 걸리면 LLM 글만 뺀다 — 집계 · 인용과 끝은 코드가 쓴 그대로. 빈 글(쓸 것이 없음)은 걸린 것이 아니다
             empty = guard_log()[-1:] == ["코드 답: 빈 글"]
@@ -441,6 +441,30 @@ BEFORE_NOTE = ("[이미 앞에 나간 것] 이 신발의 이름 · 리뷰 수 ·
 SIDE_NAME = {"positive": "좋다는 쪽", "negative": "아쉽다는 쪽", "mentioned": "그 이야기가 나온"}
 
 
+DIVERSE_SKIP = ("착용감",)   # "편하다 · 불편하다"는 아무 리뷰에나 걸려 이야기를 가르지 못한다(7차 측정 — 30건 중 5~12건)
+
+
+def diverse(candidates: list[dict], n: int) -> list[dict]:
+    """쪽 칸을 이야기가 다른 리뷰부터 채운다(9차 수정, 사용자 승인 — 추천 순으로만 채우니 노바블라스트 6 은 쿠션 이야기만 넷).
+    이야기 = 관점 사전(ASPECTS) 낱말이 걸리는 관점들(착용감 빼고). 후보 순서(추천 많은 순)대로 보면서
+    ① 이미 넣은 리뷰의 이야기와 하나도 겹치지 않는 리뷰를 먼저 넣고(이야기가 둘 이상 걸린 리뷰는 그 모두가 새것이어야 한다),
+    ② 남은 자리는 후보 순서대로 채운다 — 이야기가 겹치는 리뷰 · 어느 관점에도 안 걸리는 리뷰는 여기서만 들어간다.
+    넣은 리뷰는 후보 순서로 돌려준다"""
+    covered: set[str] = set()
+    first: list[dict] = []
+    for r in candidates:
+        if len(first) == n:
+            break
+        topics = {a for a, _ in ASPECTS if a not in DIVERSE_SKIP and mentions_by_words(a, r["content"])}
+        if topics and not topics & covered:
+            first.append(r)
+            covered |= topics
+    picked = {r["id"] for r in first}
+    rest = [r for r in candidates if r["id"] not in picked][:n - len(first)]
+    picked |= {r["id"] for r in rest}
+    return [r for r in candidates if r["id"] in picked]
+
+
 def evidence(t: Tally, pool: list[dict], shown_ids: set[int], aspect: str | None, focus: tuple[str, ...],
              sides: dict[int, str] | None = None) -> list[str]:
     """LLM 근거 — 리뷰 원문 줄만. 숫자(건수 · 별점 · 추천 수)를 붙이지 않는다(5차 수정 1-1).
@@ -462,10 +486,10 @@ def evidence(t: Tally, pool: list[dict], shown_ids: set[int], aspect: str | None
         if sides is None:
             groups = [("[리뷰]", reviews[:SIDE_GOOD + SIDE_BAD])]
         else:
-            groups = [("[좋다는 쪽 리뷰]", [r for r in reviews if sides.get(r["id"]) == "positive"][:SIDE_GOOD]),
+            groups = [("[좋다는 쪽 리뷰]", diverse([r for r in reviews if sides.get(r["id"]) == "positive"], SIDE_GOOD)),
                       # 아쉬움이 중심인 리뷰 먼저, 그다음 좋은 말이 섞인 리뷰 — 각각 추천 많은 순(SIDES_SYSTEM 주석)
-                      ("[아쉽다는 쪽 리뷰]", ([r for r in reviews if sides.get(r["id"]) == "negative"]
-                                         + [r for r in reviews if sides.get(r["id"]) == "mixed"])[:SIDE_BAD])]
+                      ("[아쉽다는 쪽 리뷰]", diverse([r for r in reviews if sides.get(r["id"]) == "negative"]
+                                                + [r for r in reviews if sides.get(r["id"]) == "mixed"], SIDE_BAD))]
         for head, members in groups:
             if members:
                 lines.append(head)

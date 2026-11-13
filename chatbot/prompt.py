@@ -147,17 +147,35 @@ EXAMPLES = """### ① 인사 + 등록되지 않은 신발
 """
 
 EXAMPLES_HEAD = "\n아래는 말투의 기준이 되는 예시다. 예시의 신발 · 숫자는 답에 옮기지 말고, 숫자는 늘 이번 [등록된 정보]에서만 가져온다.\n\n"
-SYSTEM = TONE + EXAMPLES_HEAD + EXAMPLES
+SYSTEM = TONE + EXAMPLES_HEAD + EXAMPLES   # 여섯 모두 — 갈래를 모를 때만(지금 생성 갈래는 모두 아래 표를 쓴다)
 
-# 예시를 갈래에 맞게(6차 수정 2 — 사용자 2026-11-13). 예시 글은 그대로, 어느 것을 주는지만 고른다.
-# 경험·후기는 숫자 없는 ① · ②만 — ③ ~ ⑥의 숫자(40mm · 255g · 169,000원 …)를 끌어와 그 문장이 지워졌다(4차 E06 · E15, 5차 숫자 문장 지움).
-# 나머지 생성 갈래(스펙 · 비교 · 추천 · 특성 설명)는 여섯 모두 그대로
+# 갈래마다 주는 예시 — 여기 한곳에서 정한다(5-2 9차 수정, 사용자 2026-11-13). 예시 글은 그대로, 어느 것을 주는지만 고른다.
+# 말투 규칙(TONE · HEALTH)은 모든 갈래에 그대로. 예시가 문제를 만든 일이 네 번이었다(5-1 ③ 신발 이름 지어냄 ·
+# 6차 숫자로 문장 버려짐 · 8차 ①② 끝인사 따라 씀 · 8차 ⑤ 숫자로 B05 코드 답) — 생길 때마다 빼지 않고 갈래에 맞는 것만 준다.
+# 경험·후기는 코드가 앞뒤를 다 쓰고 LLM 은 가운데 한 덩어리만 써서 "답 전체 모양"을 보여 주는 예시가 맞지 않는다.
+# 용어는 LLM 을 부르지 않는다(사전 원문) — 표에만 적는다. 갈래가 늘면 여기에 줄을 더한다
+EXAMPLES_BY_BRANCH: dict[str, tuple[str, ...]] = {
+    "experience": (),
+    "explain": ("①", "②", "③"),
+    "term": ("①", "②", "③"),
+    "spec": ("①", "②", "④", "⑤", "⑥"),
+    "compare": ("①", "②", "④", "⑤", "⑥"),
+    "recommend": ("①", "②", "④", "⑤", "⑥"),
+}
 _EXAMPLE_PARTS = {m.group(1): m.group(0).strip() for m in re.finditer(r"### ([①-⑥])[\s\S]*?(?=\n### |\Z)", EXAMPLES)}
-EXAMPLES_NO_NUMBERS = "\n\n\n".join(_EXAMPLE_PARTS[k] for k in ("①", "②")) + "\n"
 
 
-def system(health: bool, examples: str | None = None) -> str:
-    base = SYSTEM if examples is None else TONE + EXAMPLES_HEAD + examples
+def examples_for(branch: str) -> str:
+    return "\n\n\n".join(_EXAMPLE_PARTS[k] for k in EXAMPLES_BY_BRANCH[branch])
+
+
+def system(health: bool, branch: str | None = None) -> str:
+    """생성 시스템 — 말투 규칙 + 그 갈래의 예시(표) + 통증이면 HEALTH. 예시가 없는 갈래는 예시 머리도 붙이지 않는다"""
+    if branch is None:
+        base = SYSTEM
+    else:
+        ex = examples_for(branch)
+        base = TONE + (EXAMPLES_HEAD + ex + "\n" if ex else "")
     return base + ("\n" + HEALTH if health else "")
 
 
@@ -185,7 +203,7 @@ def dump() -> str:
                                        __import__("chatbot.branches.common", fromlist=["x"]).attached_note([DOCTOR], [EXPLAIN_TAIL, "보러 가실래요?"]),
                                        __import__("chatbot.branches.common", fromlist=["x"]).REFERENCE_HEAD])),
         ("경험·후기 — 앞에 나간 것 알림", experience.BEFORE_NOTE),
-        ("경험·후기에 주는 말투 예시(숫자 없는 ① · ② — 다른 생성 갈래는 여섯 모두)", EXAMPLES_NO_NUMBERS),
+        ("갈래마다 주는 말투 예시(EXAMPLES_BY_BRANCH — 9차)", "\n".join(f"{b}: {' '.join(v) or '없음'}" for b, v in EXAMPLES_BY_BRANCH.items())),
         ("경험·후기 — 코드가 LLM 글 뒤에 붙이는 설명문 단락 머리(LLM 에 주지 않는다)", experience.DESC_LEAD),
     ]
     out = []
