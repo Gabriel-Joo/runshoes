@@ -192,10 +192,17 @@ class TallyTest(unittest.TestCase):
         self.assertEqual(ex.quote_block("발이 넓어 와이드로 신습니다. 롱런 후반에도 발이 편해요. 다만 반발은 아쉬워요.", ("와이드",)),
                          "> 발이 넓어 와이드로 신습니다.\n> 롱런 후반에도 발이 편해요.")
 
-    def test_keep_named(self):
-        shoes = [{"model": "젤 님버스 28"}, {"model": "클라우드몬스터 3"}]
-        body = "젤 님버스 28 은 편하다는 이야기가 있어요.\n\n리뷰에 따르면, 발등이 편하대요.\n\n클라우드몬스터는 단단하다는 이야기가 있어요."
-        self.assertEqual(ex.keep_named(body, shoes), "젤 님버스 28 은 편하다는 이야기가 있어요.\n\n클라우드몬스터는 단단하다는 이야기가 있어요.")
+    def test_evidence_counts(self):
+        # 근거 묶음 — 쪽마다, 그 안의 다른 이야기별 건수(4차 수정 4). 인용한 리뷰는 줄에서 빠지지만 건수에는 든다
+        t = ex.Tally(SHOES[0], [{"id": 1, "content": "무릎이 편하고 쿠션이 좋아요", "likeCount": 2},
+                                {"id": 2, "content": "무릎 편해요. 쿠션 말랑", "likeCount": 1},
+                                {"id": 3, "content": "무릎이 아파요", "likeCount": 0}], "무릎")
+        t.labeled, t.labels = True, {1: "positive", 2: "positive", 3: "negative"}
+        lines, counts = ex.evidence(t, t.mentioned(), {2, 3}, 1, "무릎", ())
+        self.assertEqual(lines[0], "[무릎 — 좋다는 쪽 2건, 1건은 앞에 인용함] 이 쪽 리뷰 가운데 쿠션 이야기 2건 · 착용감 이야기 2건")
+        self.assertEqual(lines[1], ex.QUOTED_ROW)                            # 인용한 리뷰는 내용 없이 자리만
+        self.assertIn(2, counts)
+        self.assertNotIn("무릎이 편하고 쿠션이 좋아요", "\n".join(lines))
 
     def test_counts_kept(self):
         t = ex.Tally(SHOES[0], [{"id": i, "content": "", "likeCount": 0} for i in range(14)], "무릎")
@@ -225,12 +232,13 @@ class PickShoesTest(unittest.TestCase):
         out = ex.pick_shoes([self.t(1, 0, 3), self.t(2, 3, 0)], None, False)
         self.assertEqual([x.shoe["id"] for x in out], [1, 2])
 
-    def test_with_doctor_before_code_tail(self):
+    def test_with_doctor_at_front(self):
+        # 의료 안내는 맨 앞, "다만" 없이(4차 수정 — 끝에 두면 인사 · 물음표 뒤에 왔다)
         from chatbot.prompt import DOCTOR
         from chatbot.reply import with_doctor
-        self.assertEqual(with_doctor("본문.\n\n보러 가실래요?", True), f"본문.\n\n{DOCTOR}\n\n보러 가실래요?")
-        self.assertEqual(with_doctor("봤는데, 보러 가실래요?", True), f"봤는데, 보러 가실래요?\n\n{DOCTOR}")   # 단락 전체가 아니면 끝에
-        self.assertTrue(DOCTOR.startswith("다만 "))
+        self.assertEqual(with_doctor("본문.\n\n보러 가실래요?", True), f"{DOCTOR}\n\n본문.\n\n보러 가실래요?")
+        self.assertEqual(with_doctor("본문.", False), "본문.")
+        self.assertFalse(DOCTOR.startswith("다만"))
 
     def test_embedder_needs_url(self):
         from chatbot.search.embed import Embedder

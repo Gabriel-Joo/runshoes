@@ -30,10 +30,14 @@ class PromptTest(unittest.TestCase):
         self.assertNotIn("보러 가실래요", experience.TASK)
         self.assertNotIn("질문으로 끝내지", experience.TASK)
 
-    def test_after_lines_show_what_code_adds(self):
-        from chatbot.branches.common import after_lines
-        self.assertEqual(after_lines(True, ["보러 가실래요?"]), [prompt.DOCTOR, "보러 가실래요?"])
-        self.assertEqual(after_lines(False, []), [])
+    def test_attached_front_and_after(self):
+        # 의료 안내는 앞, 끝 안내는 뒤(4차 수정) — 문장이 아니라 종류만 알린다
+        from chatbot.branches.common import attached, attached_note
+        self.assertEqual(attached(True, ["보러 가실래요?"]), ([prompt.DOCTOR], ["보러 가실래요?"]))
+        self.assertEqual(attached(False, []), ([], []))
+        note = attached_note([prompt.DOCTOR], ["보러 가실래요?"])
+        self.assertIn("앞에 따로 붙는 것: 통증", note)
+        self.assertNotIn(prompt.DOCTOR, note)
 
     def test_health_has_help_rule(self):
         self.assertIn("도움이 된다", prompt.HEALTH)

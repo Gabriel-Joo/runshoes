@@ -226,6 +226,7 @@ class Bot:
         trace["ranked"] = reply.ranked
         trace["tally"] = reply.tally
         trace["want"] = reply.want
+        trace["evidence_counts"] = reply.evidence_counts
         trace["avoid"] = r.avoid
         reply.text = with_doctor(reply.text, r.health)
         return reply, trace

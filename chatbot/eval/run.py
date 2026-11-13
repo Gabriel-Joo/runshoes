@@ -158,6 +158,8 @@ def main() -> int:
             fails += check_denominator(text, {k: len(v) for k, v in counts.items()}, trace, it)
             # 집계 숫자(언급 · 긍정 · 부정 · 나머지)는 코드가 센 것 — 위 분모 · 세 칸 검사가 따로 본다
             review_src += " " + " ".join(str(t[k]) for t in trace.get("tally") or [] for k in ("n", "k", "pos", "neg", "rest"))
+            # 근거 묶음의 건수(4차 수정 — 이야기별 건수를 근거로 준다)도 코드가 센 것
+            review_src += " " + " ".join(str(n) for n in trace.get("evidence_counts") or [])
             fails += check_experience(text, reply, trace)
         if it.get("hit_any"):
             want = {by_name[n]["id"] for n in it["hit_any"] if n in by_name}
@@ -354,21 +356,31 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
             fails.append("피하려는 질문에 보러 가기 버튼")
         if ex.CLOSE in text:
             fails.append("피하려는 질문에 '보러 가실래요?'")
-    # 여러 켤레 — LLM 문단마다 신발 이름(3차 수정 6). 2차의 검사는 평가가 아니라 따로 돌린 스크립트에서 "리뷰에서는"으로
-    # 시작하는 문단만 찾아 "리뷰에 따르면, …"을 놓쳤다. 이번엔 코드가 쓴 문단을 뺀 모든 문단을 본다
+    # 여러 켤레 — 어느 신발 이야기인지(3차 수정 6 · 4차 수정 3). 4차부터 LLM 글은 신발마다 따로 쓰여 그 신발 블록
+    # ("브랜드의 모델: 집계 …" + 인용) 바로 아래에 붙는다 — 그래서 이름이 없어도 어느 신발인지 정해진다.
+    # 검사: ① 첫 신발 블록 앞에 LLM 문단이 없을 것 ② 신발 블록 아래 문단이 다른 신발의 이름을 말하지 않을 것(섞임).
+    # 모델명 전체(또는 그 목록에서 하나뿐인 세대 뗀 이름)로 본다 — 이름 일부로 통과 · 걸림이 나지 않게
     shoes = reply.shoes
     if len(shoes) > 1:
         from chatbot import prompt
         code_paras = {ex.AVOID_HEAD, "말씀하신 부분을 리뷰에서 찾아봤어요.", ex.CLOSE, prompt.DOCTOR}
-        starts = tuple(f"{s['brand']}의 {s['model']}" for s in shoes)
         bases = [re.sub(r"\s*v?\d+\s*$", "", s["model"]) for s in shoes]
-        names = {s["model"] for s in shoes} | {b for b in bases if bases.count(b) == 1}
+        names = {s["id"]: {s["model"]} | ({b} if bases.count(b) == 1 else set()) for s, b in zip(shoes, bases)}
+        cur = None
         for p in text.split("\n\n"):
             p = p.strip()
-            if not p or p.startswith(">") or p in code_paras or p.startswith(starts):
+            if not p or p.startswith(">") or p in code_paras:
                 continue
-            if not any(n in p for n in names):
-                fails.append(f"여러 켤레인데 이름 없는 문단: {p[:30]}")
+            head = next((s for s in shoes if p.startswith(f"{s['brand']}의 {s['model']}:")), None)
+            if head:
+                cur = head
+                continue
+            if cur is None:
+                fails.append(f"여러 켤레인데 신발 블록 앞에 LLM 문단: {p[:30]}")
+                continue
+            others = [s["model"] for s in shoes if s["id"] != cur["id"] and any(n in p for n in names[s["id"]])]
+            if others:
+                fails.append(f"{cur['model']} 아래 문단이 다른 신발({others[0]}) 이야기: {p[:30]}")
     return fails
 
 

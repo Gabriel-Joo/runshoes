@@ -159,7 +159,7 @@ class ReplyTest(unittest.TestCase):
 
     def test_medical_sentence_is_code_only(self):
         out, _ = guard("쿠션이 두터워요. 병원에 가 보세요.", "", "코드 답")
-        self.assertEqual(with_doctor(out, True), "쿠션이 두터워요.\n\n" + DOCTOR)
+        self.assertEqual(with_doctor(out, True), DOCTOR + "\n\n쿠션이 두터워요.")   # 안내는 맨 앞(5-2 4차 수정)
 
     def test_catalog_talk_without_shoes(self):
         out, used = guard("등록된 신발 중에는 쿠션이 두꺼운 모델들이 있어요.", "", "코드 답", shoes_given=False)
