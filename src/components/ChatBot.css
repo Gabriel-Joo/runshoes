@@ -81,6 +81,22 @@
   white-space: pre-line;              /* 챗봇 답은 단락을 빈 줄로 나눈다(작업 5-1) */
 }
 
+/* 챗봇 답 마크다운(5-2 2차 수정) — 단락은 빈 줄로, 인용 블록은 리뷰 원문 */
+.chatbot-md > :first-child { margin-top: 0; }
+.chatbot-md > :last-child { margin-bottom: 0; }
+.chatbot-md p { margin: 0 0 10px; }
+.chatbot-md ul,
+.chatbot-md ol { margin: 0 0 10px; padding-left: 20px; }
+.chatbot-md blockquote {
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-left: 3px solid #14807a;     /* 사용자 말풍선과 같은 청록 */
+  background: #fafafa;
+  color: #444;
+  font-size: 14px;
+}
+.chatbot-md blockquote p { margin: 0; }
+
 /* "보러 가기" — 답 아래에 조용히(작업 5-1). 색은 사용자 말풍선과 같은 청록 */
 .chatbot-links {
   display: flex;
