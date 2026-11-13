@@ -7,7 +7,8 @@
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
 - [ ] 5-1 남은 한계 넷 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절 · 16절
 - [ ] 5-2 경험·후기 15문항 — 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `09_chatbot_rag.md` 16절
-- [ ] 5-2 운영 반영(새 마이그레이션 없음 · 웹 이미지도 바뀜 — 챗봇 답 마크다운) — 인프라 매니페스트 챗봇 env `MODEL_SERVICE_URL=http://192.168.122.1:8200` 를 먼저(없으면 경험·후기가 늘 "잠시 뒤") → `09_chatbot_rag.md` 16절
+- [ ] 5-2 운영 반영(구현은 9차 수정으로 끝 — `cc/runshoes-2`. 새 마이그레이션 없음 · 웹 이미지도 바뀜 — 챗봇 답 마크다운) — 인프라 매니페스트 챗봇 env `MODEL_SERVICE_URL=http://192.168.122.1:8200` 를 먼저(없으면 경험·후기가 늘 "잠시 뒤") → `09_chatbot_rag.md` 16절
+- [ ] 5-2 남은 한계 — 운영에 올린 뒤 실제 질문을 보고 다시 정한다(항목마다 무엇을 볼지 적어 둠) → `09_chatbot_rag.md` 16절 「5-2 남은 한계」
 - [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기 — 지금은 5-1 처럼 거절 · 기록 → `09_chatbot_rag.md` 8절 · 16절
 - [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
 - [ ] 챗봇 인증(연결 뒤 첫 프레임 auth) → `04_auth.md` 4절
