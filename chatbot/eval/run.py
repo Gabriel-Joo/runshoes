@@ -176,10 +176,28 @@ def main() -> int:
             fails.append("전문의 안내 누락")
         if text.count(prompt.DOCTOR) > 1:
             fails.append("전문의 안내가 두 번")
-        # 묻는 말이 둘(E14 · 5-1 B02 와 같은 문제 — 사용자 2026-11-13). 경험·후기는 실패, 다른 갈래는 경고로 센다
-        asks = [s for s in sentences(text) if s.endswith("?")]
+        # 묻는 말이 둘(E14 · 5-1 B02 와 같은 문제 — 사용자 2026-11-13) — 모든 갈래 실패.
+        # 2차까지는 "?"로 끝나는 문장만 셌다 — 용도 묻기("…알려주시면 그에 맞춰 찾아볼게요.")는 마침표라 B05 · B09 의 두 번을 놓쳤다(3차 수정)
+        one_ask = text   # 코드 고정 문구 하나(용도 묻기 두 문장)는 묻는 말 하나로
+        for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM):
+            one_ask = one_ask.replace(c, "용도를 묻는다?")
+        asks = [s for s in sentences(one_ask) if s.endswith("?") or re.search(r"알려\s*주시면|말씀해\s*주시면", s)]
         if len(asks) > 1:
-            (fails if trace["branch"] == "experience" else warns).append(f"묻는 말 {len(asks)}개: {' / '.join(a[-25:] for a in asks)}")
+            fails.append(f"묻는 말 {len(asks)}개: {' / '.join(a[-25:] for a in asks)}")
+        # 코드가 붙이는 문장을 LLM 이 따라 씀 · 지우다 남은 조각(3차 수정 5) — 코드 고정 문구의 문장이 두 번 나오면.
+        # 여러 켤레의 소개 문장처럼 코드가 신발마다 같은 꼴로 쓰는 문장은 보지 않는다(일부러 되풀이한다)
+        def _k(s: str) -> str:
+            return re.sub(r"[\s\"'.,!?·—:>-]", "", s)
+        keys = [_k(s) for s in sentences(text)]
+        fixed = {_k(s) for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM, prompt.EXPLAIN_TAIL, prompt.DOCTOR, facts.PRICE_NOTE, "보러 가실래요?")
+                 for s in re.split(r"(?<=[.!?])\s+", c)}
+        dup = sorted(k for k in fixed if keys.count(k) > 1)
+        if dup:
+            fails.append(f"코드 문장이 두 번: {dup[0][:25]}")
+        # 인용을 다시 씀(3차 수정 2) — 인용 블록의 문장이 인용 밖에 또 나오면
+        quoted = {_k(s) for l in text.split("\n") if l.startswith(">") for s in re.split(r"(?<=[.!?])\s+", l[1:].strip()) if len(_k(s)) >= 8}
+        if quoted & set(keys):
+            fails.append("인용한 문장을 인용 밖에서 다시 씀")
         # 겹침(2차 수정 4) — 코드가 붙인 문장과 LLM 글이 겹치는지 센다: "다만" 두 번 · 리뷰 원문을 따옴표로 옮김(인용은 코드 블록)
         plain = "\n".join(l for l in text.split("\n") if not l.startswith(">"))
         if plain.count("다만") > 1:
@@ -201,8 +219,12 @@ def main() -> int:
             fails.append(f"효과 약속(신발이 몸에 도움): {s_[:50]}")
         for s_ in hu:
             warns.append(f"'도움이' 주어를 가리기 어려움 — 사람이 읽는다: {s_[:50]}")
-        if re.search(r"러너들이|실제 사용자|많은 사람들|대부분의 사용자|사용자들|전문가|완벽한 선택|죄송합니다만|(?<!카본 )플레이트", text):
+        if re.search(r"러너들이|실제 사용자|많은 사람들|대부분의 사용자|사용자들|전문가|완벽한 선택|죄송합니다만", text):
             fails.append("금칙어")
+        # "카본" 없는 "플레이트"는 리뷰에서 온 말일 때만 막는다 — 설명문 · 스펙에는 "판(플레이트)은 나일론"이 실제로 있다
+        # (엔돌핀 스피드 4, 3차 수정 S10). 리뷰를 말하는 문장(경험·후기 갈래에서 "리뷰"가 든 문장)만 본다
+        if trace["branch"] == "experience" and any(re.search(r"(?<!카본 )플레이트", s) and "리뷰" in s for s in sentences(text)):
+            fails.append("금칙어(리뷰에서 카본 없는 플레이트)")
         if re.search("[\U0001F000-\U0001FAFF☀-➿]", text):
             fails.append("이모지")
         if it.get("cat") != "term" and trace["branch"] != "term":
@@ -332,6 +354,21 @@ def check_experience(text: str, reply, trace: dict) -> list[str]:
             fails.append("피하려는 질문에 보러 가기 버튼")
         if ex.CLOSE in text:
             fails.append("피하려는 질문에 '보러 가실래요?'")
+    # 여러 켤레 — LLM 문단마다 신발 이름(3차 수정 6). 2차의 검사는 평가가 아니라 따로 돌린 스크립트에서 "리뷰에서는"으로
+    # 시작하는 문단만 찾아 "리뷰에 따르면, …"을 놓쳤다. 이번엔 코드가 쓴 문단을 뺀 모든 문단을 본다
+    shoes = reply.shoes
+    if len(shoes) > 1:
+        from chatbot import prompt
+        code_paras = {ex.AVOID_HEAD, "말씀하신 부분을 리뷰에서 찾아봤어요.", ex.CLOSE, prompt.DOCTOR}
+        starts = tuple(f"{s['brand']}의 {s['model']}" for s in shoes)
+        bases = [re.sub(r"\s*v?\d+\s*$", "", s["model"]) for s in shoes]
+        names = {s["model"] for s in shoes} | {b for b in bases if bases.count(b) == 1}
+        for p in text.split("\n\n"):
+            p = p.strip()
+            if not p or p.startswith(">") or p in code_paras or p.startswith(starts):
+                continue
+            if not any(n in p for n in names):
+                fails.append(f"여러 켤레인데 이름 없는 문단: {p[:30]}")
     return fails
 
 

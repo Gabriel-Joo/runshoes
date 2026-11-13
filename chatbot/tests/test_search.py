@@ -176,13 +176,26 @@ class TallyTest(unittest.TestCase):
 
     def test_quote_most_liked(self):
         t = self.tally(lambda cs: ["positive" if "편해" in c else "negative" if "아파" in c else "none" for c in cs])
-        self.assertEqual(ex.quote(t), ("무릎 이야기를 한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", "> 오래 뛰면 무릎이 아파요."))
+        self.assertEqual(ex.quote(t), ("무릎을 말한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", "> 오래 뛰면 무릎이 아파요.", 11))
         # 찾는 쪽이 긍정이면 긍정 리뷰에서(추천 3 — 그 무리에서 가장 많다)
-        self.assertEqual(ex.quote(t, "positive"), ("무릎 이야기를 좋게 한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", "> 무릎이 편해요."))
+        self.assertEqual(ex.quote(t, "positive"), ("무릎을 말한 리뷰 중 좋다는 쪽에서, 가장 많은 추천을 받은 리뷰예요.", "> 무릎이 편해요.", 10))
+        self.assertEqual(ex.INTRO[("negative", False)].format(a="통증을"), "통증을 말한 리뷰 중 아쉽다는 쪽의 한 건이에요.")
 
     def test_quote_block_lines(self):
-        self.assertEqual(ex.quote_block("앞은 넉넉한데 뒤꿈치가 넓어서 계속 헐떡임. 끈 조여도 물집 생김. 실망.", None),
-                         "> 앞은 넉넉한데 뒤꿈치가 넓어서 계속 헐떡임.\n> 끈 조여도 물집 생김. 실망.")
+        # 관점 문장 + (짧으면) 다음 문장 — 짧은 꼬리 "실망."은 앞 줄에(3차 수정)
+        self.assertEqual(ex.quote_block("앞은 넉넉한데 뒤꿈치가 넓어서 계속 헐떡임. 끈 조여도 물집 생김. 실망.", ("물집",)),
+                         "> 끈 조여도 물집 생김. 실망.")
+        # 관점과 상관없는 문장은 빼고 관점 문장만(E13 가이드 19)
+        self.assertEqual(ex.quote_block("발이 좁아 반 업했어요. 안정감은 좋아요. 갑피도 두툼해서 한여름엔 발이 금방 더워지고요. 발볼은 보통이에요.", ("더워",)),
+                         "> 갑피도 두툼해서 한여름엔 발이 금방 더워지고요.")
+        # 관점 문장이 짧으면 다음 문장이 뜻을 잇는다(E11 님버스 28)
+        self.assertEqual(ex.quote_block("발이 넓어 와이드로 신습니다. 롱런 후반에도 발이 편해요. 다만 반발은 아쉬워요.", ("와이드",)),
+                         "> 발이 넓어 와이드로 신습니다.\n> 롱런 후반에도 발이 편해요.")
+
+    def test_keep_named(self):
+        shoes = [{"model": "젤 님버스 28"}, {"model": "클라우드몬스터 3"}]
+        body = "젤 님버스 28 은 편하다는 이야기가 있어요.\n\n리뷰에 따르면, 발등이 편하대요.\n\n클라우드몬스터는 단단하다는 이야기가 있어요."
+        self.assertEqual(ex.keep_named(body, shoes), "젤 님버스 28 은 편하다는 이야기가 있어요.\n\n클라우드몬스터는 단단하다는 이야기가 있어요.")
 
     def test_counts_kept(self):
         t = ex.Tally(SHOES[0], [{"id": i, "content": "", "likeCount": 0} for i in range(14)], "무릎")
