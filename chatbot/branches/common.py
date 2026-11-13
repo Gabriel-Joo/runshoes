@@ -56,7 +56,7 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
              history: list[dict], task: str, reference: bool = True, shoes_given: bool = True,
              before: list[str] = (), before_note: str = "", tails: list[str] = (),
              no_digits: list[str] | None = None, digit_source: str = "",
-             examples: str | None = None) -> tuple[str, bool]:
+             branch: str | None = None) -> tuple[str, bool]:
     """(글, fallback 을 썼는지). LLM 이 실패해도 코드 답을 낸다.
     reference — 코드 답을 참고로 보여 줄지. 특성 설명은 사전 원문(합니다체)이라 보여 주면 그대로 옮겨 쓴다 — 끈다.
     before — 코드가 이 글 앞에 붙이는 글(경험·후기의 집계 · 인용). 보여 주지 않고 before_note 로 무엇이 나갔는지만 알린다.
@@ -64,7 +64,7 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
     no_digits — 숫자를 가려 써야 하는 글(경험·후기, 5차 수정)이면 신발 이름 꼴 목록. digit_source(근거 리뷰)에 없는 숫자나
     건수("N건")가 든 문장을 검사 전에 지운다(6차 수정 3 — 리뷰 속 숫자는 통과). 검사(guard)는 사실에 없는 숫자면 글 전체를
     코드 답으로 바꾸므로, 그 전에 문장만 덜어 낸다.
-    examples — 이 갈래에 줄 말투 예시(없으면 여섯 모두 — 6차 수정 2)"""
+    branch — 갈래 이름. 말투 예시를 prompt.EXAMPLES_BY_BRANCH 표에서 고른다(9차 수정 — 6차의 갈래별 우회를 표로)"""
     parts = [f"질문: {question}", "", "[등록된 정보]", *fact_lines]
     if conclusions:
         parts += ["", CONCLUSION_HEAD, *conclusions]
@@ -80,7 +80,7 @@ def generate(question: str, fact_lines: list[str], conclusions: list[str], fallb
     msgs = [{"role": h["role"], "content": h["content"]} for h in history[-4:]]
     msgs.append({"role": "user", "content": user})
     try:
-        out = llm.chat(prompt.system(health, examples), msgs)
+        out = llm.chat(prompt.system(health, branch), msgs)
     except Exception as e:   # noqa: BLE001
         print(f"[generate] LLM 실패: {e}")
         guard_log().append(f"코드 답: LLM 실패 {type(e).__name__}")

@@ -219,6 +219,14 @@ class TallyTest(unittest.TestCase):
         self.assertIsNone(ex.split_sides(rs, lambda cs: ["positive"]))
         self.assertEqual(ex.evidence(ex.Tally(SHOES[0], rs, None), rs, {r["id"] for r in rs}, None, (), None)[0], "[리뷰]")
 
+    def test_diverse(self):
+        # 이야기가 다른 리뷰 먼저(하나도 안 겹쳐야), 남은 자리는 추천 순 — 관점이 안 걸리는 리뷰는 남은 자리에서만(9차 수정)
+        rs = [{"id": 1, "content": "쿠션이 좋은데 무릎이 아파요"}, {"id": 2, "content": "쿠션이 모자라요"},
+              {"id": 3, "content": "처음엔 어색했어요"}, {"id": 4, "content": "발볼이 좁아요"}, {"id": 5, "content": "무게가 무거워요"}]
+        self.assertEqual([r["id"] for r in ex.diverse(rs, 3)], [1, 4, 5])      # 2 는 쿠션이 겹치고 3 은 관점이 없다
+        self.assertEqual([r["id"] for r in ex.diverse(rs, 4)], [1, 2, 4, 5])   # 남은 자리는 추천 순(2)
+        self.assertEqual([r["id"] for r in ex.diverse(rs[:3], 3)], [1, 2, 3])
+
     def test_digit_sentences(self):
         # LLM 글에서 숫자가 든 문장만 지운다 — 신발 이름의 숫자는 숫자로 보지 않는다(5차 수정)
         from chatbot.reply import drop_digit_sentences, name_forms
