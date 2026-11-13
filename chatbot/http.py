@@ -24,6 +24,15 @@ def status(path: str, timeout: float = 2) -> int | None:
         return None
 
 
+def me_status(token: str, timeout: float = 3) -> int | None:
+    """챗봇 로그인 확인 — 같은 Pod 백엔드 GET /api/me(Bearer)의 상태 코드만. 닿지 않으면 None.
+    토큰은 헤더로만 보내고 어디에도 찍지 않는다"""
+    try:
+        return requests.get(f"{API}/api/me", headers={"Authorization": f"Bearer {token}"}, timeout=timeout).status_code
+    except requests.RequestException:
+        return None
+
+
 def post_json(path: str, body: dict) -> int:
     r = requests.post(f"{API}{path}", json=body, timeout=TIMEOUT)
     return r.status_code

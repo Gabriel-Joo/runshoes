@@ -133,6 +133,36 @@
   padding: 4px 14px;
 }
 
+/* "보러 가기"로 접은 창 — 대화 · 연결은 남기고 감추기만(위 display:flex 가 hidden 속성을 이기지 않게) */
+.chatbot-window[hidden] {
+  display: none;
+}
+
+/* 로그인 전 안내 — 패널 안에 문장 하나와 로그인 단추 */
+.chatbot-login {
+  margin: auto 0;
+  padding: 0 8px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.chatbot-login p {
+  margin: 0 0 14px;
+  word-break: keep-all;
+}
+
+.chatbot-login button {
+  padding: 8px 22px;
+  border: none;
+  border-radius: 999px;
+  background: #14807a;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
 .chatbot-input-row {
   display: flex;
   border-top: 1px solid #eee;

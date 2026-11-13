@@ -6,6 +6,7 @@
   python -m chatbot.eval.run --out /tmp/eval.json  # 문항별 결과 · 답 전문
 
 문항: golden.jsonl(용어 10 · 스펙 10 · 비교 10 · 추천 15 — Claude 초안) + golden-boundary.jsonl(경계 15 — 사용자가 쓴다, draft 줄은 건너뛴다).
+문항은 웹소켓을 거치지 않고 Bot 을 바로 부른다 — 로그인과 상관없다. 로그인 문턱은 끝에 login.py(L01~, 실제 handler + 가짜 /api/me)로 따로 본다.
 없는 신발 · 용어 기록(V18 POST)은 보내지 않고 가로채서 본다 — 운영에 쓰지 않는다.
 
 검사
@@ -273,6 +274,13 @@ def main() -> int:
             print("     " + text.replace("\n", "\n     "))
             for w in warns:
                 print(f"     · {w}")
+
+    # 로그인 문턱(17절) — 웹소켓 서버 수준. 위 문항은 봇을 바로 부르므로 로그인과 상관없다
+    from chatbot.eval import login
+    only = set(a.only.split(",")) if a.only else None
+    for r in login.run(only):
+        results.append(r)
+        print(f"{'PASS' if r['ok'] else 'FAIL'} {r['id']:4} {r['seconds']:5.1f}s  {r['q']} {'; '.join(r['fails'])}")
 
     summary(results, copy_issues)
     if a.out:

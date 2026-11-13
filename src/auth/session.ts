@@ -50,6 +50,12 @@ const listeners = new Set<(u: User | null) => void>();
 
 export const currentUser = () => user;
 
+/**
+ * 챗봇 로그인 전용 — 웹소켓은 인증 헤더를 못 붙이고 refresh 쿠키(Path=/api/auth)도 /ws/chat 에는 가지 않아,
+ * 연결 직후 첫 메시지 {type:"auth", token} 으로 보낸다(docs/04_auth.md 4절). 다른 곳은 apiFetch 를 쓴다
+ */
+export const chatToken = () => token;
+
 export function onUserChange(fn: (u: User | null) => void) {
   listeners.add(fn);
   return () => listeners.delete(fn);
