@@ -32,7 +32,7 @@ Claude는 운영 DB에 직접 접근하지 않는다 — `kubectl exec … mysql
 
 ## 일하는 방식
 
-- 코드 일은 worktree에서 커밋까지 한다. **push는 관리자가 한다**
+- 코드 일은 worktree에서 커밋까지 한다. **main에 합치는 것은 FOREMAN 합치기 카드(관리자 승인, squash), push는 관리자가 따로 한다**(2026-11-13부터 — 아래 「관리자」 「합치기 카드」). 작업 세션은 main에 직접 merge하지 않는다
 - 커밋 전 `git status` — 남이 고친 것은 건드리지 않고 자기 파일만 `git add`
 - 인계문이 가리키는 작업 자리(worktree)와 세션이 뜬 자리가 다르면 멈추고 알린다(2026-11-12 — 원본 폴더에 뜬 세션이 다른 세션의 worktree에 들어가 일했다)
 - 막히면 혼자 우회하지 말고 멈추고 알린다
@@ -84,5 +84,14 @@ Claude는 운영 DB에 직접 접근하지 않는다 — `kubectl exec … mysql
 - 이 저장소 관리자는 원본 폴더 `~/AI_programming/runshoes`의 `main`에서 도는 역할 manager 세션 하나다
 - FOREMAN API는 이 프로젝트 토큰으로만 부른다: `T=$(/usr/bin/grep -E '^FOREMAN_TOKEN_RUNSHOES=' ~/AI_programming/foreman/.env.project_tokens | cut -d= -f2-)` — 셸 변수로만 쓰고 `-H "Authorization: Bearer $T"`로 싣는다. 이 토큰은 런슈즈 세션 · 방 · 게시 API만 연다(다른 프로젝트는 403)
 - 다른 프로젝트에 부탁: `POST http://127.0.0.1:8000/api/managers/<프로젝트>/ask` `{"text": "…"}`. 관리자가 없으면 사람에게 텔레그램으로 간다. 클러스터 일은 인프라(`ronanlab-infra`)에 부탁한다
+- **합치기 카드**(2026-11-13 켬, 사용자 결정 — FOREMAN 9fa7831):
+  - 작업 세션 worktree에 main보다 앞선 커밋이 있고 커밋 안 한 변경이 없으면 FOREMAN이 카드를 띄운다(커밋 · 바뀐 파일 · 충돌 여부). 승인자는 이 저장소 관리자다 — 커밋 · 바뀐 파일 · 시험(평가 결과)을 보고 정한다. 판단이 안 서면 사람에게 묻는다
+  - 합치기 `POST /api/sessions/<sid>/merge-prep` `{"action":"merge"}`(프로젝트 토큰이면 by는 저절로 manager), 미루기 `{"action":"skip"}`(새 커밋이 생기면 다시 뜬다), 다 고른 합친 카드 `{"action":"docs_done"}`. 카드 전부 `GET /api/merge-prep?project=runshoes`
+  - **세션이 살아 있으면 승인할 때 그 세션을 끝낸다** — 같은 세션에 이어 맡길 일이 남았으면 미룬다(2026-11-13 317 — 0건 수정까지 받고 한 번에 합치려고 미뤘다)
+  - squash 한 커밋. 제목은 기계가 `타입: <세션 제목> — 커밋 N개`로 만든다(타입은 원래 커밋 중 가장 무거운 것). 더 맞는 제목이 있으면 승인할 때 `"title": "…"`(위 「커밋 메시지」 꼴). 본문에 원래 커밋 날짜 · 해시 · 제목, 원래 커밋은 서버 PC의 `refs/foreman/squashed/<해시>`에만
+  - **사람 승인 경로** — `backend/src/main/resources/db/migration/V*.sql` · `CLAUDE.md` · `.claude/*` · `Jenkinsfile` · `Dockerfile` · `Dockerfile.chatbot`이 든 카드는 브리지가 「사용자 답 기다림」으로 올린다. 마이그레이션이 든 push는 위 「push할 때 볼 것」 그대로
+  - 카드는 **합치기까지만** — 합친 뒤 시험 · push · 정리 후보 고르기는 관리자 몫. push는 지금처럼 사용자가 말할 때
+  - 「치울 것 — 빈 worktree」는 세션이 끝났고 · 앞선 커밋 0 · 커밋 안 한 변경 0일 때만 뜬다. 카드가 0장인 것은 「비었다」는 뜻이 아니다(커밋 안 한 변경이 있으면 카드를 만들지 않는다)
+- 보고 중계 · 물음 중계 · 21:00 묶음(2026-11-13 켬): 작업 세션의 보고는 관리자 입력 칸으로 온다. 사람에게 올릴 것은 `POST /api/sessions/<관리자 sid>/escalate` `{"kind":"report"|"question","text":"…"}`
 - 교장이 넘긴 계획(「[교장 계획 #N …]」)은 고칠 것이 없으면 `/api/foreman/start` `{"dispatch_id": N, "use_saved": true}`로 띄운다. 틀렸으면 띄우지 말고 사람에게 묻는다
 - 개발 스택(docker compose `runshoes-mysql-dev`, `127.0.0.1:3307`)은 하나라 worktree 둘이 동시에 쓰면 겹칠 수 있다 — 「한 번에 한 세션」 규칙을 둘지는 **정해지지 않음**
