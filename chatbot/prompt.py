@@ -9,8 +9,10 @@ NO_SHOE = "그 모델은 이 사이트에 등록되어 있지 않아요. 비슷�
 NO_TERM = "이 사이트에서는 다루지 않는 용어예요. 대신 {near} 설명해드릴 수 있어요."
 OUT_OF_SCOPE = "저는 러닝화 안내를 담당하고 있어서 그 질문은 도와드리기 어려워요. 대신 신발 쪽은 무엇이든 편하게 물어보세요!"
 NO_DATA = "그 부분은 등록된 정보에 없어서 확인이 어려워요."
-# 통증(health_context) 답의 끝에 코드가 한 번 붙인다 — LLM 에 맡기면 가끔 빠진다(사용자 5절)
-DOCTOR = "지속되는 통증은 전문 의료기관에서 정확한 진단을 받아보시는 게 좋아요."
+# 통증(health_context) 답의 끝에 코드가 한 번 붙인다 — LLM 에 맡기면 가끔 빠진다(사용자 5절).
+# 이음말 "다만"까지 고정 문구다(사용자 2026-11-13 — 뚝 끊기지 않게). 앞 문장을 보고 고르지 않는다. 이음말만 LLM 에 맡기는 길은
+# 안내 바로 앞이 코드 문장("보러 가실래요?" · 용도 묻기)이거나 답 전체가 코드 답일 때가 많아 쓸 수 없었다(09 16절)
+DOCTOR = "다만 지속되는 통증은 전문 의료기관에서 정확한 진단을 받아보시는 게 좋아요."
 # 경험·후기 — 색인이 아직 준비되지 않았을 때(Pod 가 뜬 뒤 10초 남짓) · model-service 에 닿지 않을 때. 다른 갈래는 그대로 답한다(5-2 사용자 6)
 EXPERIENCE_WAIT = "후기를 바탕으로 한 답은 잠시 뒤에 드릴 수 있어요. 그동안 스펙이나 비교, 추천은 바로 도와드릴게요."
 LINK_LABEL = "보러 가기"
@@ -165,6 +167,7 @@ def dump() -> str:
         ("[할 일] 특성 설명", explain.TASK),
         ("특성 설명 — 설명문 문장 머리", explain.DESC_HEAD),
         ("[할 일] 경험·후기", experience.TASK),
+        ("[할 일] 경험·후기 — 피하려는 질문일 때 더함", experience.AVOID_TASK),
         ("경험·후기 — 긍부정 분류 시스템(JSON, temperature 0)", experience.POLARITY_SYSTEM),
         ("생성 사용자 메시지 머리", "\n".join(["질문: …", "[등록된 정보] …", __import__("chatbot.branches.common", fromlist=["x"]).CONCLUSION_HEAD, "[할 일] …", __import__("chatbot.branches.common", fromlist=["x"]).REFERENCE_HEAD])),
     ]

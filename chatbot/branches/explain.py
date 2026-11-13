@@ -80,7 +80,9 @@ def find_desc(searcher, question: str) -> list:
 def answer(question: str, dic: Dictionary, health: bool, history: list[dict], extra: tuple[str, ...] = (),
            tail: str = prompt.EXPLAIN_TAIL, searcher=None, catalog=None) -> Reply:
     entries = pick(dic, question, extra)
-    desc = find_desc(searcher, question)
+    # 통증 질문에는 설명문(신발 이름 · 보러 가기)을 쓰지 않는다(사용자 2026-11-13) — 병명 → 신발로 가는 근거가 사전에 없어
+    # 챗봇이 고른 신발이 "이 병에는 이 신발"로 읽힌다. 사용자가 지목한 신발은 이 길로 오지 않는다(스펙 · 경험·후기)
+    desc = [] if health else find_desc(searcher, question)
     if not entries and not desc:
         return Reply(prompt.NO_FEATURE, branch="explain")
     # 근거는 설명(description)만 — 짧은 정의(short)까지 주면 같은 정의를 두 번 썼다(1회차). 사전 용어는 미리 쉬운 말로
@@ -102,6 +104,8 @@ def answer(question: str, dic: Dictionary, health: bool, history: list[dict], ex
         paras.append(plain_words(f"{h.meta.get('brand')}의 {josa(h.meta.get('model'), '은', '는')} 설명에 이런 내용이 있어요. {haeyo(h.text)}"))
     fallback = "관련된 신발 특성을 정리해 드릴게요.\n\n" + "\n\n".join(paras)
     text, used = generate(question, lines, [], fallback, health, history, TASK, reference=False, shoes_given=bool(desc))
+    # 생성한 글도 해요체 표로 — 근거가 사전뿐(통증 질문)이면 LLM 이 "무난하다고 합니다"처럼 원문 말투를 따랐다(1차 수정 평가 B04 · B05)
+    text = haeyo(text)
     # 보여 줄 신발 — 답에 이름이 나온 설명문의 신발만. 그 밖에는 LLM 이 예시를 따라 붙인 "보러 가실래요?"를 지운다
     if desc and catalog is not None:
         shoes = [catalog.by_id[h.shoe_id] for h in desc if h.meta.get("model") and h.meta["model"] in text and h.shoe_id in catalog.by_id]

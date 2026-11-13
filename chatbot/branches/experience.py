@@ -17,13 +17,19 @@ import re
 import numpy as np
 
 from .. import http, llm, prompt
-from ..reply import Reply, guard_log
+from ..facts import PRICE_NOTE
+from ..reply import Reply, drop_asks, guard_log
 from ..search.index import like_rerank, rank_shoes
 from .common import generate
 
 CAP = 30                 # 답에 넣는 리뷰 상한(사용자 2026-11-12)
-CAP_PER_SHOE_MULTI = 10  # 신발을 말하지 않아 여러 켤레를 볼 때 켤레당(30 을 셋으로 — Claude 가 정함, 관리자 확인 2026-11-12)
+CAP_PER_SHOE_MULTI = 10  # 신발을 말하지 않아 여러 켤레를 볼 때 켤레당(30 을 셋으로 — Claude 가 정함, 사용자 확인 2026-11-13)
 MULTI_SHOES = 3
+MULTI_POOL = 5           # 여러 켤레 — 긍부정을 세 볼 후보 신발. 반대 쪽이 많은 신발을 빼도 셋이 남게(Claude 가 정함)
+MIN_REVIEWS = 3          # 여러 켤레 목록에 넣는 최소 리뷰 수 — 리뷰 요약 기능과 같은 기준(사용자 2026-11-13). 지목한 신발은 그대로
+# 셀 수 있는 것을 두루뭉술하게 말하는 낱말 — 건수로 말하거나 "~다는 이야기가 있어요"로 끝낸다(사용자 2026-11-13). 이 갈래 생성 검사가 막는다
+VAGUE = ("많아요", "대부분", "전반적으로", "주로", "흔히")
+CLOSE = "보러 가실래요?"   # 끝 안내 — 코드가 붙인다(LLM 이 쓰면 묻는 말이 둘 됐다, E14)
 MENTION_COS = 0.60       # 낱말이 든 리뷰가 없을 때 임베딩만으로 후보에 넣는 문턱(candidates 참고)
 EXTRA = 5                # 임베딩으로 더하는 후보 상한(신발마다)
 DESC_COS = 0.50          # 설명문 문장을 근거로 줄 문턱
@@ -53,8 +59,15 @@ _ASPECT = dict(ASPECTS)
 
 TASK = (
     "[결론 문장]의 집계 문장은 숫자 · 건수를 바꾸지 말고 그대로 넣는다. 리뷰를 옮길 때는 \"등록된 리뷰에서는\"처럼 리뷰라는 것을 밝히고, "
-    "[리뷰]에 있는 내용만 쓴다. 리뷰에 없는 경향(\"대체로\" · \"자주\")을 새로 만들지 않는다. 긍정과 부정이 다 있으면 둘 다 말한다. "
-    "[설명문]이 있으면 신발의 구조로 한 문장 덧붙여도 된다. 네다섯 문장으로. 보러 가기를 권할 때는 \"보러 가실래요?\"."
+    "[리뷰]에 있는 내용만 쓴다. 얼마나 나왔는지는 [결론 문장]에 센 건수로만 말한다. 세지 않은 이야기는 \"~다는 이야기가 있어요\"로 끝내고, "
+    "\"많아요 · 대부분 · 전반적으로 · 주로 · 흔히 · 대체로 · 자주\"처럼 양을 짐작하는 말을 쓰지 않는다. 긍정과 부정이 다 있으면 둘 다 말한다. "
+    "[설명문]이 있으면 신발의 구조로 한 문장 덧붙여도 된다. 네다섯 문장으로. "
+    "답 끝에 안내 문장이 자동으로 붙으니 질문으로 끝내지 않고, 끝맺는 인사 · 정리 문장도 따로 쓰지 않는다."
+    # 금지 예시를 따옴표로 들었더니("이렇게 확인해 봤어요") 15문항 중 4~7문항이 그 문장을 그대로 붙였다(1차 수정 평가) — 예시를 들지 않는다
+)
+# 피하려는 질문(라우터 avoid) — 고른 신발을 권하는 모양이 되지 않게(사용자 2026-11-13, E12)
+AVOID_TASK = (
+    " 사용자는 이런 이야기가 나온 신발을 피하려고 묻는다. 신발을 권하거나 좋게 말하지 말고, 어느 신발 리뷰에서 그 이야기가 나왔는지만 알린다."
 )
 POLARITY_SYSTEM = """너는 러닝화 리뷰 분류기다. 각 리뷰가 주어진 관점에 대해 어떻게 말하는지 하나를 고른다. JSON 하나만 낸다.
 
@@ -64,7 +77,11 @@ POLARITY_SYSTEM = """너는 러닝화 리뷰 분류기다. 각 리뷰가 주어�
 관점이 통증이면: 통증 · 물집 · 쓸림 같은 불편이 생겼다 → negative, 그런 불편이 없었다 · 덜했다고 직접 말한다 → positive.
 한 리뷰에 좋은 말과 나쁜 말이 같이 있으면 더 무게가 실린 쪽을 고른다.
 
-{"labels": {"리뷰 번호": "positive" | "negative" | "none", ...}} — 받은 번호를 모두 넣는다."""
+asks — 질문이 그 관점에서 어느 쪽 이야기를 찾는지. 좋다는 이야기("편하다는 후기", "넉넉하다는 리뷰") → positive,
+나쁘다는 이야기("덥다는 후기", "쓸린다는 후기", "금방 닳아요?") → negative, 어느 쪽도 아니면("무릎 어때요?") → none
+
+{"labels": {"1": "positive" | "negative" | "none", "2": ..., 받은 번호 모두}, "asks": "positive" | "negative" | "none"} — 받은 번호를 모두 넣는다."""
+# labels 를 먼저 쓰게 한다 — asks 를 앞에 두었더니 그쪽(negative) 리뷰 번호만 적고 나머지를 빠뜨렸다(28건 중 6건, 2026-11-13)
 
 
 def aspect_of(text: str) -> str | None:
@@ -114,6 +131,9 @@ class Tally:
     def mentioned(self) -> list[dict]:
         return [r for r in by_likes(self.reviews) if r["id"] in self.labels]
 
+    def count(self, side: str) -> int:
+        return self.pos if side == "positive" else self.neg
+
 
 def by_likes(reviews: list[dict]) -> list[dict]:
     """추천 많은 순, 같으면 최근 순"""
@@ -148,16 +168,20 @@ def summary_lines(t: Tally) -> list[str]:
     return out
 
 
-def quote_line(t: Tally) -> str | None:
-    """인용 — 관점이 있으면 그 이야기를 한 리뷰 가운데, 없으면 등록된 리뷰 가운데 추천이 가장 많은 것"""
-    pool = t.mentioned() if t.aspect else by_likes(t.reviews)
+def quote_line(t: Tally, want: str | None = None) -> str | None:
+    """인용 — 관점이 있으면 그 이야기를 한 리뷰 가운데, 없으면 등록된 리뷰 가운데 추천이 가장 많은 것.
+    want — 질문이 찾는 쪽(positive · negative). 있으면 그쪽 리뷰에서 고른다(편하다는 리뷰를 물었는데 쓸린다는 인용이 나가지 않게)"""
+    full = t.mentioned() if t.aspect else by_likes(t.reviews)
+    pool = full
+    if want and any(t.labels.get(r["id"]) == want for r in pool):
+        pool = [r for r in pool if t.labels.get(r["id"]) == want]
     if t.aspect:   # 관점 낱말이 그대로 든 리뷰를 먼저 — 인용만 보고도 무슨 이야기인지 알게
         pool = [r for r in pool if mentions_by_words(t.aspect, r["content"])] + [r for r in pool if not mentions_by_words(t.aspect, r["content"])]
     if not pool:
         return None
     r = pool[0]
     likes = r.get("likeCount") or 0
-    top = likes > 0 and likes >= max((x.get("likeCount") or 0) for x in pool)   # 「가장 많은 추천」은 정말 그럴 때만
+    top = likes > 0 and likes >= max((x.get("likeCount") or 0) for x in full)   # 「가장 많은 추천」은 정말 그럴 때만(그 이야기를 한 리뷰 전체에서)
     q = aspect_sentence(r["content"], t.aspect)
     if t.aspect:
         head = f"{t.aspect} 이야기를 한 리뷰 가운데 가장 많은 추천을 받은 리뷰에서는" if top else f"{t.aspect} 이야기를 한 리뷰에서는"
@@ -188,30 +212,46 @@ def strip_names(question: str, shoes: list[dict]) -> str:
 
 
 # ------------------------------------------------------------------ 길
-def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, history: list[dict], classify=None) -> Reply:
-    """shoes — 이름이 나온 신발(없으면 검색으로 고른다). searcher 가 준비 전이면 "잠시 뒤"(bot 이 먼저 본다)"""
+def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, history: list[dict], classify=None,
+           avoid: bool = False) -> Reply:
+    """shoes — 이름이 나온 신발(없으면 검색으로 고른다). searcher 가 준비 전이면 "잠시 뒤"(bot 이 먼저 본다).
+    avoid — 피하려는 질문(라우터). 그 이야기(부정)가 나온 신발만 남기고, 버튼 · "보러 가실래요?"를 붙이지 않는다"""
     classify = classify or classify_llm
     aspect = aspect_of(question)
     qtext = strip_names(question, shoes)
     qvec = searcher.query_vec(qtext)
     multi = not shoes
+    order: list[int] = []
     if multi:
         hits = like_rerank(searcher.index.search(qvec, question, 60, {"kind": "review"}))
-        order = [sid for sid, _ in rank_shoes(hits) if sid in catalog.by_id]
+        # 리뷰 3건 미만인 신발은 목록에 넣지 않는다(사용자 2026-11-13 — 리뷰 요약과 같은 기준)
+        order = [sid for sid, _ in rank_shoes(hits) if sid in catalog.by_id and (catalog.by_id[sid].get("reviewCount") or 0) >= MIN_REVIEWS]
         if aspect:
             # 관점을 물었으면 검색 결과 가운데 그 낱말이 든 리뷰가 많은 신발부터 — 상위 문서 하나로만 고르면 언급 0건 신발이 섞였다
             n_words = {sid: sum(1 for h in hits if h.shoe_id == sid and mentions_by_words(aspect, h.text)) for sid in order}
             order = sorted(order, key=lambda sid: (-n_words[sid], order.index(sid)))
-        shoes = [catalog.by_id[sid] for sid in order][:MULTI_SHOES]
+        shoes = [catalog.by_id[sid] for sid in order][:MULTI_POOL if aspect else MULTI_SHOES]
         if not shoes:
             return Reply(prompt.NO_DATA, branch="experience")
-    shoes = shoes[:MULTI_SHOES]
+    else:
+        shoes = shoes[:MULTI_SHOES]
     tallies = [Tally(s, http.get_json("/api/reviews", {"shoeId": s["id"]}), aspect) for s in shoes]
-    tallies = [t for t in tallies if t.n > 0] or tallies
-    if aspect:
-        label(tallies, aspect, question, qvec, searcher, classify)
+    if multi:
+        tallies = [t for t in tallies if t.n >= MIN_REVIEWS]   # 카탈로그 건수와 지금 건수가 다를 때
+    else:
+        tallies = [t for t in tallies if t.n > 0] or tallies
+    want = None
+    if aspect and tallies:
+        asks = label(tallies, aspect, question, qvec, searcher, classify)
+        # 피하려는 질문은 늘 부정 쪽(쓸린다 · 덥다는 이야기가 나온 신발)
+        want = "negative" if avoid else asks if asks in ("positive", "negative") else None
+    if multi:
+        tallies = pick_shoes(tallies, want, avoid)
+        if not tallies:
+            return Reply(NO_MATCH, links_off=True, branch="experience")
 
     cap = CAP if len(tallies) == 1 else CAP_PER_SHOE_MULTI
+    named = multi or len(tallies) > 1   # 챗봇이 고른 신발은 하나만 남아도 이름을 앞에(무슨 신발 이야기인지 모른다)
     lines: list[str] = []
     conclusions: list[str] = []
     paras: list[str] = []
@@ -232,34 +272,81 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         summ = summary_lines(t)
         if not aspect:
             summ = [f"{name}에는 리뷰가 {t.n}건 있어요."]
-        quote = quote_line(t)
+        quote = quote_line(t, want)
         c = summ + ([quote] if quote and (not aspect or t.k) else []) + ([read_note] if read_note else [])
-        conclusions += [f"{name}: {x}" if len(tallies) > 1 else x for x in c]
-        lines.append(f"[{name}] 리뷰 {t.n}건" + (f", {aspect} 분류 — 긍정 {t.pos} · 부정 {t.neg} · 언급 없음 {t.rest}" if aspect and t.labeled else ""))
-        lines.append("[리뷰]" if shown else "[리뷰] 그 부분을 말한 리뷰 없음")
+        conclusions += [f"{name}: {x}" if named else x for x in c]
+        # 근거 머리 — 내부 말("분류" · "관점")을 쓰지 않는다. LLM 이 그대로 옮겼다(E09 "내구성 분류에 대한 언급이 없어요")
+        lines.append(f"[{name}] 리뷰 {t.n}건" + (f" — {aspect} 이야기: 좋다 {t.pos}건 · 아쉽다 {t.neg}건 · 그 이야기 없음 {t.rest}건" if aspect and t.labeled else ""))
+        lines.append("[리뷰]" if shown else f"[리뷰] {aspect or '그 부분'} 이야기를 한 리뷰 없음")
         for r in shown:
             tag = {"positive": "긍정", "negative": "부정"}.get(t.labels.get(r["id"]), "")
             lines.append(f"- (별점 {r.get('rating')} · 추천 {r.get('likeCount') or 0}{' · ' + tag if tag else ''}) {r['content']}")
-        para = (f"{name}: " if len(tallies) > 1 else "") + " ".join(summ)
+        para = (f"{name}: " if named else "") + " ".join(summ)
         if quote and (not aspect or t.k):
             para += " " + quote
         if read_note:
             para += " " + read_note
         paras.append(para)
 
-    desc = desc_lines(searcher, qvec, qtext, [t.shoe["id"] for t in tallies], aspect)
+    desc = [] if avoid else desc_lines(searcher, qvec, qtext, [t.shoe["id"] for t in tallies], aspect)   # 피할 신발의 구조 설명은 권하는 말이 된다
     if desc:
         lines += ["[설명문]", *desc]
-    head = "말씀하신 부분을 리뷰에서 찾아봤어요." if multi else ""
-    fallback = "\n\n".join(([head] if head else []) + paras + ["보러 가실래요?"])
-    text, used = generate(question, lines, conclusions, fallback, health, history, TASK)
+    head = (AVOID_HEAD if avoid else "말씀하신 부분을 리뷰에서 찾아봤어요.") if multi else ""
+    fallback = "\n\n".join(([head] if head else []) + paras)
+    text, used = generate(question, lines, conclusions, fallback, health, history, TASK + (AVOID_TASK if avoid else ""))
+    if not used:
+        # 양을 짐작하는 말이 든 문장은 지운다 — 답 전체를 코드 답으로 바꾸면 짧고 딱딱해진다(5-1 B03). 센 숫자가 지워지면 아래 검사가 잡는다
+        text = drop_vague(text)
+        # 이 갈래는 가격을 다루지 않는다 — 말투 예시의 발매가 문장을 그대로 옮겨 붙였다(1차 수정 평가 E01 · E06 · E11)
+        text = "\n\n".join(p for p in (q.replace(PRICE_NOTE, "").strip() for q in text.split("\n\n")) if p)
     if not used and not counts_kept(text, tallies):
         guard_log().append("코드 답: 집계 숫자가 바뀜")
         text, used = fallback, True
-    reply = Reply(text, [t.shoe for t in tallies], fallback_used=used, branch="experience")
+    # 묻는 말은 코드가 끝에 한 번 — LLM 이 "더 궁금한 점 있으신가요?"로 끝내면 질문이 둘 됐다(E14)
+    text = drop_asks(text) or fallback
+    if not avoid:
+        text += "\n\n" + CLOSE
+    reply = Reply(text, [t.shoe for t in tallies], links_off=avoid, fallback_used=used, branch="experience")
     reply.ranked = order[:10] if multi else []
     reply.tally = [{"shoe_id": t.shoe["id"], "n": t.n, "k": t.k, "pos": t.pos, "neg": t.neg, "rest": t.rest, "labeled": t.labeled} for t in tallies]
+    reply.want = want
     return reply
+
+
+AVOID_HEAD = "말씀하신 이야기가 나온 리뷰를 찾아봤어요. 아래 신발은 등록된 리뷰에 그런 이야기가 있었어요."
+NO_MATCH = "말씀하신 이야기가 나온 리뷰를 등록된 리뷰에서 찾지 못했어요. 신발 이름을 알려주시면 그 신발 리뷰를 살펴볼게요."
+
+
+def drop_vague(text: str) -> str:
+    """VAGUE 낱말이 든 문장을 지운다(인용 따옴표 안은 리뷰 원문이라 둔다)"""
+    paras = []
+    for para in text.split("\n\n"):
+        sents = re.split(r"(?<=[.!?])\s+", para.strip())
+        kept = []
+        for s in sents:
+            outside = re.sub(r"\"[^\"]*\"", "", s)
+            if any(w in outside for w in VAGUE):
+                guard_log().append("양 짐작 문장 지움")
+                continue
+            kept.append(s)
+        if kept:
+            paras.append(" ".join(kept))
+    return "\n\n".join(paras)
+
+
+def pick_shoes(tallies: list[Tally], want: str | None, avoid: bool) -> list[Tally]:
+    """여러 켤레 — 질문이 찾는 쪽(want) 건수가 많은 순으로 셋(사용자 2026-11-13, E11).
+    반대 쪽이 더 많은 신발은 뺀다(Claude 가 정함 — 넣고 먼저 밝히는 것보다 낫다: 09 16절). 피하려는 질문은 부정이 긍정보다 많은 신발만(E12).
+    분류가 안 됐으면(낱말로만 셈) 긍부정을 모르니 거르지 않는다"""
+    if want is None or not all(t.labeled for t in tallies):
+        return tallies[:MULTI_SHOES]
+    other = "negative" if want == "positive" else "positive"
+    if avoid:
+        keep = [t for t in tallies if t.count(want) > t.count(other)]
+    else:
+        keep = [t for t in tallies if t.count(want) >= 1 and t.count(other) <= t.count(want)]
+    keep.sort(key=lambda t: -t.count(want))   # 같으면 검색 순서(안정 정렬)
+    return keep[:MULTI_SHOES]
 
 
 def candidates(t: Tally, aspect: str, qvec, searcher) -> list[dict]:
@@ -279,19 +366,21 @@ def candidates(t: Tally, aspect: str, qvec, searcher) -> list[dict]:
     return words + rest
 
 
-def label(tallies: list[Tally], aspect: str, question: str, qvec, searcher, classify) -> None:
-    """관점 후보(낱말 + 임베딩 유사도) → LLM 분류 한 번(모든 신발 함께) → Tally.labels"""
+def label(tallies: list[Tally], aspect: str, question: str, qvec, searcher, classify) -> str | None:
+    """관점 후보(낱말 + 임베딩 유사도) → LLM 분류 한 번(모든 신발 함께) → Tally.labels.
+    돌려주는 것은 질문이 찾는 쪽(asks — positive · negative · none, 모르면 None). classify 는 목록이나 (목록, asks) 를 낸다"""
     cands: list[tuple[Tally, dict]] = []
     for t in tallies:
         cands += [(t, r) for r in candidates(t, aspect, qvec, searcher)]
     if not cands:
         for t in tallies:
             t.labeled = True
-        return
-    ok, labels = False, []
+        return None
+    ok, labels, asks = False, [], None
     for attempt in (1, 2):   # 가끔 번호를 빠뜨린다 — 한 번만 다시 묻는다(늦어지는 것은 그때뿐)
         try:
-            labels = classify(aspect, question, [r["content"] for _, r in cands])
+            out = classify(aspect, question, [r["content"] for _, r in cands])
+            labels, asks = out if isinstance(out, tuple) else (out, None)
             ok = len(labels) == len(cands)
         except Exception as e:   # noqa: BLE001
             print(f"[experience] 분류 실패({attempt}): {e!r}")
@@ -305,7 +394,7 @@ def label(tallies: list[Tally], aspect: str, question: str, qvec, searcher, clas
         for t, r in cands:
             if mentions_by_words(aspect, r["content"]):
                 t.labels[r["id"]] = "mentioned"
-        return
+        return None
     for (t, r), v in zip(cands, labels):
         if v in ("positive", "negative"):
             t.labels[r["id"]] = v
@@ -314,11 +403,13 @@ def label(tallies: list[Tally], aspect: str, question: str, qvec, searcher, clas
         if not t.check():   # 셈이 맞지 않으면 긍부정을 말하지 않는다
             guard_log().append(f"집계 대조 실패 {t.shoe['id']}")
             t.labeled = False
+    return asks
 
 
-def classify_llm(aspect: str, question: str, contents: list[str]) -> list[str]:
+def classify_llm(aspect: str, question: str, contents: list[str]) -> tuple[list[str], str | None]:
     user = f"관점: {aspect}\n질문: {question}\n\n리뷰\n" + "\n".join(f"[{i + 1}] {c}" for i, c in enumerate(contents))
-    data = llm.chat_json(POLARITY_SYSTEM, user, num_predict=60 + 14 * len(contents))
+    data = llm.chat_json(POLARITY_SYSTEM, user, num_predict=80 + 14 * len(contents))
+    asks = data.get("asks") if data.get("asks") in ("positive", "negative", "none") else None
     raw = data.get("labels", data)
     if isinstance(raw, list):   # ["positive", …] 로 올 때가 있다
         raw = {str(i + 1): v for i, v in enumerate(raw)}
@@ -332,7 +423,7 @@ def classify_llm(aspect: str, question: str, contents: list[str]) -> list[str]:
     missing = [i for i in range(1, len(contents) + 1) if by_num.get(i) not in ("positive", "negative", "none")]
     if missing:
         raise ValueError(f"분류가 빠진 리뷰 {len(missing)}건")
-    return [by_num[i] for i in range(1, len(contents) + 1)]
+    return [by_num[i] for i in range(1, len(contents) + 1)], asks
 
 
 def desc_lines(searcher, qvec, question: str, shoe_ids: list[int], aspect: str | None) -> list[str]:
