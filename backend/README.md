@@ -63,7 +63,7 @@ ronanlab-infra `apps/runshoes/app/deployment.yaml` 이 넣는 값 — 그 밖은
 | `BASE_PATH` | 비움(루트). 주면 그 아래로(context-path) |
 | `DEMO_LOGIN_ENABLED` | `true` — 로그인 화면의 체험 카드(application.yml 기본값은 `false`) |
 
-- 프로브: startup `/actuator/health` · readiness `/actuator/health/readiness`(readinessState + **db**) · liveness `/actuator/health/liveness`. 앱 포트에 같은 그룹 `/readyz` · `/livez` 도 있다 — 프로브를 이쪽으로 옮길 예정(`docs/06_deployment.md` 1-9)
+- 프로브: startup · readiness `/readyz`(readinessState + **db**) · liveness `/livez` — 앱 포트 3000. actuator(`/actuator/health` · `/actuator/prometheus`)는 관리 포트 9000 에만 있고 Service · Ingress 에 싣지 않는다(`docs/06_deployment.md` 1-9). 로컬에서 9000 이 겹치면 env `MANAGEMENT_SERVER_PORT`
 - 종료: graceful shutdown 20초(`server.shutdown: graceful`) — Deployment preStop 5초 뒤
 - 로그 확인: `kubectl -n runshoes logs deploy/runshoes -c runshoes` — 기동 때 Flyway(`Successfully applied …` 또는 `Schema … is up to date`)
 - 운영에서 계약 확인은 읽기만: `node contract/record.mjs --read-only …`(contract/README.md)

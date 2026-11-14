@@ -26,8 +26,8 @@ CACHE = os.environ.get("CHATBOT_INDEX_CACHE", "")
 # 첫 동기화 전에 같은 Pod 백엔드 준비를 기다린다(5-2 운영 뒤, 사용자 승인 2026-11-13) — Spring + Flyway 가 25~30초 걸려
 # 배포마다 Pod 마다 "동기화 실패: ConnectionError" 한 줄이 남았다(로그에 늘 남으면 진짜 에러를 못 찾는다).
 # 경로는 쿠버네티스 readinessProbe 와 같은 그룹이다(infra apps/runshoes/app/deployment.yaml · backend application.yml management).
-# 프로브도 /readyz 로 옮길 예정이다(A-2 2단계, 인프라 — 그 전까지 프로브는 /actuator/health/readiness, 둘은 같은 것을 본다)
-READY_PATH = "/readyz"   # 앱 포트의 readiness(DB 까지) — /actuator 는 관리 포트로 옮겨 갈 것이라 이쪽을 쓴다(06 1-9)
+# 프로브도 /readyz 를 본다(A-2 2단계, infra 2bfbf40).
+READY_PATH = "/readyz"   # 앱 포트의 readiness(DB 까지) — /actuator 는 관리 포트 9000 에만 있다(06 1-9)
 READY_EVERY_SEC = 2
 READY_WAIT_SEC = 180      # 백엔드 startupProbe(2초 × 60 = 2분)보다 넉넉히. 넘으면 기다림을 그만두고 그대로 동기화(실패는 실패 줄로)
 

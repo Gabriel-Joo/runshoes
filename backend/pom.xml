@@ -35,6 +35,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <!-- /actuator/prometheus — 관리 포트 9000 에만 연다(application.yml management, docs/06_deployment.md 1-9) -->
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
     <!-- 로그인(docs/04_auth.md) — JWT 발급 · 검증은 resource-server 의 Nimbus(HS256), 비밀번호는 BCrypt -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

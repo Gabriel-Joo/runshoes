@@ -80,7 +80,7 @@ runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 - **노드 분산(2026-11-10, 인프라 가용성 묶음 1)** — replicas 2 를 required anti-affinity(`kubernetes.io/hostname`)로 서로 다른 노드에 두고 PDB minAvailable 1. 노드 하나가 죽어도 다른 Pod 가 받는다. 롤링 중 2+1개라 스케줄 가능한 워커 3대가 필요하다 — 워커가 4대라 한 대를 정비하는 동안에도 된다(그날 w1 을 cordon 한 채 새 태그가 w2 · w3 로 롤링됐다). 시도 제한(RateLimiter)은 DB 에 있어 Pod 가 둘이어도 갈리지 않는다. 상세 원본은 infra `docs/02_availability.md`.
 - **배치 고정 · Replica(2026-11-10 저녁, 인프라 가용성 묶음 2)** — 앱은 app 노드(w1 · w2)에만(nodeSelector). 노드가 둘이라 위의 2+1 롤링은 세 번째 Pod 가 갈 곳이 없어 **옛 Pod 하나를 먼저 내리고 새 Pod**(maxSurge 0 · maxUnavailable 1)로 바꿨다 — 롤링 동안 잠깐 Pod 하나, `rollout restart` 82초 · 1초 탐침 실패 0. MySQL Replica `runshoes-mysql-replica-0`(w2)가 binlog 로 따라간다(자동 전환 없음 — infra `docs/runbooks/mysql-replica.md`, 승격 시험은 이 Replica 로 했다: SQL 0.2초 · Service 전환 0.1초 · 다시 만들기 10초).
 - **activity_logs 정리를 꺼 두었다(2026-11-10 사용자 결정)** — `ActivityCleanup`(`@Scheduled`)이 Pod 마다 돌아 두 Pod 가 같은 시각 같은 행을 지우려 한다. Deployment env `ACTIVITY_CLEANUP_CRON: "-"`(Spring 의 끄기 값). ShedLock 이 들어오면 그 env 를 뺀다(4절).
-- **앱** — RollingUpdate `maxSurge 1, maxUnavailable 0`: 새 Pod 가 Ready 가 된 뒤 옛 Pod 를 내린다. Ready 는 DB 까지(`/actuator/health/readiness`), startup 은 최대 2분(Flyway 첫 기동). 종료는 preStop 5초 → graceful shutdown 최대 20초.
+- **앱** — RollingUpdate `maxSurge 1, maxUnavailable 0`: 새 Pod 가 Ready 가 된 뒤 옛 Pod 를 내린다. Ready 는 DB 까지(`/readyz` — 앱 포트 3000, readinessState + db), liveness 는 `/livez`, startup 은 최대 2분(Flyway 첫 기동). actuator 는 관리 포트 9000 에만 있다(1-9). 종료는 preStop 5초 → graceful shutdown 최대 20초.
 - **비밀** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`), DB 비밀번호는 `runshoes-mysql`. optional 이 아니다 — Secret 이 없으면 새 Pod 가 멈추고 옛 Pod 가 계속 돈다.
 - **Namespace · Secret 은 사람이 만든다.** ArgoCD 가 Namespace 를 소유하면 Application 삭제 · prune 한 번에 Secret 까지 사라질 수 있다(`CreateNamespace=false`).
 - **DB** — utf8mb4 · `utf8mb4_unicode_ci` · `default-time-zone=+00:00`. 데이터베이스와 계정은 이미지가 첫 기동에 만들고, 스키마는 앱의 Flyway 가 만든다(`07_database.md`). PVC 는 Retain.
@@ -120,18 +120,27 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 
 - 운영 Pod 에 직접 붙을 때는 MetalLB VIP 로 간다: `http://192.168.122.240` + `Host: runshoes.ronanlab.dev`. Cloudflare 를 거치면 헤더가 바뀐다.
 
-#### 1-9. actuator 를 클러스터 안으로(진행 중 — 관측 작업 A-2, 2026-11-14 사용자)
+#### 1-9. actuator 를 클러스터 안으로(관측 작업 A-2, 2026-11-14 사용자)
 
-지금 공개 주소의 `/actuator` · `/actuator/health` 가 인터넷에 열려 있다. Prometheus 노출(`/actuator/prometheus`)을 더하면 그것도 열린다. 그래서 actuator 를 관리 포트(9000)로 옮기고 Service · Ingress 에 싣지 않는다. 그러면 3000 의 `/actuator/**` 가 사라져 지금 프로브가 깨진다 — 순서를 틀리면 새 Pod 가 Ready 가 안 돼 롤링이 멈춘다. 그래서 세 단계로, 한 단계씩 확인하고 넘어간다.
+3단계 전에는 공개 주소의 `/actuator` · `/actuator/health` 가 인터넷에 열려 있었다. Prometheus 노출(`/actuator/prometheus`)을 더하면 그것도 열린다. 그래서 actuator 를 관리 포트(9000)로 옮기고 Service · Ingress 에 싣지 않는다. 그러면 3000 의 `/actuator/**` 가 사라져 지금 프로브가 깨진다 — 순서를 틀리면 새 Pod 가 Ready 가 안 돼 롤링이 멈춘다. 그래서 세 단계로, 한 단계씩 확인하고 넘어간다.
 
 | # | 일 | 누가 | 상태 |
 |---|---|---|---|
-| 1 | 앱: 3000 에 `/livez` · `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인 · 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 로컬 끝 |
-| 2 | 인프라: 프로브를 `/livez` · `/readyz` 로(startup · readiness · liveness 셋) | 인프라 관리자 | 1 이 운영에 오른 뒤 |
-| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push · 인프라 | 2 를 확인한 뒤 |
+| 1 | 앱: 3000 에 `/livez` · `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인 · 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 운영(35537160ce73) |
+| 2 | 인프라: 프로브를 `/livez` · `/readyz` 로(startup · readiness · liveness 셋) | 인프라 관리자 | 끝(infra 2bfbf40) |
+| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push · 인프라 | 앱 로컬 끝, 주석은 인프라 |
 
 - `/livez` = liveness 그룹(livenessState), `/readyz` = readiness 그룹(readinessState + db). 내용은 `/actuator/health/liveness` · `readiness` 와 같다. DB 가 멈추면 `/readyz` 만 503(Hikari 연결 대기 30초 뒤 — 지금 readiness 와 같은 동작), `/livez` 는 200(2026-11-14 로컬).
 - SPA 대체 경로(`config/SpaConfig` 의 `/**`)와 겹치지 않는다 — `/livez` · `/readyz` 는 actuator JSON, 다른 주소는 그대로 `index.html`(로컬 확인).
+
+3단계(앱, 2026-11-14 로컬)
+
+- `management.server.port: 9000`, 노출은 `health` · `prometheus`. Service(80 → 3000, 8766) · Ingress 에 9000 이 없다(infra `apps/runshoes/app/service.yaml` · `ingress.yaml` 읽어 확인). Prometheus 는 Service 가 아니라 Pod IP:9000 에 바로 붙는다 — infra Prometheus 설정의 `kubernetes-pods` 잡이 Pod 주석 `prometheus.io/scrape: "true"` · `prometheus.io/port: "9000"` · `prometheus.io/path: /actuator/prometheus` 를 본다.
+- 3000 에서 `/actuator` · `/actuator/health` · `/actuator/prometheus` 는 SPA 대체(200 `text/html`, `index.html`)가 된다 — actuator JSON 이 아니다. `/livez` · `/readyz` 는 그대로 3000 에 있다.
+- 응답 시간(`http_server_requests`)은 버킷 넷만 — 50ms · 100ms · 300ms · 1s(+Inf). percentiles-histogram 은 켜지 않았다(시계열이 크게 는다, 사용자 · 인프라 조건). 그래서 p50 · p95 는 이 넷 사이의 어림값이다.
+- 9000 에서도 `/livez` · `/api/…` 같은 주소가 `index.html` 을 돌려준다 — SPA 설정이 관리 포트에도 붙는다(컨트롤러는 붙지 않는다). 9000 은 바깥에 없어 그대로 둔다.
+- 앱 push 와 Pod 주석은 어느 쪽이 먼저여도 된다. 주석이 먼저면 옛 이미지는 9000 이 닫혀 있어 그 대상이 `up 0` 일 뿐 프로브 · 트래픽과 상관없다. 앱이 먼저면 9000 이 열려 있고 아무도 긁지 않는다.
+- 배포 뒤 확인: 공개 주소의 `/actuator` · `/actuator/health` · `/actuator/prometheus` 가 `text/html`(index.html)인지 본다. JSON 이나 `# HELP` 로 시작하는 글이 나오면 열린 것이다.
 
 #### 2. 왜 이렇게 했나
 

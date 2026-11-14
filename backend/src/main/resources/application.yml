@@ -55,11 +55,16 @@ app:
     timeout-ms: 40000
 
 management:
-  endpoints.web.exposure.include: health
+  # actuator 는 관리 포트(9000)에만 — Service · Ingress 에 싣지 않아 바깥에서 닿지 않는다. 3000 에는 /actuator/** 가 없다(관측 작업 A-2 3단계, 2026-11-14).
+  # Prometheus 는 Pod 주석(prometheus.io/port 9000 · path /actuator/prometheus)으로 Pod IP 에 바로 붙는다(docs/06_deployment.md 1-9)
+  server.port: 9000   # 로컬에서 겹치면 env MANAGEMENT_SERVER_PORT 로 바꾼다
+  endpoints.web.exposure.include: health,prometheus
+  # 응답 시간 버킷은 넷만(50ms · 100ms · 300ms · 1s, 사용자 2026-11-14). percentiles-histogram 은 켜지 않는다 —
+  # 켜면 주소 · 메서드 · 상태 조합마다 버킷이 70개쯤 생겨 시계열이 크게 는다(인프라 조건). p50 · p95 는 이 넷에서 어림한 값이다
+  metrics.distribution.slo.http.server.requests: 50ms,100ms,300ms,1s
   endpoint.health:
     probes.enabled: true
-    # 앱 포트(3000)에 /livez · /readyz 를 더한다 — /actuator/health/liveness · readiness 와 같은 그룹(관측 작업 A-2 1단계, 2026-11-14).
-    # 다음 단계에서 actuator 를 관리 포트(9000)로 옮기면 /actuator/** 는 3000 에서 사라지지만 이 둘은 3000 에 남는다 —
-    # 그래서 프로브 · 챗봇 준비 확인을 먼저 이 둘로 옮겨 둔다(docs/06_deployment.md 1-9)
+    # 앱 포트(3000)에 /livez · /readyz 를 둔다 — /actuator/health/liveness · readiness 와 같은 그룹(A-2 1단계).
+    # actuator 가 9000 으로 옮겨 가도 이 둘은 3000 에 남는다 — 프로브(인프라 deployment.yaml) · 챗봇 준비 확인이 본다
     probes.add-additional-paths: true
     group.readiness.include: readinessState,db   # 이게 있어야 readiness 가 DB 를 본다(기본은 readinessState 만)

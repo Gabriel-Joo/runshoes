@@ -24,7 +24,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `POST /api/internal/chatbot-misses` | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문 기록(V18, 작업 5-1). 본문 `{kind: "shoe"\|"term"\|"feature", query, message}` → 204, 잘못된 본문 400 `{}`. **같은 Pod 안에서 127.0.0.1 로 들어온 연결만** — 서버 쪽 주소(`localAddr`)를 본다. `remoteAddr` 는 믿지 않는다: Spring Boot 는 쿠버네티스에서 `X-Forwarded-For` 로 `remoteAddr` 를 바꾼다(127/8 · 내부 대역을 프록시로 믿는다 — `X-Forwarded-For: 127.0.0.1` 이면 루프백이 된다). 그 밖은 404 `{}` | 챗봇 사이드카 |
 | `GET /api/admin/chatbot-misses` | 위 기록을 `query` 로 묶어 센 목록 `[{kind, query, count, lastAt, lastMessage}]`, 최근 순 200개 | admin · 데모 관리자 |
 | `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
-| 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/actuator/health/*` 는 프로브용 | — |
+| 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/livez` · `/readyz` 는 프로브용(actuator 는 관리 포트 9000 에만 — `06_deployment.md` 1-9) | — |
 
 #### 1-2. json-server 와 같게 한 것
 

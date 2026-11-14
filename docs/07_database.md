@@ -23,6 +23,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | `chatbot_turns` | 21 | 챗봇 대화 한 턴에 한 줄(V19) — 연결 id · 계정 id · 질문 · 답 · 갈래 · 판정 표시 · 신발 수 · 단계별 시간(라우터 · 검색 · 생성 · API 다섯). 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 대시보드가 복제본을 읽되 질문 · 답 칸은 권한으로 막는다. `user_id` 는 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다) — `09_chatbot_rag.md` 18절 |
 | `summary_batch_runs` | 11 | 요약 배치 한 실행 한 줄(V20) — 시작 · 끝 · 결과(`running` · `ran` · `skipped` · `error`) · 대상 · 성공 · 실패 · 다시 stale · 사라짐 · 걸린 시간 · 오류 글. 배치가 바로 쓴다 — `09_chatbot_rag.md` 5절 「실행 기록」 |
 | `summary_batch_failures` | 5 | 요약 배치가 만들지 못한 켤레 한 줄(V20) — 실행 id(FK, CASCADE) · 신발 id(FK 없음) · 까닭 · 시각 |
+| `grafana_compare_views`(뷰) | 4 | `activity_logs` 의 `compare.view` 행에서 비교한 신발 번호만(V21). 대시보드 읽기 계정이 `meta` 없이 비교 조합을 센다 — 1-6절 |
 
 - 키 · 제약
   - `uk_shoes_line_generation_gender(line_key, generation, gender)` — 한 라인의 한 세대 · 한 성별은 한 행. 숨긴 행에도 걸린다(같은 세대는 새로 넣지 않고 되살린다, 409).
@@ -60,7 +61,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - `ActivityCleanup` 이 매일(`app.activity.cleanup-cron`, Asia/Seoul) 지운다 — `auth.*` · `user.*` 90일, 나머지(`review.*` · `like.*` · `shoe.*` · `compare.*` …) 180일(`application.yml`).
 - 그래서 오래 남아야 하는 기록은 로그에 기대지 않는다 — 영구 삭제는 `shoe_purges`, 신발의 마지막 수정은 `shoes.last_change`.
 
-#### 1-4. 마이그레이션 V1~V20
+#### 1-4. 마이그레이션 V1~V21
 
 | V | 이름 | 무엇 | 운영 적용 |
 |---|---|---|---|
@@ -82,8 +83,9 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 2026-11-10 |
 | 17 | terms outsole id | 아웃솔 용어의 id 12 → 13 — 챗봇이 용어를 id 로 참조할 때 둘이 섞이지 않게(`09_chatbot_rag.md` 8절). 첫 구문 가드 — 아웃솔이 id 12 인 행이 하나이고 13 이 비었을 때만 | 2026-11-12 |
 | 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 2026-11-12 |
-| 19 | chatbot turns | `chatbot_turns`(턴 한 줄 — 연결 · 계정 · 질문 · 답 · 갈래 · 판정 · 단계별 시간, created_at · conn_id 색인) — `09_chatbot_rag.md` 18절 | 아직(로컬) |
-| 20 | summary batch runs | `summary_batch_runs` · `summary_batch_failures`(요약 배치 실행 기록 · 실패한 켤레) — `09_chatbot_rag.md` 5절. V19 와 같은 배포 | 아직(로컬) |
+| 19 | chatbot turns | `chatbot_turns`(턴 한 줄 — 연결 · 계정 · 질문 · 답 · 갈래 · 판정 · 단계별 시간, created_at · conn_id 색인) — `09_chatbot_rag.md` 18절 | 2026-11-14 |
+| 20 | summary batch runs | `summary_batch_runs` · `summary_batch_failures`(요약 배치 실행 기록 · 실패한 켤레) — `09_chatbot_rag.md` 5절. V19 와 같은 배포 | 2026-11-14 |
+| 21 | grafana compare views | 뷰 `grafana_compare_views`(`compare.view` 행의 신발 번호만, `SQL SECURITY DEFINER`) — 대시보드 비교 조합 순위, 1-6절. 표는 바꾸지 않는다 | 아직(로컬) |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md`)에 있다. 절차는 `06_deployment.md`.
 
@@ -96,6 +98,52 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - **기존 행을 추측으로 채우지 않는다.** 새 칸의 기존 값은 NULL 로 두고 적재기 · 관리 화면이 채운다(V5 · V6 · V11 · V12).
 - 기존 데이터를 고정 값으로 고치는 마이그레이션(V3 · V4)은 **맨 첫 구문에 가드**를 둔다 — 운영 데이터가 시드와 같을 때만 진행하고, 다르면 `ERROR 1242` 로 아무것도 바꾸기 전에 멈춘다.
 - MySQL DDL 은 트랜잭션이 아니다 — 운영 적용 전에 `mysqldump` 를 먼저 뜬다(런북).
+
+#### 1-6. 대시보드 읽기 계정 `grafana_ro`(관측 작업 A-3, 2026-11-14 — SQL 만, 운영에는 아직 없다)
+
+Grafana 가 런슈즈 MySQL **복제본**(`runshoes-mysql-replica.runshoes.svc:3306`, read_only)을 읽는 계정이다. 복제본에서는 만들 수 없으므로 **원본(`runshoes-mysql-0`)에서 사람이 만들면 복제된다**. 꼴은 펫퍼민트 `grafana_ro` 와 같다(infra `docs/09_monitoring.md` 2-4절): 칸 단위 SELECT 만, 최대 연결 5.
+
+```sql
+-- 원본에서 한 줄씩. 비밀번호는 자리표시 — 화면 · 기록에 남기지 않게 넣는다(Grafana 쪽 Secret 과 같은 값)
+CREATE USER 'grafana_ro'@'%' IDENTIFIED BY '<비밀번호>' WITH MAX_USER_CONNECTIONS 5;
+GRANT SELECT (turn_id, conn_id, user_id, created_at, branch, by_rule, llm_ok, health, fallback_used, shoe_count, latency_ms, router_ms, search_ms, gen_ms, catalog_ms, compare_ms, recommend_ms, review_ms, summary_ms) ON runshoes.chatbot_turns TO 'grafana_ro'@'%';
+GRANT SELECT (run_id, started_at, finished_at, result, target, ok, failed, restaled, gone, duration_ms, error) ON runshoes.summary_batch_runs TO 'grafana_ro'@'%';
+GRANT SELECT (id, run_id, shoe_id, reason, created_at) ON runshoes.summary_batch_failures TO 'grafana_ro'@'%';
+GRANT SELECT (id, occurred_at, user_id, event, target_type, target_id) ON runshoes.activity_logs TO 'grafana_ro'@'%';
+GRANT SELECT (id, role, created_at, deleted_at) ON runshoes.users TO 'grafana_ro'@'%';
+GRANT SELECT (id, brand, model, generation, gender, deleted_at) ON runshoes.shoes TO 'grafana_ro'@'%';
+GRANT SELECT (id, shoe_id, user_id, rating, review_type, created_at) ON runshoes.reviews TO 'grafana_ro'@'%';
+GRANT SELECT (user_id, shoe_id, created_at) ON runshoes.likes TO 'grafana_ro'@'%';
+GRANT SELECT (user_id, review_id, created_at) ON runshoes.review_likes TO 'grafana_ro'@'%';
+-- 뷰(V21)는 V21 이 운영에 올라간 뒤에 친다 — 그 전에는 뷰가 없어 ERROR 1146
+GRANT SELECT ON runshoes.grafana_compare_views TO 'grafana_ro'@'%';
+```
+
+주지 않은 칸 · 표와 까닭
+
+| 표 | 뺀 칸 | 까닭 |
+|---|---|---|
+| `chatbot_turns` | `question` · `answer` | 대화 본문(18절 — 대시보드는 숫자만) |
+| `users` | `email` · `password_hash` · `nickname` · `updated_at` · `last_login_at` | 개인 정보 · 비밀번호 해시 · 한 사람의 접속 시각 |
+| `activity_logs` | `meta` · `ip` · `user_agent` · `request_id` | `meta` 에 닉네임 변경 전후(`user.nickname.change`) · 모델 이름 · 바뀐 칸이 섞인다. ip · 브라우저는 개인 정보 |
+| `reviews` | `author` · `content` · `proof_image_url` · `distance_km` · `verified*` · `liked` · `like_count` · `parent_review_id` · `first_shoe_id` | 닉네임 스냅샷 · 리뷰 글 · 인증 사진. 나머지는 대시보드에 쓰지 않는다 |
+| `shoes` | 나머지 42칸 | 순위 이름표에 쓰는 것만 |
+| `refresh_tokens` · `chatbot_misses` · `shoe_purges` · `shoe_summaries` · `terms` · `flyway_schema_history` | 표 전체 | 토큰 해시 · 사용자가 친 글(챗봇 못 찾은 말) · 대시보드에 쓰지 않음 |
+
+- `activity_logs.target_id` 는 로그인 이벤트(`target_type='email'`)일 때 이메일의 HMAC-SHA256 앞 8바이트다(`auth/EmailKey` — 키는 JWT 서명 키에서 뽑아 서버 밖에서는 되돌릴 수 없다). 그래서 준다 — 신발 조회 순위(`shoe.view` 의 `target_id`)에 필요하다.
+- 체험 계정은 `users.id` 1~30(시드 사용자, V3 가 id 를 고정해 넣는다)과 `role='DEMO_ADMIN'` 이다. 대시보드는 이 둘을 「체험 계정」으로 가른다 — 이메일을 보지 않는다.
+- 비교 조합 순위는 `activity_logs.meta` 의 `shoeIds` 에만 있다. `meta` 칸은 줄 수 없으니 뷰 `grafana_compare_views`(V21 — `compare.view` 행의 `id` · `occurred_at` · `user_id` · `shoe_ids` 만)의 SELECT 를 준다(사용자 2026-11-14).
+  - `SQL SECURITY DEFINER` · 정의자 `runshoes`@`%`(Flyway 를 돌리는 앱 계정) — 뷰는 정의자 권한으로 밑 표를 읽으므로 `grafana_ro` 는 `meta` 권한 없이 뷰만 읽는다. 복제본에도 `runshoes` 계정이 있다(복제본은 `mysql` 스키마까지 옮겨 채운다 — infra `docs/runbooks/mysql-replica.md` 2절). 없으면 뷰를 읽을 때 `ERROR 1449`.
+  - 뷰는 `meta` 에서 `$.shoeIds` 하나만 꺼내고 `compare.view` 행만 본다 — 닉네임 변경 같은 다른 이벤트의 `meta` 는 나오지 않는다.
+  - **다른 이름의 DB 로 복원하면 그 DB 에서는 뷰를 읽을 수 없다**(`ERROR 1356` — 정의자 권한이 `runshoes.*` 에만 있다). 덤프 · 복원 확인(06 1-7 3단계)은 표의 행 수로 하고 뷰는 세지 않는다. 같은 이름(`runshoes`)으로 복원하면 그대로 읽힌다.
+- 표에 칸이 생기면 권한을 손으로 더해야 한다(펫퍼민트와 같은 대가).
+
+시험(2026-11-14, 임시 MySQL — 개발 DB 덤프 복원 + V17~V20, tmpfs, 끝나면 사라짐)
+
+- 막힘: `SELECT question` · `SELECT answer FROM chatbot_turns` → `ERROR 1143`, `SELECT * FROM chatbot_turns` → `ERROR 1142`. `users` 의 `email` · `password_hash` · `nickname`, `activity_logs` 의 `meta` · `ip`, `reviews` 의 `content` · `author` → 모두 `ERROR 1143`. `chatbot_misses` · `refresh_tokens` → `ERROR 1142`. `INSERT INTO likes` → `ERROR 1142`.
+- 6번째 동시 연결 → `ERROR 1226 … max_user_connections (current value: 5)`.
+- 준 칸으로 집계는 된다(`SELECT event, COUNT(*) FROM activity_logs GROUP BY event` 등).
+- 뷰(V21, 같은 날 — 빈 임시 MySQL 에 Flyway 로 V1~V21, 앱 계정 `runshoes` 로): API 로 비교 기록 셋과 닉네임 변경 하나를 만든 뒤, `grafana_ro` 로 뷰를 읽으면 비교 세 줄(`[2, 16]` · `[2, 5, 16]` · `[7, 9]`)만 나오고 닉네임 값은 없다. 같은 계정으로 `SELECT meta FROM activity_logs` 는 여전히 `ERROR 1143`, `SHOW CREATE VIEW` 는 `ERROR 1142`. 덤프를 `runshoes_restore` 로 복원하면 복원은 되고 표 행 수도 맞지만, 뷰를 읽으면 `ERROR 1356`.
 
 #### 2. 왜 이렇게 했나
 
