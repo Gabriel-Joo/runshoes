@@ -32,7 +32,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 | 계정 | JWT · refresh 쿠키 · 체험 계정 · 시도 제한 · 활동 로그 | `04_auth.md` |
 | API | json-server 계약 재현 + 새 기능, 계약 시험 | `05_api_contract.md` |
 | 배포 | Jenkins(BuildKit) → Harbor → 인프라 리포 태그 → ArgoCD | `06_deployment.md` |
-| DB | 테이블 9 · 마이그레이션 V1~V13 | `07_database.md` |
+| DB | 테이블 9 · 마이그레이션 V1~V21 | `07_database.md` |
 | 비교 | 점수 없는 비교표(2~5켤레) · 자동 채우기 · 분포 그래프 — 운영 반영(2026-11-09). 레이더 차트는 버렸다 | `08_compare.md` |
 
 | 저장소 | 담는 것 |

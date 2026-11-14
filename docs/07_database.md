@@ -85,9 +85,9 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 2026-11-12 |
 | 19 | chatbot turns | `chatbot_turns`(턴 한 줄 — 연결 · 계정 · 질문 · 답 · 갈래 · 판정 · 단계별 시간, created_at · conn_id 색인) — `09_chatbot_rag.md` 18절 | 2026-11-14 |
 | 20 | summary batch runs | `summary_batch_runs` · `summary_batch_failures`(요약 배치 실행 기록 · 실패한 켤레) — `09_chatbot_rag.md` 5절. V19 와 같은 배포 | 2026-11-14 |
-| 21 | grafana compare views | 뷰 `grafana_compare_views`(`compare.view` 행의 신발 번호만, `SQL SECURITY DEFINER`) — 대시보드 비교 조합 순위, 1-6절. 표는 바꾸지 않는다 | 아직(로컬) |
+| 21 | grafana compare views | 뷰 `grafana_compare_views`(`compare.view` 행의 신발 번호만, `SQL SECURITY DEFINER`) — 대시보드 비교 조합 순위, 1-6절. 표는 바꾸지 않는다 | 2026-11-14 |
 
-운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md`)에 있다. 절차는 `06_deployment.md`.
+운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md` · `v19-v20-observability.md` · `v21-grafana-compare-views.md`)에 있다. 절차는 `06_deployment.md`.
 
 #### 1-5. 마이그레이션을 쓰는 규칙
 
@@ -99,7 +99,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - 기존 데이터를 고정 값으로 고치는 마이그레이션(V3 · V4)은 **맨 첫 구문에 가드**를 둔다 — 운영 데이터가 시드와 같을 때만 진행하고, 다르면 `ERROR 1242` 로 아무것도 바꾸기 전에 멈춘다.
 - MySQL DDL 은 트랜잭션이 아니다 — 운영 적용 전에 `mysqldump` 를 먼저 뜬다(런북).
 
-#### 1-6. 대시보드 읽기 계정 `grafana_ro`(관측 작업 A-3, 2026-11-14 — SQL 만, 운영에는 아직 없다)
+#### 1-6. 대시보드 읽기 계정 `grafana_ro`(관측 작업 A-3 — 2026-11-14 사람이 운영 원본에서 만들어 복제본에 따라감, 복제본에서 `question` 읽기 ERROR 1143 확인)
 
 Grafana 가 런슈즈 MySQL **복제본**(`runshoes-mysql-replica.runshoes.svc:3306`, read_only)을 읽는 계정이다. 복제본에서는 만들 수 없으므로 **원본(`runshoes-mysql-0`)에서 사람이 만들면 복제된다**. 꼴은 펫퍼민트 `grafana_ro` 와 같다(infra `docs/09_monitoring.md` 2-4절): 칸 단위 SELECT 만, 최대 연결 5.
 
