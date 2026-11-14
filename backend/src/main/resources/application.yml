@@ -58,4 +58,8 @@ management:
   endpoints.web.exposure.include: health
   endpoint.health:
     probes.enabled: true
+    # 앱 포트(3000)에 /livez · /readyz 를 더한다 — /actuator/health/liveness · readiness 와 같은 그룹(관측 작업 A-2 1단계, 2026-11-14).
+    # 다음 단계에서 actuator 를 관리 포트(9000)로 옮기면 /actuator/** 는 3000 에서 사라지지만 이 둘은 3000 에 남는다 —
+    # 그래서 프로브 · 챗봇 준비 확인을 먼저 이 둘로 옮겨 둔다(docs/06_deployment.md 1-9)
+    probes.add-additional-paths: true
     group.readiness.include: readinessState,db   # 이게 있어야 readiness 가 DB 를 본다(기본은 readinessState 만)

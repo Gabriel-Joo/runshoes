@@ -24,7 +24,7 @@
 - [ ] 갈래별 질문 수(용어 · 스펙 · 비교 · 추천 · 특성 · 경험 · 범위 밖 · 되묻기) → `09_chatbot_rag.md` 15절
 - [ ] 규칙이 정한 비율 · 라우터 LLM 이 정한 비율 · 라우터 실패(JSON 깨짐 · 시간 초과) 수 → `09` 15절
 - [ ] `health_context` true 비율 → `09` 7절
-- [ ] 응답 시간 — 한 턴 전체 · 라우터 LLM · 생성 LLM · `/api/shoes` 읽기(질문마다 약 1MB — 캐시를 할지 판단할 자료) → `09` 15절
+- [ ] 응답 시간 — 한 턴 전체 · 라우터 LLM · 생성 LLM · API 읽기. 턴 기록(`chatbot_turns`, V19)이 칸마다 남긴다 — 대시보드에 올리면 끝. `/api/shoes` 는 캐시했다(`09` 19절) → `09` 18절
 - [ ] 검사에 걸려 코드 답을 낸 비율과 까닭(사실에 없는 숫자 · 금칙어 · 잘림 · 신발이 몸에 도움) → `09` 15절
 - [ ] 거절 · 기록 건수 — 없는 신발 · 없는 용어 · 답하지 못한 특성(`chatbot_misses` kind 별) · 범위 밖 → `07_database.md` 1-1
 - [ ] "보러 가기" 버튼을 누른 비율(1켤레 · 비교하기) → `02_screens.md` 1-7
@@ -57,7 +57,7 @@
 #### 인프라 · DB
 
 - [ ] MySQL 정기 백업(덤프 CronJob, 저장소 밖 보관) → `06_deployment.md` 4절
-- [ ] ShedLock — activity_logs 정리를 Pod 하나만 돌게, 그 뒤 infra Deployment env `ACTIVITY_CLEANUP_CRON` 빼기 → `06_deployment.md` 4절
+- [ ] ShedLock — activity_logs 정리를 Pod 하나만 돌게, 그 뒤 infra Deployment env `ACTIVITY_CLEANUP_CRON` 빼기 → `06_deployment.md` 4절. 그때 chatbot_turns 질문 · 답 90일 정리도 함께 켠다
 - [ ] MySQL 승격을 앱 트래픽까지 옮겨 한 번 해 보기(점검 시간에 — Replica · 런북은 2026-11-10 인프라 묶음 2에서 생김) → `06_deployment.md` 4절
 - [ ] Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 → 상세 문서 없음(전에 `overview.md` 표에만 있던 것)
 - [ ] 옛 칸 정리 마이그레이션(옛 칸 · `liked` 삭제 · NOT NULL 조이기 · `legacy*`) → `07_database.md` 4절

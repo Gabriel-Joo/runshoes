@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-from .. import http, llm, prompt
+from .. import http, llm, prompt, timing
 from ..facts import (PRICE_NOTE, STABILITY_PLAIN, WIDE_SCOPE, WIDTH_PLAIN, euro, josa, jong, num, weight_converted,
                      weight_phrase)
 from ..reply import Reply, drop_asks, guard_log, guard_reset, haeyo, name_forms
@@ -346,7 +346,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
     multi = not shoes
     order: list[int] = []
     if multi:
-        hits = like_rerank(searcher.index.search(qvec, question, 60, {"kind": "review"}))
+        with timing.stage("search"):
+            hits = like_rerank(searcher.index.search(qvec, question, 60, {"kind": "review"}))
         # 리뷰 3건 미만인 신발은 목록에 넣지 않는다(사용자 2026-11-13 — 리뷰 요약과 같은 기준)
         order = [sid for sid, _ in rank_shoes(hits) if sid in catalog.by_id and (catalog.by_id[sid].get("reviewCount") or 0) >= MIN_REVIEWS]
         if aspect:
@@ -455,7 +456,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
 
     # 대화 기록은 주지 않는다(4차 수정 — 앞 턴의 스펙 답에서 "쿠션 소재가 FF Blast Max …"를 옮겨 왔다, E15). 근거는 [리뷰]뿐
     if sum(j is not None for j in jobs) > 1:
-        with ThreadPoolExecutor(max_workers=len(jobs)) as ex_:
+        # 생성 스레드는 단계 시간을 재지 않는다 — 여기서 통째로 gen 으로 잰다(timing 머리말)
+        with timing.stage("gen"), ThreadPoolExecutor(max_workers=len(jobs)) as ex_:
             outs = list(ex_.map(comment, jobs))
     else:
         mine = list(guard_log())
@@ -667,7 +669,8 @@ def candidates(t: Tally, aspect: str, qvec, searcher) -> list[dict]:
     안 든 리뷰도 0.70 이었다(노바블라스트 6 · 무릎, 2026-11-12). 그래서 낱말이 주 신호이고, 임베딩은 「낱말이 든 리뷰의
     중앙값보다 가까운 것」을 EXTRA 건까지 더한다. 낱말이 든 리뷰가 없으면 MENTION_COS 를 넘는 것만 EXTRA 건까지"""
     ids = [f"rev:{r['id']}" for r in t.reviews]
-    have, mat = searcher.index.vectors(ids)
+    with timing.stage("search"):
+        have, mat = searcher.index.vectors(ids)
     cos = dict(zip(have, (mat @ np.asarray(qvec, dtype=np.float32)).tolist())) if len(have) else {}
     words = [r for r in t.reviews if mentions_by_words(aspect, r["content"])]
     hit_cos = sorted(cos.get(f"rev:{r['id']}", 0.0) for r in words)

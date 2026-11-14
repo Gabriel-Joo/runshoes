@@ -8,11 +8,12 @@ from __future__ import annotations
 
 import re
 import threading
+import time
 from dataclasses import dataclass, field
 
-from . import http, prompt, router
+from . import http, prompt, router, timing
 from .branches import compare, experience, explain, recommend, spec, term
-from .catalog import Catalog, Mention, norm
+from .catalog import Catalog, CatalogCache, Mention, norm
 from .facts import josa
 from .reply import Reply, guard_log, guard_reset, with_doctor
 from .terms import Dictionary
@@ -32,6 +33,8 @@ class State:
     history: list[dict] = field(default_factory=list)      # {"role": "user"|"assistant", "content"}
     pending: dict | None = None                            # {"kind": "choose"|"purpose"|"similar", ...}
     logged: set = field(default_factory=set)               # 이 연결에서 이미 기록한 것(같은 말을 거듭 남기지 않는다)
+    conn_id: str | None = None                             # 턴 기록(V19)이 한 대화를 묶는 id — server 가 연결마다 만든다
+    user_id: int | None = None                             # 로그인 확인(GET /api/me)의 계정 id — 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다)
 
 
 _GREETING = re.compile(r"^\s*(안녕|하이|hi|hello|반가)", re.IGNORECASE)
@@ -55,15 +58,65 @@ def record_miss(state: State, kind: str, query: str, message: str, post=None) ->
     threading.Thread(target=run, daemon=True).start()
 
 
+TURN_PATH = "/api/internal/chatbot-turns"
+ERROR_BRANCH = "error"   # 턴이 예외로 끝났다 — server 가 FALLBACK_ERROR 를 낸다(답 칸은 빈 글)
+
+
+def turn_record(state: State, text: str, reply: Reply | None, trace: dict, total_ms: int, stages: dict) -> dict:
+    """턴 기록(V19 chatbot_turns) 한 줄의 본문. 갈래는 답이 정한 것(되묻기 choose · 없는 신발 no_shoe 포함), 없으면 라우터 것"""
+    return {
+        "connId": state.conn_id, "userId": state.user_id,
+        "question": text, "answer": reply.text if reply else "",
+        "branch": (reply.branch if reply and reply.branch else None) or (trace.get("branch") if reply else ERROR_BRANCH) or "",
+        "byRule": trace.get("by_rule"), "llmOk": trace.get("llm_ok"), "health": trace.get("health"),
+        "fallbackUsed": bool(reply and reply.fallback_used), "shoeCount": len(reply.shoes) if reply else 0,
+        "latencyMs": total_ms,
+        # 단계 칸 — router_ms → routerMs … summary_ms → summaryMs(timing.STAGES 순서)
+        **{f"{k}Ms": stages[f"{k}_ms"] for k in timing.STAGES},
+    }
+
+
+def record_turn(body: dict, post=None) -> None:
+    """턴 한 줄 → V19(내부 POST). record_miss 와 같다 — 따로 도는 스레드라 답을 막지도 늦추지도 않고, 실패해도 답은 나간다"""
+    poster = post or (lambda b: http.post_json(TURN_PATH, b, timeout=http.LOG_TIMEOUT))
+
+    def run():
+        try:
+            poster(body)
+        except Exception as e:   # noqa: BLE001
+            print(f"[turn] 기록 실패: {e!r}")
+
+    threading.Thread(target=run, daemon=True).start()
+
+
 class Bot:
-    def __init__(self, load=Catalog.load, ask=router.ask_llm, post=None, searcher=None):
-        self.load = load
+    def __init__(self, load=None, ask=router.ask_llm, post=None, searcher=None, log_turn=None):
+        # 카탈로그 — 없으면 캐시(신발이 바뀔 때만 다시 읽는다, catalog.CatalogCache). 평가는 미리 읽은 카탈로그를 넘긴다
+        self.load = load or CatalogCache().get
         self.ask = ask
-        self.post = post
+        self.post = post            # 없는 신발 · 용어 기록(V18) — 평가는 가로챈다
+        self.log_turn = log_turn    # 턴 기록(V19) — 평가는 가로챈다. 없으면 같은 Pod 백엔드로 보낸다
         self.searcher = searcher   # search.service.Searcher — 없거나 준비 전이면 경험·후기는 "잠시 뒤", 특성 설명은 사전만
 
     def turn(self, state: State, text: str) -> tuple[Reply, dict]:
-        """(답, 기록 — 평가용: 갈래 · health · 찾은 신발)"""
+        """(답, 기록 — 평가용: 갈래 · health · 찾은 신발). 턴마다 한 줄을 기록한다(V19, 예외로 끝나도 갈래 error 로)"""
+        t0 = time.perf_counter()
+        timing.begin()
+        trace: dict = {}
+        reply = None
+        try:
+            reply, trace = self._run(state, text)
+            return reply, trace
+        finally:
+            total = int(round((time.perf_counter() - t0) * 1000))
+            stages = timing.take()
+            trace["ms"] = {"latency_ms": total, **stages}
+            try:
+                record_turn(turn_record(state, text, reply, trace, total, stages), self.log_turn)
+            except Exception as e:   # noqa: BLE001 — 기록 본문을 만들다 실패해도 답은 나간다
+                print(f"[turn] 기록 준비 실패: {e!r}")
+
+    def _run(self, state: State, text: str) -> tuple[Reply, dict]:
         cat = self.load()
         dic = Dictionary(cat.terms)
         guard_reset()
@@ -109,7 +162,8 @@ class Bot:
         terms_found = dic.find(text)
         state_shoes = [cat.by_id[i] for i in state.last_shoe_ids if i in cat.by_id]
 
-        r = router.route(text, len(found) + len(ambiguous) + len(unregistered), len(state_shoes), len(terms_found), state.history, self.ask)
+        with timing.stage("router"):
+            r = router.route(text, len(found) + len(ambiguous) + len(unregistered), len(state_shoes), len(terms_found), state.history, self.ask)
         # 직전 신발은 "그거 · 둘 다" 같은 가리키는 말이 있거나(15절), 라우터가 이름 없이 이어 묻는 질문이라고 볼 때 쓴다
         # (r.unnamed — 「후기는 어때요?」). 가리키는 말 목록과 라우터 판단을 둘 다 둔다, 목록은 넓히지 않는다(2026-11-14 사용자 결정)
         context = state_shoes if (router.has_any(text, router.REFER_WORDS) or r.unnamed) else []

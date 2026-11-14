@@ -67,7 +67,8 @@ else
     maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
 fi
 for i in $(seq 1 90); do
-  curl -sf -o /dev/null http://127.0.0.1:3200/actuator/health/readiness && break
+  # /readyz — 앱 포트의 readiness(06 1-9). 그 전 이미지(IMAGE=…)는 /readyz 가 없어 옛 경로도 본다
+  { curl -sf -o /dev/null http://127.0.0.1:3200/readyz || curl -sf -o /dev/null http://127.0.0.1:3200/actuator/health/readiness; } && break
   docker ps -q -f name=runshoes-spring-dev | grep -q . || { echo "Spring 이 죽었다"; exit 1; }
   sleep 1
 done

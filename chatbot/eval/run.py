@@ -28,6 +28,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
+# 턴 기록의 단계 칸 합 ↔ 전체 — 이름 찾기 · 검사 같은 파이썬 코드(조사 평균 1ms · 최대 3ms)와 칸마다 따로 반올림한 차이.
+# 5ms 를 넘으면 경고, 30ms 를 넘으면 실패(사용자 2026-11-14). 2026-11-14 평가 다섯 번 중 한 번 B12 7ms · E12 29ms 가 나왔고 같은 문항을 다시 재면
+# 3ms 안이었다(GC 0회 — 호스트 CPU 흔들림). 재지 않은 API 호출은 공개 주소로 100ms 를 넘으므로 실패로 잡힌다
+SUM_WARN_MS, SUM_FAIL_MS = 5, 30
 
 
 def main() -> int:
@@ -44,7 +48,7 @@ def main() -> int:
     os.environ["OLLAMA_URL"] = a.ollama
     os.environ["MODEL_SERVICE_URL"] = a.model_service
 
-    from chatbot import facts, http, prompt  # noqa: E402 — 주소를 정한 뒤에 읽는다
+    from chatbot import facts, http, prompt, timing  # noqa: E402 — 주소를 정한 뒤에 읽는다
     from chatbot.bot import Bot, State
     from chatbot.branches import recommend
     from chatbot.catalog import Catalog
@@ -60,7 +64,9 @@ def main() -> int:
     from chatbot.search.service import Searcher
     searcher = Searcher()
     print(f"색인 {searcher.sync()}")
-    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body), searcher=searcher)
+    # 기록 둘(V18 없는 신발 · V19 턴)은 가로챈다 — 평가는 운영 공개 API 를 읽으므로 운영 백엔드로 보내지 않는다
+    turns: list[dict] = []
+    bot = Bot(load=lambda: cat, post=lambda body: posts.append(body), searcher=searcher, log_turn=lambda body: turns.append(body))
     # 몸풀기 — 한동안 질문이 없으면 Ollama 가 모델을 내려서(약 5분) 첫 질문이 모델을 올리느라 몇 초 더 걸린다
     # (2026-11-14 운영 확인 10.9초, 평가 4.3 ~ 4.7초). 문항 전에 챗봇과 같은 모델 · 옵션(llm.chat)으로 한 번 말을 걸어 올려 두고,
     # 문항 시간에는 넣지 않는다. 첫 문항을 빼면 --only 로 한 문항만 잴 때 잴 것이 없어진다(사용자 2026-11-14)
@@ -82,6 +88,7 @@ def main() -> int:
         for s in it.get("setup", []):
             bot.turn(st, s)
         posts.clear()
+        turns.clear()
         # 시간은 묻는 질문 하나만 — 앞 턴(setup)까지 재면 「두 번 묻는 데 걸린 시간」이 된다(사용자 2026-11-14)
         t0 = time.time()
         reply, trace = bot.turn(st, it["q"])
@@ -122,6 +129,25 @@ def main() -> int:
                     fails.append(f"용어 {key} 원문이 답에 없다")
             if not it.get("terms") and not text.startswith(prompt.NO_TERM.split("{")[0][:20]):
                 fails.append("사전에 없는 용어인데 거절 문구가 아니다")
+        # 턴 기록(V19) — 묻는 질문 한 줄, 칸이 차 있고 답 · 갈래가 실제와 같은가
+        if len(turns) != 1:
+            fails.append(f"턴 기록 {len(turns)}줄")
+        else:
+            tr = turns[0]
+            want_branch = reply.branch or trace.get("branch")
+            if tr["question"] != it["q"] or tr["answer"] != reply.text or tr["branch"] != want_branch:
+                fails.append(f"턴 기록이 답과 다르다(갈래 {tr['branch']} ≠ {want_branch})")
+            if tr["shoeCount"] != len(reply.shoes) or tr["fallbackUsed"] != reply.fallback_used:
+                fails.append("턴 기록의 신발 수 · 코드 답이 다르다")
+            # 단계 칸을 모두 더하면 전체와 맞아야 한다 — 남는 것은 이름 찾기 · 검사 같은 파이썬 코드(조사 평균 1ms · 최대 3ms)
+            ms = [tr["latencyMs"]] + [tr[f"{k}Ms"] for k in timing.STAGES]
+            gap = ms[0] - sum(ms[1:])
+            if not all(isinstance(x, int) and x >= 0 for x in ms):
+                fails.append(f"턴 기록 시간 {ms}")
+            elif abs(gap) > SUM_FAIL_MS:
+                fails.append(f"단계 합이 전체와 {gap}ms 다르다 {ms}")
+            elif abs(gap) > SUM_WARN_MS:
+                warns.append(f"단계 합이 전체와 {gap}ms 다르다(경고선 {SUM_WARN_MS}ms) {ms}")
         # 기록(V18)
         if it.get("miss"):
             if not any(p["kind"] == it["miss"]["kind"] and p["query"] == it["miss"]["query"] for p in posts):
@@ -568,6 +594,12 @@ def summary(results: list[dict], copy_issues: list[str]) -> None:
             else:
                 g[x.split(" [")[0]] += 1
     print("  생성 검사가 한 일: " + (", ".join(f"{k} {v}" for k, v in sorted(g.items())) or "없음"))
+    timed = [r["trace"]["ms"] for r in results if isinstance(r["trace"].get("ms"), dict)]
+    if timed:   # 턴 기록(V19)의 단계별 시간 평균 — 셋을 더해도 전체가 되지 않는다(chatbot/timing.py)
+        keys = [k for k in timed[0] if k.endswith("_ms")]
+        print("  단계 평균(ms): " + " · ".join(f"{k} {sum(t[k] for t in timed) / len(timed):.0f}" for k in keys))
+        gaps = [t["latency_ms"] - sum(t[k] for k in keys if k != "latency_ms") for t in timed]
+        print(f"  전체 − 단계 합(ms): 평균 {sum(gaps) / len(gaps):.1f} · 최소 {min(gaps)} · 최대 {max(gaps)}")
     bad_num = sum(any(f.startswith("API 에 없는 숫자") for f in r["fails"]) for r in results)
     print(f"  수치 불일치 문항 {bad_num} · 전문의 누락 {sum('전문의 안내 누락' in r['fails'] for r in results)}")
     print("  용어 사본 · 예시 값 대조: " + ("같다" if not copy_issues else "; ".join(copy_issues)))

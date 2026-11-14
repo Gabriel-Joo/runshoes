@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
  *   2. 보이는 신발 전체를 다시 판단한다 — 30일 조건 · SQL 로 직접 넣은 리뷰는 쓰기 시점 판단을 거치지 않는다.
  *   3. stale 인 신발만 하나씩 차례로 만든다 — Ollama 에 동시에 보내지 않는다. 신발마다 따로 커밋해, 중간에 죽으면 남은 것은 stale 로 다음 회차가 잇는다.
  * 로그: 시작(쓰기 시점에 서 있던 stale · 재판단으로 새로 선 stale · 지운 행) · 10켤레마다 진행 · 끝(성공 · 실패 · 재비교로 다시 stale · 걸린 시간).
+ * 실행 기록(V20, BatchRunLog): 실행마다 한 줄(ran · skipped · error, 숫자 · 걸린 시간)과 실패한 켤레마다 한 줄(까닭). 기록이 실패해도 배치는 끝까지 돈다.
  */
 @Component
 public class SummaryBatch {
@@ -35,14 +36,30 @@ public class SummaryBatch {
 	private final DataSource dataSource;
 	private final SummaryStore store;
 	private final SummaryService summaries;
+	private final BatchRunLog runs;
 
-	SummaryBatch(DataSource dataSource, SummaryStore store, SummaryService summaries) {
+	SummaryBatch(DataSource dataSource, SummaryStore store, SummaryService summaries, BatchRunLog runs) {
 		this.dataSource = dataSource;
 		this.store = store;
 		this.summaries = summaries;
+		this.runs = runs;
 	}
 
+	/** 실행 기록(V20)을 앞뒤에 남긴다 — 기록이 실패해도 배치는 그대로(BatchRunLog 는 던지지 않는다) */
 	public Result run() throws Exception {
+		long t0 = System.nanoTime();
+		Long runId = runs.start(BatchRunLog.now());
+		try {
+			Result r = locked(runId);
+			runs.finish(runId, r.ran() ? "ran" : "skipped", r, (System.nanoTime() - t0) / 1_000_000L, null);
+			return r;
+		} catch (Exception | Error e) {
+			runs.finish(runId, "error", null, (System.nanoTime() - t0) / 1_000_000L, BatchRunLog.reason(e));
+			throw e;
+		}
+	}
+
+	private Result locked(Long runId) throws Exception {
 		// GET_LOCK 은 연결(세션)에 붙는다 — 배치 내내 이 연결 하나를 쥐고 있다가 같은 연결로 놓는다. 프로세스가 죽으면 연결이 끊겨 MySQL 이 푼다
 		try (Connection lockConn = dataSource.getConnection(); Statement st = lockConn.createStatement()) {
 			int got;
@@ -55,14 +72,14 @@ public class SummaryBatch {
 				return new Result(false, 0, 0, 0, 0, 0);
 			}
 			try {
-				return work();
+				return work(runId);
 			} finally {
 				st.executeQuery("SELECT RELEASE_LOCK('" + LOCK + "')").close();
 			}
 		}
 	}
 
-	private Result work() {
+	private Result work(Long runId) {
 		long started = System.nanoTime();
 
 		// 2. 전체 재판단 — 이미 서 있던 것과 새로 선 것을 나눠 센다(새로 선 것이 계속 많으면 쓰기 시점 판단이 빠진 경로가 있다)
@@ -99,6 +116,7 @@ public class SummaryBatch {
 				} catch (Exception e) {
 					failed++;
 					log.warn("[summary-batch] shoeId={} 실패 — stale 로 남긴다: {}", id, e.getMessage());
+					runs.failure(runId, id, e);
 				}
 			}
 			done++;

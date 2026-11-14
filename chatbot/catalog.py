@@ -8,10 +8,11 @@
 from __future__ import annotations
 
 import re
+import threading
 import unicodedata
 from dataclasses import dataclass, field
 
-from . import http
+from . import http, timing
 
 # 공시 무게의 기준 사이즈 → mm(01a_catalog_sources.md 1-3a). 다섯 값 밖은 기준 모름
 SIZE_MM = {"M8.5": 265, "M9": 270, "M9.5": 275, "M10": 280, "M10.5": 285}
@@ -82,7 +83,8 @@ class Mention:
 
 
 class Catalog:
-    """GET /api/shoes · /api/terms 를 읽어 이름 색인을 만든다. 질문마다 새로 읽는다(느리면 그때 캐시 — 먼저 잰다)"""
+    """GET /api/shoes · /api/terms 를 읽어 이름 색인을 만든다. 챗봇은 CatalogCache 로 한 번 읽어 두고 신발이 바뀌면 다시 읽는다.
+    만든 뒤에는 읽기만 한다 — 여러 연결 · 스레드가 한 객체를 함께 쓴다"""
 
     def __init__(self, shoes: list[dict], terms: list[dict]):
         self.shoes = shoes
@@ -96,7 +98,9 @@ class Catalog:
 
     @classmethod
     def load(cls) -> "Catalog":
-        return cls(http.get_json("/api/shoes"), http.get_json("/api/terms"))
+        # 이름 색인을 만드는 시간(310켤레 약 8~17ms)까지 catalog 칸에 — 안의 get_json 두 번은 바깥 칸에 든다(timing)
+        with timing.stage("catalog"):
+            return cls(http.get_json("/api/shoes"), http.get_json("/api/terms"))
 
     # ---------------------------------------------------------------- 색인
     def _names(self, s: dict) -> list[str]:
@@ -213,3 +217,53 @@ class Catalog:
     def display(s: dict, first: bool = True) -> str:
         """처음 말할 때는 브랜드를 붙인다 — "아식스의 노바블라스트 5" """
         return f"{s['brand']}의 {s['model']}" if first else s["model"]
+
+
+VERSION_PATH = "/api/internal/catalog-version"
+
+
+def fetch_version() -> str:
+    """같은 Pod 백엔드가 주는 카탈로그 판(shoes · terms 체크섬) — api/CatalogVersionController"""
+    v = http.get_json(VERSION_PATH).get("version")
+    if not isinstance(v, str) or not v:
+        raise ValueError("판이 비었다")
+    return v
+
+
+class CatalogCache:
+    """카탈로그를 한 번 읽어 두고, 턴마다 판(작은 GET 하나)만 물어 다르면 다시 읽는다(docs/09_chatbot_rag.md 19절).
+
+    시간으로 만료시키지 않는다 — 신발이 바뀌면(관리 화면 · 적재기 · 리뷰 · 찜 · 손 SQL 어느 길이든) DB 체크섬이 바뀌어 판이 바뀐다.
+    Pod 가 여럿이어도 판은 같은 DB 에서 나오므로 각 Pod 의 캐시가 따로 맞춰진다.
+    정한 것(사용자 2026-11-14): 비우는 길은 이 체크섬 판(관리 API 마다 비우기를 끼우지 않는다), Pod 사이는 턴마다 판 묻기,
+    최대 보관 시간은 두지 않는다(아래 실패 처리 때문에 옛 카탈로그로 답하는 경우가 없다).
+    판을 묻다 실패하면(백엔드가 아직 안 뜸 · 옛 이미지 · 평가처럼 공개 주소) 이번 턴은 새로 읽는다 — 캐시 전과 같은 동작이고,
+    낡은 카탈로그를 쓰지 않는다. 그다음 턴도 판을 다시 묻는다.
+    """
+
+    def __init__(self, fetch=Catalog.load, version=fetch_version):
+        self.fetch = fetch
+        self.version = version
+        self._cat: Catalog | None = None
+        self._ver: str | None = None
+        self._lock = threading.Lock()
+        self._warned = False
+        self.reloads = 0   # 다시 읽은 횟수(시험 · 로그)
+
+    def get(self) -> Catalog:
+        with timing.stage("catalog"):   # 판 묻기 · 다시 읽기 모두 catalog 칸
+            try:
+                v = self.version()
+            except Exception as e:   # noqa: BLE001
+                v = None
+                if not self._warned:
+                    print(f"[catalog] 판을 묻지 못했다 — 판을 알 때까지 턴마다 새로 읽는다: {e!r}")
+                    self._warned = True
+            with self._lock:   # 여러 턴이 함께 다시 읽지 않게(한 번 읽고 나머지는 그것을 쓴다)
+                if v is None or self._cat is None or v != self._ver:
+                    self._cat = self.fetch()
+                    self._ver = v   # None 이면 다음 턴에 다시 읽는다
+                    self.reloads += 1
+                    if v is not None:
+                        self._warned = False
+                return self._cat

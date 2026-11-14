@@ -120,6 +120,19 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 
 - 운영 Pod 에 직접 붙을 때는 MetalLB VIP 로 간다: `http://192.168.122.240` + `Host: runshoes.ronanlab.dev`. Cloudflare 를 거치면 헤더가 바뀐다.
 
+#### 1-9. actuator 를 클러스터 안으로(진행 중 — 관측 작업 A-2, 2026-11-14 사용자)
+
+지금 공개 주소의 `/actuator` · `/actuator/health` 가 인터넷에 열려 있다. Prometheus 노출(`/actuator/prometheus`)을 더하면 그것도 열린다. 그래서 actuator 를 관리 포트(9000)로 옮기고 Service · Ingress 에 싣지 않는다. 그러면 3000 의 `/actuator/**` 가 사라져 지금 프로브가 깨진다 — 순서를 틀리면 새 Pod 가 Ready 가 안 돼 롤링이 멈춘다. 그래서 세 단계로, 한 단계씩 확인하고 넘어간다.
+
+| # | 일 | 누가 | 상태 |
+|---|---|---|---|
+| 1 | 앱: 3000 에 `/livez` · `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인 · 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 로컬 끝 |
+| 2 | 인프라: 프로브를 `/livez` · `/readyz` 로(startup · readiness · liveness 셋) | 인프라 관리자 | 1 이 운영에 오른 뒤 |
+| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push · 인프라 | 2 를 확인한 뒤 |
+
+- `/livez` = liveness 그룹(livenessState), `/readyz` = readiness 그룹(readinessState + db). 내용은 `/actuator/health/liveness` · `readiness` 와 같다. DB 가 멈추면 `/readyz` 만 503(Hikari 연결 대기 30초 뒤 — 지금 readiness 와 같은 동작), `/livez` 는 200(2026-11-14 로컬).
+- SPA 대체 경로(`config/SpaConfig` 의 `/**`)와 겹치지 않는다 — `/livez` · `/readyz` 는 actuator JSON, 다른 주소는 그대로 `index.html`(로컬 확인).
+
 #### 2. 왜 이렇게 했나
 
 - **Pull 형(GitOps).** Jenkins 가 `kubectl set image` 로 밀어 넣으면 Jenkins 가 클러스터 권한을 들고 있어야 하고(뚫리면 클러스터도), "지금 무엇이 배포됐나"를 알려면 kubectl 을 쳐야 한다. Jenkins 는 Git 에 커밋만 하고 ArgoCD 가 Git 을 읽게 하면 — 자격 증명이 줄고, 배포된 것의 답이 늘 Git 에 있고, 롤백이 `git revert` 다.

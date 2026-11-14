@@ -20,6 +20,9 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | `shoe_purges` | 11 | 영구 삭제한 신발의 기록(행이 없으니 FK 아님) |
 | `terms` | 6 | 용어 설명(읽기 전용). `row_no` 가 키 — 시드에 `id 12` 가 둘이었고 V17 에서 아웃솔을 13 으로 |
 | `chatbot_misses` | 5 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리 화면이 이름으로 묶어 센다 |
+| `chatbot_turns` | 21 | 챗봇 대화 한 턴에 한 줄(V19) — 연결 id · 계정 id · 질문 · 답 · 갈래 · 판정 표시 · 신발 수 · 단계별 시간(라우터 · 검색 · 생성 · API 다섯). 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 대시보드가 복제본을 읽되 질문 · 답 칸은 권한으로 막는다. `user_id` 는 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다) — `09_chatbot_rag.md` 18절 |
+| `summary_batch_runs` | 11 | 요약 배치 한 실행 한 줄(V20) — 시작 · 끝 · 결과(`running` · `ran` · `skipped` · `error`) · 대상 · 성공 · 실패 · 다시 stale · 사라짐 · 걸린 시간 · 오류 글. 배치가 바로 쓴다 — `09_chatbot_rag.md` 5절 「실행 기록」 |
+| `summary_batch_failures` | 5 | 요약 배치가 만들지 못한 켤레 한 줄(V20) — 실행 id(FK, CASCADE) · 신발 id(FK 없음) · 까닭 · 시각 |
 
 - 키 · 제약
   - `uk_shoes_line_generation_gender(line_key, generation, gender)` — 한 라인의 한 세대 · 한 성별은 한 행. 숨긴 행에도 걸린다(같은 세대는 새로 넣지 않고 되살린다, 409).
@@ -57,7 +60,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - `ActivityCleanup` 이 매일(`app.activity.cleanup-cron`, Asia/Seoul) 지운다 — `auth.*` · `user.*` 90일, 나머지(`review.*` · `like.*` · `shoe.*` · `compare.*` …) 180일(`application.yml`).
 - 그래서 오래 남아야 하는 기록은 로그에 기대지 않는다 — 영구 삭제는 `shoe_purges`, 신발의 마지막 수정은 `shoes.last_change`.
 
-#### 1-4. 마이그레이션 V1~V18
+#### 1-4. 마이그레이션 V1~V20
 
 | V | 이름 | 무엇 | 운영 적용 |
 |---|---|---|---|
@@ -79,6 +82,8 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | 16 | weight term | 무게 용어(`term_key 'weight'`) 설명을 환산 규칙(반 사이즈당 약 2.6%)에 맞춘다. 첫 구문 가드 — 시드 원문과 다르면 멈춘다. id 12 가 둘이라 `term_key` 로 고친다 | 2026-11-10 |
 | 17 | terms outsole id | 아웃솔 용어의 id 12 → 13 — 챗봇이 용어를 id 로 참조할 때 둘이 섞이지 않게(`09_chatbot_rag.md` 8절). 첫 구문 가드 — 아웃솔이 id 12 인 행이 하나이고 13 이 비었을 때만 | 2026-11-12 |
 | 18 | chatbot misses | `chatbot_misses`(kind `shoe` · `term` · `feature` CHECK · query · message · created_at) — `09_chatbot_rag.md` 15절 | 2026-11-12 |
+| 19 | chatbot turns | `chatbot_turns`(턴 한 줄 — 연결 · 계정 · 질문 · 답 · 갈래 · 판정 · 단계별 시간, created_at · conn_id 색인) — `09_chatbot_rag.md` 18절 | 아직(로컬) |
+| 20 | summary batch runs | `summary_batch_runs` · `summary_batch_failures`(요약 배치 실행 기록 · 실패한 켤레) — `09_chatbot_rag.md` 5절. V19 와 같은 배포 | 아직(로컬) |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md`)에 있다. 절차는 `06_deployment.md`.
 
@@ -118,6 +123,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - **카운터는 앱이 지킨다.** `like_count` · `review_count` · `rating` 이 `likes` · `reviews` 와 어긋나도 DB 가 막지 않는다.
 - **`terms.id` 가 키가 아니다.** 시드의 중복(`id 12` 둘)을 재현하려고 `row_no` 를 키로 썼다. 중복은 V17 에서 없앴지만(아웃솔 13, 계약 R03 다시 녹화) 키는 그대로 `row_no` 다. 화면이 직접 가진 와이드 모델 · 안정성 용어(`src/utils/terms.ts`)는 `terms` 로 옮기지 않았다 — 챗봇이 사본을 가지고 평가가 대조한다(2026-11-12 사용자).
 - **`chatbot_misses` 는 쌓이기만 한다.** 지우는 일 · 보존 기간이 없다. 쓰는 길이 챗봇 사이드카 하나뿐이라 그대로 두었다.
+- **`chatbot_turns` 도 아직 쌓이기만 한다(V19).** 정한 보관(사용자 2026-11-14)은 「행은 두고 질문 · 답만 90일 뒤 빈 글로」지만, Pod 둘이 함께 돌지 않게 하는 잠금(ShedLock)이 없어 그 정리를 아직 켜지 않았다 — `activity_logs` 정리와 함께 켠다(`TODO.md`).
 - **`spec_sources` 형식은 DB 가 아니라 API 가 본다.** DB 에 직접 쓰면 형식이 틀린 값이 들어갈 수 있다 — 그래서 운영 쓰기는 관리자 API(적재기 · 관리 화면)로만 한다.
 
 #### 5. 검증 항목

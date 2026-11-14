@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import uuid
 from datetime import datetime
 
 import websockets
@@ -41,8 +42,8 @@ def payload(kind: str, text: str, links: list | None = None) -> str:
     return json.dumps({"type": kind, "username": "챗봇", "message": text, "links": links or [], "time": now()}, ensure_ascii=False)
 
 
-async def authenticate(websocket, timeout: float) -> bool:
-    """첫 메시지로 로그인 확인. 실패면 알리는 프레임을 보내고 닫은 뒤 False"""
+async def authenticate(websocket, timeout: float, state: State | None = None) -> bool:
+    """첫 메시지로 로그인 확인. 실패면 알리는 프레임을 보내고 닫은 뒤 False. 통과하면 state.user_id 에 계정 id(턴 기록용)"""
     async def fail(kind: str, reason: str, code: int, message: str = "") -> bool:
         print(f"[{now()}] 챗봇 인증 실패 — {reason}")
         await websocket.send(json.dumps({"type": kind, "reason": reason, "message": message}, ensure_ascii=False))
@@ -64,8 +65,10 @@ async def authenticate(websocket, timeout: float) -> bool:
     if len(token) > 4096 or any(c.isspace() or not c.isprintable() for c in token):
         # 헤더에 실을 수 없는 꼴 — 요청이 예외로 빠져 "백엔드 안 뜸"으로 잘못 갈리지 않게 여기서 막는다
         return await fail("auth_failed", "malformed", CLOSE_AUTH_FAILED)
-    status = await asyncio.get_running_loop().run_in_executor(None, http.me_status, token)
+    status, uid = await asyncio.get_running_loop().run_in_executor(None, http.me_user_id, token)
     if status == 200:
+        if state is not None:
+            state.user_id = uid
         return True
     if status == 401:
         return await fail("auth_failed", "invalid", CLOSE_AUTH_FAILED)
@@ -74,10 +77,12 @@ async def authenticate(websocket, timeout: float) -> bool:
 
 
 async def handler(websocket, bot: Bot, auth_timeout: float | None = None):
-    state = State()
+    # conn_id — 턴 기록(V19)이 한 대화를 묶는 id. 연결마다 새 무작위 값(uuid4 32자). 토큰 · 계정에서 만들지 않는다 —
+    # 다시 연결하면 대화 상태도 사라지므로(bot.State) 「한 연결 = 한 대화」로 본다(사용자 2026-11-14)
+    state = State(conn_id=uuid.uuid4().hex)
     print(f"[{now()}] 챗봇 접속됨")
     try:
-        if not await authenticate(websocket, AUTH_TIMEOUT if auth_timeout is None else auth_timeout):
+        if not await authenticate(websocket, AUTH_TIMEOUT if auth_timeout is None else auth_timeout, state):
             return
     except websockets.exceptions.ConnectionClosed:
         print(f"[{now()}] 챗봇 연결 종료(인증 전)")

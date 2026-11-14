@@ -7,6 +7,8 @@ import os
 
 import requests
 
+from . import timing
+
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "https://ollama.ronanlab.dev").rstrip("/")
 MODEL = os.environ.get("CHATBOT_MODEL", "gemma4:e4b")
 CF_HEADERS = {
@@ -29,7 +31,8 @@ def chat(system: str, messages: list[dict], *, json_mode: bool = False, temperat
     }
     if json_mode:
         body["format"] = "json"
-    r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, headers=CF_HEADERS, timeout=TIMEOUT)
+    with timing.stage("gen"):   # 라우터 안에서 부르면 router 로 센다(timing 머리말)
+        r = requests.post(f"{OLLAMA_URL}/api/chat", json=body, headers=CF_HEADERS, timeout=TIMEOUT)
     r.raise_for_status()
     data = r.json()
     if data.get("done_reason") == "length":   # 잘린 답은 내보내지 않는다 — 부른 쪽이 코드 답을 쓴다
