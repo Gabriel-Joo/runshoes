@@ -12,7 +12,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 |---|---|---|
 | `GET` · `POST` · `PATCH` · `PUT` · `DELETE /api/{shoes,reviews,terms}[/{id}]` | json-server 모양의 컬렉션(`JsonServerController`) | 읽기는 누구나, 쓰기는 1-4 |
 | `GET /api/brands` | 브랜드 이름 배열(id 순으로 처음 나온 순서) | 누구나 |
-| `GET /api/shoes/{id}/summary` | 리뷰 AI 요약 — DB(`shoe_summaries`, V14)만 읽는다, Ollama 를 부르지 않는다. 만들었으면 `{summary: {positive, negative}, reviewCount, generatedAt}`(다시 만들 차례여도 그대로), 리뷰 3개 미만 · 없는 신발이면 `{summary: null, reason: "리뷰가 3개 미만입니다"}`, 아직 만들지 않았으면 `{summary: null, reason: "요약을 아직 만들지 않았습니다"}`. 만드는 것은 하루 한 번 배치(`09_chatbot_rag.md` 5절) | 누구나 |
+| `GET /api/shoes/{id}/summary` | 리뷰 AI 요약 — DB(`shoe_summaries`, V14)만 읽는다, Ollama 를 부르지 않는다. 만들었으면 `{summary: {positive, negative}, reviewCount, generatedAt}`(다시 만들 차례여도 그대로), 리뷰 3개 미만 · 없는 신발이면 `{summary: null, reason: "리뷰가 3개 미만입니다"}`, 아직 만들지 않았으면 `{summary: null, reason: "요약을 아직 만들지 않았습니다"}`. 만드는 것은 하루 한 번 배치(`09_chatbot_rag.md` 5절). 챗봇도 읽는다 — 후기 전반 질문에 요약을 원문 그대로 인용 블록으로 보여 준다(`09_chatbot_rag.md` 16절 운영 뒤 수정 4) | 누구나 |
 | `PUT` · `DELETE /api/{shoes,reviews}/{id}/like` | 찜 · 리뷰 공감 → `{liked, likeCount}`, 멱등 | 로그인 |
 | `/api/auth/{signup,login,refresh,logout,demo,demo-accounts,nickname-available}` | 인증 · 체험 로그인(`04_auth.md`) | — |
 | `GET` · `DELETE /api/me`, `PATCH /api/me/nickname`, `PUT /api/me/password` | 내 정보 · 탈퇴 · 닉네임 · 비밀번호 | 로그인 |
