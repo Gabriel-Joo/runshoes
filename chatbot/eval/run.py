@@ -61,6 +61,16 @@ def main() -> int:
     searcher = Searcher()
     print(f"색인 {searcher.sync()}")
     bot = Bot(load=lambda: cat, post=lambda body: posts.append(body), searcher=searcher)
+    # 몸풀기 — 한동안 질문이 없으면 Ollama 가 모델을 내려서(약 5분) 첫 질문이 모델을 올리느라 몇 초 더 걸린다
+    # (2026-11-14 운영 확인 10.9초, 평가 4.3 ~ 4.7초). 문항 전에 챗봇과 같은 모델 · 옵션(llm.chat)으로 한 번 말을 걸어 올려 두고,
+    # 문항 시간에는 넣지 않는다. 첫 문항을 빼면 --only 로 한 문항만 잴 때 잴 것이 없어진다(사용자 2026-11-14)
+    from chatbot import llm
+    w0 = time.time()
+    try:
+        llm.chat("한 문장으로 짧게 답한다.", [{"role": "user", "content": "안녕하세요"}], num_predict=64)
+        print(f"몸풀기 {time.time() - w0:.1f}s — 모델을 올려 둔다(문항 시간에 넣지 않는다)")
+    except Exception as e:   # noqa: BLE001 — 몸풀기가 실패해도 평가는 돈다
+        print(f"몸풀기 실패 {time.time() - w0:.1f}s({e!r}) — 첫 문항 시간에 모델 올리는 시간이 섞일 수 있다")
 
     results = []
     copy_issues = check_term_copy(WIDE_TERM, STABILITY_DESCRIPTION)
@@ -69,10 +79,11 @@ def main() -> int:
     for it in items:
         st = State()
         posts.clear()
-        t0 = time.time()
         for s in it.get("setup", []):
             bot.turn(st, s)
         posts.clear()
+        # 시간은 묻는 질문 하나만 — 앞 턴(setup)까지 재면 「두 번 묻는 데 걸린 시간」이 된다(사용자 2026-11-14)
+        t0 = time.time()
         reply, trace = bot.turn(st, it["q"])
         time.sleep(0.3)   # 기록 스레드가 끝나게
         dt = time.time() - t0
@@ -545,7 +556,8 @@ def summary(results: list[dict], copy_issues: list[str]) -> None:
     for c, rs in cats.items():
         print(f"  {c:10} {sum(r['ok'] for r in rs)}/{len(rs)}  경고 {sum(len(r['warns']) for r in rs)}  코드 답 {sum(r['fallback'] for r in rs)}")
     total = len(results)
-    print(f"  전체 {sum(r['ok'] for r in results)}/{total} · 평균 {sum(r['seconds'] for r in results) / max(total, 1):.1f}s")
+    print(f"  전체 {sum(r['ok'] for r in results)}/{total} · 평균 {sum(r['seconds'] for r in results) / max(total, 1):.1f}s"
+          "(몸풀기 · 앞 턴은 넣지 않음)")
     from collections import Counter
     g = Counter()
     for r in results:
