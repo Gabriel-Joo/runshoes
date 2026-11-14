@@ -267,6 +267,41 @@ class TallyTest(unittest.TestCase):
         self.assertEqual(lines, ["[무릎 — 좋다는 쪽 리뷰]", "- 무릎 편해요. 쿠션 말랑", "[무릎 — 아쉽다는 쪽 리뷰]", "- 무릎이 아파요"])
         self.assertFalse(any(ch.isdigit() for ch in "".join(lines)))
 
+    def test_evidence_cut_like_quote(self):
+        # 관점 있는 질문의 근거도 인용 블록과 같은 자르기(운영 뒤 — 밑창 질문에 「짧은 대회에선 정말 빨라요」가 섞였다)
+        t = ex.Tally(SHOES[0], [{"id": 1, "content": "짧은 대회에선 정말 빨라요. 밑창 닳는 속도만 좀 아쉬워요.", "likeCount": 1},
+                                {"id": 2, "content": "발이 넓어 와이드로 신습니다. 롱런 후반에도 발이 편해요. 다만 반발은 아쉬워요.", "likeCount": 0}], "내구성")
+        t.labeled, t.labels = True, {1: "negative"}
+        self.assertEqual(ex.evidence(t, t.mentioned(), {1}, "내구성", ()), ["[내구성 — 아쉽다는 쪽 리뷰]", "- 밑창 닳는 속도만 좀 아쉬워요."])
+        # 짧은 관점 문장이면 다음 문장을 붙이는 규칙(SHORT)도 근거에서 그대로 — 한 줄로 잇는다
+        self.assertEqual(ex.evidence_line(t.reviews[1]["content"], ex._ASPECT["발볼"]),
+                         "- 발이 넓어 와이드로 신습니다. 롱런 후반에도 발이 편해요.")
+        # 이음말로 시작하면 앞 문장을 붙인다
+        self.assertEqual(ex.evidence_line("쿠션이 정말 푹신하고 좋아요. 그런데 밑창 바깥쪽이 두 달 만에 눈에 띄게 닳았어요. 색상은 사진보다 실물이 예뻐요.", ex._ASPECT["내구성"]),
+                         "- 쿠션이 정말 푹신하고 좋아요. 그런데 밑창 바깥쪽이 두 달 만에 눈에 띄게 닳았어요.")
+        # 낱말이 없으면(관점 없는 질문) 통째
+        self.assertEqual(ex.evidence_line("짧은 대회에선 정말 빨라요. 밑창 닳는 속도만 좀 아쉬워요."), "- 짧은 대회에선 정말 빨라요. 밑창 닳는 속도만 좀 아쉬워요.")
+
+    def test_summary_block(self):
+        # 관점 없는 질문의 요약 블록(2026-11-13) — 상세 화면의 꼬리표 글자, 본문은 API 원문 그대로(말투 바꾸지 않음)
+        import contextlib
+        import io
+        from unittest import mock
+
+        import requests
+        # 꼬리표는 따로 한 줄, 다음 줄부터 본문. 좋았던 점 · 아쉬운 점은 인용 블록 둘(2026-11-14)
+        self.assertEqual(ex.summary_block({"positive": "발이 편안합니다.", "negative": "다소 무겁습니다."}),
+                         "> 좋았던 점\n> 발이 편안합니다.\n\n> 아쉬운 점\n> 다소 무겁습니다.")
+        # 아쉬운 점이 비면 좋았던 점 줄만
+        self.assertEqual(ex.summary_block({"positive": "발이 편안합니다.", "negative": None}), "> 좋았던 점\n> 발이 편안합니다.")
+        # 요약이 없거나(3건 미만 · 아직 안 만듦) 읽기 실패면 None — 블록을 통째로 뺀다
+        with mock.patch.object(ex.http, "get_json", return_value={"summary": None, "reason": "리뷰가 3개 미만입니다"}):
+            self.assertIsNone(ex.review_summary(1))
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), mock.patch.object(ex.http, "get_json", side_effect=requests.ConnectionError("refused")):
+            self.assertIsNone(ex.review_summary(1))
+        self.assertIn("요약 읽기 실패", out.getvalue())
+
     def test_sides(self):
         # 관점 없는 질문 — 좋다 · 아쉽다 묶음, 쪽마다 추천 많은 순으로 상한까지, 건수 없이(8차 수정)
         rs = [{"id": i, "content": f"리뷰{chr(0xAC00 + i)}", "likeCount": 10 - i} for i in range(1, 9)]

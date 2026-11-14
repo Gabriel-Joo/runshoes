@@ -45,6 +45,7 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
   "branch": "term" | "spec" | "compare" | "recommend" | "explain" | "experience" | "out_of_scope" | "greeting",
   "health_context": true | false,
   "avoid": true | false,
+  "same_shoe_as_before": true | false,
   "shoe_names": ["문장에 나온 신발 모델 이름 그대로"],
   "term": "뜻을 물은 러닝화 용어(없으면 null)",
   "feature": "신발 특성을 물었다면 그 특성을 짧은 명사구로(예: 뒤꿈치 쓸림, 힐컵, 통기성). 없으면 null",
@@ -55,7 +56,8 @@ ROUTER_SYSTEM = f"""너는 러닝화 사이트 챗봇의 질문 분류기다. �
     "cushion": "high" | "mid" | "low" | null,
     "budget_won": 숫자(원) 또는 null,
     "price_level": "low" | "mid" | "any" | null
-  }}
+  }},
+  "more_conditions": [conditions 와 같은 꼴의 객체]
 }}
 
 branch
@@ -83,6 +85,11 @@ avoid
 - 그런 후기가 있는지 · 신발이 어떤지 묻는 것은 false
   ("쓸렸다는 후기 있어요?", "덥다는 후기 있는 신발 있어요?", "무릎 편하다는 후기 있는 신발", "밑창 금방 닳아요?")
 
+same_shoe_as_before
+- 이 질문에 답하려면 이전 대화의 그 신발을 다시 봐야 하는가. 문장이 새 신발을 찾는다면 false다
+- false: 문장이 조건에 맞는 신발을 찾는다. 특성 · 효과를 일반적으로 묻는다. 문장에 모델 이름이 있다
+- true: 위가 아니고, 이름 없이 그 신발의 후기 · 발볼 · 사이즈 같은 것을 이어 묻는다
+
 shoe_names
 - 문장에 나온 러닝화 모델 이름을 세대 숫자까지 그대로 적는다("호카 마하 7" → "마하 7"). 브랜드만 나오면 넣지 않는다.
   "카본화 · 안정화 · 쿠션화 · 트레일화"처럼 신발 종류는 모델이 아니다 — 넣지 않는다. 없으면 []
@@ -96,6 +103,10 @@ conditions — 추천에 쓸 조건. 문장에 드러난 것만, 짐작하지 �
 - cushion: 푹신 · 쿠션 많이 → "high", 적당 → "mid", 얇게 · 지면 느낌 → "low"
 - budget_won: 금액을 말했을 때만. "15만원" → 150000, "20만원 이하" → 200000
 - price_level: 금액 없이 가격만 말했을 때. 저렴한 · 싼 · 가성비 → "low", 적당한 가격 → "mid", 비싸도 괜찮다 · 가격 상관없다 → "any". 금액을 말했으면 null
+
+more_conditions
+- 용도가 다른 신발을 따로따로 찾을 때만, 둘째 신발부터의 조건을 conditions 와 같은 꼴로 넣는다. 첫째 신발의 조건은 conditions 에 둔다
+- 한 가지 신발만 찾으면 []
 """
 
 
@@ -110,6 +121,24 @@ class Route:
     llm_ok: bool = True
     feature: str | None = None
     avoid: bool = False   # 피하려는 질문(경험·후기 — 버튼을 붙이지 않고 그 이야기가 나온 신발만, 사용자 2026-11-13)
+    # 이름 없이 직전 신발(또는 정해진 신발 하나)을 이어 묻는다(사용자 2026-11-13 — 「알파플라이 3 무게?」 → 「후기는 어때요?」가
+    # 가리키는 말이 없어 엉뚱한 신발 셋이 나왔다). 같은 라우터 호출에서 받는다(LLM 호출을 늘리지 않음). 실패하면 False.
+    # JSON 칸 이름은 same_shoe_as_before — 처음 쓴 about_unnamed_shoe(「이름 없이 정해진 신발을 묻는가」)는 gemma4 가 이전 대화에
+    # 신발이 있으면 「무릎 편한 후기 있는 신발 있어요?」에도 true 를 냈다(8문장 × 3번 모두 true). 「새 신발을 찾으면 false」를 먼저 두니
+    # 예시 안 10문장 · 예시 밖 10문장 모두 맞았다(2026-11-13, 각 2 · 3번)
+    # 설명에 예시 문장을 두지 않는다 — 「쿠션 좋으면 무릎 나을까요?」 같은 예시를 두었을 때 「노바블라스트 6 신으면 무릎 괜찮아요?」(E01)의
+    # 갈래가 experience 에서 explain 으로 바뀌었다(4번 모두). 예시를 빼니 4번 모두 돌아왔다(2026-11-14)
+    unnamed: bool = False
+    # 추천 조건 둘째 벌부터(사용자 2026-11-14 — 「조깅용 하나, 레이스용 하나」에서 레이스화만 셋이 나왔다). 같은 라우터 호출의
+    # more_conditions 칸. 용도가 있고 첫째 벌과 다른 것만, 첫째 벌과 합쳐 MAX_SETS 벌까지. 한 벌이면 []
+    more_conditions: list[dict] = field(default_factory=list)
+
+
+# 추천 조건을 몇 벌까지 받을지 — 둘(첫째 벌 + 하나, 2026-11-14 사용자 결정). 셋 이상이면 버튼(비교하기 5켤레)과 답 길이가 넘친다
+MAX_SETS = 2
+# 둘째 벌에 문장에 드러나지 않은 칸이 있으면 첫째 벌에서 물려받는 칸 — 사람에 대한 것(발볼 · 발 유형 · 예산)만, 쿠션 · 용도는 신발마다 다르다
+# (2026-11-14 사용자 결정)
+SHARED_KEYS = ("width", "stability", "budget_won", "price_level")
 
 
 def has_any(text: str, words: tuple[str, ...]) -> bool:
@@ -155,14 +184,39 @@ def route(text: str, n_shoes: int, n_state: int, n_terms: int, history: list[dic
     feature = data.get("feature").strip()[:40] if isinstance(data.get("feature"), str) and data.get("feature").strip() else None
     if branch == "term" and not term:
         term = guess_term(text)   # LLM 이 용어 이름을 비워 보낼 때가 있다 — 기록(V18)이 빠지지 않게
-    cond = clean_conditions(data.get("conditions"))
+    cond = _price_by_text(clean_conditions(data.get("conditions")), text)
+    avoid = ok and data.get("avoid") is True
+    unnamed = ok and data.get("same_shoe_as_before") is True
+    more = more_sets(cond, data.get("more_conditions"), text)
+    return Route(branch, health, rule is not None, names, term, cond, ok, feature, avoid, unnamed, more)
+
+
+def _price_by_text(cond: dict, text: str) -> dict:
     # 가격 조건은 문장에 가격 이야기가 있을 때만 — LLM 이 말하지 않은 "가격 상관없음"을 붙이는 일이 있었다(2026-11-12 평가)
     if not has_any(text, PRICE_WORDS):
         cond.pop("price_level", None)
     if not re.search(r"\d|만\s*원|천\s*원", text):
         cond.pop("budget_won", None)
-    avoid = ok and data.get("avoid") is True
-    return Route(branch, health, rule is not None, names, term, cond, ok, feature, avoid)
+    return cond
+
+
+def more_sets(first: dict, raw, text: str) -> list[dict]:
+    """둘째 벌부터 — 용도가 있고 앞 벌들과 다른 것만, 첫째 벌을 포함해 MAX_SETS 벌까지. 빈 칸은 SHARED_KEYS 만 첫째 벌에서 물려받는다.
+    겹치는 벌(용도까지 같은 조건)은 버린다. 첫째 벌에 용도가 없으면 둘째 벌도 쓰지 않는다(용도를 먼저 되묻는다)"""
+    if not first.get("purpose") or not isinstance(raw, list):
+        return []
+    out: list[dict] = []
+    for c in raw:
+        c = _price_by_text(clean_conditions(c), text)
+        if not c.get("purpose"):
+            continue
+        for k in SHARED_KEYS:
+            if k in first and k not in c and not (k == "budget_won" and "price_level" in c) and not (k == "price_level" and "budget_won" in c):
+                c[k] = first[k]
+        if c == first or c in out:
+            continue
+        out.append(c)
+    return out[:MAX_SETS - 1]
 
 
 PRICE_WORDS = ("가격", "값", "원", "싼", "싸", "저렴", "비싸", "비싼", "가성비", "예산", "돈", "부담", "상관없", "얼마")

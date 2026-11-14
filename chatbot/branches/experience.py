@@ -219,6 +219,37 @@ INTRO = {
 }
 INTRO_ALL = {True: "등록된 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.", False: "등록된 리뷰 가운데 한 건이에요."}
 
+# 관점 없는 질문(「후기 어때요」)은 LLM 을 부르지 않고 리뷰 요약으로 답한다(사용자 2026-11-13).
+# 8차의 쪽 가르기(split_sides) + LLM 글은 섞인 리뷰를 아쉽다는 쪽에 통째로 넣어 「반면에」 뒤에 좋은 이야기가 나왔다(E06).
+# 요약은 상세 화면(ReviewSummary.tsx)과 같은 글을 원문 그대로 인용 블록에 놓는다 — 말투 바꾸기(haeyo) · 검사를 걸지 않는다(사이트에 이미 나간 글)
+# 「등록된 리뷰 가운데 가장 많은 추천을 받은 리뷰예요.」 자리(관점 없을 때만). 인용한 리뷰의 「도움이 돼요」가 0이면 빼고 집계 줄만
+# (사용자 2026-11-13 — 「많은 분들이 …」는 310켤레 중 94켤레에서 도움 수가 0 · 1이라 맞지 않았다).
+# 「가장 많이」가 늘 맞는 까닭: 관점 없는 질문의 인용(quote)은 상한 30건이 아니라 그 신발 리뷰 전부를 도움 수 많은 순으로 놓고 첫째를 고른다
+# (같은 수면 최근 리뷰 — 그래도 최댓값이다)
+INTRO_HELPFUL = prompt.INTRO_HELPFUL   # 효과 약속 검사가 이 문장만 건너뛰도록 prompt.py 에 둔다(2026-11-14)
+SUMMARY_HEAD = "전체적인 평가는 다음과 같아요."
+SUMMARY_LABELS = ("좋았던 점", "아쉬운 점")   # src/components/ReviewSummary.tsx 의 글자 그대로
+
+
+def review_summary(shoe_id: int) -> dict | None:
+    """GET /api/shoes/{id}/summary 의 summary({positive, negative}) — 없으면(리뷰 3건 미만 · 아직 안 만듦) · 읽기 실패면 None.
+    오래된 요약(is_stale)도 그대로 쓴다(API 가 가르지도 않는다)"""
+    try:
+        body = http.get_json(f"/api/shoes/{shoe_id}/summary")
+    except Exception as e:   # noqa: BLE001 — 요약 블록만 빼고 답은 낸다
+        print(f"[experience] 요약 읽기 실패({shoe_id}): {e!r}")
+        return None
+    s = body.get("summary") if isinstance(body, dict) else None
+    return s if isinstance(s, dict) and s.get("positive") else None
+
+
+def summary_block(s: dict) -> str:
+    """요약 인용 블록 — 「좋았던 점」 꼬리표 한 줄, 다음 줄부터 본문. 아쉬운 점이 있으면 같은 꼴로 이어서. 본문은 API 원문 그대로.
+    꼬리표는 굵게 하지 않고 따로 한 줄에 둔다(사용자 2026-11-14 — 같은 줄에 빈칸 둘로 띄우면 본문이 줄을 넘길 때 갈림이 약했다).
+    좋았던 점과 아쉬운 점은 인용 블록 둘로 나눈다(빈 줄로 띄움, 블록 안 빈 인용 줄은 쓰지 않음 — 한 블록이면 한 덩어리로 보였다, 사용자 2026-11-14)"""
+    rows = [(SUMMARY_LABELS[0], s["positive"])] + ([(SUMMARY_LABELS[1], s["negative"])] if s.get("negative") else [])
+    return "\n\n".join(f"> {label}\n> " + text.replace("\n", "\n> ") for label, text in rows)
+
 
 def quote(t: Tally, want: str | None = None, focus: tuple[str, ...] = ()) -> tuple[str, str, int] | None:
     """인용 — (소개 문장, 인용 블록, 리뷰 id). 코드가 고르고 코드가 붙인다(2차 수정 — 리뷰 원문을 문장 속에 넣으면 원문의 마침표에 엉켰다, E12).
@@ -246,7 +277,19 @@ def quote(t: Tally, want: str | None = None, focus: tuple[str, ...] = ()) -> tup
 
 
 def quote_block(content: str, words: tuple[str, ...] = ()) -> str:
-    """"> " 인용 블록 — 리뷰 통째가 아니라 관점 문장 중심(3차 수정 3 — E13 가이드 19 는 네 줄 중 한 줄만 질문과 관련).
+    """"> " 인용 블록 — 자르기는 aspect_lines, 여기서는 꼴만"""
+    return "\n".join("> " + x for x in aspect_lines(content, words))
+
+
+def evidence_line(content: str, words: tuple[str, ...] = ()) -> str:
+    """LLM 근거 한 줄 — 관점 낱말(words)이 있으면 인용 블록과 같은 자르기(aspect_lines), 없으면 리뷰 통째.
+    근거도 통째로 주면 물어본 주제와 상관없는 문장이 답에 섞였다(운영 뒤 — 「베이퍼플라이 4 밑창 금방 닳아요?」에
+    같은 리뷰의 「짧은 대회에선 정말 빨라요」가 따라 나왔다)"""
+    return "- " + (" ".join(aspect_lines(content, words)) if words else content)
+
+
+def aspect_lines(content: str, words: tuple[str, ...] = ()) -> list[str]:
+    """리뷰 통째가 아니라 관점 문장 중심(3차 수정 3 — E13 가이드 19 는 네 줄 중 한 줄만 질문과 관련). 인용 블록과 LLM 근거가 함께 쓴다.
     관점 낱말이 든 문장(둘까지)에, 그 문장이 짧거나 이음말로 시작하면 앞뒤 한 문장. 관점 문장이 없으면 앞 두 문장.
     문장마다 한 줄(짧은 꼬리 "실망." 같은 것은 앞 줄에 붙인다)"""
     sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+|\n+", content.strip()) if s.strip()]
@@ -274,7 +317,7 @@ def quote_block(content: str, words: tuple[str, ...] = ()) -> str:
             lines[-1] += " " + s
         else:
             lines.append(s)
-    return "\n".join("> " + x for x in lines)
+    return lines
 
 
 def strip_names(question: str, shoes: list[dict]) -> str:
@@ -350,8 +393,8 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
         cut = len(pool) > cap
         # 잘랐으면 밝힌다 — 분모는 늘 전체(사용자 3). "봤다"는 이 답이 고른 범위 = 인용과 근거를 고른 리뷰 수.
         # 관점 없는 질문(8차 수정)은 이 30건에서 인용을 고르고 좋다 · 아쉽다를 가르고, LLM 에는 쪽마다 몇 건만 준다
-        read_note = (None if not cut else f"리뷰 {t.n}건 중 추천이 많은 {len(shown)}건을 봤어요." if not aspect else
-                     f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
+        # 관점 없는 질문은 요약(리뷰 전부로 만든 것)을 보여 주므로 「30건을 봤어요」를 말하지 않는다(사용자 2026-11-13)
+        read_note = (None if not cut or not aspect else f"{aspect} 이야기를 한 {len(pool)}건 중 추천이 많은 {len(shown)}건을 봤어요.")
         summ = summary_lines(t) or [f"{name}에는 리뷰가 {t.n}건 있어요."]
         # 그 관점 이야기가 0건이면 스펙으로 답할 수 있는 관점만 스펙 한 줄(운영 뒤, 사용자 승인 — 0건이 흔해 답이 자주 비었다)
         if aspect in SPEC_ASPECTS and t.n and t.k == 0:
@@ -359,6 +402,16 @@ def answer(question: str, shoes: list[dict], catalog, searcher, health: bool, hi
             if line:
                 summ = summ + [line]
         q = quote(t, want, focus) if (not aspect or t.k) else None
+        if not aspect:
+            # 관점 없는 질문 — 집계 줄 + 소개 두 줄, 인용, 요약 블록(있을 때만, 안내 문구 없이). LLM 을 부르지 않는다
+            summary = review_summary(t.shoe["id"])
+            helped = q and next((r.get("likeCount") or 0) for r in t.reviews if r["id"] == q[2]) > 0
+            sec = ["\n".join(summ + ([INTRO_HELPFUL] if helped else []))] + ([q[1]] if q else [])
+            if summary:
+                sec += [SUMMARY_HEAD, summary_block(summary)]
+            sections.append(sec)
+            jobs.append(None)
+            continue
         sec = [(f"{name}: " if named and aspect else "") + " ".join(summ + ([read_note] if read_note else []) + ([q[0]] if q else []))]
         if q:
             sec.append(q[1])
@@ -524,13 +577,15 @@ def evidence(t: Tally, pool: list[dict], shown_ids: set[int], aspect: str | None
     인용한 리뷰는 shown_ids 에서 이미 빠졌다(자리 표시도 하지 않는다 — 4차의 자리 표시는 LLM 이 건수를 세지 않게 하려던 것)"""
     lines: list[str] = []
     if aspect:
+        # 인용 블록(quote)과 같은 낱말로 자른다 — 통증은 질문의 낱말(focus), 그 밖에는 관점 낱말 묶음
+        words = tuple(focus) or _ASPECT[aspect]
         for side in ("positive", "negative", "mentioned"):
             members = [r for r in pool if t.labels.get(r["id"]) == side and r["id"] in shown_ids]
             if focus:
                 members = [r for r in members if any(w in r["content"] for w in focus)]
             if members:
                 lines.append(f"[{aspect} — {SIDE_NAME[side]} 리뷰]")
-                lines += [f"- {r['content']}" for r in members]
+                lines += [evidence_line(r["content"], words) for r in members]
     else:
         # 관점이 없으면 좋다는 쪽 · 아쉽다는 쪽으로 묶는다(8차 수정) — 쪽마다 추천 많은 순 SIDE_GOOD · SIDE_BAD 건, 건수 없이.
         # 쪽 가르기가 실패했으면(sides None) 추천 많은 리뷰를 한 묶음으로

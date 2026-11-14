@@ -75,12 +75,97 @@ def _asked(p: dict) -> set[str]:
     return out
 
 
+NOT_FOUND = "조건에 맞는 신발을 찾지 못했어요. 조건을 하나 줄여서 다시 찾아볼까요?"
+
+
 def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]) -> Reply:
+    s = _one_set(cond, catalog)
+    if not s["shoes"]:
+        return Reply(NOT_FOUND, branch="recommend")
+    shoes, lines, budget_notes, unasked_line = s["shoes"], s["lines"], s["budget_notes"], s["unasked_line"]
+    paras: list[str] = ["조건에 맞춰 찾아봤어요!"] + s["paras"]
+    conclusions = budget_notes + _among(shoes)
+    if conclusions:
+        paras.append(" ".join(conclusions))
+    if any(s.get("price") is not None for s in shoes):
+        paras.append(facts.PRICE_NOTE)
+    paras.append("좋은 신발 만나시길 바랄게요!")
+    fallback = "\n\n".join(paras)
+    # 순위 문장은 [결론 문장]으로 준다 — 참고 답에만 있으면 15문항 중 2~3문항에서 "1위는"이 빠졌다(5-2 4차 수정 7, R04)
+    ranks = [f"{rank}위는 {ieyo(s['brand'] + '의 ' + s['model'])}." for rank, s in enumerate(shoes, start=1)]
+    text, used = generate(question, lines + unasked_line, ranks + conclusions, fallback, health, history, TASK, branch="recommend")
+    if not used and not all(f"{rank}위" in text for rank in range(1, len(shoes) + 1)):
+        # 그래도 빠지면 코드 답(순위가 든 사용자 예시 ⑥의 꼴)으로 — 순위는 화면(추천받기)과 같은 답의 뼈대다
+        guard_log().append("코드 답: 순위 빠짐")
+        text, used = fallback, True
+    return Reply(text, shoes, fallback_used=used, branch="recommend")
+
+
+TASK_MANY = (
+    "첫 줄은 \"조건에 맞춰 찾아봤어요!\". 용도마다 문단을 나눠 \"OO용으로는\"으로 시작하고, 그 용도의 순위를 [결론 문장]대로 쓴다. "
+    "용도를 섞지 않는다. 보지 않은 조건 문장은 한 번 넣는다. [결론 문장]의 비교만 쓰고 새 비교를 만들지 않는다. "
+    "보러 가기를 권할 때는 \"보러 가실래요?\". 마무리는 격려 한 줄."
+)
+# 조건이 여러 벌일 때 벌마다 몇 켤레 — 둘(2026-11-14 사용자 결정). 셋이면 두 벌에 여섯 켤레라 버튼(비교하기 다섯 켤레까지)에서 하나가 빠진다
+PER_SET = 2
+
+
+def answer_many(question: str, conds: list[dict], catalog, health: bool, history: list[dict]) -> Reply:
+    """조건 여러 벌(사용자 2026-11-14 — 「조깅용 하나, 레이스용 하나」). 벌마다 /api/recommend 를 한 번씩 부르고, 답은 용도마다 문단으로.
+    LLM 글은 한 번. 겹치는 신발은 앞 벌에만 두고, 뒤 벌에서는 빼고 API 의 다음 순위로 말없이 채운다
+    (2026-11-14 사용자 결정 — 「…에서 뺐어요」라고 알리면 두 쓰임에 다 맞는 신발이 좋지 않은 일처럼 읽힌다)"""
+    sets, seen = [], {}
+    for cond in conds:
+        s = _one_set(cond, catalog, exclude=seen, limit=PER_SET)
+        for shoe in s["shoes"]:
+            seen[shoe["id"]] = cond["purpose"]
+        sets.append(s)
+    shoes = [shoe for s in sets for shoe in s["shoes"]]
+    if not shoes:
+        return Reply(NOT_FOUND, branch="recommend")
+    paras: list[str] = ["조건에 맞춰 찾아봤어요!"]
+    lines: list[str] = []
+    conclusions: list[str] = []
+    for s in sets:
+        use = s["purpose"] + "용"
+        lines.append(f"[{use}]")
+        if not s["shoes"]:
+            paras.append(f"{josa(use, '은', '는')} 조건에 맞는 신발을 찾지 못했어요.")
+            lines.append("  조건에 맞는 신발 없음")
+            continue
+        paras.append(f"{use}으로는 이렇게 골랐어요.")
+        paras += [x for x in s["paras"] if x not in paras]   # 같은 「말씀해주지 않으셔서」 문단은 한 번만
+        lines += s["lines"] + s["unasked_line"]
+        conclusions += [f"{use} {rank}위는 {ieyo(x['brand'] + '의 ' + x['model'])}." for rank, x in enumerate(s["shoes"], start=1)]
+        notes = [x for x in s["budget_notes"] if x not in conclusions]
+        among = _among(s["shoes"])
+        conclusions += notes + [f"({use}) {c}" for c in among]   # LLM 에는 어느 용도의 비교인지 붙여 준다
+        if notes + among:
+            paras.append(" ".join(notes + among))
+    if any(x.get("price") is not None for x in shoes):
+        paras.append(facts.PRICE_NOTE)
+    paras.append("좋은 신발 만나시길 바랄게요!")
+    fallback = "\n\n".join(paras)
+    text, used = generate(question, lines, conclusions, fallback, health, history, TASK_MANY, branch="recommend")
+    if not used and not all(x["model"] in text for x in shoes):
+        guard_log().append("코드 답: 고른 신발 빠짐")
+        text, used = fallback, True
+    return Reply(text, shoes, fallback_used=used, branch="recommend")
+
+
+def _one_set(cond: dict, catalog, exclude: dict | None = None, limit: int | None = None) -> dict:
+    """조건 한 벌 — API 결과와 그 벌의 근거 줄 · 문단(첫 줄 · 결론 · 마무리 빼고).
+    exclude(신발 id → 앞 벌 용도)에 든 신발은 빼고 다음 순위로 채운다(API 가 주는 셋 안에서). limit — 몇 켤레까지"""
     p, budget_notes = params(cond)
     res = http.get_json("/api/recommend", p).get("results", [])
+    exclude = exclude or {}
+    res = [r for r in res if r["id"] not in exclude]
+    res = res[:limit] if limit else res
     shoes = [catalog.by_id[r["id"]] for r in res if r["id"] in catalog.by_id]
+    out = {"purpose": cond["purpose"], "shoes": shoes, "lines": [], "paras": [], "budget_notes": budget_notes,
+           "unasked_line": []}
     if not shoes:
-        return Reply("조건에 맞는 신발을 찾지 못했어요. 조건을 하나 줄여서 다시 찾아볼까요?", branch="recommend")
+        return out
     asked = _asked(p)
     # 말하지 않은 조건과, 말했지만 추천받기가 보지 않는 조건(발볼 보통 — 10_recommend 1-1)을 나눠 말한다
     said = {"width": "width" in cond, "stability": "stability" in cond, "cushion": "cushion" in cond,
@@ -89,7 +174,7 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
     said_unchecked = ["발볼은 보통이라고 하셔서 따로 보지 않았어요."] if cond.get("width") == "보통" else []
 
     lines: list[str] = []
-    paras: list[str] = ["조건에 맞춰 찾아봤어요!"]
+    paras: list[str] = []
     for rank, (r, shoe) in enumerate(zip(res, shoes), start=1):
         name = f"{shoe['brand']}의 {shoe['model']}"
         hits = sum(1 for x in r["reasons"] if x.get("hit"))
@@ -125,22 +210,9 @@ def answer(question: str, cond: dict, catalog, health: bool, history: list[dict]
         else:
             paras.append(f"{rank}위는 {ieyo(name)}. 확인한 조건 {r['checked']}개 중 {hits}개가 맞아요.")
 
-    conclusions = budget_notes + _among(shoes)
-    if conclusions:
-        paras.append(" ".join(conclusions))
-    if any(s.get("price") is not None for s in shoes):
-        paras.append(facts.PRICE_NOTE)
-    paras.append("좋은 신발 만나시길 바랄게요!")
-    fallback = "\n\n".join(paras)
     unasked_line = ([f"보지 않은 조건: {', '.join(unasked)}(말씀하지 않으셔서)"] if unasked else []) + [f"보지 않은 조건: {x}" for x in said_unchecked]
-    # 순위 문장은 [결론 문장]으로 준다 — 참고 답에만 있으면 15문항 중 2~3문항에서 "1위는"이 빠졌다(5-2 4차 수정 7, R04)
-    ranks = [f"{rank}위는 {ieyo(s['brand'] + '의 ' + s['model'])}." for rank, s in enumerate(shoes, start=1)]
-    text, used = generate(question, lines + unasked_line, ranks + conclusions, fallback, health, history, TASK, branch="recommend")
-    if not used and not all(f"{rank}위" in text for rank in range(1, len(shoes) + 1)):
-        # 그래도 빠지면 코드 답(순위가 든 사용자 예시 ⑥의 꼴)으로 — 순위는 화면(추천받기)과 같은 답의 뼈대다
-        guard_log().append("코드 답: 순위 빠짐")
-        text, used = fallback, True
-    return Reply(text, shoes, fallback_used=used, branch="recommend")
+    out.update(lines=lines, paras=paras, unasked_line=unasked_line)
+    return out
 
 
 def _among(shoes: list[dict]) -> list[str]:

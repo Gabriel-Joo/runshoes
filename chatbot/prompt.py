@@ -19,6 +19,9 @@ EXPERIENCE_WAIT = "후기를 바탕으로 한 답은 잠시 뒤에 드릴 수 �
 LINK_LABEL = "보러 가기"
 ASK_PURPOSE = "어떤 달리기에 주로 신으실 건가요? 조깅·회복주, 템포·인터벌, LSD·장거리, 레이스, 트레일 중에 알려주시면 맞춰서 찾아볼게요!"
 ASK_SHOE = "어떤 신발이 궁금하세요? 모델 이름을 알려주시면 바로 찾아볼게요."
+# 경험·후기 — 관점 없는 질문에서 인용 리뷰를 소개한다(branches/experience.py INTRO_HELPFUL). 버튼 이름에 따옴표(사용자 2026-11-14).
+# 「도움이 돼」가 들어 효과 약속 검사(reply.help_claims)에 걸리므로, 검사는 이 문장과 똑같은 문장만 건너뛴다(정규식은 그대로)
+INTRO_HELPFUL = "'도움이 돼요'를 가장 많이 받은 리뷰를 가져왔어요."
 ASK_SECOND = "어떤 신발이랑 견줘 볼까요? 모델 이름을 하나 더 알려주세요."
 # 특성 설명 끝 — 추천으로 이어 갈 수 있게(사용자 2026-11-12)
 EXPLAIN_TAIL = "어떤 달리기에 신으실지 알려주시면 맞춰서 찾아볼게요."
@@ -191,6 +194,7 @@ def dump() -> str:
         ("[할 일] 비교", compare.TASK),
         ("[할 일] 비교 — 우열을 물을 때 더함", compare.VERDICT_TASK),
         ("[할 일] 추천", recommend.TASK),
+        ("[할 일] 추천 — 조건 여러 벌", recommend.TASK_MANY),
         ("[할 일] 특성 설명", explain.TASK),
         ("특성 설명 — 설명문 문장 머리", explain.DESC_HEAD),
         ("[할 일] 경험·후기(관점 있는 질문)", experience.TASK),

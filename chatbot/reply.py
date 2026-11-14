@@ -10,7 +10,7 @@ import re
 import threading
 from dataclasses import dataclass, field
 
-from .prompt import DOCTOR, LINK_LABEL
+from .prompt import DOCTOR, INTRO_HELPFUL, LINK_LABEL
 
 # 리뷰는 가상 유저 200명이 만든 데이터다 — 실제 사람들의 반응처럼 말하는 낱말을 막는다(09 6절, 5-2 에서 셋 더함)
 BANNED = ("전문가", "완벽한 선택", "죄송합니다만", "러너들이", "실제 사용자", "많은 사람들", "대부분의 사용자", "사용자들")
@@ -48,10 +48,11 @@ _SHOE_SUBJ = re.compile(r"(신발|쿠션|안정화|중립화|카본|플레이트
 
 
 def help_claims(text: str) -> tuple[list[str], list[str]]:
-    """(효과 약속으로 보는 문장, 주어를 가리기 어려운 문장)"""
+    """(효과 약속으로 보는 문장, 주어를 가리기 어려운 문장). 코드가 붙이는 소개 문장 INTRO_HELPFUL 과 똑같은 문장은 건너뛴다
+    (리뷰 버튼 이름 「도움이 돼요」를 말할 뿐이다 — 사용자 2026-11-14. 비슷한 문장까지 넓히지 않는다)"""
     bad, unsure = [], []
     for s in re.split(r"(?<=[.!?])\s+|\n+", text):
-        if not _HELP.search(s) or _PERSON_ACT.search(s):
+        if s.strip() == INTRO_HELPFUL or not _HELP.search(s) or _PERSON_ACT.search(s):
             continue
         (bad if _SHOE_SUBJ.search(s[:_HELP.search(s).start()]) else unsure).append(s.strip())
     return bad, unsure

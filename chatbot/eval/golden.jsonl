@@ -43,3 +43,4 @@
 {"id": "R13", "cat": "recommend", "q": "20만원 이하로 장거리용 쿠션 많은 거 추천해줘", "branch": "recommend", "conditions": {"purpose": "LSD·장거리", "cushion": "high", "budget_won": 200000}}
 {"id": "R14", "cat": "recommend", "q": "밑창 바깥쪽이 많이 닳아요. 조깅화 추천해 주세요", "branch": "recommend", "conditions": {"purpose": "조깅·회복주", "stability": "중립화-outer"}}
 {"id": "R15", "cat": "recommend", "q": "비싸도 괜찮으니 레이스용으로 골라 주세요", "branch": "recommend", "conditions": {"purpose": "레이스", "price_level": "any"}}
+{"id": "R16", "cat": "recommend", "q": "조깅용 하나, 레이스용 하나 추천해 주세요", "branch": "recommend", "sets": ["조깅·회복주", "레이스"], "note": "추천 조건 여러 벌 — 두 벌 다, 벌마다 두 켤레(사용자 2026-11-14). 겹친 신발을 뺐다는 알림 문구 없음", "not_contains": ["뺐어요", "이미 골라서"]}

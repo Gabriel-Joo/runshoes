@@ -22,7 +22,7 @@ class PromptTest(unittest.TestCase):
 
     def test_see_it_only_where_shoes_are(self):
         # "보러 가실래요?" — 신발을 말하는 갈래의 [할 일]에만(공통 규칙 · 특성 설명에는 없다)
-        for t in (spec.TASK, compare.TASK, recommend.TASK):
+        for t in (spec.TASK, compare.TASK, recommend.TASK, recommend.TASK_MANY):
             self.assertIn("보러 가실래요?", t)
         self.assertNotIn("보러 가실래요", prompt.TONE)
         self.assertNotIn("보러 가실래요", explain.TASK)

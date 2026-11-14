@@ -108,11 +108,12 @@ class Bot:
         unregistered = [m for m in mentions if m.line and not m.shoe]   # 라인은 있는데 그 세대가 없다
         terms_found = dic.find(text)
         state_shoes = [cat.by_id[i] for i in state.last_shoe_ids if i in cat.by_id]
-        # 직전 신발은 "그거 · 둘 다" 같은 가리키는 말이 있을 때만 쓴다(15절)
-        context = state_shoes if router.has_any(text, router.REFER_WORDS) else []
 
         r = router.route(text, len(found) + len(ambiguous) + len(unregistered), len(state_shoes), len(terms_found), state.history, self.ask)
-        trace = {"explained": [], "branch": r.branch, "health": r.health, "by_rule": r.by_rule, "llm_ok": r.llm_ok,
+        # 직전 신발은 "그거 · 둘 다" 같은 가리키는 말이 있거나(15절), 라우터가 이름 없이 이어 묻는 질문이라고 볼 때 쓴다
+        # (r.unnamed — 「후기는 어때요?」). 가리키는 말 목록과 라우터 판단을 둘 다 둔다, 목록은 넓히지 않는다(2026-11-14 사용자 결정)
+        context = state_shoes if (router.has_any(text, router.REFER_WORDS) or r.unnamed) else []
+        trace = {"explained": [], "branch": r.branch, "health": r.health, "by_rule": r.by_rule, "llm_ok": r.llm_ok, "unnamed": r.unnamed,
                  "shoes": [s["id"] for s in found], "shoe_names": r.shoe_names, "term": r.term, "conditions": r.conditions}
 
         # 추천 — 용도를 되물은 뒤의 답
@@ -194,6 +195,14 @@ class Bot:
                 state.pending = {"kind": "purpose", "cond": cond, "question": text, "health": r.health}
                 return Reply(prompt.ASK_PURPOSE, branch="recommend"), trace
             trace["conditions_used"] = cond
+            more = router.more_sets(cond, r.more_conditions, text) if r.more_conditions else []
+            if more:
+                # 조건 여러 벌(사용자 2026-11-14) — 벌마다 추천을 부르고 용도마다 나눠 답한다. 첫째 벌 용도를 규칙으로 채웠을 때도
+                # 둘째 벌을 다시 맞춰 본다(겹침 · 물려받는 칸)
+                trace["conditions_more"] = more
+                reply = recommend.answer_many(text, [cond] + more, cat, r.health, state.history)
+                reply.text = with_doctor(reply.text, r.health)
+                return reply, trace
             return self._recommend(state, text, cond, cat, r.health), trace
         if b == "spec":
             shoes = found or context[:3]
@@ -208,6 +217,10 @@ class Bot:
             return reply, trace
         # 경험·후기(5-2) — 리뷰 집계. 색인 준비 전 · model-service 실패면 "잠시 뒤"(다른 갈래는 그대로)
         shoes = (found or context)[:3]
+        if not shoes and r.unnamed:
+            # 이름 없이 어떤 신발 하나를 이어 묻는데 직전 신발도 없다(첫 질문이 「후기는 어때요?」) — 리뷰 검색으로 아무 신발이나 고르지 않고 되묻는다
+            trace["asked_shoe"] = True
+            return Reply(with_doctor(prompt.ASK_SHOE, r.health), branch="experience"), trace
         ready = self.searcher is not None and self.searcher.ready
         if r.health and not shoes and not router.has_any(text, router.REVIEW_WORDS):
             # 몸 이야기 + 신발 없음 + 후기를 직접 묻지 않음 — 특성으로(5-1 과 같다). "저려서 큰 사이즈로 신는데 괜찮을까요"에

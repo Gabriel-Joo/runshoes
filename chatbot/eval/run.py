@@ -80,6 +80,11 @@ def main() -> int:
         warns: list[str] = []
         text = reply.text
         ids = [s["id"] for s in reply.shoes]
+        # 관점 없는 경험·후기 — 요약 블록이 API 원문 그대로인지 보고, 아래 검사(금칙어 · 숫자 · 말투)에서는 뺀다.
+        # 상세 화면에 이미 나가는 글이라 챗봇이 검사하지 않는다(사용자 2026-11-13). 요약 품질 검사는 요약 배치 쪽 일
+        if trace["branch"] == "experience":
+            text, s_fails = check_summary_block(text, reply, it["q"])
+            fails += s_fails
 
         # 갈래
         if it.get("branch") and trace["branch"] != it["branch"]:
@@ -126,6 +131,24 @@ def main() -> int:
                 rec_reasons = json.dumps(api, ensure_ascii=False)
                 if [r["id"] for r in api] != ids:
                     fails.append(f"추천 결과 {ids} ≠ API {[r['id'] for r in api]}")
+        if "sets" in it:
+            # 추천 조건 여러 벌(사용자 2026-11-14) — 용도마다 한 벌씩 다 나왔는지, 벌마다 PER_SET 켤레인지.
+            # 챗봇이 넘긴 조건마다 API 를 다시 불러, 앞 벌에 나온 신발을 빼고 상위 PER_SET 켤레를 이어 붙인 것과 같아야 한다
+            conds = [trace.get("conditions_used") or {}] + list(trace.get("conditions_more") or [])
+            purposes = [c.get("purpose") for c in conds]
+            if purposes != it["sets"]:
+                fails.append(f"조건 벌의 용도 {purposes} ≠ {it['sets']}")
+            want, apis = [], []
+            for c in conds:
+                if not c.get("purpose"):
+                    continue
+                p, _ = recommend.params(c)
+                api = http.get_json("/api/recommend", p)["results"]
+                apis += api
+                want += [r["id"] for r in api if r["id"] not in want][:recommend.PER_SET]
+            rec_reasons = json.dumps(apis, ensure_ascii=False)
+            if ids != want:
+                fails.append(f"추천 결과 {ids} ≠ 벌마다 상위 {recommend.PER_SET}켤레 {want}")
         # 무게 8g 규칙
         rule = it.get("weight_rule")
         if rule == "judge" and ("거의 같은" in text or "가벼운 편" not in text and "가벼워요" not in text):
@@ -181,8 +204,8 @@ def main() -> int:
             fails.append("전문의 안내가 두 번")
         # 묻는 말이 둘(E14 · 5-1 B02 와 같은 문제 — 사용자 2026-11-13) — 모든 갈래 실패.
         # 2차까지는 "?"로 끝나는 문장만 셌다 — 용도 묻기("…알려주시면 그에 맞춰 찾아볼게요.")는 마침표라 B05 · B09 의 두 번을 놓쳤다(3차 수정)
-        one_ask = text   # 코드 고정 문구 하나(용도 묻기 두 문장)는 묻는 말 하나로
-        for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM):
+        one_ask = text   # 코드 고정 문구 하나(용도 묻기 · 신발 되묻기 두 문장)는 묻는 말 하나로 — ASK_SHOE 는 E25 에서 더함(2026-11-14)
+        for c in (prompt.ASK_PURPOSE, prompt.ASK_PURPOSE_CALM, prompt.ASK_SHOE):
             one_ask = one_ask.replace(c, "용도를 묻는다?")
         asks = [s for s in sentences(one_ask) if s.endswith("?") or re.search(r"알려\s*주시면|말씀해\s*주시면", s)]
         if len(asks) > 1:
@@ -265,13 +288,13 @@ def main() -> int:
             fails.append("버튼 라벨이 '보러 가기'가 아니다")
 
         ok = not fails
-        results.append({"id": it["id"], "cat": it["cat"], "ok": ok, "fails": fails, "warns": warns, "q": it["q"], "answer": text,
+        results.append({"id": it["id"], "cat": it["cat"], "ok": ok, "fails": fails, "warns": warns, "q": it["q"], "answer": reply.text,
                         "links": links, "trace": trace, "fallback": reply.fallback_used, "seconds": round(dt, 1)})
         mark = "PASS" if ok else "FAIL"
         print(f"{mark} {it['id']:4} {dt:5.1f}s {'(코드 답)' if reply.fallback_used else ''} {'; '.join(fails)}"
               + (f"  [경고 {len(warns)}]" if warns else ""))
         if a.verbose or not ok:
-            print("     " + text.replace("\n", "\n     "))
+            print("     " + reply.text.replace("\n", "\n     "))
             for w in warns:
                 print(f"     · {w}")
 
@@ -344,6 +367,52 @@ def check_denominator(text: str, counts: dict[int, int], trace: dict, it: dict) 
     return fails
 
 
+SUMMARY_LABELS = ("좋았던 점", "아쉬운 점")   # src/components/ReviewSummary.tsx 의 글자 — 코드의 상수를 쓰지 않고 따로 적는다
+
+
+def check_summary_block(text: str, reply, question: str) -> tuple[str, list[str]]:
+    """관점 없는 질문의 요약 블록(사용자 2026-11-13) — 신발마다 GET /api/shoes/{id}/summary 를 따로 읽어
+    ① 요약이 있으면 「좋았던 점」 · (있으면) 「아쉬운 점」 꼬리표 줄 바로 다음 줄에 원문이 그대로 있는지 ② 없으면 블록 · 머리 문장이 없는지.
+    꼬리표는 따로 한 줄이고, 좋았던 점 · 아쉬운 점은 인용 블록 둘이다(사용자 2026-11-14).
+    돌려주는 글은 요약 줄을 뺀 것(다른 검사용). 관점 있는 질문이면 요약 블록이 없어야 한다"""
+    from chatbot import http
+    from chatbot.branches import experience as ex
+    fails: list[str] = []
+    lines = text.split("\n")
+    if ex.aspect_of(question) is not None:
+        if ex.SUMMARY_HEAD in text or f"> {SUMMARY_LABELS[0]}" in lines:
+            fails.append("관점 있는 질문에 요약 블록")
+        return text, fails
+    drop: set[str] = set()
+    n_sum = n_neg = 0
+    for s in reply.shoes:
+        sm = (http.get_json(f"/api/shoes/{s['id']}/summary") or {}).get("summary")
+        if not sm:
+            continue
+        n_sum += 1
+        for label, v in zip(SUMMARY_LABELS, (sm.get("positive"), sm.get("negative"))):
+            if not v:
+                continue
+            n_neg += label == SUMMARY_LABELS[1]
+            head, body = f"> {label}", f"> {v}"
+            at = [i for i in range(len(lines) - 1) if lines[i] == head and lines[i + 1] == body]
+            if at:
+                drop.update((head, body))
+                # 꼬리표마다 따로 된 인용 블록 — 앞줄 · 본문 다음 줄이 인용 줄이면 한 블록으로 이어진 것(사용자 2026-11-14)
+                i = at[0]
+                if (i > 0 and lines[i - 1].startswith(">")) or (i + 2 < len(lines) and lines[i + 2].startswith(">")):
+                    fails.append(f"요약 「{label}」이 따로 된 인용 블록이 아니다: {s['model']}")
+            else:
+                fails.append(f"요약이 API 원문과 다르다: {s['model']} {label}")
+    if text.count(ex.SUMMARY_HEAD) != n_sum:
+        fails.append(f"요약 머리 문장 {text.count(ex.SUMMARY_HEAD)}번 ≠ 요약 있는 신발 {n_sum}")
+    for label, n in zip(SUMMARY_LABELS, (n_sum, n_neg)):
+        got = lines.count(f"> {label}")
+        if got != n:
+            fails.append(f"「{label}」 줄 {got} ≠ API {n}")
+    return "\n".join(l for l in lines if l not in drop), fails
+
+
 def check_experience(text: str, reply, trace: dict, review_src: str = "") -> list[str]:
     """경험·후기 1차 수정(사용자 2026-11-13) — 두루뭉술한 양 · 내부 말 · 순위 · 최소 건수 · 피하려는 질문"""
     from chatbot.branches import experience as ex
@@ -390,7 +459,7 @@ def check_experience(text: str, reply, trace: dict, review_src: str = "") -> lis
     shoes = reply.shoes
     if len(shoes) > 1:
         from chatbot import prompt
-        code_paras = {ex.AVOID_HEAD, "말씀하신 부분을 리뷰에서 찾아봤어요.", ex.CLOSE, prompt.DOCTOR}
+        code_paras = {ex.AVOID_HEAD, "말씀하신 부분을 리뷰에서 찾아봤어요.", ex.CLOSE, prompt.DOCTOR, ex.SUMMARY_HEAD}
         bases = [re.sub(r"\s*v?\d+\s*$", "", s["model"]) for s in shoes]
         names = {s["id"]: {s["model"]} | ({b} if bases.count(b) == 1 else set()) for s, b in zip(shoes, bases)}
         cur = None
@@ -398,7 +467,8 @@ def check_experience(text: str, reply, trace: dict, review_src: str = "") -> lis
             p = p.strip()
             if not p or p.startswith(">") or p in code_paras:
                 continue
-            head = next((s for s in shoes if p.startswith(f"{s['brand']}의 {s['model']}:")), None)
+            # 관점 없는 질문의 신발 블록은 「브랜드의 모델에는 리뷰가 N건 있어요.」로 시작한다(요약 블록, 2026-11-13)
+            head = next((s for s in shoes if p.startswith((f"{s['brand']}의 {s['model']}:", f"{s['brand']}의 {s['model']}에는"))), None)
             if head:
                 cur = head
                 continue

@@ -130,6 +130,55 @@ class RouterTest(unittest.TestCase):
         r = router.route("카야노 무게", 1, 0, 0, [], lambda t, h: {"branch": "recommend", "health_context": False})
         self.assertEqual((r.branch, r.health), ("spec", False))
 
+    def test_same_shoe_as_before(self):
+        # 직전 신발을 이어 묻는가 — 규칙이 갈래를 정해도 라우터 LLM 은 부르므로 이 칸은 늘 받는다. true 만 참, 실패하면 False
+        r = router.route("후기는 어때요?", 0, 1, 0, [], lambda t, h: {"branch": "experience", "same_shoe_as_before": True})
+        self.assertEqual((r.branch, r.by_rule, r.unnamed), ("experience", True, True))
+        self.assertFalse(router.route("후기는 어때요?", 0, 1, 0, [], lambda t, h: {"same_shoe_as_before": "true"}).unnamed)
+        self.assertFalse(router.route("후기는 어때요?", 0, 1, 0, [], lambda t, h: (_ for _ in ()).throw(ValueError("x"))).unnamed)
+
+    def test_more_conditions(self):
+        # 추천 조건 여러 벌(2026-11-14) — 용도 있는 것만, 첫째 벌과 같은 것은 버리고, 발볼 · 발 유형 · 예산만 물려받는다. MAX_SETS 벌까지
+        ask = lambda t, h: {"branch": "recommend", "conditions": {"purpose": "조깅·회복주", "width": "넓음", "cushion": "high"},
+                            "more_conditions": [{"purpose": "레이스"}, {"width": "넓음"}, {"purpose": "조깅·회복주", "width": "넓음", "cushion": "high"},
+                                                {"purpose": "트레일"}]}
+        r = router.route("발볼 넓은데 쿠션 많은 조깅용 하나, 레이스용 하나 추천해 주세요", 0, 0, 0, [], ask)
+        self.assertEqual(r.more_conditions, [{"purpose": "레이스", "width": "넓음"}][:router.MAX_SETS - 1])
+        # 한 벌이면 [] — 칸이 없거나 꼴이 틀려도
+        self.assertEqual(router.route("조깅화 추천해 주세요", 0, 0, 0, [], lambda t, h: {"conditions": {"purpose": "조깅·회복주"}}).more_conditions, [])
+        self.assertEqual(router.route("조깅화 추천해 주세요", 0, 0, 0, [], lambda t, h: {"conditions": {"purpose": "조깅·회복주"}, "more_conditions": "x"}).more_conditions, [])
+        # 첫째 벌에 용도가 없으면 둘째 벌도 쓰지 않는다(용도를 먼저 되묻는다)
+        self.assertEqual(router.route("하나 더 추천해 주세요", 0, 0, 0, [], lambda t, h: {"conditions": {}, "more_conditions": [{"purpose": "레이스"}]}).more_conditions, [])
+
+    def test_recommend_many_overlap(self):
+        # 조건 여러 벌(2026-11-14) — 벌마다 PER_SET 켤레, 앞 벌에 나온 신발(880 v15)은 뒤 벌에서 빼고 API 다음 순위(레벨 v5)로
+        # 말없이 채운다(사용자 결정 — 「뺐어요」 알림 없음)
+        from unittest import mock
+        from chatbot.branches import recommend
+        c = Catalog(SHOES, TERMS)
+        api = {"조깅·회복주": [2, 4, 5], "레이스": [4, 8, 6]}
+        get = lambda path, p: {"results": [{"id": i, "checked": 1, "reasons": [{"text": "용도에 맞아요", "hit": True}]} for i in api[p["purpose"]]]}
+        seen_llm = {}
+        def gen(q, lines, conclusions, fb, *a, **k):
+            seen_llm["c"] = conclusions
+            return fb, True
+        with mock.patch.object(recommend.http, "get_json", side_effect=get), mock.patch.object(recommend, "generate", side_effect=gen):
+            r = recommend.answer_many("조깅용 하나, 레이스용 하나", [{"purpose": "조깅·회복주"}, {"purpose": "레이스"}], c, False, [])
+        self.assertEqual([s["id"] for s in r.shoes], [2, 4, 8, 6])
+        self.assertEqual(r.text.count("880 v15"), 1)   # 조깅·회복주용에 한 번만
+        for t in [r.text] + seen_llm["c"]:
+            self.assertNotIn("뺐어요", t)
+            self.assertNotIn("이미 골라서", t)
+        self.assertLess(r.text.index("조깅·회복주용으로는"), r.text.index("레이스용으로는"))
+
+    def test_help_claims_skips_only_intro(self):
+        # 코드가 붙이는 소개 문장과 똑같은 문장만 건너뛴다(2026-11-14). 비슷한 문장은 그대로 잡는다
+        from chatbot.prompt import INTRO_HELPFUL
+        from chatbot.reply import help_claims
+        self.assertEqual(help_claims("리뷰 38건이 있어요.\n" + INTRO_HELPFUL), ([], []))
+        self.assertEqual(help_claims("도움이 돼요를 가장 많이 받은 리뷰를 가져왔어요."), ([], ["도움이 돼요를 가장 많이 받은 리뷰를 가져왔어요."]))
+        self.assertEqual(help_claims("이 쿠션은 무릎에 도움이 돼요.")[0], ["이 쿠션은 무릎에 도움이 돼요."])
+
     def test_conditions_are_clamped(self):
         c = router.clean_conditions({"purpose": "산책", "width": "넓음", "cushion": "푹신", "budget_won": 150000})
         self.assertEqual(c, {"width": "넓음", "budget_won": 150000})

@@ -3,7 +3,7 @@
 {"id": "E03", "cat": "experience", "q": "본디 9 정사이즈로 사면 돼요?", "branch": "experience", "shoes": ["호카 본디 9"], "denom": true, "note": "사이즈 — 정사이즈 · 반 업 언급 4건"}
 {"id": "E04", "cat": "experience", "q": "베이퍼플라이 4 밑창 금방 닳아요?", "branch": "experience", "shoes": ["나이키 베이퍼플라이 4"], "denom": true, "note": "내구성 — 닳 · 마모 언급 4건"}
 {"id": "E05", "cat": "experience", "q": "라이드 19 여름에 신으면 더워요?", "branch_any": ["experience", "spec"], "shoes": ["사우코니 라이드 19"], "note": "통기성 — 더워 · 땀 언급 3건. '더워요'는 규칙 낱말이 아니라 라우터 LLM 이 정한다"}
-{"id": "E06", "cat": "experience", "q": "노바블라스트 6 후기 어때요?", "branch": "experience", "shoes": ["아식스 노바블라스트 6"], "denom": true, "contains": ["38건"], "note": "관점 없음 · 38건 → 추천 많은 30건만 읽었다고 밝힌다"}
+{"id": "E06", "cat": "experience", "q": "노바블라스트 6 후기 어때요?", "branch": "experience", "shoes": ["아식스 노바블라스트 6"], "denom": true, "contains": ["38건"], "note": "관점 없음 · 38건 → 집계 줄 + 인용 + 요약 블록(좋았던 점 · 아쉬운 점, API 원문 그대로)"}
 {"id": "E07", "cat": "experience", "q": "클리프톤 10 리뷰 좀 알려주세요", "branch": "experience", "shoes": ["호카 클리프톤 10"], "denom": true, "contains": ["8건"], "note": "관점 없음 · 8건(상한 아래)"}
 {"id": "E08", "cat": "experience", "q": "아라히 8 신으면 무릎 편해요?", "branch": "experience", "shoes": ["호카 아라히 8"], "denom": true, "contains": ["리뷰 근거가 많지 않아요"], "health": true, "note": "근거 얇음 — 4건 중 무릎 1~2건. 몸 이야기 → 전문의 안내(사용자 2026-11-13)"}
 {"id": "E09", "cat": "experience", "q": "클리프톤 10 밑창 금방 닳아요?", "branch": "experience", "shoes": ["호카 클리프톤 10"], "denom": true, "contains": ["그 부분을 말한 리뷰는 없었어요"], "note": "근거 0건 — 8건 중 내구성 언급 없음"}
@@ -17,3 +17,9 @@
 {"id": "E17", "cat": "experience", "q": "페가수스 프리미엄 쿠션 후기 어때요?", "branch": "experience", "shoes": ["나이키 페가수스 프리미엄"], "denom": true, "contains": ["그 부분을 말한 리뷰는 없었어요", "등록된 스펙으로는 쿠션 높이가"], "note": "쿠션 0건(9건 중 쿠션 낱말 리뷰 없음, 운영 공개 API 2026-11-13) → 0건 문장 + 스펙 한 줄(운영 뒤 수정, 사용자 승인). 숫자는 수치 검사가 API 값으로 본다"}
 {"id": "E18", "cat": "experience", "q": "패트리어트 14 발볼 넓은 사람한테 끼어요?", "branch": "experience", "shoes": ["아식스 패트리어트 14"], "denom": true, "contains": ["그 부분을 말한 리뷰는 없었어요", "등록된 스펙으로는 발볼이"], "note": "발볼 0건(8건) → 발볼 칸 · 넓은 폭 버전 한 줄"}
 {"id": "E19", "cat": "experience", "q": "알파플라이 3 무게 후기 어때요?", "branch": "experience", "shoes": ["나이키 알파플라이 3"], "denom": true, "contains": ["그 부분을 말한 리뷰는 없었어요", "등록된 스펙으로는 무게가"], "note": "무게 0건(18건) → 무게(기준 사이즈) 한 줄"}
+{"id": "E20", "cat": "experience", "q": "알파플라이 4 후기 어때요?", "branch": "experience", "shoes": ["나이키 알파플라이 4"], "denom": true, "contains": ["2건"], "not_contains": ["전체적인 평가는 다음과 같아요."], "note": "관점 없음 · 리뷰 2건 → 요약이 없다(3건 미만). 집계 줄 + 인용 블록만, 안내 문구 없이"}
+{"id": "E21", "cat": "experience", "setup": ["알파플라이 3 무게는 얼마예요?"], "q": "후기는 어때요?", "branch": "experience", "shoes": ["나이키 알파플라이 3"], "denom": true, "note": "이름 · 가리키는 말 없이 이어 묻기 — 직전 신발로(라우터 same_shoe_as_before, 사용자 2026-11-14)"}
+{"id": "E22", "cat": "experience", "setup": ["노바블라스트 6 무게는 얼마예요?"], "q": "발볼 넓은 사람한테는 어때요?", "branch": "experience", "shoes": ["아식스 노바블라스트 6"], "denom": true, "note": "이름 없이 관점(발볼)을 이어 묻기 — 직전 신발로"}
+{"id": "E23", "cat": "experience", "setup": ["노바블라스트 6 무게는 얼마예요?"], "q": "무릎 편한 후기 있는 신발 있어요?", "branch": "experience", "health": true, "denom": true, "hit_any": ["브룩스 고스트 18", "사우코니 엔돌핀 트레이너", "아식스 노바블라스트 6", "아식스 젤 카야노 33", "나이키 페가수스 42", "호카 아라히 8"], "note": "직전 신발이 있어도 새 신발을 찾는 질문 — 여러 켤레 검색(Hit@5는 E10과 같은 정답). 직전 신발 하나로 답하면 검색 순위가 없어 실패"}
+{"id": "E24", "cat": "experience", "setup": ["노바블라스트 6 무게는 얼마예요?"], "q": "쿠션 좋으면 무릎 나을까요?", "shoes": [], "health": true, "explain": true, "note": "직전 신발이 있어도 특성 · 효과를 일반적으로 묻는 질문 — 직전 신발을 쓰지 않고 특성 설명 + 전문의 안내"}
+{"id": "E25", "cat": "experience", "q": "후기는 어때요?", "branch": "experience", "shoes": [], "contains": ["어떤 신발이 궁금하세요?"], "note": "직전 신발이 없는데 이름 없이 후기를 물으면 되묻는다"}
