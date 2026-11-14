@@ -199,7 +199,9 @@ def _one_set(cond: dict, catalog, exclude: dict | None = None, limit: int | None
         if rank == 1:
             para = f"1위는 {ieyo(name)}. 확인한 조건 {r['checked']}개 중 {hits}개가 맞아요."
             if reasons_hit:
-                para += " " + " ".join(t if t.endswith(("요", ".")) else t + "." for t in reasons_hit)
+                # 추천 API 의 이유 문장에는 마침표가 없다 — 문장 끝 부호가 없으면 붙인다(「요」로 끝나도 붙인다. 2026-11-14 운영 확인:
+                # 「…맞는 신발이에요 교정 장치가 없는 중립화예요」처럼 문장이 마침표 없이 이어졌다). 괄호로 끝나는 이유 뒤에도 붙인다
+                para += " " + " ".join(t if t.endswith((".", "!", "?")) else t + "." for t in reasons_hit)
             paras.append(para)
             if unasked:
                 ua = _and(unasked)
