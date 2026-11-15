@@ -1,9 +1,15 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Shoe } from "../../types";
 import { formatNum, topic, NUM_TEXT, SIZE_MM, type NumKey } from "../../utils/compare";
 import type { CompareStats } from "../../utils/compareApi";
 
 const W = 268, H = 64, BINS = 24;
+/**
+ * 시트의 그래프 — 예전에는 내용을 300px 로 묶어(viewBox 268 → 300px, 높이 약 101px) 양옆이 비었다. 이제 시트 안쪽 폭을 다 쓰되
+ * 높이 · 글자 크기는 그대로 두려고 viewBox 폭만 늘린다(2026-11-15 사용자). 폭을 그대로 늘리면 높이도 같은 비율로 커져
+ * 화면을 거의 덮었다(2026-11-09) — 그래서 이 배율(300/268)을 지킨다. 막대 칸 수(BINS)는 그대로
+ */
+const SHEET_SCALE = 300 / W;
 
 interface Props {
   shoe: Shoe;
@@ -29,6 +35,16 @@ function CompareDist({ shoe, field, stats, others, sheet, right, onClose }: Prop
     if (r.bottom > window.innerHeight - 8) el.classList.add("is-up");
     if (r.right > window.innerWidth - 8) el.classList.add("is-right");
   });
+  // 시트 안쪽 폭(여백 뺀) — 바뀌면(화면 돌리기 · 창 크기) 다시 잰다
+  const [inner, setInner] = useState<number | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !sheet) return;
+    const ro = new ResizeObserver(([e]) => setInner(Math.round(e.contentRect.width)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [sheet]);
+  const vw = sheet && inner ? inner / SHEET_SCALE : W;   // viewBox 폭 — 시트가 아니면 예전 그대로 268
   const cls = `cdist ${sheet ? "is-sheet" : ""} ${right ? "is-right" : ""}`;
   const cellOf = (id: number) => stats?.shoes.find((r) => r.id === id)?.[field];
   const me = cellOf(shoe.id);
@@ -51,7 +67,7 @@ function CompareDist({ shoe, field, stats, others, sheet, right, onClose }: Prop
   const lo = Math.min(...pop), hi = Math.max(...pop), span = hi - lo || 1;
   const counts = Array<number>(BINS).fill(0);
   pop.forEach((a) => counts[Math.min(BINS - 1, Math.floor(((a - lo) / span) * BINS))]++);
-  const max = Math.max(...counts), bw = W / BINS, x = (a: number) => ((a - lo) / span) * W;
+  const max = Math.max(...counts), bw = vw / BINS, x = (a: number) => ((a - lo) / span) * vw;
   const otherCells = others.map((s) => ({ s, c: cellOf(s.id) })).filter((o) => o.c);
   const otherVals = otherCells.map((o) => o.c!.value).filter((a): a is number => a != null);
   const skipped = field === "weight" ? otherCells.filter((o) => o.c!.value == null).map((o) => o.s.model) : [];
@@ -70,7 +86,7 @@ function CompareDist({ shoe, field, stats, others, sheet, right, onClose }: Prop
       <h4 className="cdist__title">
         {field === "weight" ? `무게 ${shoe.weight}g${meConv ? `(270mm로 약 ${formatNum(field, v)})` : ""}` : `${t.label} ${formatNum(field, v)}`} — {word}이에요
       </h4>
-      <svg viewBox={`0 0 ${W} ${H + 26}`} className="cdist__svg" aria-hidden="true">
+      <svg viewBox={`0 0 ${vw} ${H + 26}`} className="cdist__svg" aria-hidden="true">
         {counts.map((c, i) => (
           <rect key={i} x={i * bw + 1} y={H - (c / max) * (H - 6)} width={bw - 2} height={(c / max) * (H - 6)} className="cdist__bar" />
         ))}
@@ -78,8 +94,8 @@ function CompareDist({ shoe, field, stats, others, sheet, right, onClose }: Prop
         <line x1={x(v)} x2={x(v)} y1={0} y2={H} className="cdist__me" />
         <path d={`M${x(v) - 5} ${H + 9} L${x(v) + 5} ${H + 9} L${x(v)} ${H + 3}Z`} className="cdist__mark" />
         {x(v) > edge && <text x={0} y={H + 22} className="cdist__axis">{short(lo)}</text>}
-        {x(v) < W - edge && <text x={W} y={H + 22} className="cdist__axis" textAnchor="end">{short(hi)}</text>}
-        <text x={Math.min(Math.max(x(v), half), W - half)} y={H + 22} className="cdist__axis is-me" textAnchor="middle">{short(v)}</text>
+        {x(v) < vw - edge && <text x={vw} y={H + 22} className="cdist__axis" textAnchor="end">{short(hi)}</text>}
+        <text x={Math.min(Math.max(x(v), half), vw - half)} y={H + 22} className="cdist__axis is-me" textAnchor="middle">{short(v)}</text>
       </svg>
       <div className="cdist__legend">
         <span className="is-me">{shoe.model}</span>

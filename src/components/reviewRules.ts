@@ -35,5 +35,7 @@ export async function reviewError(res: Response, fallback: string) {
   return reviewFailure[res.status] ?? fallback;
 }
 
-/** 관리자가 리뷰를 숨기면 어디에 언제 반영되나 — 확인 창 · 알림 · 안내가 같은 문장을 쓴다(2026-11-14 사용자) */
-export const WHEN_APPLIED = "목록 · 평점 · 리뷰 수에서는 바로 빠지고, 챗봇은 최대 10분, 요약은 다음 날 03:30에 반영돼요.";
+/** 관리자가 리뷰를 숨기면 어디에 언제 반영되나 — 확인 창 · 알림 · 안내가 같은 문장을 쓴다(2026-11-14 사용자, 문구 2026-11-15 사용자) */
+export const WHEN_APPLIED = "리뷰 목록 · 평점 계산 · 리뷰 수에서는 바로 빠지고, 챗봇에는 최대 10분 이후부터, 요약은 익일 새벽 03:30에 반영돼요.";
+/** 되살리면 — 반영되는 때는 같고 방향만 반대 */
+export const WHEN_RESTORED = "리뷰 목록 · 평점 계산 · 리뷰 수에 바로 돌아오고, 챗봇에는 최대 10분 이후부터, 요약은 익일 새벽 03:30에 반영돼요.";

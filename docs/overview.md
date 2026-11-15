@@ -15,7 +15,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
    │  runshoes :3000  Spring Boot                       │
    │   ├ 화면(React 빌드물, SPA)                         │
    │   ├ /api/shoes · reviews · terms  json-server 계약  │──▶ MySQL 8(StatefulSet runshoes-mysql)
-   │   ├ /api/auth · /api/me · like · admin · activity   │       Flyway V1~V23
+   │   ├ /api/auth · /api/me · like · admin · activity   │       Flyway V1~V24
    │   └ /api/shoes/{id}/summary ─────────────┐          │
    │  chatbot :8766  Python WebSocket ─────────┤          │
    └───────────────────────────────────────────┼──────────┘
@@ -32,7 +32,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 | 계정 | JWT · refresh 쿠키 · 체험 계정 · 시도 제한 · 활동 로그 | `04_auth.md` |
 | API | json-server 계약 재현 + 새 기능, 계약 시험 | `05_api_contract.md` |
 | 배포 | Jenkins(BuildKit) → Harbor → 인프라 리포 태그 → ArgoCD | `06_deployment.md` |
-| DB | 테이블 14 · 뷰 1 · 마이그레이션 V1~V23 | `07_database.md` |
+| DB | 테이블 14 · 뷰 1 · 마이그레이션 V1~V24 | `07_database.md` |
 | 비교 | 점수 없는 비교표(2~5켤레) · 자동 채우기 · 분포 그래프 — 운영 반영(2026-11-09). 레이더 차트는 버렸다 | `08_compare.md` |
 
 | 저장소 | 담는 것 |
@@ -75,7 +75,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 - **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만(`06_deployment.md` 4절).
 - **옛 칸이 남아 있다.** `weight` · `drop_mm` · `stack_height` · `width` · `liked`(`07_database.md` 4절).
 - **화면 시험이 자동이 아니다.** 계약 시험은 API 만 본다.
-- **페이지가 없다.** 목록을 한 번에 받는다(서버는 이미 지원).
+- **홈 목록은 페이지가 없다.** 공개 신발 목록을 한 번에 받는다(서버는 이미 지원). 관리 화면의 목록(리뷰 · 회원 · 챗봇 문의 · 대화 · 신발 관리)은 서버가 쪽을 나눈다(`03_admin.md` 1-1 · 1-6).
 
 #### 다음에 할 일
 

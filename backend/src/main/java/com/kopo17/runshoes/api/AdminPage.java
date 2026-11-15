@@ -52,6 +52,16 @@ record AdminPage(int page, int size) {
 		return d == null ? null : d.plusDays(1).atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
 	}
 
+	/** 한국 연도 ?year=2026 — 그해 1월 1일 00:00 KST 부터 다음 해 같은 때 전까지(UTC). 비면 null, 숫자가 아니거나 2000~2100 밖이면 400 */
+	static LocalDateTime[] yearKst(String v) {
+		if (v == null || v.isBlank()) return null;
+		int y = number("year", v, 0, 2000, 2100);
+		LocalDate start = LocalDate.of(y, 1, 1);
+		return new LocalDateTime[] {
+				start.atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime(),
+				start.plusYears(1).atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime() };
+	}
+
 	/** LIKE '%…%' 의 글 — % _ \ 를 글자 그대로. 비면 null */
 	static String like(String v) {
 		if (v == null || v.isBlank()) return null;

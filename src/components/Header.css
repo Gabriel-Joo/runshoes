@@ -43,7 +43,7 @@
   font-weight: 600;
   color: var(--text-weak);
 }
-/* 로그인 · 닉네임 — 메뉴 맨 끝, 앞과 줄로 나눈다(admin 이면 등록·관리 뒤) */
+/* 로그인 · 닉네임 — 메뉴 맨 끝, 앞과 줄로 나눈다(admin 이면 신발 관리 뒤) */
 .header__link--auth {
   border-left: 1px solid var(--text-strong);
   padding-left: 20px;
@@ -193,7 +193,7 @@
   }
 }
 
-/* 태블릿 — 로그인하면 메뉴가 하나 는다(닉네임, admin 은 등록·관리까지). 닉네임은 6글자 폭에서 말줄임 */
+/* 태블릿 — 로그인하면 메뉴가 하나 는다(닉네임, admin 은 신발 관리까지). 닉네임은 6글자 폭에서 말줄임 */
 @media (max-width: 1199px) {
   .header__nick {
     max-width: 6em;

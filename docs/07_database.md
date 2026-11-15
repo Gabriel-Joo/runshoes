@@ -19,7 +19,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | `activity_logs` | 10 | 인증 · 리뷰 · 찜 · 신발 조회 · 비교 · 관리 화면 쓰기 이력. 로그인 시도 제한도 여기서 센다 |
 | `shoe_purges` | 11 | 영구 삭제한 신발의 기록(행이 없으니 FK 아님) |
 | `terms` | 6 | 용어 설명. `row_no` 가 키 — 시드에 `id 12` 가 둘이었고 V17 에서 아웃솔을 13 으로. 관리자 마이페이지가 더한다(2026-11-14, `POST /api/admin/terms` — id 는 가장 큰 id + 1) |
-| `chatbot_misses` | 8 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리자 마이페이지가 이름으로 묶어 보이고 처리 상태를 적는다(V23 `status` · `decided_at` · `decided_by`) |
+| `chatbot_misses` | 8 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리자 마이페이지가 이름으로 묶어 보이고 처리 상태를 적는다(V23 `status` · `decided_at` · `decided_by`, V24 사유 `decided_note`) |
 | `chatbot_turns` | 21 | 챗봇 대화 한 턴에 한 줄(V19) — 연결 id · 계정 id · 질문 · 답 · 갈래 · 판정 표시 · 신발 수 · 단계별 시간(라우터 · 검색 · 생성 · API 다섯). 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 대시보드가 복제본을 읽되 질문 · 답 칸은 권한으로 막는다. 관리자 마이페이지의 대화 보기가 원문을 읽는다(2026-11-14 — V19 의 「읽는 API 를 두지 않는다」를 바꿨다, 데모 관리자에게는 질문 · 답을 빼고 준다). `user_id` 는 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다) — `09_chatbot_rag.md` 18절 |
 | `summary_batch_runs` | 11 | 요약 배치 한 실행 한 줄(V20) — 시작 · 끝 · 결과(`running` · `ran` · `skipped` · `error`) · 대상 · 성공 · 실패 · 다시 stale · 사라짐 · 걸린 시간 · 오류 글. 배치가 바로 쓴다 — `09_chatbot_rag.md` 5절 「실행 기록」 |
 | `summary_batch_failures` | 5 | 요약 배치가 만들지 못한 켤레 한 줄(V20) — 실행 id(FK, CASCADE) · 신발 id(FK 없음) · 까닭 · 시각 |
@@ -61,7 +61,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 - `ActivityCleanup` 이 매일(`app.activity.cleanup-cron`, Asia/Seoul) 지운다 — `auth.*` · `user.*` 90일, 나머지(`review.*` · `like.*` · `shoe.*` · `compare.*` …) 180일(`application.yml`).
 - 그래서 오래 남아야 하는 기록은 로그에 기대지 않는다 — 영구 삭제는 `shoe_purges`, 신발의 마지막 수정은 `shoes.last_change`.
 
-#### 1-4. 마이그레이션 V1~V23
+#### 1-4. 마이그레이션 V1~V24
 
 | V | 이름 | 무엇 | 운영 적용 |
 |---|---|---|---|
@@ -89,6 +89,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 
 | 22 | review hide | `reviews.hidden_at`(관리자가 숨긴 때, NULL = 보인다, INSTANT 열 추가) — `03_admin.md` 1-6. 옛 이미지로 롤백하면 숨긴 리뷰가 다시 보이고 평점에 다시 든다 | 2026-11-15 |
 | 23 | chatbot miss status | `chatbot_misses.status`(NULL 처리 안 함 · `done` · `ignored`) · `decided_at` · `decided_by` — 챗봇 문의 처리 상태, `03_admin.md` 1-6. CHECK 없음(표를 다시 쓰지 않게 — 값은 앱이 본다). V22 와 목적이 달라 나눴다 | 2026-11-15 |
+| 24 | chatbot miss note | `chatbot_misses.decided_note`(VARCHAR(200) NULL, 맨 뒤 INSTANT 열 추가, 데이터 안 고침) — 처리함 · 무시의 사유, `03_admin.md` 1-6. 200자는 앱이 400 으로 막는다. 옛 이미지로 롤백하면 이 칸을 읽지도 쓰지도 않는다 | 아직(사람이 런북으로) |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md` · `v19-v20-observability.md` · `v21-grafana-compare-views.md`)에 있다. 절차는 `06_deployment.md`.
 

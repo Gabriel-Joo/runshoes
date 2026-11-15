@@ -1,0 +1,43 @@
+{
+  "id": "X228",
+  "plan": null,
+  "name": "사유가 글이 아님 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/chatbot-misses/decide",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "kind": "term",
+      "query": "힐카운터",
+      "status": "ignored",
+      "note": 5
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "note(사유)는 글로 보내 주세요.",
+      "code": "invalid"
+    }
+  }
+}

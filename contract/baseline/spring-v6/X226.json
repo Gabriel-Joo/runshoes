@@ -1,22 +1,19 @@
 {
-  "id": "X221",
+  "id": "X226",
   "plan": null,
-  "name": "없는 리뷰 인증 → 404",
+  "name": "가입 연도가 범위 밖 → 400",
   "contract": true,
-  "expect": 404,
+  "expect": 400,
   "request": {
-    "method": "POST",
-    "path": "/api/admin/reviews/99999/verify",
+    "method": "GET",
+    "path": "/api/admin/users?year=1999",
     "headers": {
-      "Content-Type": "application/json",
       "Authorization": "Bearer {{admin}}"
     },
-    "body": {
-      "verified": true
-    }
+    "body": null
   },
   "response": {
-    "status": 404,
+    "status": 400,
     "headers": {
       "access-control-allow-origin": "*",
       "cache-control": "no-cache",
@@ -29,10 +26,12 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
-      "keep-alive": "timeout=60",
-      "connection": "keep-alive"
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "connection": "close"
     },
-    "body": {}
+    "body": {
+      "message": "year 값은 2000~2100 사이로 적어 주세요.",
+      "code": "invalid"
+    }
   }
 }

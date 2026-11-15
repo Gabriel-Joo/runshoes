@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 숨기면 빠지는 곳 — 공개 리뷰 목록(/api/reviews, 챗봇 색인은 이것을 10분마다 다시 읽는다) · 신발 평점 · 리뷰 수(Ratings 로 다시 센다) ·
  *   요약 입력 · 다시 만들지 판단(SummaryStore). 요약은 비율 조건과 상관없이 「다시 만들 차례」로 세운다(forceStale) — 다음 배치(03:30 KST)가 만든다.
  * 실사용 후기(FOLLOWUP, parent_review_id)는 첫 리뷰와 같이 숨기고 같이 되살린다 — 영구 삭제 때 FK CASCADE 로 같이 지워지는 것과 맞춘다.
- * 권한: 목록은 admin · 데모 관리자(보기만), 숨기기 · 되살리기 · 영구 삭제 · 인증은 admin 만(데모 관리자 403 demo_admin). 순서는 401 → 404 → 403(Viewer).
+ * 권한: 목록은 admin · 데모 관리자(보기만), 숨기기 · 되살리기 · 영구 삭제는 admin 만(데모 관리자 403 demo_admin). 순서는 401 → 404 → 403(Viewer).
  * 관리자 행동은 activity_logs 에 admin.review.* 로 남긴다(보관 180일 — ActivityCleanup).
  */
 @Component
@@ -112,26 +112,6 @@ class AdminReviews {
 		Map<String, Object> d = new LinkedHashMap<>();
 		d.put("id", id);
 		d.putAll(c);
-		return d;
-	}
-
-	/**
-	 * 실사용 인증 켜기 · 끄기(2026-11-14 사용자) — V3 의 verified · verified_at · verified_by 칸은 있었는데 화면이 없었다.
-	 * 켜면 때 · 켠 관리자를 적고, 끄면 둘 다 비운다. 숨긴 리뷰에도 할 수 있다. 평점 · 요약과 상관없다(셈을 바꾸지 않는다).
-	 * 공개 응답의 verified 는 그대로 나간다(ReviewCollection.toDoc) — 상세 모달에 표시를 그리는 것은 이번 범위 밖
-	 */
-	@Transactional
-	Map<String, Object> verify(long id, Object value, Viewer viewer) {
-		Row r = locked(id, viewer);
-		if (!(value instanceof Boolean on)) throw ApiException.invalid("verified 를 true 또는 false 로 보내 주세요.");
-		LocalDateTime at = on ? Values.nowUtc().truncatedTo(ChronoUnit.MILLIS) : null;
-		jdbc.update("UPDATE reviews SET verified = ?, verified_at = ?, verified_by = ? WHERE id = ?",
-				on, at == null ? null : Timestamp.valueOf(at), on ? viewer.userId() : null, id);
-		activity.log(new Entry(on ? "admin.review.verify" : "admin.review.unverify", viewer.userId(), "review", id, meta(r, Map.of())));
-		Map<String, Object> d = new LinkedHashMap<>();
-		d.put("id", id);
-		d.put("verified", on);
-		d.put("verifiedAt", at == null ? null : Values.formatCreatedAt(at));
 		return d;
 	}
 

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
  * POST   /api/admin/reviews/{id}/hide     숨기기(이미 숨김 409 already_hidden)            — admin 만
  * POST   /api/admin/reviews/{id}/restore  되살리기(숨긴 것이 아니면 409 not_hidden)       — admin 만
  * DELETE /api/admin/reviews/{id}          영구 삭제(숨긴 리뷰만, 아니면 409 not_hidden)   — admin 만
- * POST   /api/admin/reviews/{id}/verify   실사용 인증 켜기 · 끄기 {verified: true|false}   — admin 만
+ * 실사용 인증 켜기(POST …/{id}/verify)는 2026-11-15 사용자 지시로 뺐다 — 실사용 후기 · 스크린샷 같은 근거가 아직 없어
+ * 관리자가 근거 없이 켜게 되고, 켜면 공개 응답에 verified: true 가 나간다. verified 칸(V3)은 그대로 두고 쓰지 않는다.
  * GET 은 SecurityConfig 가 누구에게나 열어 두므로 401 도 여기서(Viewer) 낸다. 쓰기의 401 은 SecurityConfig.
  */
 @RestController
@@ -57,10 +57,5 @@ class AdminReviewController {
 	@DeleteMapping("/{id}")
 	Map<String, Object> purge(@PathVariable String id) {
 		return reviews.purge(JsonServerController.id(id), Viewer.current());
-	}
-
-	@PostMapping("/{id}/verify")
-	Map<String, Object> verify(@PathVariable String id, @RequestBody(required = false) Map<String, Object> body) {
-		return reviews.verify(JsonServerController.id(id), body == null ? null : body.get("verified"), Viewer.current());
 	}
 }

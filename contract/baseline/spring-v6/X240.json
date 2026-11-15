@@ -1,25 +1,19 @@
 {
-  "id": "X218",
+  "id": "X240",
   "plan": null,
-  "name": "인증 켜기 admin → 200",
+  "name": "모르는 탭 → 400",
   "contract": true,
-  "expect": 200,
-  "volatile": [
-    "verifiedAt"
-  ],
+  "expect": 400,
   "request": {
-    "method": "POST",
-    "path": "/api/admin/reviews/79/verify",
+    "method": "GET",
+    "path": "/api/admin/shoes?tab=x",
     "headers": {
-      "Content-Type": "application/json",
       "Authorization": "Bearer {{admin}}"
     },
-    "body": {
-      "verified": true
-    }
+    "body": null
   },
   "response": {
-    "status": 200,
+    "status": 400,
     "headers": {
       "access-control-allow-origin": "*",
       "cache-control": "no-cache",
@@ -32,14 +26,12 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
-      "keep-alive": "timeout=60",
-      "connection": "keep-alive"
+      "date": "Sun, 15 Nov 2026 02:45:27 GMT",
+      "connection": "close"
     },
     "body": {
-      "id": 79,
-      "verified": true,
-      "verifiedAt": "2026-11-14T13:04:05.503Z"
+      "code": "invalid",
+      "message": "tab 은 list · hidden · gaps · purged 가운데 하나예요."
     }
   }
 }

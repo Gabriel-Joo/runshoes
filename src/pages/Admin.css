@@ -27,6 +27,7 @@
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.02em;
+  white-space: nowrap;   /* 휴대폰에서 옆의 요약 줄에 밀려 「신발 관 / 리」로 꺾였다(옛 제목도 같았다) — 요약 줄이 접힌다 */
 }
 
 .admin__new {
@@ -288,8 +289,18 @@
   margin-right: auto;               /* 개수는 왼쪽, 탭 · 새 등록은 오른쪽 */
 }
 
+/* 개수 + 몇 개씩 보기(2026-11-15) — 둘을 묶어 왼쪽에, 탭 · 새 등록은 오른쪽 */
+.admin__countbar .admin__countmain {
+  margin-top: 0;
+  margin-right: auto;
+}
+
+.admin__countbar .admin__countmain .admin__count {
+  margin-right: 0;
+}
+
 .admin__countbar .admin__new {
-  margin-left: 28px;                /* 탭 묶음과 다른 묶음으로 보이게 */
+  margin-left: 28px;               /* 탭 묶음과 다른 묶음으로 보이게 */
   padding: 7px 16px;                /* 탭과 같은 높이 */
 }
 
@@ -389,15 +400,19 @@
     align-items: center;
     gap: 10px;
   }
-  .admin__countbar .admin__count { grid-area: count; }
+  .admin__countbar .admin__countmain { grid-area: count; }
   .admin__countbar .admin__tabs { grid-area: tabs; }
   .admin__countbar .admin__new {
     grid-area: new;
     margin-left: 0;
     padding: 9px 14px;
   }
+  /* 탭 넷 — 숫자가 세 자리면(310켤레) 한 줄에 다 들어가지 않아 390px 에서 10px 넘쳤다(2026-11-15 확인). 두 개씩 두 줄 */
+  .admin__tabs {
+    flex-wrap: wrap;
+  }
   .admin__tabs .admin__tab {
-    flex: 1;
+    flex: 1 1 calc(50% - 3px);
     padding: 7px 6px;
     white-space: nowrap;
   }

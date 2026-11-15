@@ -103,7 +103,7 @@ function Login() {
               <div className="auth__admincard">
                 <button className="auth__card is-admin" onClick={() => tryDemo(admin)} disabled={busy}>
                   <strong>{DEMO_ADMIN_NAME}</strong>
-                  <span>등록 · 관리 화면 보기</span>
+                  <span>신발 관리 화면 보기</span>
                 </button>
               </div>
             </div>

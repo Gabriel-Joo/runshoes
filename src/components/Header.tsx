@@ -7,7 +7,7 @@ import "./Header.css";
 
 const NAV: [string, string][] = [["/", "홈"], ["/recommend", "추천받기"], ["/compare", "비교하기"], ["/best", "러너들의 선택"]];
 
-/** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 등록·관리는 admin · 데모 관리자(보기만)에게 */
+/** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 신발 관리는 admin · 데모 관리자(보기만)에게 */
 function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -67,7 +67,7 @@ function Header() {
           ))}
           {canViewAdmin && (
             <Link to="/admin" className="header__link header__link--admin">
-              등록·관리
+              신발 관리
             </Link>
           )}
           {status === "anonymous" && (
@@ -110,7 +110,7 @@ function Header() {
       {open && (
         <nav className="header__drawer">
           {NAV.map(([to, label]) => drawerLink(to, label))}
-          {canViewAdmin && drawerLink("/admin", "등록·관리")}
+          {canViewAdmin && drawerLink("/admin", "신발 관리")}
           {status === "anonymous" && (
             <Link to={toLogin} className="header__drawerlink header__drawerlink--auth" onClick={close}>
               로그인

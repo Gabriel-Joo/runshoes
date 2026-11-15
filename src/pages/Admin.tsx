@@ -10,12 +10,27 @@ import ConfirmModal from "../components/ConfirmModal";
 import { useAuth } from "../auth/useAuth";
 import { demoBlocked } from "../auth/demoAdmin";
 import SearchBox from "../components/SearchBox";
+import { Pager, SizeChoice } from "./adminmy/parts";
+import { PAGE_SIZES, pageSize } from "../utils/pageGroup";
 import "./Admin.css";
+import "./AdminMy.css";   // 쪽 번호 · 몇 개씩 보기 칸(adminmy__pager · adminmy__choice) — 관리자 마이페이지와 같은 모양
 
 // 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
-//   화면에서 정렬한다 — 목록은 늘 전부 받고, 최근 수정순의 "고친 적 없음(null)은 뒤에, id 순"은 서버의 _sort 로 나타낼 수 없다
-/** 영구 삭제 기록 한 줄(GET /api/admin/shoes/purged, V11 shoe_purges) — 지울 때의 리뷰 · 찜 수 */
+//   목록 · 정렬 · 빈 칸 판정 · 쪽 나누기는 서버가 한다(GET /api/admin/shoes, 2026-11-15 — 리뷰 · 회원 관리와 같은 {items, total, page, size}).
+//   화면은 받은 한 쪽을 그리기만 한다
+/** 영구 삭제 기록 한 줄(V11 shoe_purges) — 지울 때의 리뷰 · 찜 수 */
 type PurgedShoe = { id: number; lineKey: string | null; generation: number | null; gender: string | null; brand: string; model: string; reviews: number; likes: number; purgedAt: string };
+/** 신발 관리 목록 한 줄 — 공개 /api/shoes 와 같은 신발 + 숨긴 신발은 deletedAt, 보완 필요는 빈 칸 이름 gaps(서버 AdminShoes.GAPS 순서) */
+type AdminShoe = Shoe & { deletedAt?: string | null; gaps?: string[] };
+/** GET /api/admin/shoes 응답 — counts 는 탭 단추의 수(list · gaps 는 브랜드 · 검색을 건 수, all 은 전체), gapCounts 는 빈 칸 칩의 수 */
+type AdminShoePage = {
+  items: (AdminShoe & PurgedShoe)[];
+  total: number;
+  page: number;
+  size: number;
+  counts: { list: number; all: number; hidden: number; gaps: number; purged: number };
+  gapCounts: Record<string, number>;
+};
 const GENDER: Record<string, string> = { men: "남성", women: "여성", unisex: "공용" };
 
 type SortKey = "gaps" | "updated" | "id" | "brand" | "model";
@@ -26,38 +41,22 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: "model", label: "모델명순" },
 ];
 
-// 보완 필요 탭(2026-11-01 사용자) — 비어 있는(null) 칸. 와이드 · 카본은 null 만("없음" false 는 확인한 값).
-//   드롭 · 중량 사이즈(중량은 있는데 사이즈가 빈 것)를 더했다 — 같은 날 사용자 승인. 가격 출처(가격과 늘 같이 빈다) · 스펙 기준 사이즈(전부 비고 화면에 안 쓴다)는 뺐다
-const GAPS: { key: string; label: string; empty: (s: Shoe) => boolean }[] = [
-  { key: "price", label: "가격", empty: (s) => s.price == null },
-  { key: "width", label: "발볼", empty: (s) => !s.width },
-  { key: "wideAvailable", label: "와이드", empty: (s) => s.wideAvailable == null },
-  { key: "stackHeight", label: "스택", empty: (s) => s.stackHeight == null },
-  { key: "midsole", label: "미드솔", empty: (s) => !s.midsole },
-  { key: "carbon", label: "카본", empty: (s) => s.carbon == null },
-  { key: "weight", label: "중량", empty: (s) => s.weight == null },
-  { key: "drop", label: "드롭", empty: (s) => s.drop == null },
-  { key: "weightSize", label: "중량 사이즈", empty: (s) => s.weight != null && !s.weightSize },
-  { key: "sku", label: "품번", empty: (s) => !s.sku },
+// 보완 필요 탭(2026-11-01 사용자)의 빈 칸 — 어떤 칸이 비었는지는 서버가 판정한다(AdminShoes.GAPS, 2026-11-15 옮김). 여기는 칩 이름과 순서만
+const GAPS: { key: string; label: string }[] = [
+  { key: "price", label: "가격" },
+  { key: "width", label: "발볼" },
+  { key: "wideAvailable", label: "와이드" },
+  { key: "stackHeight", label: "스택" },
+  { key: "midsole", label: "미드솔" },
+  { key: "carbon", label: "카본" },
+  { key: "weight", label: "중량" },
+  { key: "drop", label: "드롭" },
+  { key: "weightSize", label: "중량 사이즈" },
+  { key: "sku", label: "품번" },
 ];
-const gapsOf = (s: Shoe) => GAPS.filter((g) => g.empty(s));
+const GAP_LABEL = Object.fromEntries(GAPS.map((g) => [g.key, g.label]));
 // 기본은 빈 칸 적은 순(2026-11-01 사용자 — 한 칸만 빈 신발부터 고치면 목록이 빨리 준다). 다시 누르면 많은 순
 const GAP_SORTS: { key: SortKey; label: string }[] = [{ key: "gaps", label: "빈 칸 적은 순" }, ...SORTS];
-
-function sortShoes(list: Shoe[], key: SortKey, down: boolean): Shoe[] {
-  const byId = (a: Shoe, b: Shoe) => a.id - b.id;
-  const ko = (a: string, b: string) => a.localeCompare(b, "ko");
-  const sign = down ? 1 : -1;
-  return [...list].sort((a, b) => {
-    if (key === "gaps") return sign * (gapsOf(a).length - gapsOf(b).length) || byId(a, b);   // ↓ 적은 것부터
-    if (key === "updated") {
-      if (!a.updatedAt || !b.updatedAt) return a.updatedAt ? -1 : b.updatedAt ? 1 : byId(a, b);   // 고친 적 없는 것은 방향과 상관없이 뒤에, id 순
-      return sign * (Date.parse(b.updatedAt) - Date.parse(a.updatedAt)) || byId(a, b);
-    }
-    if (key === "id") return sign * (b.id - a.id);
-    return sign * ko(a[key], b[key]) || byId(a, b);
-  });
-}
 
 // 바뀐 칸 이름(API) → 화면 이름. 한 번에 같이 바뀌는 칸(대표 · 추가 이미지, 가격 출처 · 날짜 · 종류)은 한 이름으로 묶는다
 const FIELD_LABEL: Record<string, string> = {
@@ -92,7 +91,6 @@ function Admin() {
   const location = useLocation();
   const oneOf = <T extends string>(v: string | null, ok: readonly T[], d: T): T => (ok.includes(v as T) ? (v as T) : d);
   const SORT_KEYS = ["updated", "id", "brand", "model"] as const;
-  const [shoes, setShoes] = useState<Shoe[]>([]);
   const [brand, setBrand] = useState(() => params.get("brand") ?? "전체");
   const [keyword, setKeyword] = useState(() => params.get("q") ?? "");
   const [sort, setSort] = useState<SortKey>(() => oneOf(params.get("sort"), SORT_KEYS, "updated"));
@@ -100,21 +98,22 @@ function Admin() {
   const [target, setTarget] = useState<Shoe | null>(null);
   const [purgeTarget, setPurgeTarget] = useState<Shoe | null>(null);
   const [brands, setBrands] = useState<string[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+  const [data, setData] = useState<(AdminShoePage & { tab: string }) | null>(null);
   const [reload, setReload] = useState(0);
-  const [hidden, setHidden] = useState<Shoe[]>([]);
   // 리뷰 요약(V14) — 다시 만들 것 · 아직 없는 것. 읽기만(만드는 것은 매일 03:30 CronJob — 화면에서 돌리지 않는다, 2026-11-10 사용자)
   const [summaries, setSummaries] = useState<{ stale: number; pending: number; generated: number; total: number } | null>(null);
   // 등록된 신발 · 숨긴 신발 · 보완 필요(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에).
   //   챗봇 문의 탭은 관리자 마이페이지(/account?tab=misses)로 옮겼다(2026-11-14 사용자 — 이 탭은 신발 전용)
   const [tab, setTab] = useState<"list" | "hidden" | "gaps" | "purged">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps", "purged"] as const, "list"));
-  // 영구 삭제한 신발 기록(V11 shoe_purges, GET /api/admin/shoes/purged) — API 는 있었는데 화면이 없었다(2026-11-14 사용자). 읽기만, 최근 먼저
-  const [purged, setPurged] = useState<PurgedShoe[]>([]);
+  // 영구 삭제 기록 탭(V11 shoe_purges, 2026-11-14 사용자) — 읽기만, 최근 먼저
   // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 적은 순)
   const [gapKey, setGapKey] = useState<string | null>(() => oneOf(params.get("gap"), GAPS.map((g) => g.key), "") || null);
   const [gapSort, setGapSort] = useState<SortKey>(() => oneOf(params.get("gsort"), ["gaps", ...SORT_KEYS] as const, "gaps"));
   const [gapDown, setGapDown] = useState(() => params.get("gdir") !== "up");
+  // 몇 개씩 · 몇 쪽(2026-11-15 사용자) — 서버가 나눈다. 탭 · 브랜드 · 검색 · 정렬 · 빈 칸 · 몇 개씩을 바꾸면 1쪽으로
+  const [size, setSize] = useState(() => pageSize(params.get("size") ?? ""));
+  const [page, setPage] = useState(() => Math.max(1, Number(params.get("page")) || 1));
+  const first = <T,>(set: (v: T) => void) => (v: T) => { set(v); setPage(1); };
   useEffect(() => {
     const p = new URLSearchParams();
     if (tab !== "list") p.set("tab", tab);
@@ -125,62 +124,60 @@ function Admin() {
     if (gapKey) p.set("gap", gapKey);
     if (gapSort !== "gaps") p.set("gsort", gapSort);
     if (!gapDown) p.set("gdir", "up");
+    if (size !== PAGE_SIZES[0]) p.set("size", String(size));
+    if (page > 1) p.set("page", String(page));
     setParams(p, { replace: true });
-  }, [tab, brand, keyword, sort, down, gapKey, gapSort, gapDown, setParams]);
+  }, [tab, brand, keyword, sort, down, gapKey, gapSort, gapDown, size, page, setParams]);
   const back = { back: location.pathname + location.search };   // 수정 · 등록 화면이 돌아올 주소
   const [busy, setBusy] = useState(false);
   const { setNotice, isDemoAdmin } = useAuth();
 
   const search = useDebounced(keyword.trim());
 
-  // 홈과 같은 서버 검색(search = 브랜드 · 모델명, 낱말 AND) — 브랜드 칩 · 정렬도 서버가 한다
+  // 서버가 거르고(브랜드 · 검색 — 홈과 같은 규칙, 빈 칸) 정렬하고 나눈 한 쪽. 탭마다 정렬은 따로(보완 필요는 기본 빈 칸 적은 순)
   const query = useMemo(() => {
-    const p = new URLSearchParams();
+    const p = new URLSearchParams({ tab, sort: tab === "gaps" ? gapSort : sort, dir: (tab === "gaps" ? gapDown : down) ? "down" : "up", page: String(page), size: String(size) });
     if (brand !== "전체") p.set("brand", brand);
     if (search) p.set("search", search);
+    if (tab === "gaps" && gapKey) p.set("gap", gapKey);
     return p.toString();
-  }, [brand, search]);
+  }, [tab, sort, down, gapSort, gapDown, gapKey, brand, search, page, size]);
 
   useEffect(() => {
     const ctrl = new AbortController();
-    apiFetch(`/shoes?${query}`, { signal: ctrl.signal })
-      .then((res) => res.json())
-      .then((list: Shoe[]) => {
-        setShoes(list);
-        setLoaded(true);
+    apiFetch(`/admin/shoes?${query}`, { signal: ctrl.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`admin/shoes ${res.status}`))))
+      .then((d: AdminShoePage) => {
+        // 숨기기 · 영구 삭제로 줄어 이 쪽이 비면 마지막 쪽으로
+        const last = Math.max(1, Math.ceil(d.total / d.size));
+        if (d.items.length === 0 && d.page > last) setPage(last);
+        else setData({ ...d, tab });
       })
       .catch((e) => {
         if (e.name !== "AbortError") console.error(e);
       });
     return () => ctrl.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- tab 은 query 에 들어 있다(받은 쪽이 어느 탭 것인지 적어 두려고만 쓴다)
   }, [query, reload]);
 
-  // 브랜드 칩과 "전체 N개"는 검색 결과와 상관없이 전부 — 목록을 다 받지 않고 브랜드 목록 · 개수만
+  // 브랜드 칩은 검색 결과와 상관없이 전부 — 이름만(/api/brands). 리뷰 요약 건수
   useEffect(() => {
     fetch(`${API}/brands`)
       .then((res) => res.json())
       .then(setBrands);
-    fetch(`${API}/shoes?_limit=0`).then((res) =>
-      setTotal(Number(res.headers.get("X-Total-Count") ?? 0)),
-    );
-    // 숨긴 신발(V8) — admin · 데모 관리자가 본다
-    apiFetch("/admin/shoes/hidden")
-      .then((res) => (res.ok ? res.json() : []))
-      .then(setHidden)
-      .catch(() => setHidden([]));
     apiFetch("/admin/summaries")
       .then((res) => (res.ok ? res.json() : null))
       .then(setSummaries)
       .catch(() => setSummaries(null));
-    apiFetch("/admin/shoes/purged")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((list: PurgedShoe[]) => setPurged([...list].reverse()))   // API 는 지운 순서 — 최근 먼저로
-      .catch(() => setPurged([]));
   }, [reload]);
 
   const getShoes = () => setReload((n) => n + 1);
-  const sorted = useMemo(() => sortShoes(shoes, sort, down), [shoes, sort, down]);
+  const counts = data?.counts;
+  // 탭을 바꾼 직후에는 앞 탭의 쪽이 남아 있다 — 모양이 달라(영구 삭제 기록) 이 탭 것만 그린다
+  const loaded = data?.tab === tab;
+  const items = loaded ? data.items : [];
   const pickSort = (key: SortKey) => {
+    setPage(1);
     if (key === sort) setDown((d) => !d);
     else {
       setSort(key);
@@ -188,19 +185,13 @@ function Admin() {
     }
   };
   const pickGapSort = (key: SortKey) => {
+    setPage(1);
     if (key === gapSort) setGapDown((d) => !d);
     else {
       setGapSort(key);
       setGapDown(true);
     }
   };
-  // 보완 필요 — 받은 목록(브랜드 칩 · 검색이 걸린 그대로)에서 브라우저가 거른다
-  const lacking = useMemo(() => shoes.filter((x) => gapsOf(x).length > 0), [shoes]);
-  const gapCounts = useMemo(() => Object.fromEntries(GAPS.map((g) => [g.key, shoes.filter(g.empty).length])), [shoes]);
-  const gapList = useMemo(() => {
-    const g = GAPS.find((x) => x.key === gapKey);
-    return sortShoes(g ? lacking.filter(g.empty) : lacking, gapSort, gapDown);
-  }, [lacking, gapKey, gapSort, gapDown]);
   const sortBar = tab === "gaps" ? { list: GAP_SORTS, key: gapSort, down: gapDown, pick: pickGapSort } : { list: SORTS, key: sort, down, pick: pickSort };
 
   // 숨김(V8, 화면 이름도 "숨김" — 2026-11-01) — 리뷰 · 찜은 남고 신발과 함께 화면에서 빠진다. admin 만(서버 403 — 데모 관리자는 그 문구)
@@ -246,7 +237,7 @@ function Admin() {
     <div className="admin">
       <div className="admin__head">
         <h2 className="admin__title">
-          러닝화 관리
+          신발 관리
           {isDemoAdmin && <span className="admin__demo">데모 관리자 · 보기 전용</span>}
         </h2>
         {summaries && (
@@ -262,7 +253,7 @@ function Admin() {
           <button
             key={b}
             className={`admin__brand ${brand === b ? "is-active" : ""}`}
-            onClick={() => setBrand(b)}
+            onClick={() => first(setBrand)(b)}
           >
             {b}
           </button>
@@ -271,7 +262,7 @@ function Admin() {
 
       <div className="admin__tools">
         <div className="admin__search">
-          <SearchBox value={keyword} onChange={setKeyword} />
+          <SearchBox value={keyword} onChange={first(setKeyword)} />
         </div>
 
         <div className="admin__sorts">
@@ -290,21 +281,25 @@ function Admin() {
       </div>
 
       <div className="admin__countbar">
-        <p className="admin__count">
-          {tab === "list" ? `${shoes.length}개 / 전체 ${total}개` : tab === "hidden" ? `숨긴 신발 ${hidden.length}개` : tab === "purged" ? `영구 삭제한 신발 ${purged.length}개` : `보완 필요 ${gapList.length}개 / 전체 ${shoes.length}개`}
-        </p>
+        {/* 개수 오른쪽에 몇 개씩 보기 — 관리자 마이페이지와 같은 칸(adminmy/parts SizeChoice) */}
+        <div className="adminmy__countbar admin__countmain">
+          <p className="admin__count">
+            {!counts ? "" : tab === "list" ? `${counts.list}개 / 전체 ${counts.all}개` : tab === "hidden" ? `숨긴 신발 ${counts.hidden}개` : tab === "purged" ? `영구 삭제한 신발 ${counts.purged}개` : `보완 필요 ${loaded ? data.total : counts.gaps}개 / 전체 ${counts.list}개`}
+          </p>
+          <SizeChoice size={size} onChange={(v) => first(setSize)(pageSize(v))} />
+        </div>
         <div className="admin__tabs" role="tablist" aria-label="목록">
-          <button role="tab" aria-selected={tab === "list"} className={`admin__tab ${tab === "list" ? "is-active" : ""}`} onClick={() => setTab("list")}>
-            등록된 신발 {shoes.length}
+          <button role="tab" aria-selected={tab === "list"} className={`admin__tab ${tab === "list" ? "is-active" : ""}`} onClick={() => first(setTab)("list")}>
+            등록된 신발 {counts?.list ?? ""}
           </button>
-          <button role="tab" aria-selected={tab === "hidden"} className={`admin__tab ${tab === "hidden" ? "is-active" : ""}`} onClick={() => setTab("hidden")}>
-            숨긴 신발 {hidden.length}
+          <button role="tab" aria-selected={tab === "hidden"} className={`admin__tab ${tab === "hidden" ? "is-active" : ""}`} onClick={() => first(setTab)("hidden")}>
+            숨긴 신발 {counts?.hidden ?? ""}
           </button>
-          <button role="tab" aria-selected={tab === "gaps"} className={`admin__tab admin__tab--gaps ${tab === "gaps" ? "is-active" : ""}`} onClick={() => setTab("gaps")}>
-            보완 필요 {lacking.length}
+          <button role="tab" aria-selected={tab === "gaps"} className={`admin__tab admin__tab--gaps ${tab === "gaps" ? "is-active" : ""}`} onClick={() => first(setTab)("gaps")}>
+            보완 필요 {counts?.gaps ?? ""}
           </button>
-          <button role="tab" aria-selected={tab === "purged"} className={`admin__tab ${tab === "purged" ? "is-active" : ""}`} onClick={() => setTab("purged")}>
-            영구 삭제 기록 {purged.length}
+          <button role="tab" aria-selected={tab === "purged"} className={`admin__tab ${tab === "purged" ? "is-active" : ""}`} onClick={() => first(setTab)("purged")}>
+            영구 삭제 기록 {counts?.purged ?? ""}
           </button>
         </div>
         {/* 새 등록 — 탭 줄 오른쪽, 탭 묶음과 띄운다(성격이 다른 버튼, 2026-11-01 사용자) */}
@@ -315,11 +310,11 @@ function Admin() {
 
       {tab === "list" && (
       <ul className="admin__list">
-        {loaded && shoes.length === 0 && (
+        {loaded && items.length === 0 && (
           <li className="admin__empty">조건에 맞는 러닝화가 없습니다.</li>
         )}
 
-        {sorted.map((shoe) => {
+        {items.map((shoe) => {
           const change = changeOf(shoe);
           return (
           <li className="admin__row" key={shoe.id}>
@@ -366,20 +361,20 @@ function Admin() {
         <>
           {/* 칸 하나씩 — 고른 것은 코랄. 0 인 칸은 감춘다 */}
           <div className="admin__gapfilters" role="group" aria-label="빈 칸 필터">
-            <button className={`admin__gapfilter ${gapKey === null ? "is-active" : ""}`} onClick={() => setGapKey(null)} aria-pressed={gapKey === null}>
-              전체 {lacking.length}
+            <button className={`admin__gapfilter ${gapKey === null ? "is-active" : ""}`} onClick={() => first(setGapKey)(null)} aria-pressed={gapKey === null}>
+              전체 {counts?.gaps ?? ""}
             </button>
-            {GAPS.filter((g) => gapCounts[g.key] > 0).map((g) => (
-              <button key={g.key} className={`admin__gapfilter ${gapKey === g.key ? "is-active" : ""}`} onClick={() => setGapKey(g.key)} aria-pressed={gapKey === g.key}>
-                {g.label} {gapCounts[g.key]}
+            {GAPS.filter((g) => (data?.gapCounts[g.key] ?? 0) > 0).map((g) => (
+              <button key={g.key} className={`admin__gapfilter ${gapKey === g.key ? "is-active" : ""}`} onClick={() => first(setGapKey)(g.key)} aria-pressed={gapKey === g.key}>
+                {g.label} {data?.gapCounts[g.key]}
               </button>
             ))}
           </div>
           <ul className="admin__list">
-            {loaded && gapList.length === 0 && <li className="admin__empty">비어 있는 칸이 없습니다.</li>}
-            {gapList.map((shoe) => {
-              const gaps = gapsOf(shoe).sort((a, b) => Number(b.key === gapKey) - Number(a.key === gapKey));   // 고른 칸을 앞에
-              const names = gaps.map((g) => g.label);
+            {loaded && items.length === 0 && <li className="admin__empty">비어 있는 칸이 없습니다.</li>}
+            {items.map((shoe) => {
+              const gaps = [...(shoe.gaps ?? [])].sort((a, b) => Number(b === gapKey) - Number(a === gapKey));   // 고른 칸을 앞에
+              const names = gaps.map((g) => GAP_LABEL[g] ?? g);
               const text = names.length > 3 ? `${names.slice(0, 3).join(", ")} 외 ${names.length - 3}건` : names.join(", ");
               return (
                 <li key={shoe.id}>
@@ -406,8 +401,8 @@ function Admin() {
 
       {tab === "hidden" && (
           <ul className="admin__list">
-            {hidden.length === 0 && <li className="admin__empty">숨긴 신발이 없습니다.</li>}
-            {hidden.map((shoe) => (
+            {loaded && items.length === 0 && <li className="admin__empty">숨긴 신발이 없습니다.</li>}
+            {items.map((shoe) => (
               <li className="admin__row is-hidden" key={shoe.id}>
                 <div className="admin__thumb">
                   <ShoeImage src={shoe.image} alt={shoe.model} />
@@ -437,8 +432,8 @@ function Admin() {
         <>
           <p className="admin__missnote">영구 삭제한 신발이에요. 리뷰 · 찜은 함께 지워졌고, 카탈로그를 다시 적재해도 들어오지 않아요(적재기가 이 기록을 읽어 뺀다). 되살릴 수 없어요.</p>
           <ul className="admin__list">
-            {purged.length === 0 && <li className="admin__empty">영구 삭제한 신발이 없습니다.</li>}
-            {purged.map((p) => (
+            {loaded && items.length === 0 && <li className="admin__empty">영구 삭제한 신발이 없습니다.</li>}
+            {items.map((p) => (
               <li className="admin__row is-hidden" key={`${p.id}:${p.purgedAt}`}>
                 <span className="admin__no">NO.{String(p.id).padStart(2, "0")}</span>
                 <span className="admin__purpose">리뷰 {p.reviews} · 찜 {p.likes}</span>
@@ -455,6 +450,8 @@ function Admin() {
           </ul>
         </>
       )}
+
+      {loaded && <Pager page={data.page} size={data.size} total={data.total} onPage={setPage} />}
 
       {target && <HideShoeConfirm shoe={target} busy={busy} onConfirm={removeShoe} onCancel={() => setTarget(null)} />}
       {purgeTarget && (

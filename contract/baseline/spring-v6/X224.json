@@ -1,22 +1,22 @@
 {
-  "id": "X217",
+  "id": "X224",
   "plan": null,
-  "name": "인증 값이 불린이 아님 → 400",
+  "name": "회원 목록 가입 연도 2001 → 0개, years 는 그대로",
   "contract": true,
-  "expect": 400,
+  "expect": 200,
+  "volatile": [
+    "years"
+  ],
   "request": {
-    "method": "POST",
-    "path": "/api/admin/reviews/79/verify",
+    "method": "GET",
+    "path": "/api/admin/users?year=2001",
     "headers": {
-      "Content-Type": "application/json",
       "Authorization": "Bearer {{admin}}"
     },
-    "body": {
-      "verified": "yes"
-    }
+    "body": null
   },
   "response": {
-    "status": 400,
+    "status": 200,
     "headers": {
       "access-control-allow-origin": "*",
       "cache-control": "no-cache",
@@ -29,12 +29,18 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
-      "connection": "close"
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
     },
     "body": {
-      "message": "verified 를 true 또는 false 로 보내 주세요.",
-      "code": "invalid"
+      "items": [],
+      "total": 0,
+      "page": 1,
+      "size": 20,
+      "years": [
+        2026
+      ]
     }
   }
 }

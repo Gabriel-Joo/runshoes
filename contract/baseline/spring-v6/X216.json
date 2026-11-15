@@ -1,22 +1,22 @@
 {
   "id": "X216",
   "plan": null,
-  "name": "인증 데모 관리자 → 403",
+  "name": "실사용 인증 주소는 없다 admin → 404",
   "contract": true,
-  "expect": 403,
+  "expect": 404,
   "request": {
     "method": "POST",
     "path": "/api/admin/reviews/79/verify",
     "headers": {
       "Content-Type": "application/json",
-      "Authorization": "Bearer {{d}}"
+      "Authorization": "Bearer {{admin}}"
     },
     "body": {
       "verified": true
     }
   },
   "response": {
-    "status": 403,
+    "status": 404,
     "headers": {
       "access-control-allow-origin": "*",
       "cache-control": "no-cache",
@@ -29,13 +29,10 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
-    "body": {
-      "message": "데모 관리자 계정은 할 수 없습니다",
-      "code": "demo_admin"
-    }
+    "body": {}
   }
 }

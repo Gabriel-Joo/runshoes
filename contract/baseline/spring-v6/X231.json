@@ -1,0 +1,58 @@
+{
+  "id": "X231",
+  "plan": null,
+  "name": "문의 목록 — 다시 처리 안 함, 전에 무시한 사유가 보인다",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "lastAt",
+    "lastDecidedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-misses?kind=term",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "kind": "term",
+          "query": "힐카운터",
+          "count": 3,
+          "open": 1,
+          "lastAt": "2026-11-15T01:57:45.091Z",
+          "lastMessage": "힐카운터 세 번째",
+          "status": "open",
+          "decidedAt": null,
+          "lastDecision": "ignored",
+          "lastDecidedAt": "2026-11-15T01:57:45.088Z",
+          "decidedNote": "이미 사전에 있는 말"
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

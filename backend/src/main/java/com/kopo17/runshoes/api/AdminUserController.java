@@ -1,6 +1,7 @@
 package com.kopo17.runshoes.api;
 
 import com.kopo17.runshoes.auth.LoginLocks;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 회원 관리(관리자 마이페이지, 2026-11-14 사용자 — docs/03_admin.md 1-6).
- * GET  /api/admin/users?q=&page=&size=   계정 목록, 가입 최근 순. q 는 이메일 · 닉네임 부분 일치. 서버 페이지 나누기 {items, total, page, size}.
+ * GET  /api/admin/users?q=&year=&page=&size=   계정 목록, 가입 최근 순. q 는 이메일 · 닉네임 부분 일치, year 는 가입한 한국 연도(2000~2100, 밖이면 400).
+ *                                        서버 페이지 나누기 {items, total, page, size, years} — years 는 가입한 해들(최근 먼저, 연도 고르기 칸, 2026-11-15).
  *                                        한 줄: id · 이메일 · 닉네임 · 역할 · 가입일 · 마지막 로그인 · 탈퇴 · 잠김(풀리는 때) · 리뷰 수. admin · 데모 관리자
  *        데모 관리자도 admin 과 똑같이 본다(이메일 · 이메일 검색 포함, 2026-11-15 사용자) — 시현용이라 가리면 화면이 빈다.
  *        실제 서비스로 가면 데모 관리자 계정을 지운다(docs/04_auth.md)
@@ -39,18 +41,24 @@ class AdminUserController {
 
 	@GetMapping
 	@Transactional(readOnly = true)
-	Map<String, Object> list(@RequestParam(required = false) String q, @RequestParam(required = false) String page,
-			@RequestParam(required = false) String size) {
+	Map<String, Object> list(@RequestParam(required = false) String q, @RequestParam(required = false) String year,
+			@RequestParam(required = false) String page, @RequestParam(required = false) String size) {
 		Viewer viewer = Viewer.current();
 		viewer.requireAdminView();
 		AdminPage p = AdminPage.of(page, size);
 		String like = AdminPage.like(q);
-		StringBuilder where = new StringBuilder();
+		LocalDateTime[] y = AdminPage.yearKst(year);
+		StringBuilder where = new StringBuilder(" WHERE 1 = 1");
 		List<Object> args = new ArrayList<>();
 		if (like != null) {
-			where.append(" WHERE (u.email LIKE ? OR u.nickname LIKE ?)");
+			where.append(" AND (u.email LIKE ? OR u.nickname LIKE ?)");
 			args.add(like);
 			args.add(like);
+		}
+		if (y != null) {
+			where.append(" AND u.created_at >= ? AND u.created_at < ?");
+			args.add(Timestamp.valueOf(y[0]));
+			args.add(Timestamp.valueOf(y[1]));
 		}
 		long total = jdbc.queryForObject("SELECT COUNT(*) FROM users u" + where, Long.class, args.toArray());
 		List<Object> pageArgs = new ArrayList<>(args);
@@ -78,7 +86,11 @@ class AdminUserController {
 					d.put("reviews", rs.getInt("reviews"));
 					return d;
 				}, pageArgs.toArray());
-		return p.body(items, total);
+		Map<String, Object> body = p.body(items, total);
+		// 연도 고르기 칸의 값 — 가입한 해(한국 연도) 최근 먼저. 거르기와 상관없이 전체 계정에서
+		body.put("years", jdbc.queryForList(
+				"SELECT DISTINCT YEAR(CONVERT_TZ(created_at, '+00:00', '+09:00')) AS y FROM users ORDER BY y DESC", Integer.class));
+		return body;
 	}
 
 	@PostMapping("/{id}/unlock")

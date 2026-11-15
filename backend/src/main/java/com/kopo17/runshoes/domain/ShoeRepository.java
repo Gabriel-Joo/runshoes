@@ -10,6 +10,10 @@ public interface ShoeRepository extends JpaRepository<Shoe, Long> {
 	@Query(value = "select * from shoes where deleted_at is not null order by deleted_at desc, id", nativeQuery = true)
 	java.util.List<Shoe> findHidden();
 
+	/** 신발 관리 목록의 한 쪽(AdminShoes) — SQL 이 고른 id 들. 숨긴 신발도 읽어야 해서 native(엔티티의 deleted_at 거르기를 거치지 않는다). 순서는 부르는 쪽이 맞춘다 */
+	@Query(value = "select * from shoes where id in (:ids)", nativeQuery = true)
+	java.util.List<Shoe> findAnyByIdIn(java.util.Collection<Long> ids);
+
 	@Query(value = "select count(*) from shoes where id = :id and deleted_at is not null", nativeQuery = true)
 	long countHidden(Long id);
 

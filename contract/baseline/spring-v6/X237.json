@@ -1,0 +1,74 @@
+{
+  "id": "X237",
+  "plan": null,
+  "name": "영구 삭제 기록 탭 — 최근 먼저",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "purgedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/shoes?tab=purged",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 02:45:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "id": 21,
+          "lineKey": null,
+          "generation": null,
+          "gender": null,
+          "brand": "계약테스트",
+          "model": "Contract Runner V6",
+          "reviews": 2,
+          "likes": 0,
+          "purgedAt": "2026-11-15T02:45:25.894Z"
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20,
+      "counts": {
+        "list": 21,
+        "all": 21,
+        "hidden": 0,
+        "gaps": 21,
+        "purged": 1
+      },
+      "gapCounts": {
+        "price": 0,
+        "width": 0,
+        "wideAvailable": 0,
+        "stackHeight": 2,
+        "midsole": 1,
+        "carbon": 0,
+        "weight": 0,
+        "drop": 0,
+        "weightSize": 20,
+        "sku": 20
+      }
+    }
+  }
+}

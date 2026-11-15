@@ -1,7 +1,7 @@
 {
   "id": "X219",
   "plan": null,
-  "name": "공개 리뷰 79 — verified true",
+  "name": "공개 리뷰 79 — verified false",
   "contract": true,
   "expect": 200,
   "request": {
@@ -24,7 +24,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -42,7 +42,7 @@
       "parentReviewId": null,
       "distanceKm": null,
       "proofImageUrl": null,
-      "verified": true
+      "verified": false
     }
   }
 }

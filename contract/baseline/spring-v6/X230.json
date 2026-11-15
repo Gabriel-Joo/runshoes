@@ -1,0 +1,40 @@
+{
+  "id": "X230",
+  "plan": null,
+  "name": "같은 이름으로 새 질문 → 204",
+  "contract": true,
+  "expect": 204,
+  "request": {
+    "method": "POST",
+    "path": "/api/internal/chatbot-misses",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "kind": "term",
+      "query": "힐카운터",
+      "message": "힐카운터 세 번째"
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "$sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "$length": 0,
+      "$head": ""
+    }
+  }
+}

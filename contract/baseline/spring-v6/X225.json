@@ -1,0 +1,37 @@
+{
+  "id": "X225",
+  "plan": null,
+  "name": "가입 연도가 숫자가 아님 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/users?year=abc",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "year 값은 숫자로 적어 주세요.",
+      "code": "invalid"
+    }
+  }
+}

@@ -57,11 +57,11 @@ class ShoeCollection implements DocCollection {
 	@Override
 	public String name() { return "shoes"; }
 
-	/** 홈 · 등록·관리의 검색창 — 브랜드 · 모델명 · 영어 이름 · 검색용 다른 표기(V13) */
+	/** 홈 · 신발 관리의 검색창 — 브랜드 · 모델명 · 영어 이름 · 검색용 다른 표기(V13) */
 	@Override
 	public List<String> searchFields() { return List.of("brand", "model", "modelEn", "modelAlias"); }
 
-	/** 브랜드 목록(처음 나온 순서 = id 순) — 등록·관리의 브랜드 칩. 검색 결과와 상관없이 전부 */
+	/** 브랜드 목록(처음 나온 순서 = id 순) — 신발 관리의 브랜드 칩. 검색 결과와 상관없이 전부 */
 	@Transactional(readOnly = true)
 	public List<String> brands() {
 		return shoes.findAll(Sort.by("id")).stream().map(Shoe::getBrand).distinct().toList();
@@ -232,19 +232,24 @@ class ShoeCollection implements DocCollection {
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> purged(Viewer viewer) {
 		viewer.requireAdminView();
-		return jdbc.query("SELECT shoe_id, line_key, generation, gender, brand, model, review_count, like_count, purged_at FROM shoe_purges ORDER BY id", (rs, i) -> {
-			Map<String, Object> d = new LinkedHashMap<>();
-			d.put("id", rs.getLong("shoe_id"));
-			d.put("lineKey", rs.getString("line_key"));
-			d.put("generation", rs.getObject("generation"));
-			d.put("gender", rs.getString("gender"));
-			d.put("brand", rs.getString("brand"));
-			d.put("model", rs.getString("model"));
-			d.put("reviews", rs.getInt("review_count"));
-			d.put("likes", rs.getInt("like_count"));
-			d.put("purgedAt", Values.formatCreatedAt(rs.getTimestamp("purged_at").toLocalDateTime()));
-			return d;
-		});
+		return jdbc.query("SELECT " + PURGED_COLUMNS + " FROM shoe_purges ORDER BY id", (rs, i) -> purgedRow(rs));
+	}
+
+	/** 영구 삭제 기록 한 줄 — 위 목록과 신발 관리 목록(AdminShoes, 최근 먼저 · 쪽 나누기)이 같은 꼴로 */
+	static final String PURGED_COLUMNS = "shoe_id, line_key, generation, gender, brand, model, review_count, like_count, purged_at";
+
+	static Map<String, Object> purgedRow(java.sql.ResultSet rs) throws java.sql.SQLException {
+		Map<String, Object> d = new LinkedHashMap<>();
+		d.put("id", rs.getLong("shoe_id"));
+		d.put("lineKey", rs.getString("line_key"));
+		d.put("generation", rs.getObject("generation"));
+		d.put("gender", rs.getString("gender"));
+		d.put("brand", rs.getString("brand"));
+		d.put("model", rs.getString("model"));
+		d.put("reviews", rs.getInt("review_count"));
+		d.put("likes", rs.getInt("like_count"));
+		d.put("purgedAt", Values.formatCreatedAt(rs.getTimestamp("purged_at").toLocalDateTime()));
+		return d;
 	}
 
 	/** 수정 이력에 넣지 않는 키 — 셈하는 값 · 요청한 사람 기준 값 · 이력 자신 · DB 가 계산하는 값(무게를 고치면 weight 가 이미 남는다) */

@@ -1,22 +1,19 @@
 {
-  "id": "X220",
+  "id": "X239",
   "plan": null,
-  "name": "인증 끄기 → 200, verifiedAt null",
+  "name": "신발 관리 목록 일반 회원 → 403",
   "contract": true,
-  "expect": 200,
+  "expect": 403,
   "request": {
-    "method": "POST",
-    "path": "/api/admin/reviews/79/verify",
+    "method": "GET",
+    "path": "/api/admin/shoes",
     "headers": {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer {{admin}}"
+      "Authorization": "Bearer {{u1}}"
     },
-    "body": {
-      "verified": false
-    }
+    "body": null
   },
   "response": {
-    "status": 200,
+    "status": 403,
     "headers": {
       "access-control-allow-origin": "*",
       "cache-control": "no-cache",
@@ -29,14 +26,10 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
+      "date": "Sun, 15 Nov 2026 02:45:27 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
-    "body": {
-      "id": 79,
-      "verified": false,
-      "verifiedAt": null
-    }
+    "body": {}
   }
 }

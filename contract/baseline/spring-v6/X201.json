@@ -29,7 +29,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "date": "Sun, 15 Nov 2026 01:57:44 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -40,10 +40,13 @@
           "query": "힐카운터",
           "count": 1,
           "open": 1,
-          "lastAt": "2026-11-14T12:58:27.525Z",
+          "lastAt": "2026-11-15T01:57:44.937Z",
           "lastMessage": "힐카운터가 뭐야",
           "status": "open",
-          "decidedAt": null
+          "decidedAt": null,
+          "lastDecision": null,
+          "lastDecidedAt": null,
+          "decidedNote": null
         }
       ],
       "total": 1,

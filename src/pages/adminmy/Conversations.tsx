@@ -44,7 +44,7 @@ const STAGE: Record<string, string> = {
 const seconds = (ms: number) => `${(ms / 1000).toFixed(1)}초`;
 
 /**
- * 대화 보기 — 날짜 최신순(마지막 턴), 거르기 날짜 · 계정 · 갈래. 펼치면 턴마다 질문과 답 전체, 갈래, 걸린 시간.
+ * 대화 보기 — 날짜 최신순(마지막 턴), 거르기 날짜 · 계정 · 갈래. 계정 칸은 숫자(계정 번호)도 그대로 찾지만 안내에는 닉네임만 적는다(2026-11-15 사용자). 펼치면 턴마다 질문과 답 전체, 갈래, 걸린 시간.
  * 펼치기는 상세 모달의 리뷰 「전체보기」(review__more)를 따른다 — 관리 화면에는 펼치기 행이 없었다.
  * 숫자 · 추세는 Grafana 가 본다 — 여기는 개별 대화를 읽는 곳이다(합계 · 그래프를 그리지 않는다)
  */
@@ -70,7 +70,7 @@ function Conversations() {
 
       <div className="adminmy__filters">
         <DateRange from={q.get("from")} to={q.get("to")} onChange={(from, to) => q.set({ from, to })} />
-        <TextFilter value={q.get("account")} placeholder="계정(닉네임 · 번호)" onChange={(account) => q.set({ account })} />
+        <TextFilter value={q.get("account")} placeholder="계정(닉네임)" onChange={(account) => q.set({ account })} />
         <div className="admin__gapfilters" role="group" aria-label="갈래">
           <button className={`admin__gapfilter ${!branch ? "is-active" : ""}`} aria-pressed={!branch} onClick={() => q.set({ branch: "" })}>전체</button>
           {BRANCHES.map(([key, label]) => (

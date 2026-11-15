@@ -1,0 +1,172 @@
+{
+  "id": "X234",
+  "plan": null,
+  "name": "보완 필요 — 빈 칸 품번, 2쪽(2개씩), 한 줄에 gaps",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "updatedAt",
+    "priceCheckedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/shoes?tab=gaps&gap=sku&size=2&page=2",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 02:45:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "id": 5,
+          "brand": "아식스",
+          "model": "노바블라스트 5",
+          "purpose": "템포·인터벌",
+          "stability": "중립화",
+          "midsole": "FF Blast Max",
+          "weight": 255,
+          "drop": 8,
+          "stackHeight": 41.5,
+          "width": "보통",
+          "wideAvailable": true,
+          "wideScope": null,
+          "carbon": false,
+          "price": 159000,
+          "image": "/images/novablast-5.png",
+          "images": [
+            "/images/novablast-5.png",
+            "/images/novablast-5-1.png",
+            "/images/novablast-5-2.png",
+            "/images/novablast-5-3.png"
+          ],
+          "summary": "페이스를 올려보려는 분에게",
+          "description": "카본 플레이트 없이도 통통 튀는 느낌을 주는 아식스의 인기 모델입니다. 조깅에도 쓸 수 있지만 페이스를 올렸을 때 진가가 나오는 편이라, 템포런을 처음 해보시는 분께 자주 추천됩니다.",
+          "rating": 4.6,
+          "reviewCount": 5,
+          "likeCount": 60,
+          "liked": false,
+          "lineKey": "asics:novablast",
+          "generation": 5,
+          "isCurrent": false,
+          "gender": "men",
+          "weightSize": null,
+          "specSize": null,
+          "measuredWeight": null,
+          "measuredWeightSize": null,
+          "measuredStackHeight": null,
+          "measuredDrop": null,
+          "measuredSource": null,
+          "measuredCount": null,
+          "priceSource": null,
+          "priceCheckedAt": null,
+          "priceKind": null,
+          "specSources": null,
+          "sku": null,
+          "updatedAt": null,
+          "lastChange": null,
+          "modelEn": null,
+          "modelAlias": null,
+          "weightNorm270": null,
+          "gaps": [
+            "weightSize",
+            "sku"
+          ]
+        },
+        {
+          "id": 7,
+          "brand": "브룩스",
+          "model": "고스트 17",
+          "purpose": "조깅·회복주",
+          "stability": "중립화",
+          "midsole": "DNA Loft v3",
+          "weight": 289,
+          "drop": 10,
+          "stackHeight": 37,
+          "width": "넓음",
+          "wideAvailable": true,
+          "wideScope": null,
+          "carbon": false,
+          "price": 189000,
+          "image": "/images/ghost-17.png",
+          "images": [
+            "/images/ghost-17.png",
+            "/images/ghost-17-1.png"
+          ],
+          "summary": "발볼이 넓어 신발이 조이는 분에게",
+          "description": "브룩스의 대표 데일리 트레이너입니다. 폭 옵션이 네 가지나 되어 발볼이 넓은 분도 맞는 사이즈를 찾기 쉽습니다. DNA Loft v3 미드솔은 부드럽지만 물렁하지 않고, 드롭 10mm로 뒤꿈치부터 착지하는 분에게 편안합니다. 특별히 튀는 성격은 없지만 그래서 매일 신기 좋습니다.",
+          "rating": 4,
+          "reviewCount": 6,
+          "likeCount": 20,
+          "liked": false,
+          "lineKey": "brooks:ghost",
+          "generation": 17,
+          "isCurrent": false,
+          "gender": "men",
+          "weightSize": null,
+          "specSize": null,
+          "measuredWeight": null,
+          "measuredWeightSize": null,
+          "measuredStackHeight": null,
+          "measuredDrop": null,
+          "measuredSource": null,
+          "measuredCount": null,
+          "priceSource": null,
+          "priceCheckedAt": null,
+          "priceKind": null,
+          "specSources": null,
+          "sku": null,
+          "updatedAt": null,
+          "lastChange": null,
+          "modelEn": null,
+          "modelAlias": null,
+          "weightNorm270": null,
+          "gaps": [
+            "weightSize",
+            "sku"
+          ]
+        }
+      ],
+      "total": 20,
+      "page": 2,
+      "size": 2,
+      "counts": {
+        "list": 21,
+        "all": 21,
+        "hidden": 0,
+        "gaps": 21,
+        "purged": 1
+      },
+      "gapCounts": {
+        "price": 0,
+        "width": 0,
+        "wideAvailable": 0,
+        "stackHeight": 2,
+        "midsole": 1,
+        "carbon": 0,
+        "weight": 0,
+        "drop": 0,
+        "weightSize": 20,
+        "sku": 20
+      }
+    }
+  }
+}

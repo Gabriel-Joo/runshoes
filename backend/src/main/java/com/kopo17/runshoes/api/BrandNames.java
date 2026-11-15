@@ -26,6 +26,11 @@ final class BrandNames {
 
 	private BrandNames() {}
 
+	/** 표 전체 — 신발 관리 목록이 SQL 의 검색 글(CASE)에 같은 이름을 넣는다(AdminShoes) */
+	static Map<String, String> all() {
+		return EN;
+	}
+
 	/** 한글 브랜드 → 영문(모르면 빈 문자열) */
 	static String english(String brand) {
 		return brand == null ? "" : EN.getOrDefault(brand.strip(), "");

@@ -119,7 +119,7 @@ export const SUMMARY_SCENARIOS = [
 
 // 검색(search) — json-server 에 없던 것이라 Node 기준선이 없다. Spring 녹화(contract/baseline/spring-search)가 기준선이다.
 // 전부 읽기(시드 상태). 규칙: shoes 의 brand · model 에서, 띄어쓰기로 나눈 낱말이 모두 있어야(AND), 대소문자 무시, 공백 빼고도 맞춘다.
-// 홈은 purpose · liked · _sort 와, 등록·관리는 brand · _sort 와 같이 보낸다(ShoeList.tsx · Admin.tsx). id 가 Q 로 시작 — 운영 --read-only 에도 든다
+// 홈은 purpose · liked · _sort 와, 신발 관리는 brand · _sort 와 같이 보낸다(ShoeList.tsx · Admin.tsx). id 가 Q 로 시작 — 운영 --read-only 에도 든다
 const S = (id, name, path) => ({ id, name, method: "GET", path });
 export const SEARCH_SCENARIOS = [
   S("Q01", "브랜드 — 나이키", "/api/shoes?search=나이키"),
@@ -521,13 +521,13 @@ export const V6_SCENARIOS = [
   W("X176", "지운 리뷰 되살리기 → 404", "POST", "/api/admin/reviews/28/restore", { headers: bearer("admin"), expect: 404 }),
 
   // 관리자 마이페이지 2(2026-11-14) — 회원 목록 · 로그인 잠금 풀기. runner05(v6 의 다른 단계가 로그인하지 않는 시드 계정)
-  W("X177", "회원 목록 admin — runner05 검색(이메일)", "GET", "/api/admin/users?q=runner05", { headers: bearer("admin"), volatile: ["createdAt", "lastLoginAt"], expect: 200 }),
-  W("X178", "회원 목록 데모 관리자 — admin 과 같게 이메일로 찾고 이메일이 보인다(2026-11-15)", "GET", "/api/admin/users?q=runner05", { headers: bearer("d"), volatile: ["createdAt", "lastLoginAt"], expect: 200 }),
+  W("X177", "회원 목록 admin — runner05 검색(이메일)", "GET", "/api/admin/users?q=runner05", { headers: bearer("admin"), volatile: ["createdAt", "lastLoginAt", "years"], expect: 200 }),
+  W("X178", "회원 목록 데모 관리자 — admin 과 같게 이메일로 찾고 이메일이 보인다(2026-11-15)", "GET", "/api/admin/users?q=runner05", { headers: bearer("d"), volatile: ["createdAt", "lastLoginAt", "years"], expect: 200 }),
   W("X179", "회원 목록 일반 회원 → 403", "GET", "/api/admin/users", { headers: bearer("u1"), expect: 403 }),
   ...[1, 2, 3, 4, 5].map((n) => W(`X18${n - 1}`, `runner05 틀린 비밀번호 ${n}번째 → 401`, "POST", "/api/auth/login",
     { headers: json, body: { email: "runner05@runshoes.test", password: "wrong-pass1" }, expect: 401 })),
   W("X185", "6번째 → 429(계정 잠김)", "POST", "/api/auth/login", { headers: json, body: { email: "runner05@runshoes.test", password: "wrong-pass1" }, volatile: ["retryAfter"], expect: 429 }),
-  W("X186", "회원 목록 — runner05 잠김(풀리는 때)", "GET", "/api/admin/users?q=runner05", { headers: bearer("admin"), volatile: ["createdAt", "lastLoginAt", "lockedUntil"], expect: 200 }),
+  W("X186", "회원 목록 — runner05 잠김(풀리는 때)", "GET", "/api/admin/users?q=runner05", { headers: bearer("admin"), volatile: ["createdAt", "lastLoginAt", "lockedUntil", "years"], expect: 200 }),
   W("X187", "잠금 풀기 데모 관리자 → 403", "POST", "/api/admin/users/5/unlock", { headers: bearer("d"), expect: 403 }),
   W("X188", "잠금 풀기 admin → 200", "POST", "/api/admin/users/5/unlock", { headers: bearer("admin"), expect: 200 }),
   W("X189", "다시 풀기 → 409 not_locked", "POST", "/api/admin/users/5/unlock", { headers: bearer("admin"), expect: 409 }),
@@ -557,21 +557,42 @@ export const V6_SCENARIOS = [
   W("X207", "/api/terms 쓰기는 그대로 405", "POST", "/api/terms", { headers: jb("admin"), body: { key: "x", name: "y", short: "a", description: "b" }, expect: 405 }),
   W("X208", "terms 전체 — 14개(새 용어가 끝에)", "GET", "/api/terms", { expect: 200 }),
   W("X209", "문의 처리함 admin → 200", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "done" }, expect: 200 }),
-  W("X210", "문의 목록 — 처리함", "GET", "/api/admin/chatbot-misses?status=done", { headers: bearer("admin"), volatile: ["lastAt", "decidedAt"], expect: 200 }),
+  W("X210", "문의 목록 — 처리함", "GET", "/api/admin/chatbot-misses?status=done", { headers: bearer("admin"), volatile: ["lastAt", "decidedAt", "lastDecidedAt"], expect: 200 }),
   W("X211", "같은 이름으로 새 질문 → 204", "POST", "/api/internal/chatbot-misses", { headers: json, body: { kind: "term", query: "힐카운터", message: "힐카운터 다시 물어봄" }, expect: 204 }),
-  W("X212", "문의 목록 — 새 질문이 와서 다시 처리 안 함(open 1 · count 2)", "GET", "/api/admin/chatbot-misses", { headers: bearer("admin"), volatile: ["lastAt"], expect: 200 }),
+  W("X212", "문의 목록 — 새 질문이 와서 다시 처리 안 함(open 1 · count 2)", "GET", "/api/admin/chatbot-misses", { headers: bearer("admin"), volatile: ["lastAt", "lastDecidedAt"], expect: 200 }),
   W("X213", "문의 되돌리기(open) → 200", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "open" }, expect: 200 }),
   W("X214", "문의 목록 status 틀림 → 400", "GET", "/api/admin/chatbot-misses?status=x", { headers: bearer("admin"), expect: 400 }),
   W("X215", "없는 묶음 처리 → 404", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "shoe", query: "없는 신발", status: "done" }, expect: 404 }),
 
-  // 관리자 마이페이지 5(2026-11-14) — 실사용 인증 · 영구 삭제 기록(기록 GET 은 X113 이 이미 본다). 리뷰 79(신발 8, 다른 단계가 건드리지 않는다)
-  W("X216", "인증 데모 관리자 → 403", "POST", "/api/admin/reviews/79/verify", { headers: jb("d"), body: { verified: true }, expect: 403 }),
-  W("X217", "인증 값이 불린이 아님 → 400", "POST", "/api/admin/reviews/79/verify", { headers: jb("admin"), body: { verified: "yes" }, expect: 400 }),
-  W("X218", "인증 켜기 admin → 200", "POST", "/api/admin/reviews/79/verify", { headers: jb("admin"), body: { verified: true }, volatile: ["verifiedAt"], expect: 200 }),
-  W("X219", "공개 리뷰 79 — verified true", "GET", "/api/reviews/79", { expect: 200 }),
-  W("X220", "인증 끄기 → 200, verifiedAt null", "POST", "/api/admin/reviews/79/verify", { headers: jb("admin"), body: { verified: false }, expect: 200 }),
-  W("X221", "없는 리뷰 인증 → 404", "POST", "/api/admin/reviews/99999/verify", { headers: jb("admin"), body: { verified: true }, expect: 404 }),
+  // 관리자 마이페이지 5 — 실사용 인증은 2026-11-15 사용자 지시로 뺐다(근거 없이 켜면 공개 응답에 verified: true 가 나간다).
+  // 그 주소는 이제 없다(admin 404). 공개 리뷰의 verified 키는 계약 키라 그대로 나가고 늘 false. 리뷰 79(신발 8, 다른 단계가 건드리지 않는다)
+  W("X216", "실사용 인증 주소는 없다 admin → 404", "POST", "/api/admin/reviews/79/verify", { headers: jb("admin"), body: { verified: true }, expect: 404 }),
+  W("X219", "공개 리뷰 79 — verified false", "GET", "/api/reviews/79", { expect: 200 }),
   // 2026-11-15 사용자 — 상세 모달에는 숨기기만. admin 도 남의 보이는 리뷰를 공개 API 로 지우지 못한다(숨긴 뒤 리뷰 관리에서 영구 삭제)
   W("X222", "남의 보이는 리뷰 지우기 admin → 403 hide_first", "DELETE", "/api/reviews/29", { headers: bearer("admin"), expect: 403 }),
   W("X223", "리뷰 29 그대로 있다", "GET", "/api/reviews/29", { expect: 200 }),
+
+  // 관리자 마이페이지 화면 수정(2026-11-15 사용자) — 회원 목록 가입 연도. 응답에 years(가입한 해들)가 더해졌다
+  W("X224", "회원 목록 가입 연도 2001 → 0개, years 는 그대로", "GET", "/api/admin/users?year=2001", { headers: bearer("admin"), volatile: ["years"], expect: 200 }),
+  W("X225", "가입 연도가 숫자가 아님 → 400", "GET", "/api/admin/users?year=abc", { headers: bearer("admin"), expect: 400 }),
+  W("X226", "가입 연도가 범위 밖 → 400", "GET", "/api/admin/users?year=1999", { headers: bearer("admin"), expect: 400 }),
+  // 챗봇 문의 처리 사유(V24) — 힐카운터 묶음(X200 ~ X213 에서 되돌려 처리 안 함)
+  W("X227", "사유 200자 넘음 → 400", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "ignored", note: "가".repeat(201) }, expect: 400 }),
+  W("X228", "사유가 글이 아님 → 400", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "ignored", note: 5 }, expect: 400 }),
+  W("X229", "무시 + 사유 → 200", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "ignored", note: "이미 사전에 있는 말" }, expect: 200 }),
+  W("X230", "같은 이름으로 새 질문 → 204", "POST", "/api/internal/chatbot-misses", { headers: json, body: { kind: "term", query: "힐카운터", message: "힐카운터 세 번째" }, expect: 204 }),
+  W("X231", "문의 목록 — 다시 처리 안 함, 전에 무시한 사유가 보인다", "GET", "/api/admin/chatbot-misses?kind=term", { headers: bearer("admin"), volatile: ["lastAt", "lastDecidedAt"], expect: 200 }),
+  W("X232", "되돌리기 — 사유도 비운다", "POST", "/api/admin/chatbot-misses/decide", { headers: jb("admin"), body: { kind: "term", query: "힐카운터", status: "open", note: "쓰지 않는다" }, expect: 200 }),
+
+  // 신발 관리 목록(2026-11-15) — 서버가 쪽을 나눈다. 공개 /api/shoes 는 그대로(위 시나리오들)
+  W("X233", "신발 관리 목록 데모 관리자 — 등록순 3개, counts · gapCounts", "GET", "/api/admin/shoes?sort=id&size=3", { headers: bearer("d"), volatile: ["updatedAt", "priceCheckedAt"], expect: 200 }),
+  W("X234", "보완 필요 — 빈 칸 품번, 2쪽(2개씩), 한 줄에 gaps", "GET", "/api/admin/shoes?tab=gaps&gap=sku&size=2&page=2", { headers: bearer("admin"), volatile: ["updatedAt", "priceCheckedAt"], expect: 200 }),
+  W("X235", "브랜드 · 검색 — 나이키 페가수스, 모델명순 ↑", "GET", "/api/admin/shoes?brand=%EB%82%98%EC%9D%B4%ED%82%A4&search=%ED%8E%98%EA%B0%80%EC%88%98%EC%8A%A4&sort=model&dir=up", { headers: bearer("admin"), volatile: ["updatedAt", "priceCheckedAt"], expect: 200 }),
+  W("X236", "숨긴 신발 탭", "GET", "/api/admin/shoes?tab=hidden", { headers: bearer("admin"), volatile: ["updatedAt", "deletedAt", "priceCheckedAt"], expect: 200 }),
+  W("X237", "영구 삭제 기록 탭 — 최근 먼저", "GET", "/api/admin/shoes?tab=purged", { headers: bearer("admin"), volatile: ["purgedAt"], expect: 200 }),
+  W("X238", "신발 관리 목록 비로그인 → 401", "GET", "/api/admin/shoes", { expect: 401 }),
+  W("X239", "신발 관리 목록 일반 회원 → 403", "GET", "/api/admin/shoes", { headers: bearer("u1"), expect: 403 }),
+  W("X240", "모르는 탭 → 400", "GET", "/api/admin/shoes?tab=x", { headers: bearer("admin"), expect: 400 }),
+  W("X241", "모르는 빈 칸 → 400", "GET", "/api/admin/shoes?tab=gaps&gap=x", { headers: bearer("admin"), expect: 400 }),
+  W("X242", "한 쪽 101개 → 400", "GET", "/api/admin/shoes?size=101", { headers: bearer("admin"), expect: 400 }),
 ];

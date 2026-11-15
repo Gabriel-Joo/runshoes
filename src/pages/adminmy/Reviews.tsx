@@ -6,11 +6,12 @@ import { useAuth } from "../../auth/useAuth";
 import ShoeImage from "../../components/ShoeImage";
 import ConfirmModal from "../../components/ConfirmModal";
 import HideReviewConfirm from "../../components/HideReviewConfirm";
-import { WHEN_APPLIED } from "../../components/reviewRules";
+import { WHEN_APPLIED, WHEN_RESTORED } from "../../components/reviewRules";
 import ReviewReader from "../../components/ReviewReader";
 import BulkBar from "../../components/BulkBar";
 import { runEach, useSelection } from "../../utils/bulk";
-import { DateRange, Pager, TextFilter } from "./parts";
+import { DateRange, Pager, SizeChoice, TextFilter } from "./parts";
+import { pageSize } from "../../utils/pageGroup";
 import { qs, useQuery, usePaged, when } from "./paged";
 
 /** GET /api/admin/reviews 의 한 줄(api/AdminReviews) */
@@ -37,15 +38,16 @@ export interface AdminReview {
 }
 
 /**
- * 리뷰 관리 — 전체 리뷰(실사용 인증 · 숨기기)와 숨긴 리뷰(되살리기 · 영구 삭제). 신발 숨김과 같은 흐름이다: 숨기기 → 숨긴 리뷰 → 거기서만 영구 삭제.
- * 표는 마이페이지 「도움받은 리뷰」와 같은 칸(작성자가 있는 표). 날짜 최신순(서버), 거르기는 날짜 · 신발 · 작성자 — 모두 주소에 둔다.
- * 데모 관리자도 버튼이 보이고, 누르면 서버가 403 문구로 막는다(등록·관리 탭과 같다)
+ * 리뷰 관리 — 전체 리뷰(숨기기)와 숨긴 리뷰(되살리기 · 영구 삭제). 신발 숨김과 같은 흐름이다: 숨기기 → 숨긴 리뷰 → 거기서만 영구 삭제.
+ * 표는 마이페이지 「도움받은 리뷰」와 같은 칸(작성자가 있는 표). 날짜 최신순(서버), 거르기는 날짜 · 신발 · 작성자, 한 쪽에 20 · 50 · 100개 — 모두 주소에 둔다.
+ * 데모 관리자도 버튼이 보이고, 누르면 서버가 403 문구로 막는다(신발 관리 탭과 같다)
  */
 function Reviews({ hidden }: { hidden: boolean }) {
   const { setNotice } = useAuth();
   const q = useQuery();
   const page = Number(q.get("page")) || 1;
-  const path = `/admin/reviews${qs({ hidden: hidden ? "true" : "", from: q.get("from"), to: q.get("to"), shoe: q.get("shoe"), author: q.get("author"), page })}`;
+  const size = pageSize(q.get("size"));
+  const path = `/admin/reviews${qs({ hidden: hidden ? "true" : "", from: q.get("from"), to: q.get("to"), shoe: q.get("shoe"), author: q.get("author"), page, size })}`;
   const { data, error, reload } = usePaged<AdminReview>(path);
   const items = data?.items ?? [];
   const sel = useSelection(items.map((r) => r.id));
@@ -64,19 +66,6 @@ function Reviews({ hidden }: { hidden: boolean }) {
     if (blocked) setNotice(blocked);
     else if (!res?.ok) setNotice((res && (await serverMessage(res))) ?? "하지 못했어요. 잠시 뒤 다시 해 주세요.");
     else setNotice(done);
-    reload();
-  };
-
-  const verify = async (r: AdminReview) => {
-    setBusy(true);
-    const res = await apiFetch(`/admin/reviews/${r.id}/verify`, {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ verified: !r.verified }),
-    }).catch(() => null);
-    setBusy(false);
-    const blocked = res && (await demoBlocked(res));
-    if (blocked) setNotice(blocked);
-    else if (!res?.ok) setNotice((res && (await serverMessage(res))) ?? "바꾸지 못했어요. 잠시 뒤 다시 해 주세요.");
-    else setNotice(r.verified ? "실사용 인증을 껐어요." : "실사용 인증을 켰어요.");
     reload();
   };
 
@@ -100,7 +89,7 @@ function Reviews({ hidden }: { hidden: boolean }) {
       </div>
       <p className="adminmy__note">
         {hidden
-          ? "되살리면 목록 · 평점에 바로 돌아오고, 챗봇은 최대 10분, 요약은 다음 날 03:30에 반영돼요. 영구 삭제는 되돌릴 수 없어요."
+          ? `되살리면 ${WHEN_RESTORED} 영구 삭제는 되돌릴 수 없어요.`
           : `숨긴 리뷰는 「숨긴 리뷰」에서 되살리거나 영구 삭제할 수 있어요. ${WHEN_APPLIED}`}
       </p>
 
@@ -111,7 +100,10 @@ function Reviews({ hidden }: { hidden: boolean }) {
         {filtered && <button className="admin__sort" onClick={() => q.set({ from: "", to: "", shoe: "", author: "" })}>거르기 지우기</button>}
       </div>
 
-      <p className="admin__count">{data ? `${data.total.toLocaleString()}건 · ${hidden ? "숨긴 순" : "작성 날짜"} 최신순` : ""}</p>
+      <div className="adminmy__countbar">
+        <p className="admin__count">{data ? `${data.total.toLocaleString()}건 · ${hidden ? "숨긴 순" : "작성 날짜"} 최신순` : ""}</p>
+        <SizeChoice size={size} onChange={(v) => q.set({ size: v })} />
+      </div>
       {error && <p className="auth__error" role="alert">{error}</p>}
       {data && items.length === 0 && <p className="mypage__empty">{filtered ? "조건에 맞는 리뷰가 없어요." : hidden ? "숨긴 리뷰가 없어요." : "리뷰가 없어요."}</p>}
 
@@ -152,7 +144,6 @@ function Reviews({ hidden }: { hidden: boolean }) {
                   {r.brand}
                   {r.shoeHidden && " · 숨긴 신발"}
                   {r.reviewType === "FOLLOWUP" && " · 실사용 후기"}
-                  {r.verified && " · 실사용 인증"}
                 </small>
               </span>
               <span className="mypage__author" title={r.author}>{r.author}</span>
@@ -166,19 +157,11 @@ function Reviews({ hidden }: { hidden: boolean }) {
               <span className="mypage__actions">
                 {hidden ? (
                   <>
-                    <button className="mypage__btn" disabled={busy} onClick={() => act("POST", `/admin/reviews/${r.id}/restore`, `리뷰를 되살렸어요. ${WHEN_APPLIED.replace("빠지고", "돌아오고")}`)}>되살리기</button>
+                    <button className="mypage__btn" disabled={busy} onClick={() => act("POST", `/admin/reviews/${r.id}/restore`, `리뷰를 되살렸어요. ${WHEN_RESTORED}`)}>되살리기</button>
                     <button className="mypage__btn is-danger" onClick={() => setPurgeTarget(r)}>영구 삭제</button>
                   </>
                 ) : (
-                  <>
-                    {/* 실사용 인증(V3 칸, 2026-11-14 화면) — 켜고 끈다. 확인 창 없이(되돌리기 쉬운 표시) */}
-                    <button className={`mypage__btn ${r.verified ? "is-primary" : ""}`} disabled={busy} aria-pressed={r.verified}
-                      title={r.verified ? `인증함 ${when(r.verifiedAt)} — 누르면 끈다` : "실사용 인증 켜기"}
-                      onClick={() => verify(r)}>
-                      {r.verified ? "인증됨" : "인증"}
-                    </button>
-                    <button className="mypage__btn is-danger" onClick={() => setHideTarget(r)}>숨기기</button>
-                  </>
+                  <button className="mypage__btn is-danger" onClick={() => setHideTarget(r)}>숨기기</button>
                 )}
               </span>
             </li>

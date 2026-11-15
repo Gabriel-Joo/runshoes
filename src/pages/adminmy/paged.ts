@@ -8,6 +8,8 @@ export interface Paged<T> {
   total: number;
   page: number;
   size: number;
+  /** 회원 목록만 — 가입한 해들(최근 먼저, 연도 고르기 칸) */
+  years?: number[];
 }
 
 /**
@@ -41,7 +43,7 @@ export function usePaged<T>(path: string) {
 }
 
 /**
- * 거르기 · 쪽 번호를 주소(?tab=…&from=…&page=…)에 둔다 — 새로 고침 · 뒤로 가기에도 같은 자리(등록·관리 탭과 같은 방식).
+ * 거르기 · 쪽 번호를 주소(?tab=…&from=…&page=…)에 둔다 — 새로 고침 · 뒤로 가기에도 같은 자리(신발 관리 탭과 같은 방식).
  * set 은 바꾼 칸을 넣고 page 를 1 로 되돌린다(page 를 직접 바꿀 때만 그대로)
  */
 export function useQuery() {

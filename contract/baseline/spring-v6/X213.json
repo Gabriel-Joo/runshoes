@@ -31,15 +31,16 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
     "body": {
       "kind": "term",
       "query": "힐카운터",
-      "rows": 2,
-      "status": "open"
+      "status": "open",
+      "note": null,
+      "rows": 2
     }
   }
 }

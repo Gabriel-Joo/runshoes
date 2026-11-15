@@ -1,0 +1,64 @@
+{
+  "id": "X236",
+  "plan": null,
+  "name": "숨긴 신발 탭",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "updatedAt",
+    "deletedAt",
+    "priceCheckedAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/shoes?tab=hidden",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 02:45:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [],
+      "total": 0,
+      "page": 1,
+      "size": 20,
+      "counts": {
+        "list": 21,
+        "all": 21,
+        "hidden": 0,
+        "gaps": 21,
+        "purged": 1
+      },
+      "gapCounts": {
+        "price": 0,
+        "width": 0,
+        "wideAvailable": 0,
+        "stackHeight": 2,
+        "midsole": 1,
+        "carbon": 0,
+        "weight": 0,
+        "drop": 0,
+        "weightSize": 20,
+        "sku": 20
+      }
+    }
+  }
+}

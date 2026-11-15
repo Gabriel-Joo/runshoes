@@ -5,7 +5,8 @@
   "contract": true,
   "expect": 200,
   "volatile": [
-    "lastAt"
+    "lastAt",
+    "lastDecidedAt"
   ],
   "request": {
     "method": "GET",
@@ -29,7 +30,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "date": "Sun, 15 Nov 2026 01:57:45 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
@@ -40,10 +41,13 @@
           "query": "힐카운터",
           "count": 2,
           "open": 1,
-          "lastAt": "2026-11-14T12:58:27.601Z",
+          "lastAt": "2026-11-15T01:57:45.017Z",
           "lastMessage": "힐카운터 다시 물어봄",
           "status": "open",
-          "decidedAt": null
+          "decidedAt": null,
+          "lastDecision": "done",
+          "lastDecidedAt": "2026-11-15T01:57:45.004Z",
+          "decidedNote": null
         }
       ],
       "total": 1,

@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-29T20:24:52.170Z",
+  "recordedAt": "2026-11-15T02:45:24.127Z",
   "base": "http://127.0.0.1:3200/",
   "host": "runshoes.ronanlab.dev",
   "set": "v6",
@@ -430,11 +430,592 @@
       "id": "X122",
       "name": "끝 상태 — shoe 2(wideScope null · specSources.wideAvailable NOTFOUND)",
       "status": 200
+    },
+    {
+      "id": "X123",
+      "name": "영어 이름 · 다른 표기 PATCH → 200, lastChange [modelEn, modelAlias]",
+      "status": 200
+    },
+    {
+      "id": "X124",
+      "name": "다른 표기로 검색 — 퓨어셀 → shoe 2",
+      "status": 200
+    },
+    {
+      "id": "X125",
+      "name": "영어 이름으로 검색 — supercomp pacer → shoe 2",
+      "status": 200
+    },
+    {
+      "id": "X126",
+      "name": "영어 이름 101자 → 400",
+      "status": 400
+    },
+    {
+      "id": "X127",
+      "name": "데모 관리자 modelEn PATCH → 403",
+      "status": 403
+    },
+    {
+      "id": "X128",
+      "name": "빈 다른 표기 → null 로 저장",
+      "status": 200
+    },
+    {
+      "id": "X129",
+      "name": "끝 상태 — shoe 2(modelEn 있음 · modelAlias null)",
+      "status": 200
+    },
+    {
+      "id": "X130",
+      "name": "영문 브랜드 검색 — nike → 나이키",
+      "status": 200
+    },
+    {
+      "id": "X131",
+      "name": "영문 브랜드 + 한글 모델 — hoka 클리프톤",
+      "status": 200
+    },
+    {
+      "id": "X132",
+      "name": "띄어 쓴 영문 브랜드 — new balance → 뉴발란스",
+      "status": 200
+    },
+    {
+      "id": "X133",
+      "name": "영문 브랜드 + 다른 브랜드 모델 — nike 클리프톤 → []",
+      "status": 200
+    },
+    {
+      "id": "X134",
+      "name": "POST /api/activity compare.view(5개) → 204",
+      "status": 204
+    },
+    {
+      "id": "X135",
+      "name": "POST /api/activity compare.view(6개) → 400",
+      "status": 400
+    },
+    {
+      "id": "X136",
+      "name": "기준 M10.5 PATCH → weightNorm270 = 297 ÷ 1.026³",
+      "status": 200
+    },
+    {
+      "id": "X137",
+      "name": "무게 300 PATCH → 300 ÷ 1.026³",
+      "status": 200
+    },
+    {
+      "id": "X138",
+      "name": "기준 M8.5 PATCH → 300 × 1.026",
+      "status": 200
+    },
+    {
+      "id": "X139",
+      "name": "실측 무게 · 사이즈 PATCH → weightNorm270 그대로(실측은 환산하지 않는다)",
+      "status": 200
+    },
+    {
+      "id": "X140",
+      "name": "본문에 weightNorm270 → 버린다(DB 가 계산)",
+      "status": 200
+    },
+    {
+      "id": "X141",
+      "name": "다섯 값 밖의 기준(W7.5) → weightNorm270 null(기준 모름)",
+      "status": 200
+    },
+    {
+      "id": "X142",
+      "name": "기준 M10 PATCH → 300 ÷ 1.026²",
+      "status": 200
+    },
+    {
+      "id": "X143",
+      "name": "기준 지우기 → weightNorm270 null",
+      "status": 200
+    },
+    {
+      "id": "X144",
+      "name": "기준 M9.5 로 새 신발 POST → 201, weightNorm270 = 280 ÷ 1.026",
+      "status": 201
+    },
+    {
+      "id": "X145",
+      "name": "PUT 으로 기준 M9 → weightNorm270 = 280, lastChange 에 weightNorm270 없음",
+      "status": 200
+    },
+    {
+      "id": "X146",
+      "name": "끝 상태 — shoe 4(weightNorm270 null)",
+      "status": 200
+    },
+    {
+      "id": "X147",
+      "name": "비교 pick=1 → cols(자동 채우기) · fields · shoes",
+      "status": 200
+    },
+    {
+      "id": "X148",
+      "name": "비교 ids — 숫자 아님 · 겹침 · 모르는 id 버림",
+      "status": 200
+    },
+    {
+      "id": "X149",
+      "name": "비교 ids · pick 둘 다 없음 → 400",
+      "status": 400
+    },
+    {
+      "id": "X150",
+      "name": "비교 모르는 pick → cols []",
+      "status": 200
+    },
+    {
+      "id": "X151",
+      "name": "추천 다섯 칸 → 상위 3 · score · reasons",
+      "status": 200
+    },
+    {
+      "id": "X152",
+      "name": "추천 모르는 값 → 400",
+      "status": 400
+    },
+    {
+      "id": "X153",
+      "name": "추천 칸 빠짐 → 400",
+      "status": 400
+    },
+    {
+      "id": "X154",
+      "name": "추천 budget=150000(price 없이) → 상한 15만원",
+      "status": 200
+    },
+    {
+      "id": "X155",
+      "name": "추천 price 와 budget 둘 다 → 400",
+      "status": 400
+    },
+    {
+      "id": "X156",
+      "name": "추천 budget 숫자 아님 → 400",
+      "status": 400
+    },
+    {
+      "id": "X157",
+      "name": "리뷰 관리 목록 비로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "X158",
+      "name": "리뷰 관리 목록 일반 회원 → 403",
+      "status": 403
+    },
+    {
+      "id": "X159",
+      "name": "리뷰 관리 목록 데모 관리자 — 신발 8, 작성 날짜 최신순",
+      "status": 200
+    },
+    {
+      "id": "X160",
+      "name": "리뷰 관리 목록 — 날짜 형식 틀림 → 400",
+      "status": 400
+    },
+    {
+      "id": "X161",
+      "name": "리뷰 숨기기 데모 관리자 → 403 demo_admin",
+      "status": 403
+    },
+    {
+      "id": "X162",
+      "name": "리뷰 숨기기 admin → 200, 요약 다시 만들 차례",
+      "status": 200
+    },
+    {
+      "id": "X163",
+      "name": "다시 숨기기 → 409 already_hidden",
+      "status": 409
+    },
+    {
+      "id": "X164",
+      "name": "숨긴 리뷰 단건 → 404",
+      "status": 404
+    },
+    {
+      "id": "X165",
+      "name": "신발 8 리뷰 목록 — 28 이 빠진다",
+      "status": 200
+    },
+    {
+      "id": "X166",
+      "name": "신발 8 — 리뷰 수 4 → 3(평점 다시 셈)",
+      "status": 200
+    },
+    {
+      "id": "X167",
+      "name": "숨긴 리뷰에 도움이 돼요 → 404",
+      "status": 404
+    },
+    {
+      "id": "X168",
+      "name": "숨긴 리뷰 목록",
+      "status": 200
+    },
+    {
+      "id": "X169",
+      "name": "보이는 리뷰 영구 삭제 → 409 not_hidden",
+      "status": 409
+    },
+    {
+      "id": "X170",
+      "name": "되살리기 → 200",
+      "status": 200
+    },
+    {
+      "id": "X171",
+      "name": "신발 8 — 리뷰 수 4 로 돌아온다",
+      "status": 200
+    },
+    {
+      "id": "X172",
+      "name": "숨긴 것이 아닌 리뷰 되살리기 → 409 not_hidden",
+      "status": 409
+    },
+    {
+      "id": "X173",
+      "name": "다시 숨기기 → 200",
+      "status": 200
+    },
+    {
+      "id": "X174",
+      "name": "영구 삭제 데모 관리자 → 403",
+      "status": 403
+    },
+    {
+      "id": "X175",
+      "name": "영구 삭제 admin → 200 {helpful, followups}",
+      "status": 200
+    },
+    {
+      "id": "X176",
+      "name": "지운 리뷰 되살리기 → 404",
+      "status": 404
+    },
+    {
+      "id": "X177",
+      "name": "회원 목록 admin — runner05 검색(이메일)",
+      "status": 200
+    },
+    {
+      "id": "X178",
+      "name": "회원 목록 데모 관리자 — admin 과 같게 이메일로 찾고 이메일이 보인다(2026-11-15)",
+      "status": 200
+    },
+    {
+      "id": "X179",
+      "name": "회원 목록 일반 회원 → 403",
+      "status": 403
+    },
+    {
+      "id": "X180",
+      "name": "runner05 틀린 비밀번호 1번째 → 401",
+      "status": 401
+    },
+    {
+      "id": "X181",
+      "name": "runner05 틀린 비밀번호 2번째 → 401",
+      "status": 401
+    },
+    {
+      "id": "X182",
+      "name": "runner05 틀린 비밀번호 3번째 → 401",
+      "status": 401
+    },
+    {
+      "id": "X183",
+      "name": "runner05 틀린 비밀번호 4번째 → 401",
+      "status": 401
+    },
+    {
+      "id": "X184",
+      "name": "runner05 틀린 비밀번호 5번째 → 401",
+      "status": 401
+    },
+    {
+      "id": "X185",
+      "name": "6번째 → 429(계정 잠김)",
+      "status": 429
+    },
+    {
+      "id": "X186",
+      "name": "회원 목록 — runner05 잠김(풀리는 때)",
+      "status": 200
+    },
+    {
+      "id": "X187",
+      "name": "잠금 풀기 데모 관리자 → 403",
+      "status": 403
+    },
+    {
+      "id": "X188",
+      "name": "잠금 풀기 admin → 200",
+      "status": 200
+    },
+    {
+      "id": "X189",
+      "name": "다시 풀기 → 409 not_locked",
+      "status": 409
+    },
+    {
+      "id": "X190",
+      "name": "로그인 runner05@runshoes.test",
+      "status": 200
+    },
+    {
+      "id": "X191",
+      "name": "없는 계정 풀기 → 404",
+      "status": 404
+    },
+    {
+      "id": "X192",
+      "name": "턴 기록(내부 POST) greeting → 204",
+      "status": 204
+    },
+    {
+      "id": "X193",
+      "name": "턴 기록(내부 POST) term → 204",
+      "status": 204
+    },
+    {
+      "id": "X194",
+      "name": "대화 목록 admin — 체험 계정 3, 첫 질문",
+      "status": 200
+    },
+    {
+      "id": "X195",
+      "name": "대화 목록 데모 관리자 — 첫 질문이 보인다(2026-11-15)",
+      "status": 200
+    },
+    {
+      "id": "X196",
+      "name": "대화 턴 admin — 질문 · 답 · 갈래 · 시간",
+      "status": 200
+    },
+    {
+      "id": "X197",
+      "name": "대화 턴 데모 관리자 — 질문 · 답이 보인다(2026-11-15)",
+      "status": 200
+    },
+    {
+      "id": "X198",
+      "name": "대화 목록 일반 회원 → 403",
+      "status": 403
+    },
+    {
+      "id": "X199",
+      "name": "없는 대화 → 404",
+      "status": 404
+    },
+    {
+      "id": "X200",
+      "name": "챗봇 문의 기록(내부 POST) 용어 → 204",
+      "status": 204
+    },
+    {
+      "id": "X201",
+      "name": "문의 목록 — 처리 안 함 · 용어",
+      "status": 200
+    },
+    {
+      "id": "X202",
+      "name": "문의 처리함 데모 관리자 → 403",
+      "status": 403
+    },
+    {
+      "id": "X203",
+      "name": "사전 추가 데모 관리자 → 403",
+      "status": 403
+    },
+    {
+      "id": "X204",
+      "name": "사전 추가 admin → 201(id 14)",
+      "status": 201
+    },
+    {
+      "id": "X205",
+      "name": "같은 이름 다시 → 409 term_exists",
+      "status": 409
+    },
+    {
+      "id": "X206",
+      "name": "key 형식 틀림 → 400",
+      "status": 400
+    },
+    {
+      "id": "X207",
+      "name": "/api/terms 쓰기는 그대로 405",
+      "status": 405
+    },
+    {
+      "id": "X208",
+      "name": "terms 전체 — 14개(새 용어가 끝에)",
+      "status": 200
+    },
+    {
+      "id": "X209",
+      "name": "문의 처리함 admin → 200",
+      "status": 200
+    },
+    {
+      "id": "X210",
+      "name": "문의 목록 — 처리함",
+      "status": 200
+    },
+    {
+      "id": "X211",
+      "name": "같은 이름으로 새 질문 → 204",
+      "status": 204
+    },
+    {
+      "id": "X212",
+      "name": "문의 목록 — 새 질문이 와서 다시 처리 안 함(open 1 · count 2)",
+      "status": 200
+    },
+    {
+      "id": "X213",
+      "name": "문의 되돌리기(open) → 200",
+      "status": 200
+    },
+    {
+      "id": "X214",
+      "name": "문의 목록 status 틀림 → 400",
+      "status": 400
+    },
+    {
+      "id": "X215",
+      "name": "없는 묶음 처리 → 404",
+      "status": 404
+    },
+    {
+      "id": "X216",
+      "name": "실사용 인증 주소는 없다 admin → 404",
+      "status": 404
+    },
+    {
+      "id": "X219",
+      "name": "공개 리뷰 79 — verified false",
+      "status": 200
+    },
+    {
+      "id": "X222",
+      "name": "남의 보이는 리뷰 지우기 admin → 403 hide_first",
+      "status": 403
+    },
+    {
+      "id": "X223",
+      "name": "리뷰 29 그대로 있다",
+      "status": 200
+    },
+    {
+      "id": "X224",
+      "name": "회원 목록 가입 연도 2001 → 0개, years 는 그대로",
+      "status": 200
+    },
+    {
+      "id": "X225",
+      "name": "가입 연도가 숫자가 아님 → 400",
+      "status": 400
+    },
+    {
+      "id": "X226",
+      "name": "가입 연도가 범위 밖 → 400",
+      "status": 400
+    },
+    {
+      "id": "X227",
+      "name": "사유 200자 넘음 → 400",
+      "status": 400
+    },
+    {
+      "id": "X228",
+      "name": "사유가 글이 아님 → 400",
+      "status": 400
+    },
+    {
+      "id": "X229",
+      "name": "무시 + 사유 → 200",
+      "status": 200
+    },
+    {
+      "id": "X230",
+      "name": "같은 이름으로 새 질문 → 204",
+      "status": 204
+    },
+    {
+      "id": "X231",
+      "name": "문의 목록 — 다시 처리 안 함, 전에 무시한 사유가 보인다",
+      "status": 200
+    },
+    {
+      "id": "X232",
+      "name": "되돌리기 — 사유도 비운다",
+      "status": 200
+    },
+    {
+      "id": "X233",
+      "name": "신발 관리 목록 데모 관리자 — 등록순 3개, counts · gapCounts",
+      "status": 200
+    },
+    {
+      "id": "X234",
+      "name": "보완 필요 — 빈 칸 품번, 2쪽(2개씩), 한 줄에 gaps",
+      "status": 200
+    },
+    {
+      "id": "X235",
+      "name": "브랜드 · 검색 — 나이키 페가수스, 모델명순 ↑",
+      "status": 200
+    },
+    {
+      "id": "X236",
+      "name": "숨긴 신발 탭",
+      "status": 200
+    },
+    {
+      "id": "X237",
+      "name": "영구 삭제 기록 탭 — 최근 먼저",
+      "status": 200
+    },
+    {
+      "id": "X238",
+      "name": "신발 관리 목록 비로그인 → 401",
+      "status": 401
+    },
+    {
+      "id": "X239",
+      "name": "신발 관리 목록 일반 회원 → 403",
+      "status": 403
+    },
+    {
+      "id": "X240",
+      "name": "모르는 탭 → 400",
+      "status": 400
+    },
+    {
+      "id": "X241",
+      "name": "모르는 빈 칸 → 400",
+      "status": 400
+    },
+    {
+      "id": "X242",
+      "name": "한 쪽 101개 → 400",
+      "status": 400
     }
   ],
   "vars": {
     "mock": "http://127.0.0.1:3109",
     "x6": 21,
-    "wv": 107
+    "wv": 107,
+    "v15": 22
   }
 }

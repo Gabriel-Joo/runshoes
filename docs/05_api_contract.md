@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 2026-11-14 로컬(관리자 마이페이지 1~5, V22 · V23): v6 PASS 184 · FAIL 0 · v3 101/11 · v3-search 24 · v4 21 · v14-summary 20. 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 2026-11-14 로컬(관리자 마이페이지 1~5, V22 · V23): v6 PASS 184 · FAIL 0 · v3 101/11 · v3-search 24 · v4 21 · v14-summary 20. 2026-11-15 로컬(관리자 화면 수정, V24 — 실사용 인증 API 를 빼고 가입 연도 · 처리 사유를 더함): v6 PASS 191 · FAIL 0 · v14-summary 21. 같은 날 신발 관리 목록 API(X233 ~ X242): v6 PASS 201 · FAIL 0. 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -17,18 +17,18 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `/api/auth/{signup,login,refresh,logout,demo,demo-accounts,nickname-available}` | 인증 · 체험 로그인(`04_auth.md`) | — |
 | `GET` · `DELETE /api/me`, `PATCH /api/me/nickname`, `PUT /api/me/password` | 내 정보 · 탈퇴 · 닉네임 · 비밀번호 | 로그인 |
 | `POST /api/activity` | 조회 · 비교 기록(`compare.view` 는 2~5켤레). 기록하면 204(30분 안 같은 기록은 다시 쓰지 않아도 204). type 이 없거나 모르는 값 · `shoeId` 없음 · 2~5켤레 밖은 400, 없는 신발은 404 | 로그인 |
-| `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발 · 되살리기 | admin(목록은 데모 관리자도) |
-| `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록 | admin(기록은 데모 관리자도) |
+| `GET /api/admin/shoes?tab=&brand=&search=&gap=&sort=&dir=&page=&size=` | 신발 관리 탭의 목록(2026-11-15, `03_admin.md` 1-1) — SQL 이 거르고 정렬하고 나눈다(`LIMIT` · `OFFSET`, 건수는 `COUNT`). `tab` = `list`(기본) · `hidden` · `gaps` · `purged`, `sort` = `updated`(기본, gaps 탭은 `gaps`) · `id` · `brand` · `model` · `gaps`, `dir` = `down`(기본) · `up`, `gap` = 빈 칸 이름(price · width · wideAvailable · stackHeight · midsole · carbon · weight · drop · weightSize · sku), `brand` · `search` 는 공개 `/api/shoes` 와 같은 규칙. 모르는 값 · size 1~100 밖은 400. → `{items, total, page, size, counts: {list, all, hidden, gaps, purged}, gapCounts}`. 한 줄은 공개 신발과 같은 꼴, 숨긴 신발은 `deletedAt`, 보완 필요는 `gaps`(빈 칸 이름), 영구 삭제 기록은 아래 `/purged` 의 한 줄. 숨긴 신발은 숨긴 때 · 영구 삭제 기록은 지운 때 최근 먼저(정렬 칸을 보지 않는다) | admin · 데모 관리자 |
+| `GET /api/admin/shoes/hidden` · `POST /api/admin/shoes/{id}/restore` | 숨긴 신발(배열, 화면은 위 목록을 쓴다 — 계약 시나리오가 본다) · 되살리기 | admin(목록은 데모 관리자도) |
+| `DELETE /api/admin/shoes/{id}` · `GET /api/admin/shoes/purged` | 영구 삭제(숨긴 신발만) · 영구 삭제 기록(배열, 지운 순서 — 카탈로그 적재기 `pull-admin` 이 읽는다) | admin(기록은 데모 관리자도) |
 | `GET /api/compare?pick=<id>` · `?ids=<id,…>` | 비교하기 계산(2026-11-10, 작업 3 — 브라우저에서 옮김). `pick` 이면 자동 채우기 `cols:[{id, why}]`(08 1-3)까지, `ids` 는 1~5켤레(숫자 아님 · 모르는 id · 겹침은 버림). 응답 `fields`(칸마다 모집단 `{n, values}` 오름차순 — 그래프 막대용) · `shoes`(칸마다 `{value, order, band, word}`, 무게는 `converted` — 등수를 말할 수 없으면 `value: null` 만). 둘 다 없거나 둘 다 있으면 400 `{}` | 누구나 |
 | `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | `price` 대신 `budget=<원>`(1 ~ 1억 정수 — 챗봇이 말한 금액, 작업 5-1)도 받는다 — 둘 다 오거나 숫자가 아니면 400. 추천받기 상위 3 `{results:[{id, score, max, checked, reasons:[{hit, text}], notes}]}` — `score` · `max` 는 판단한 조건의 점수 · 만점(데이터가 없어 못 본 조건은 빠진다), `checked` 판단한 조건 수, `notes` 못 본 조건 한 줄(`10_recommend.md`). `price` 는 low(20만원까지) · mid(30만원까지) · unknown, 옛 값 high 는 unknown 과 같게 받는다(작업 3-2). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
 | `POST /api/internal/chatbot-misses` | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문 기록(V18, 작업 5-1). 본문 `{kind: "shoe"\|"term"\|"feature", query, message}` → 204, 잘못된 본문 400 `{}`. **같은 Pod 안에서 127.0.0.1 로 들어온 연결만** — 서버 쪽 주소(`localAddr`)를 본다. `remoteAddr` 는 믿지 않는다: Spring Boot 는 쿠버네티스에서 `X-Forwarded-For` 로 `remoteAddr` 를 바꾼다(127/8 · 내부 대역을 프록시로 믿는다 — `X-Forwarded-For: 127.0.0.1` 이면 루프백이 된다). 그 밖은 404 `{}` | 챗봇 사이드카 |
-| `GET /api/admin/chatbot-misses?status=&kind=&from=&to=&page=&size=` | 위 기록을 `(kind, query)` 로 묶은 목록(관리자 마이페이지 — 2026-11-14 최근 200개 배열에서 바꿨다), 마지막 질문 최근 순, 서버 페이지 나누기. `status` 는 `open`(기본) · `done` · `ignored` · `all`(V23). 한 줄 `{kind, query, count, open, lastAt, lastMessage, status, decidedAt}` | admin · 데모 관리자 |
-| `POST /api/admin/chatbot-misses/decide` | 본문 `{kind, query, status: done \| ignored \| open}` — 묶음의 줄 전부에 처리 상태를 적는다(`open` 은 되돌리기). 없는 묶음 404 | admin |
+| `GET /api/admin/chatbot-misses?status=&kind=&from=&to=&page=&size=` | 위 기록을 `(kind, query)` 로 묶은 목록(관리자 마이페이지 — 2026-11-14 최근 200개 배열에서 바꿨다), 최근 질문 최근 순, 서버 페이지 나누기. `status` 는 `open`(기본) · `done` · `ignored` · `all`(V23). 한 줄 `{kind, query, count, open, lastAt, lastMessage, status, decidedAt, lastDecision, lastDecidedAt, decidedNote}` — 뒤의 셋은 마지막으로 처리한 줄의 상태 · 때 · 사유(V24, 2026-11-15 — 다시 처리 안 함이 된 묶음이면 그 전의 처리, 처리한 적 없으면 null) | admin · 데모 관리자 |
+| `POST /api/admin/chatbot-misses/decide` | 본문 `{kind, query, status: done \| ignored \| open, note?}` — 묶음의 줄 전부에 처리 상태와 사유를 적는다(`open` 은 되돌리기 — 사유도 비운다). `note` 는 선택, 글이 아니거나 200자를 넘으면 400(V24, 2026-11-15). → `{kind, query, status, note, rows}`. 없는 묶음 404 | admin |
 | `POST /api/admin/terms` | 사전에 용어 추가 `{key, name, short, description}` → 201(id 는 가장 큰 id + 1). 같은 key · 이름 409 `term_exists`, 형식 400. `/api/terms` 의 쓰기는 그대로 405 | admin |
-| `GET /api/admin/reviews?hidden=&from=&to=&shoeId=&shoe=&author=&page=&size=` | 리뷰 관리 목록(V22, 관리자 마이페이지 — `03_admin.md` 1-6). 서버 페이지 나누기 `{items, total, page, size}`(size 1~100, 기본 20). `hidden=true` 면 숨긴 리뷰(숨긴 순), 아니면 보이는 리뷰(작성 순) — 둘 다 최근 먼저. `from` · `to` 는 한국 날짜(포함), 틀리면 400 `{code:"invalid", message}`. 한 줄에 신발 이름 · 사진 · 숨긴 신발 여부 · 인증 · 숨긴 때 · 함께 지워질 도움이 돼요 행 수(`helpfulRows`) · 실사용 후기 수 | admin · 데모 관리자 |
-| `POST /api/admin/reviews/{id}/verify` | 실사용 인증 켜기 · 끄기 `{verified: true \| false}` → `{id, verified, verifiedAt}`. 불린이 아니면 400 | admin |
+| `GET /api/admin/reviews?hidden=&from=&to=&shoeId=&shoe=&author=&page=&size=` | 리뷰 관리 목록(V22, 관리자 마이페이지 — `03_admin.md` 1-6). 서버 페이지 나누기 `{items, total, page, size}`(size 1~100, 기본 20). `hidden=true` 면 숨긴 리뷰(숨긴 순), 아니면 보이는 리뷰(작성 순) — 둘 다 최근 먼저. `from` · `to` 는 한국 날짜(포함), 틀리면 400 `{code:"invalid", message}`. 한 줄에 신발 이름 · 사진 · 숨긴 신발 여부 · 인증 칸(`verified` · `verifiedAt` — 켜는 API 는 2026-11-15 에 뺐다, 늘 false · null) · 숨긴 때 · 함께 지워질 도움이 돼요 행 수(`helpfulRows`) · 실사용 후기 수 | admin · 데모 관리자 |
 | `POST /api/admin/reviews/{id}/hide` · `/restore` · `DELETE /api/admin/reviews/{id}` | 숨기기 · 되살리기 · 영구 삭제(숨긴 리뷰만). 상태가 안 맞으면 409 `{code: already_hidden \| not_hidden, message}`. 숨기기 · 되살리기 → `{id, hiddenAt, summaryStale}`, 영구 삭제 → `{id, helpful, followups}` | admin |
-| `GET /api/admin/users?q=&page=&size=` | 회원 목록(가입 최근 순, 서버 페이지 나누기) — 한 줄 `{id, email, nickname, role, createdAt, lastLoginAt, withdrawn, withdrawnAt, locked, lockedUntil, reviews}`. `q` 는 이메일 · 닉네임 부분 일치. 데모 관리자도 같은 응답(2026-11-15, 처음의 이메일 가림 · `emailHidden` 은 뺐다) | admin · 데모 관리자 |
+| `GET /api/admin/users?q=&year=&page=&size=` | 회원 목록(가입 최근 순, 서버 페이지 나누기) — 한 줄 `{id, email, nickname, role, createdAt, lastLoginAt, withdrawn, withdrawnAt, locked, lockedUntil, reviews}`. `q` 는 이메일 · 닉네임 부분 일치. `year` 는 가입한 한국 연도(숫자가 아니거나 2000~2100 밖 400), 응답에 `years`(가입한 해들, 최근 먼저 — 연도 고르기 칸, 2026-11-15). 데모 관리자도 같은 응답(2026-11-15, 처음의 이메일 가림 · `emailHidden` 은 뺐다) | admin · 데모 관리자 |
 | `POST /api/admin/users/{id}/unlock` | 로그인 계정 잠금 풀기(`04_auth.md` 1-4) → `{id, locked:false}`. 잠겨 있지 않으면 409 `not_locked`, 탈퇴 계정 409 `withdrawn` | admin |
 | `GET /api/admin/chatbot-conversations?from=&to=&account=&branch=&page=&size=` | 챗봇 대화 목록(V19 `chatbot_turns` 를 연결별로 묶음, 마지막 턴 최근 순, 서버 페이지 나누기) — 한 줄 `{connId, userId, nickname, demo, startedAt, lastAt, turns, branches, firstQuestion}`. `account` 는 계정 번호 또는 닉네임 부분 일치, `branch` 는 그 갈래 턴이 있는 대화 | admin · 데모 관리자 |
 | `GET /api/admin/chatbot-conversations/{connId}` | 그 대화의 턴(차례대로) `{connId, turns:[{turnId, createdAt, question, answer, branch, byRule, llmOk, health, fallbackUsed, shoeCount, latencyMs, stages}]}`. 없는 대화 404. 데모 관리자도 같은 응답(2026-11-15, 처음의 원문 가림 · `textHidden` 은 뺐다) | admin · 데모 관리자 |
@@ -52,7 +52,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 
 - 헤더는 Spring CORS 지원 대신 필터 하나(`ApiHeadersFilter`)가 만든다 — 204 · Origin 이 없을 때 `*` 같은 모양이 Spring 기본과 다르다.
 - 목록 쿼리는 SQL 이 아니라 메모리에서 한다(`ListQuery`) — JS 문자열 비교 · lodash 정렬을 SQL 로 흉내 내는 것보다 정확하다.
-- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model · modelEn · modelAlias(V13)에서 낱말마다 AND — brand 는 영문 이름도 같이 본다(`BrandNames`, "nike" · "new balance", 2026-11-09), 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 관리 화면의 "전체 N개"는 `?_limit=0` 의 `X-Total-Count`.
+- **검색은 서버가 한다**(json-server 에 없던 것): `search` 는 brand · model · modelEn · modelAlias(V13)에서 낱말마다 AND — brand 는 영문 이름도 같이 본다(`BrandNames`, "nike" · "new balance", 2026-11-09), 대소문자 무시 · NFC, 공백을 뺀 글자로도 맞춘다(`젤카야노` → 젤 카야노 32). 순서는 `q` → `search` → 필드 필터 → 정렬 → 자르기. 신발 관리 탭의 목록 · "전체 N개"는 관리자 API(`GET /api/admin/shoes` 의 `counts.all`, 2026-11-15)가 같은 검색 규칙으로 센다.
 
 #### 1-3. 데이터 표현
 
@@ -153,8 +153,8 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 
 #### 4. 남은 한계
 
-- **목록은 메모리에서 거른다.** 302켤레 전체를 읽어 거르고 정렬한다. 데이터가 커지면 SQL 로 옮길 자리다.
-- **페이지가 없다.** 목록은 한 번에 전부 온다. 서버는 `_start` · `_limit` · `X-Total-Count` 를 이미 지원한다.
+- **공개 목록은 메모리에서 거른다.** json-server 꼴 목록(`/api/shoes` 등)은 302켤레 전체를 읽어 거르고 정렬한다. 데이터가 커지면 SQL 로 옮길 자리다. 관리자 목록(`/api/admin/*`)은 SQL 이 거르고 자른다.
+- **공개 목록은 페이지가 없다.** json-server 꼴 목록(`/api/shoes` 등)은 한 번에 전부 온다. 서버는 `_start` · `_limit` · `X-Total-Count` 를 이미 지원한다. 관리자 목록(`/api/admin/*`)은 서버가 나눈다(`{items, total, page, size}`).
 - **계약 시험은 로컬 DB 를 지운다.** 적재한 로컬 카탈로그와 같은 DB 를 쓴다 — 돌린 뒤 적재를 다시 해야 한다.
 
 #### 5. 검증 항목
