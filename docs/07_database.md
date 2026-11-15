@@ -89,7 +89,7 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 
 | 22 | review hide | `reviews.hidden_at`(관리자가 숨긴 때, NULL = 보인다, INSTANT 열 추가) — `03_admin.md` 1-6. 옛 이미지로 롤백하면 숨긴 리뷰가 다시 보이고 평점에 다시 든다 | 2026-11-15 |
 | 23 | chatbot miss status | `chatbot_misses.status`(NULL 처리 안 함 · `done` · `ignored`) · `decided_at` · `decided_by` — 챗봇 문의 처리 상태, `03_admin.md` 1-6. CHECK 없음(표를 다시 쓰지 않게 — 값은 앱이 본다). V22 와 목적이 달라 나눴다 | 2026-11-15 |
-| 24 | chatbot miss note | `chatbot_misses.decided_note`(VARCHAR(200) NULL, 맨 뒤 INSTANT 열 추가, 데이터 안 고침) — 처리함 · 무시의 사유, `03_admin.md` 1-6. 200자는 앱이 400 으로 막는다. 옛 이미지로 롤백하면 이 칸을 읽지도 쓰지도 않는다 | 아직(사람이 런북으로) |
+| 24 | chatbot miss note | `chatbot_misses.decided_note`(VARCHAR(200) NULL, 맨 뒤 INSTANT 열 추가, 데이터 안 고침) — 처리함 · 무시의 사유, `03_admin.md` 1-6. 200자는 앱이 400 으로 막는다. 옛 이미지로 롤백하면 이 칸을 읽지도 쓰지도 않는다 | 2026-11-15 |
 
 운영 적용 날짜는 KST 다(런북 실행 기록의 시각은 UTC). 걸린 시간은 infra 런북의 실행 기록(`auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md` · `v17-v18-chatbot.md` · `v19-v20-observability.md` · `v21-grafana-compare-views.md`)에 있다. 절차는 `06_deployment.md`.
 
