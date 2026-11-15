@@ -1,0 +1,39 @@
+{
+  "id": "X175",
+  "plan": null,
+  "name": "영구 삭제 admin → 200 {helpful, followups}",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/admin/reviews/28",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:34:59 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 28,
+      "helpful": 0,
+      "followups": 0
+    }
+  }
+}

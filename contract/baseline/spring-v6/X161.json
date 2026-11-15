@@ -1,0 +1,38 @@
+{
+  "id": "X161",
+  "plan": null,
+  "name": "리뷰 숨기기 데모 관리자 → 403 demo_admin",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/reviews/28/hide",
+    "headers": {
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:34:59 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "demo_admin",
+      "message": "데모 관리자 계정은 할 수 없습니다"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "X193",
+  "plan": null,
+  "name": "턴 기록(내부 POST) term → 204",
+  "contract": true,
+  "expect": 204,
+  "request": {
+    "method": "POST",
+    "path": "/api/internal/chatbot-turns",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "connId": "contract0000000000000000000000c1",
+      "userId": 3,
+      "question": "드롭이 뭐야",
+      "answer": "드롭은 뒤꿈치와 앞꿈치 높이 차이예요.",
+      "branch": "term",
+      "byRule": true,
+      "llmOk": null,
+      "health": false,
+      "fallbackUsed": false,
+      "shoeCount": 0,
+      "latencyMs": 10,
+      "routerMs": 4,
+      "searchMs": 0,
+      "genMs": 6,
+      "catalogMs": 0,
+      "compareMs": 0,
+      "recommendMs": 0,
+      "reviewMs": 0,
+      "summaryMs": 0
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "date": "Sat, 14 Nov 2026 12:51:48 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "$sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "$length": 0,
+      "$head": ""
+    }
+  }
+}

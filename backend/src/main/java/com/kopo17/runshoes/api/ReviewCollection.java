@@ -23,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
  * /api/reviews — 쓰기는 로그인한 사람만(401 은 SecurityConfig).
  * POST: 작성자 · 닉네임 · 시각은 서버가 정한다(본문의 author · createdAt · likeCount · liked · id 는 버린다 — 실사용 후기의 "30일 뒤"가 서버 시각이어야 한다).
  *       한 신발에 첫 리뷰 하나(409). 별점 1~5 · 내용 10~300자(400, 2026-10-30)
- * PATCH: 작성자만(403), rating · content 만 — 다른 키는 버린다. DELETE: 작성자 또는 admin. PUT: 405(아무 필드나 덮어쓰는 길을 열지 않는다)
+ * PATCH: 작성자만(403), rating · content 만 — 다른 키는 버린다. DELETE: 작성자만 — admin 이 남의 리뷰를 지우는 것은 403 hide_first
+ *        (2026-11-15 사용자: 숨긴 뒤 리뷰 관리에서만 영구 삭제, 상세 모달은 숨기기만). PUT: 405(아무 필드나 덮어쓰는 길을 열지 않는다)
  * 데모 관리자(V7)는 쓰기 · 고치기 · 지우기 모두 403 demo_admin. 탈퇴 회원(V9)의 리뷰는 남는다(작성자 "탈퇴 회원").
  * 숨긴 신발(V8)의 리뷰는 없는 것으로 본다 — 목록에서 빠지고 GET · PATCH · DELETE 는 404(DB 에는 남는다, 되살리면 돌아온다).
+ * 관리자가 숨긴 리뷰(V22)도 같다 — 작성자에게도 404. 되살리기 · 영구 삭제는 관리 API(AdminReviews)만.
  * 쓰고 · 고치고 · 지우면 신발의 rating · reviewCount 를 다시 센다(Ratings). 그 전에 신발 행부터 잠근다(Ratings.lock — 데드락, 2026-11-01).
  * 쓰고 · 고치고 · 지운 뒤 같은 트랜잭션에서 요약을 다시 만들어야 하나만 판단한다(SummaryStore.judge — is_stale 만 세운다, 요약은 배치가 만든다. V14).
  * 새 id 는 DB 가 매긴다(V10 AUTO_INCREMENT). 저장 오류는 제약 이름으로 가른다 — 첫 리뷰 UNIQUE 만 409, 그 밖(PK 등)은 500.
@@ -62,9 +64,9 @@ class ReviewCollection implements DocCollection {
 		return reviews.findAll(Sort.by("id")).stream().filter(r -> !hidden.contains(r.getShoeId())).map(r -> toDoc(r, liked.contains(r.getId()))).toList();
 	}
 
-	/** 숨긴 신발의 리뷰는 없는 것과 같다 */
+	/** 숨긴 신발의 리뷰 · 관리자가 숨긴 리뷰(V22)는 없는 것과 같다. 숨긴 리뷰는 @SQLRestriction 이 빼지만 id 로 읽을 때도 한 번 더 본다 */
 	private Optional<Review> visible(long id) {
-		return reviews.findById(id).filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()));
+		return reviews.findById(id).filter(r -> r.getHiddenAt() == null).filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()));
 	}
 
 	@Override
@@ -137,7 +139,10 @@ class ReviewCollection implements DocCollection {
 		if (found.isEmpty()) return false;
 		Review r = found.get();
 		if (viewer.demoAdmin()) throw ApiException.demoAdmin();
-		if (!viewer.owns(r.getUserId()) && !viewer.admin()) throw ApiException.forbidden("작성자 또는 admin 만 지운다");
+		if (!viewer.owns(r.getUserId())) {
+			if (viewer.admin()) throw ApiException.hideFirst();   // 남의 리뷰는 숨기기 → 리뷰 관리에서 영구 삭제(AdminReviews)
+			throw ApiException.forbidden("작성자만 지운다");
+		}
 		ratings.lock(r.getShoeId());
 		reviews.delete(r);
 		reviews.flush();                                        // 실사용 후기는 FK(ON DELETE CASCADE)가 같이 지운다

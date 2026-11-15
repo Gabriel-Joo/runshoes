@@ -1,0 +1,35 @@
+{
+  "id": "X198",
+  "plan": null,
+  "name": "대화 목록 일반 회원 → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-conversations",
+    "headers": {
+      "Authorization": "Bearer {{u1}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:51:48 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

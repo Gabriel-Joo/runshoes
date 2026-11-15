@@ -1,0 +1,54 @@
+{
+  "id": "X201",
+  "plan": null,
+  "name": "문의 목록 — 처리 안 함 · 용어",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "lastAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-misses?kind=term",
+    "headers": {
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "kind": "term",
+          "query": "힐카운터",
+          "count": 1,
+          "open": 1,
+          "lastAt": "2026-11-14T12:58:27.525Z",
+          "lastMessage": "힐카운터가 뭐야",
+          "status": "open",
+          "decidedAt": null
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

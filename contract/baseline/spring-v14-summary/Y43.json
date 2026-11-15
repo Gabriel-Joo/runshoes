@@ -1,14 +1,14 @@
 {
   "id": "Y43",
   "plan": null,
-  "name": "리뷰 지우기 admin — Y30(→ 2건, 3건 미만이라 요약 행 삭제)",
+  "name": "내 리뷰 지우기 u1 — Y30(→ 2건, 3건 미만이라 요약 행 삭제)",
   "contract": true,
   "expect": 200,
   "request": {
     "method": "DELETE",
     "path": "/api/reviews/106",
     "headers": {
-      "Authorization": "Bearer {{admin}}"
+      "Authorization": "Bearer {{u1}}"
     },
     "body": null
   },
@@ -26,7 +26,7 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "date": "Sun, 15 Nov 2026 00:19:10 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },

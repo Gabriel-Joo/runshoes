@@ -85,7 +85,8 @@ class LikeController {
 	}
 
 	private Review review(String raw) {
-		return reviews.findById(JsonServerController.id(raw)).filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()))
+		return reviews.findById(JsonServerController.id(raw)).filter(r -> r.getHiddenAt() == null)   // 관리자가 숨긴 리뷰(V22)
+				.filter(r -> r.getShoeId() == null || shoes.existsById(r.getShoeId()))
 				.orElseThrow(ApiException::notFound);
 	}
 

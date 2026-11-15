@@ -1,0 +1,58 @@
+{
+  "id": "X177",
+  "plan": null,
+  "name": "회원 목록 admin — runner05 검색(이메일)",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "createdAt",
+    "lastLoginAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/users?q=runner05",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 00:23:47 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "id": 5,
+          "email": "runner05@runshoes.test",
+          "nickname": "주말산행런",
+          "role": "USER",
+          "createdAt": "2026-11-15T00:23:40.646Z",
+          "lastLoginAt": null,
+          "withdrawn": false,
+          "withdrawnAt": null,
+          "locked": false,
+          "lockedUntil": null,
+          "reviews": 3
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
  *                                   본문 {connId, userId, question, answer, branch, byRule, llmOk, health, fallbackUsed, shoeCount,
  *                                         latencyMs, routerMs, searchMs, genMs, catalogMs, compareMs, recommendMs, reviewMs, summaryMs}
  *                                   → 204. 잘못된 본문 400 {}
- * 읽는 API 는 두지 않는다 — 대시보드가 DB 복제본을 읽는다(A-3).
+ * 읽는 길은 둘이다. 숫자 · 추세는 대시보드가 DB 복제본을 읽는다(A-3, 질문 · 답 칸은 권한으로 막는다).
+ * 개별 대화는 관리자 마이페이지가 읽는다(AdminChatbotTurnController, 2026-11-14 사용자). V19 때는 「읽는 API 는 두지 않는다」였는데,
+ * 사용자가 관리자 화면에서 대화 원문을 보기로 정해 바뀌었다. 데모 관리자도 원문을 본다(2026-11-15 사용자, 시현용).
  */
 @RestController
 class ChatbotTurnController {

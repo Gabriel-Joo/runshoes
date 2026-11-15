@@ -1,0 +1,38 @@
+{
+  "id": "X189",
+  "plan": null,
+  "name": "다시 풀기 → 409 not_locked",
+  "contract": true,
+  "expect": 409,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/users/5/unlock",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:43:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "not_locked",
+      "message": "잠겨 있지 않아요."
+    }
+  }
+}

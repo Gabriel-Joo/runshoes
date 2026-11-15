@@ -34,3 +34,6 @@ export async function reviewError(res: Response, fallback: string) {
   }
   return reviewFailure[res.status] ?? fallback;
 }
+
+/** 관리자가 리뷰를 숨기면 어디에 언제 반영되나 — 확인 창 · 알림 · 안내가 같은 문장을 쓴다(2026-11-14 사용자) */
+export const WHEN_APPLIED = "목록 · 평점 · 리뷰 수에서는 바로 빠지고, 챗봇은 최대 10분, 요약은 다음 날 03:30에 반영돼요.";

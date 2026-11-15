@@ -48,7 +48,8 @@ public class SummaryStore {
 	public Verdict judge(long shoeId) {
 		lockShoe(shoeId);
 		Row row = row(shoeId, true).orElse(null);
-		Map<String, Object> c = jdbc.queryForMap("SELECT COUNT(*) AS n, COALESCE(SUM(rating), 0) AS total FROM reviews WHERE shoe_id = ?", shoeId);
+		// 관리자가 숨긴 리뷰(V22)는 요약 입력(엔티티 @SQLRestriction)에서 빠지므로 여기서도 세지 않는다
+		Map<String, Object> c = jdbc.queryForMap("SELECT COUNT(*) AS n, COALESCE(SUM(rating), 0) AS total FROM reviews WHERE shoe_id = ? AND hidden_at IS NULL", shoeId);
 		int n = ((Number) c.get("n")).intValue();
 		double avg = n == 0 ? 0 : ((Number) c.get("total")).doubleValue() / n;
 		Verdict v = StaleRule.judge(row, n, avg, nowUtc());
@@ -60,6 +61,19 @@ public class SummaryStore {
 		}
 		if (v.action() != Action.NONE) log.info("[summary] shoeId={} {} — {}", shoeId, v.action(), v.reason());
 		return v;
+	}
+
+	/**
+	 * 관리자가 리뷰를 숨기거나 되살린 뒤(같은 트랜잭션) — 비율 조건(10% · 0.3 · 30일)과 상관없이 「다시 만들 차례」로 세운다(2026-11-14 사용자).
+	 * 숨긴 리뷰의 내용이 요약에 남아 있을 수 있어서다. 먼저 judge 로 행을 만들거나(3건을 넘김) 지운다(3건 미만) — 그 뒤 행이 있으면 stale.
+	 * 요약은 다음 배치(매일 03:30 KST)가 만든다. 돌려주는 값: 행이 있어 stale 로 세웠나
+	 */
+	@Transactional
+	public boolean forceStale(long shoeId) {
+		judge(shoeId);
+		boolean marked = jdbc.update("UPDATE shoe_summaries SET is_stale = TRUE WHERE shoe_id = ?", shoeId) == 1;
+		if (marked) log.info("[summary] shoeId={} MARK_STALE — 관리자가 리뷰를 숨기거나 되살렸다", shoeId);
+		return marked;
 	}
 
 	/**

@@ -45,7 +45,7 @@ app:
     demo-ip: 30             # 같은 IP 15분(login-window)에 체험 로그인 30번
   activity:
     retention-auth: 90d     # auth.* · user.*
-    retention-other: 180d   # review.* · like.* · review_like.* · shoe.* · compare.*
+    retention-other: 180d   # review.* · like.* · review_like.* · shoe.* · compare.* · admin.*(관리자 마이페이지, 2026-11-14)
     cleanup-cron: ${ACTIVITY_CLEANUP_CRON:0 0 4 * * *}   # 매일 04:00(Asia/Seoul)
     warn-rows: 500000       # 남은 행이 넘으면 정리 job 이 WARN
   static-path: ${APP_STATIC:/opt/app/static}   # Vite dist — config/SpaConfig

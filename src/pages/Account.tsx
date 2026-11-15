@@ -9,6 +9,10 @@ import ShoeImage from "../components/ShoeImage";
 import ConfirmModal from "../components/ConfirmModal";
 import Barcode from "../components/Barcode";
 import ReviewCounter from "../components/ReviewCounter";
+import ReviewReader from "../components/ReviewReader";
+import BulkBar from "../components/BulkBar";
+import AdminMy from "./AdminMy";
+import { runEach, useSelection } from "../utils/bulk";
 import { clampReview, contentError, reviewError, REVIEW_MAX } from "../components/reviewRules";
 import { text, withUnit } from "../utils/display";
 import { MAX_COLS } from "../utils/compare";
@@ -30,8 +34,15 @@ const TABS: Tab[] = ["profile", "reviews", "likes", "helpful", "withdraw"];
  * 마이페이지 — 왼쪽 목차 · 오른쪽 본문(2026-10-30 사용자). 본문 맨 위에는 늘 활동 요약(리뷰 · 찜 · 도움이 돼요 · 가입일).
  * 목차는 ?tab= 으로 — 새로고침 · 뒤로 가기에도 같은 칸. 로그인 필요(App 의 RequireAuth)
  * "도움이 돼요"는 리뷰 공감(review_likes)의 화면 이름이다 — 화면에는 "공감"이라고 쓰지 않는다
+ * 관리자 · 데모 관리자는 관리자용 마이페이지(AdminMy — 리뷰 관리 · 회원 관리 · 챗봇, 2026-11-14 사용자)를 본다. 내 리뷰 · 찜 · 탈퇴는 쓸모가 없다
  */
 function Account() {
+  const { user } = useAuth();
+  if (user && user.role !== "USER") return <AdminMy />;
+  return <MemberAccount />;
+}
+
+function MemberAccount() {
   const { user } = useAuth();
   const [params, setParams] = useSearchParams();
   const tab: Tab = TABS.includes(params.get("tab") as Tab) ? (params.get("tab") as Tab) : "profile";
@@ -106,70 +117,18 @@ function useShoesOf(list: Review[] | null) {
   return shoes;
 }
 
-/** 여러 개 고르기 — 목록이 바뀌면 사라진 id 는 저절로 빠진다 */
-function useSelection(ids: number[]) {
-  const [picked, setPicked] = useState<Set<number>>(new Set());
-  const live = new Set([...picked].filter((id) => ids.includes(id)));
-  const toggle = (id: number) => setPicked((p) => { const n = new Set(p); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const all = ids.length > 0 && ids.every((id) => live.has(id));
-  const toggleAll = () => setPicked(all ? new Set() : new Set(ids));
-  return { picked: live, toggle, all, toggleAll, keep: (rest: number[]) => setPicked(new Set(rest)) };
-}
-
-/**
- * 한꺼번에 — 기존 API 를 하나씩 차례로 부른다(새 API 없음, 활동 로그도 한 건씩). 데모 관리자 403 이면 거기서 멈춘다.
- * 남은(실패한) id 와 화면 문구를 돌려준다. goneIsDone — 404(이미 없다)도 한 것으로 센다(리뷰 삭제: 다른 탭 · 관리자가 먼저 지웠다, 2026-11-01 사용자).
- *   찜 · 도움 취소는 그대로 — 숨긴 신발의 404 는 찜이 남아 있을 수 있다
- */
-async function runEach(ids: number[], call: (id: number) => Promise<Response | null>, what: string, words: { did: string; couldNot: string }, goneIsDone = false) {
-  const failed: number[] = [];
-  let done = 0;
-  for (let i = 0; i < ids.length; i++) {
-    const res = await call(ids[i]).catch(() => null);
-    const blocked = res && (await demoBlocked(res));
-    if (blocked) return { failed: [...failed, ...ids.slice(i)], message: blocked };
-    if (res?.ok || (goneIsDone && res?.status === 404)) done++;
-    else failed.push(ids[i]);
-  }
-  const message = failed.length === 0 ? `${what} ${done}개를 ${words.did}.` : `${ids.length}개 중 ${done}개를 ${words.did}. ${failed.length}개는 ${words.couldNot}.`;
-  return { failed, message };
-}
-
-/** 리뷰 전문 — 읽기 전용 모달(2026-10-30 사용자 — 표 안에서 펼치면 300자에 줄이 흔들린다) */
-function ReviewReader({ review, shoe, onClose }: { review: Review; shoe?: Shoe; onClose: () => void }) {
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", esc);
-    return () => document.removeEventListener("keydown", esc);
-  }, [onClose]);
+/** 리뷰 전문 — 공용 모달(components/ReviewReader)에 이 표의 한 줄을 넘긴다 */
+function MyReviewReader({ review, shoe, onClose }: { review: Review; shoe?: Shoe; onClose: () => void }) {
   return (
-    <div className="confirm" onClick={onClose}>
-      <div className="reader" role="dialog" aria-modal="true" aria-label="리뷰 전문" onClick={(e) => e.stopPropagation()}>
-        <div className="reader__head">
-          <div>
-            <p className="reader__model">{shoe?.model ?? `NO.${review.shoeId}`}</p>
-            <p className="reader__meta">
-              {review.author} · {"★".repeat(review.rating)}
-              <span className="mypage__ratingoff">{"★".repeat(5 - review.rating)}</span> · {review.createdAt.slice(0, 10).replace(/-/g, ".")} · 도움이 돼요 {review.likeCount ?? 0}
-            </p>
-          </div>
-          <button className="reader__close" onClick={onClose} aria-label="닫기">×</button>
-        </div>
-        <p className="reader__content">{review.content}</p>
-      </div>
-    </div>
-  );
-}
-
-/** 표 위 — "N개 선택됨 · [선택 …]" */
-function BulkBar({ count, label, onRun }: { count: number; label: string; onRun: () => void }) {
-  return (
-    <div className="mypage__bulk">
-      <span className="mypage__bulkcount">{count > 0 ? `${count}개 선택됨` : ""}</span>
-      <button className="mypage__btn is-danger is-strong" onClick={onRun} disabled={count === 0}>
-        {label}
-      </button>
-    </div>
+    <ReviewReader
+      title={shoe?.model ?? `NO.${review.shoeId}`}
+      meta={<>
+        {review.author} · {"★".repeat(review.rating)}
+        <span className="mypage__ratingoff">{"★".repeat(5 - review.rating)}</span> · {review.createdAt.slice(0, 10).replace(/-/g, ".")} · 도움이 돼요 {review.likeCount ?? 0}
+      </>}
+      content={review.content}
+      onClose={onClose}
+    />
   );
 }
 
@@ -401,7 +360,7 @@ function MyReviews({ reviews, onChange }: { reviews: Review[] | null; onChange: 
           })}
         </ul>
       )}
-      {reading && <ReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
+      {reading && <MyReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
       {target && (
         <ConfirmModal
           message="이 리뷰를 삭제할까요?"
@@ -613,7 +572,7 @@ function MyHelpful({ reviews, onChange }: { reviews: Review[] | null; onChange: 
           })}
         </ul>
       )}
-      {reading && <ReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
+      {reading && <MyReviewReader review={reading} shoe={shoes[reading.shoeId]} onClose={() => setReading(null)} />}
       {bulkOpen && (
         <ConfirmModal
           message={`"도움이 돼요" ${sel.picked.size}개를 취소할까요?`}

@@ -115,14 +115,16 @@ function ShoeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   // 돌아갈 곳 — 관리 화면이 넘긴 주소(탭 · 필터 · 정렬 그대로, 2026-11-01 사용자). 주소로 바로 들어왔으면 관리 화면 처음
-  const fromState = (useLocation().state as { back?: string } | null)?.back;
-  const backTo = fromState?.startsWith("/admin") ? fromState : "/admin";
+  //   관리자 마이페이지의 챗봇 문의(2026-11-14)에서 오면 /account?tab=misses 로 돌아가고, 새 등록이면 챗봇이 뽑은 이름(prefill)을 모델명에 미리 넣는다
+  const navState = useLocation().state as { back?: string; prefill?: string } | null;
+  const fromState = navState?.back;
+  const backTo = fromState?.startsWith("/admin") || fromState?.startsWith("/account") ? fromState : "/admin";
   const isEdit = Boolean(id);
   const { setNotice, isDemoAdmin } = useAuth();
 
   const [loaded, setLoaded] = useState<Shoe | null>(null);
   const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState(() => (isEdit ? "" : navState?.prefill ?? ""));
   const [modelEn, setModelEn] = useState("");
   const [modelAlias, setModelAlias] = useState("");
   const [purpose, setPurpose] = useState(PURPOSES[0]);

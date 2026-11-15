@@ -1,12 +1,15 @@
 {
   "id": "Y41",
   "plan": null,
-  "name": "리뷰 지우기 admin — 29",
+  "name": "리뷰 숨기기 admin — 29",
   "contract": true,
   "expect": 200,
+  "volatile": [
+    "hiddenAt"
+  ],
   "request": {
-    "method": "DELETE",
-    "path": "/api/reviews/29",
+    "method": "POST",
+    "path": "/api/admin/reviews/29/hide",
     "headers": {
       "Authorization": "Bearer {{admin}}"
     },
@@ -26,10 +29,14 @@
       "vary": "accept-encoding",
       "content-type": "application/json",
       "transfer-encoding": "chunked",
-      "date": "Tue, 10 Nov 2026 03:59:17 GMT",
+      "date": "Sun, 15 Nov 2026 00:19:10 GMT",
       "keep-alive": "timeout=60",
       "connection": "keep-alive"
     },
-    "body": {}
+    "body": {
+      "id": 29,
+      "hiddenAt": "2026-11-15T00:19:10.805Z",
+      "summaryStale": true
+    }
   }
 }

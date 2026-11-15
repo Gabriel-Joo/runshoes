@@ -1,0 +1,48 @@
+{
+  "id": "X223",
+  "plan": null,
+  "name": "리뷰 29 그대로 있다",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/29",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 00:19:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 29,
+      "shoeId": 8,
+      "userId": 28,
+      "author": "회복주는천천히",
+      "rating": 4,
+      "content": "300g이라 무겁긴 한데 쿠션은 확실합니다. 훈련 다음 날 회복주로 딱이에요.",
+      "createdAt": "2026-07-11T00:00:00.000Z",
+      "likeCount": 2,
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": false
+    }
+  }
+}

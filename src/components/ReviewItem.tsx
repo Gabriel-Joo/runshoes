@@ -8,15 +8,20 @@ import ReviewCounter from "./ReviewCounter";
 interface ReviewItemProps {
   review: Review;
   isBest?: boolean;
-  /** 수정 — 작성자만. 지우기 — 작성자 또는 admin(서버가 403 으로 다시 막는다) */
+  /**
+   * 수정 · 지우기 — 작성자만. 숨기기 — 관리자가 남의 리뷰에(2026-11-15 사용자: 상세 모달에서 남의 리뷰를 바로 지우지 않는다,
+   * 영구 삭제는 관리자 마이페이지 숨긴 리뷰에서만). 서버가 403 으로 다시 막는다
+   */
   canEdit: boolean;
   canDelete: boolean;
+  canHide: boolean;
   /** 공감: login = 로그인 안 함(누르면 로그인으로), mine = 내 리뷰(못 누른다), ok */
   likeState: "login" | "mine" | "ok";
   loginTo: string;
   /** 성공하면 null, 실패하면 화면 문구 */
   onUpdate: (id: number, rating: number, content: string) => Promise<string | null>;
   onDeleteRequest: (review: Review) => void;
+  onHideRequest: (review: Review) => void;
   onLike: (review: Review) => void;
 }
 
@@ -25,10 +30,12 @@ function ReviewItem({
   isBest,
   canEdit,
   canDelete,
+  canHide,
   likeState,
   loginTo,
   onUpdate,
   onDeleteRequest,
+  onHideRequest,
   onLike,
 }: ReviewItemProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -112,7 +119,7 @@ function ReviewItem({
               {"★".repeat(review.rating)}
               <em>{"★".repeat(5 - review.rating)}</em>
             </span>
-            {(canEdit || canDelete) && (
+            {(canEdit || canDelete || canHide) && (
               <div className="review__tools">
                 {canEdit && (
                   <button className="review__tool" onClick={startEdit}>
@@ -122,6 +129,11 @@ function ReviewItem({
                 {canDelete && (
                   <button className="review__tool review__tool--delete" onClick={() => onDeleteRequest(review)}>
                     삭제
+                  </button>
+                )}
+                {canHide && (
+                  <button className="review__tool review__tool--delete" onClick={() => onHideRequest(review)}>
+                    숨기기
                   </button>
                 )}
               </div>

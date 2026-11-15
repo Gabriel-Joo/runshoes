@@ -7,14 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.SQLRestriction;
 
 /**
  * reviews — created_at 은 UTC(DATETIME(3)). like_count 는 NULL 이면 응답에서 키를 뺀다(json-server 에서 키가 없던 것).
  * V3: user_id(작성자) · review_type(FIRST/FOLLOWUP) 과 실사용 후기 칸. first_shoe_id 는 DB 가 만드는 VIRTUAL 칸이라 매핑하지 않는다.
  * liked 는 V3 전의 공용 칸 — 읽지 않는다(사용자별은 review_likes). V4 에서 지운다.
+ * 관리자가 숨긴 리뷰(V22 hidden_at)는 엔티티로 읽히지 않는다(@SQLRestriction — 신발 숨김 V8 과 같다). 목록 · 리뷰 수 · 요약 입력에서
+ * 저절로 빠진다. 관리 화면의 리뷰 목록 · 숨기기 · 되살리기 · 영구 삭제는 JDBC 로 따로(api/AdminReviews).
  */
 @Entity
 @Table(name = "reviews")
+@SQLRestriction("hidden_at IS NULL")
 public class Review {
 
 	/** DB 가 매긴다(V10 AUTO_INCREMENT) — 지운 id 를 다시 쓰지 않는다 */
@@ -64,6 +68,10 @@ public class Review {
 	@Column(name = "verified_by")
 	private Long verifiedBy;
 
+	/** 숨긴 때(V22) — 엔티티로 읽히는 행은 늘 NULL(@SQLRestriction). 숨기기 · 되살리기는 api/AdminReviews 의 JDBC */
+	@Column(name = "hidden_at")
+	private LocalDateTime hiddenAt;
+
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }
 	public Long getShoeId() { return shoeId; }
@@ -89,4 +97,5 @@ public class Review {
 	public String getProofImageUrl() { return proofImageUrl; }
 	public Boolean getVerified() { return verified; }
 	public void setVerified(Boolean verified) { this.verified = verified; }
+	public LocalDateTime getHiddenAt() { return hiddenAt; }
 }

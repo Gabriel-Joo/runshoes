@@ -1,0 +1,43 @@
+{
+  "id": "X206",
+  "plan": null,
+  "name": "key 형식 틀림 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/terms",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "key": "Heel",
+      "name": "힐",
+      "short": "a",
+      "description": "b"
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "key 는 영문 소문자로 시작하는 영문 · 숫자 2~50자예요(예: heelCounter).",
+      "code": "invalid"
+    }
+  }
+}

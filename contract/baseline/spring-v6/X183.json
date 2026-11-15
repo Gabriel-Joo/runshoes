@@ -1,0 +1,39 @@
+{
+  "id": "X183",
+  "plan": null,
+  "name": "runner05 틀린 비밀번호 4번째 → 401",
+  "contract": true,
+  "expect": 401,
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "runner05@runshoes.test",
+      "password": "<가림>"
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:43:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "INVALID_CREDENTIALS",
+        "message": "이메일 또는 비밀번호가 맞지 않습니다."
+      }
+    }
+  }
+}

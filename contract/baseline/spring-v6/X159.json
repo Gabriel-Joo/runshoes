@@ -1,0 +1,121 @@
+{
+  "id": "X159",
+  "plan": null,
+  "name": "리뷰 관리 목록 데모 관리자 — 신발 8, 작성 날짜 최신순",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/reviews?shoeId=8",
+    "headers": {
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:34:59 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "id": 79,
+          "shoeId": 8,
+          "brand": "뉴발란스",
+          "model": "프레시폼 X 880 v15",
+          "image": "/images/880-v15.png",
+          "shoeHidden": false,
+          "userId": 10,
+          "author": "서브4가목표",
+          "rating": 5,
+          "content": "쿠션이 정말 푹신해서 장거리 회복주에 딱입니다.",
+          "createdAt": "2026-07-25T21:19:18.668Z",
+          "likeCount": 3,
+          "reviewType": "FIRST",
+          "verified": false,
+          "verifiedAt": null,
+          "hiddenAt": null,
+          "helpfulRows": 0,
+          "followups": 0
+        },
+        {
+          "id": 80,
+          "shoeId": 8,
+          "brand": "뉴발란스",
+          "model": "프레시폼 X 880 v15",
+          "image": "/images/880-v15.png",
+          "shoeHidden": false,
+          "userId": 25,
+          "author": "가성비탐험가",
+          "rating": 4,
+          "content": "가격 대비 만족스러운데 무게가 좀 나가는 편이에요.",
+          "createdAt": "2026-07-25T14:19:18.668Z",
+          "likeCount": 2,
+          "reviewType": "FIRST",
+          "verified": false,
+          "verifiedAt": null,
+          "hiddenAt": null,
+          "helpfulRows": 0,
+          "followups": 0
+        },
+        {
+          "id": 29,
+          "shoeId": 8,
+          "brand": "뉴발란스",
+          "model": "프레시폼 X 880 v15",
+          "image": "/images/880-v15.png",
+          "shoeHidden": false,
+          "userId": 28,
+          "author": "회복주는천천히",
+          "rating": 4,
+          "content": "300g이라 무겁긴 한데 쿠션은 확실합니다. 훈련 다음 날 회복주로 딱이에요.",
+          "createdAt": "2026-07-11T00:00:00.000Z",
+          "likeCount": 2,
+          "reviewType": "FIRST",
+          "verified": false,
+          "verifiedAt": null,
+          "hiddenAt": null,
+          "helpfulRows": 0,
+          "followups": 0
+        },
+        {
+          "id": 28,
+          "shoeId": 8,
+          "brand": "뉴발란스",
+          "model": "프레시폼 X 880 v15",
+          "image": "/images/880-v15.png",
+          "shoeHidden": false,
+          "userId": 22,
+          "author": "20년차러너",
+          "rating": 4,
+          "content": "쿠션이 확 늘었는데 드롭이 6mm라 예전 880과는 느낌이 많이 다릅니다. 적응 기간이 필요했어요.",
+          "createdAt": "2026-06-22T00:00:00.000Z",
+          "likeCount": 0,
+          "reviewType": "FIRST",
+          "verified": false,
+          "verifiedAt": null,
+          "hiddenAt": null,
+          "helpfulRows": 0,
+          "followups": 0
+        }
+      ],
+      "total": 4,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "X185",
+  "plan": null,
+  "name": "6번째 → 429(계정 잠김)",
+  "contract": true,
+  "expect": 429,
+  "volatile": [
+    "retryAfter"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "runner05@runshoes.test",
+      "password": "<가림>"
+    }
+  },
+  "response": {
+    "status": 429,
+    "headers": {
+      "cache-control": "no-store",
+      "retry-after": "900",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:43:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "error": {
+        "code": "RATE_LIMITED",
+        "message": "로그인 시도가 너무 많아요. 15분 뒤에 다시 해 주세요.",
+        "retryAfter": 900
+      }
+    }
+  }
+}

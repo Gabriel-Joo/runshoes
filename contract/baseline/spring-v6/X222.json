@@ -1,0 +1,38 @@
+{
+  "id": "X222",
+  "plan": null,
+  "name": "남의 보이는 리뷰 지우기 admin → 403 hide_first",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "DELETE",
+    "path": "/api/reviews/29",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 00:19:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "hide_first",
+      "message": "다른 사람의 리뷰는 숨긴 뒤 리뷰 관리에서만 영구 삭제할 수 있어요."
+    }
+  }
+}

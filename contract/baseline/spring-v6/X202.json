@@ -1,0 +1,43 @@
+{
+  "id": "X202",
+  "plan": null,
+  "name": "문의 처리함 데모 관리자 → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/chatbot-misses/decide",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": {
+      "kind": "term",
+      "query": "힐카운터",
+      "status": "done"
+    }
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "message": "데모 관리자 계정은 할 수 없습니다",
+      "code": "demo_admin"
+    }
+  }
+}

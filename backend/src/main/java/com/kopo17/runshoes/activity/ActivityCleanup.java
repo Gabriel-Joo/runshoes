@@ -20,7 +20,9 @@ class ActivityCleanup {
 
 	private static final Logger log = LoggerFactory.getLogger(ActivityCleanup.class);
 	private static final List<String> AUTH = List.of("auth.%", "user.%");
-	private static final List<String> OTHER = List.of("review.%", "like.%", "review_like.%", "shoe.%", "compare.%");
+	// admin.% — 관리자 마이페이지의 행동(리뷰 숨기기 · 되살리기 · 영구 삭제 · 인증 · 로그인 잠금 풀기 · 용어 추가 · 챗봇 문의 처리, 2026-11-14).
+	//   여기 없으면 지워지지 않고 쌓인다. 잠금 풀기는 15분만 의미가 있어 180일로 충분하다
+	private static final List<String> OTHER = List.of("review.%", "like.%", "review_like.%", "shoe.%", "compare.%", "admin.%");
 	private static final int BATCH = 5000;
 
 	private final JdbcTemplate jdbc;

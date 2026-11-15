@@ -52,6 +52,14 @@ class ApiException extends RuntimeException {
 		return new ApiException(HttpStatus.FORBIDDEN, message);
 	}
 
+	/**
+	 * admin 이 남의 보이는 리뷰를 공개 API 로 지우려 했다(2026-11-15 사용자) — 남의 리뷰는 숨긴 뒤 리뷰 관리에서만 영구 삭제한다.
+	 * 상세 모달도 숨기기만 둔다. 화면이 문구를 그대로 띄운다
+	 */
+	static ApiException hideFirst() {
+		return new ApiException(HttpStatus.FORBIDDEN, "hide_first", "다른 사람의 리뷰는 숨긴 뒤 리뷰 관리에서만 영구 삭제할 수 있어요.");
+	}
+
 	/** 한 신발에 첫 리뷰 하나(uk_reviews_user_first_shoe) */
 	static ApiException reviewExists() {
 		return new ApiException(HttpStatus.CONFLICT, "이 신발에는 이미 리뷰를 썼다");
@@ -65,6 +73,11 @@ class ApiException extends RuntimeException {
 	/** 영구 삭제(V11)는 숨긴 신발만 — 보이는 신발을 바로 지우지 않게 */
 	static ApiException notHidden() {
 		return new ApiException(HttpStatus.CONFLICT, "not_hidden", "숨긴 신발만 영구 삭제할 수 있어요. 먼저 숨겨 주세요.");
+	}
+
+	/** 관리 API 의 상태 충돌(409) — 이미 숨긴 리뷰를 숨기기 · 숨기지 않은 리뷰를 되살리기 · 영구 삭제 등. 화면이 문구를 그대로 띄운다 */
+	static ApiException state(String code, String message) {
+		return new ApiException(HttpStatus.CONFLICT, code, message);
 	}
 
 	static ApiException methodNotAllowed(String message) {

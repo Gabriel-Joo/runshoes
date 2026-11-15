@@ -1,0 +1,38 @@
+{
+  "id": "X187",
+  "plan": null,
+  "name": "잠금 풀기 데모 관리자 → 403",
+  "contract": true,
+  "expect": 403,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/users/5/unlock",
+    "headers": {
+      "Authorization": "Bearer {{d}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:43:43 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "code": "demo_admin",
+      "message": "데모 관리자 계정은 할 수 없습니다"
+    }
+  }
+}

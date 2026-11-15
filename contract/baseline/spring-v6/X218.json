@@ -1,0 +1,45 @@
+{
+  "id": "X218",
+  "plan": null,
+  "name": "인증 켜기 admin → 200",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "verifiedAt"
+  ],
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/reviews/79/verify",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "verified": true
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 79,
+      "verified": true,
+      "verifiedAt": "2026-11-14T13:04:05.503Z"
+    }
+  }
+}

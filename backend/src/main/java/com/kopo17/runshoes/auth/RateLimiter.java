@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 로그인 · 가입 시도 제한 — Redis 없이 activity_logs 를 센다(Pod 가 여럿이어도 같은 수를 본다). docs/04_auth.md.
- * 로그인: 최근 창(15분) 안의 실패 — 계정(이메일 키)은 마지막 성공 뒤의 것만(성공하면 리셋), IP 는 전부. 넘으면 마지막 실패에서 창만큼 막는다.
+ * 로그인: 최근 창(15분) 안의 실패 — 계정(이메일 키)은 마지막 성공 · 관리자의 잠금 풀기 뒤의 것만(성공하면 리셋), IP 는 전부. 넘으면 마지막 실패에서 창만큼 막는다.
  *   잠긴 동안에는 맞는 비밀번호여도 같은 429 — 비밀번호를 검사하기 전에 센다(BCrypt 도 돌리지 않는다). 없는 이메일도 같은 기준.
  *   막힌 시도(auth.login.blocked)는 실패로 세지 않는다 — 두드릴수록 잠금이 길어지지 않게.
  * 가입: 같은 IP 의 성공한 가입이 1시간에 10건 — 그 가운데 가장 오래된 것에서 1시간 뒤 풀린다.
@@ -30,15 +30,35 @@ class RateLimiter {
 		this.props = props;
 	}
 
-	/** 막혀 있으면 429(AuthException) */
-	void checkLogin(long emailKey, String ip) {
-		LocalDateTime now = now(), since = now.minus(props.loginWindow());
-		Map<String, Object> acc = jdbc.queryForMap("""
+	/**
+	 * 계정 잠금을 푸는 기록(관리자 마이페이지, 2026-11-14) — 로그인 성공처럼 그 앞의 실패를 세지 않게 한다. 계정에 잠김 칸이 없어서
+	 * (activity_logs 를 센다) 「풀었다」도 기록으로 남기고 세는 쿼리가 그 뒤만 본다. IP 잠금은 계정 단위로 풀 수 없다
+	 */
+	static final String UNLOCK = "admin.login.unlock";
+
+	/** 계정(이메일 키)의 최근 창 안 실패 — 마지막 성공 · 잠금 풀기 뒤의 것만 */
+	private Map<String, Object> accountFailures(long emailKey, LocalDateTime since) {
+		return jdbc.queryForMap("""
 				SELECT COUNT(*) AS n, MAX(occurred_at) AS last FROM activity_logs
 				WHERE event IN ('auth.login.failure', 'auth.password.failure') AND target_type = 'email' AND target_id = ? AND occurred_at > ?
 				  AND occurred_at > COALESCE((SELECT MAX(occurred_at) FROM activity_logs
-				                              WHERE event = 'auth.login.success' AND target_type = 'email' AND target_id = ?), '1970-01-01')""",
+				                              WHERE event IN ('auth.login.success', '""" + UNLOCK + "') AND target_type = 'email' AND target_id = ?), '1970-01-01')",
 				emailKey, Timestamp.valueOf(since), emailKey);
+	}
+
+	/** 계정이 잠겨 있으면 풀리는 때(UTC), 아니면 null — 관리자 회원 목록(LoginLocks)이 쓴다. IP 잠금은 보지 않는다 */
+	LocalDateTime accountLockedUntil(long emailKey) {
+		LocalDateTime now = now();
+		Map<String, Object> acc = accountFailures(emailKey, now.minus(props.loginWindow()));
+		if (((Number) acc.get("n")).longValue() < props.loginAccount()) return null;
+		LocalDateTime until = time(acc.get("last")).plus(props.loginWindow());
+		return until.isAfter(now) ? until : null;
+	}
+
+	/** 막혀 있으면 429(AuthException) */
+	void checkLogin(long emailKey, String ip) {
+		LocalDateTime now = now(), since = now.minus(props.loginWindow());
+		Map<String, Object> acc = accountFailures(emailKey, since);
 		blockIf(acc, props.loginAccount(), props.loginWindow(), now, LOGIN);
 		if (ip == null) return;
 		Map<String, Object> byIp = jdbc.queryForMap("""
@@ -69,9 +89,12 @@ class RateLimiter {
 	private static void blockIf(Map<String, Object> row, int limit, Duration window, LocalDateTime now, String template) {
 		long n = ((Number) row.get("n")).longValue();
 		if (n < limit) return;
-		Object v = row.get("last");                   // MySQL 드라이버는 DATETIME 을 LocalDateTime 으로 준다(다른 드라이버는 Timestamp)
-		LocalDateTime last = v instanceof Timestamp t ? t.toLocalDateTime() : (LocalDateTime) v;
-		throw tooMany(last.plus(window), now, template);
+		throw tooMany(time(row.get("last")).plus(window), now, template);
+	}
+
+	/** MySQL 드라이버는 DATETIME 을 LocalDateTime 으로 준다(다른 드라이버는 Timestamp) */
+	private static LocalDateTime time(Object v) {
+		return v instanceof Timestamp t ? t.toLocalDateTime() : (LocalDateTime) v;
 	}
 
 	static final String LOGIN = "로그인 시도가 너무 많아요. %d분 뒤에 다시 해 주세요.";

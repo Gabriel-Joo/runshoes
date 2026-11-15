@@ -1,4 +1,4 @@
-> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 원천: `backend/…/api` · `auth` · `config` · `contract/`
+> 상태: 운영에서 쓰는 중(2026-11-02, V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116 · FAIL 0 · v3 PASS 100 · FAIL 12(의도한 변경, 3절) · v3-search 24 · v4 21 · v14-summary 20(v3-summary 는 V14 전 계약 — 이력). 2026-11-14 로컬(관리자 마이페이지 1~5, V22 · V23): v6 PASS 184 · FAIL 0 · v3 101/11 · v3-search 24 · v4 21 · v14-summary 20. 원천: `backend/…/api` · `auth` · `config` · `contract/`
 
 #### 0. 한 줄 요약
 
@@ -22,7 +22,16 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 | `GET /api/compare?pick=<id>` · `?ids=<id,…>` | 비교하기 계산(2026-11-10, 작업 3 — 브라우저에서 옮김). `pick` 이면 자동 채우기 `cols:[{id, why}]`(08 1-3)까지, `ids` 는 1~5켤레(숫자 아님 · 모르는 id · 겹침은 버림). 응답 `fields`(칸마다 모집단 `{n, values}` 오름차순 — 그래프 막대용) · `shoes`(칸마다 `{value, order, band, word}`, 무게는 `converted` — 등수를 말할 수 없으면 `value: null` 만). 둘 다 없거나 둘 다 있으면 400 `{}` | 누구나 |
 | `GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…` | `price` 대신 `budget=<원>`(1 ~ 1억 정수 — 챗봇이 말한 금액, 작업 5-1)도 받는다 — 둘 다 오거나 숫자가 아니면 400. 추천받기 상위 3 `{results:[{id, score, max, checked, reasons:[{hit, text}], notes}]}` — `score` · `max` 는 판단한 조건의 점수 · 만점(데이터가 없어 못 본 조건은 빠진다), `checked` 판단한 조건 수, `notes` 못 본 조건 한 줄(`10_recommend.md`). `price` 는 low(20만원까지) · mid(30만원까지) · unknown, 옛 값 high 는 unknown 과 같게 받는다(작업 3-2). 다섯 칸 모두 화면 선택지 값만(`unknown` · `중립화-outer` 포함), 빠지거나 모르는 값이면 400 `{}`. 이유 문장의 가격은 한국 표기(`199,000원`) | 누구나 |
 | `POST /api/internal/chatbot-misses` | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문 기록(V18, 작업 5-1). 본문 `{kind: "shoe"\|"term"\|"feature", query, message}` → 204, 잘못된 본문 400 `{}`. **같은 Pod 안에서 127.0.0.1 로 들어온 연결만** — 서버 쪽 주소(`localAddr`)를 본다. `remoteAddr` 는 믿지 않는다: Spring Boot 는 쿠버네티스에서 `X-Forwarded-For` 로 `remoteAddr` 를 바꾼다(127/8 · 내부 대역을 프록시로 믿는다 — `X-Forwarded-For: 127.0.0.1` 이면 루프백이 된다). 그 밖은 404 `{}` | 챗봇 사이드카 |
-| `GET /api/admin/chatbot-misses` | 위 기록을 `query` 로 묶어 센 목록 `[{kind, query, count, lastAt, lastMessage}]`, 최근 순 200개 | admin · 데모 관리자 |
+| `GET /api/admin/chatbot-misses?status=&kind=&from=&to=&page=&size=` | 위 기록을 `(kind, query)` 로 묶은 목록(관리자 마이페이지 — 2026-11-14 최근 200개 배열에서 바꿨다), 마지막 질문 최근 순, 서버 페이지 나누기. `status` 는 `open`(기본) · `done` · `ignored` · `all`(V23). 한 줄 `{kind, query, count, open, lastAt, lastMessage, status, decidedAt}` | admin · 데모 관리자 |
+| `POST /api/admin/chatbot-misses/decide` | 본문 `{kind, query, status: done \| ignored \| open}` — 묶음의 줄 전부에 처리 상태를 적는다(`open` 은 되돌리기). 없는 묶음 404 | admin |
+| `POST /api/admin/terms` | 사전에 용어 추가 `{key, name, short, description}` → 201(id 는 가장 큰 id + 1). 같은 key · 이름 409 `term_exists`, 형식 400. `/api/terms` 의 쓰기는 그대로 405 | admin |
+| `GET /api/admin/reviews?hidden=&from=&to=&shoeId=&shoe=&author=&page=&size=` | 리뷰 관리 목록(V22, 관리자 마이페이지 — `03_admin.md` 1-6). 서버 페이지 나누기 `{items, total, page, size}`(size 1~100, 기본 20). `hidden=true` 면 숨긴 리뷰(숨긴 순), 아니면 보이는 리뷰(작성 순) — 둘 다 최근 먼저. `from` · `to` 는 한국 날짜(포함), 틀리면 400 `{code:"invalid", message}`. 한 줄에 신발 이름 · 사진 · 숨긴 신발 여부 · 인증 · 숨긴 때 · 함께 지워질 도움이 돼요 행 수(`helpfulRows`) · 실사용 후기 수 | admin · 데모 관리자 |
+| `POST /api/admin/reviews/{id}/verify` | 실사용 인증 켜기 · 끄기 `{verified: true \| false}` → `{id, verified, verifiedAt}`. 불린이 아니면 400 | admin |
+| `POST /api/admin/reviews/{id}/hide` · `/restore` · `DELETE /api/admin/reviews/{id}` | 숨기기 · 되살리기 · 영구 삭제(숨긴 리뷰만). 상태가 안 맞으면 409 `{code: already_hidden \| not_hidden, message}`. 숨기기 · 되살리기 → `{id, hiddenAt, summaryStale}`, 영구 삭제 → `{id, helpful, followups}` | admin |
+| `GET /api/admin/users?q=&page=&size=` | 회원 목록(가입 최근 순, 서버 페이지 나누기) — 한 줄 `{id, email, nickname, role, createdAt, lastLoginAt, withdrawn, withdrawnAt, locked, lockedUntil, reviews}`. `q` 는 이메일 · 닉네임 부분 일치. 데모 관리자도 같은 응답(2026-11-15, 처음의 이메일 가림 · `emailHidden` 은 뺐다) | admin · 데모 관리자 |
+| `POST /api/admin/users/{id}/unlock` | 로그인 계정 잠금 풀기(`04_auth.md` 1-4) → `{id, locked:false}`. 잠겨 있지 않으면 409 `not_locked`, 탈퇴 계정 409 `withdrawn` | admin |
+| `GET /api/admin/chatbot-conversations?from=&to=&account=&branch=&page=&size=` | 챗봇 대화 목록(V19 `chatbot_turns` 를 연결별로 묶음, 마지막 턴 최근 순, 서버 페이지 나누기) — 한 줄 `{connId, userId, nickname, demo, startedAt, lastAt, turns, branches, firstQuestion}`. `account` 는 계정 번호 또는 닉네임 부분 일치, `branch` 는 그 갈래 턴이 있는 대화 | admin · 데모 관리자 |
+| `GET /api/admin/chatbot-conversations/{connId}` | 그 대화의 턴(차례대로) `{connId, turns:[{turnId, createdAt, question, answer, branch, byRule, llmOk, health, fallbackUsed, shoeCount, latencyMs, stages}]}`. 없는 대화 404. 데모 관리자도 같은 응답(2026-11-15, 처음의 원문 가림 · `textHidden` 은 뺐다) | admin · 데모 관리자 |
 | `GET /api/admin/summaries` | 리뷰 요약 건수 `{stale, pending, generated, total}`(보이는 신발만) — 읽기만, 화면에서 돌리는 버튼은 없다(V14) | admin · 데모 관리자 |
 | 그 밖 | SPA — 파일이 있으면 그 파일, 없으면 `index.html`. `/livez` · `/readyz` 는 프로브용(actuator 는 관리 포트 9000 에만 — `06_deployment.md` 1-9) | — |
 
@@ -51,15 +60,17 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 - **숫자** — 스펙 · 가격 · 평점은 DOUBLE. 정수 값은 `300.0` 이 아니라 `300` 으로 낸다(`JacksonConfig`).
 - **`createdAt`** — 언제나 `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`(UTC, ms). 시드의 날짜만인 값은 그날 00:00:00.000Z.
 - **null** — 그대로 `null` 로 낸다(전역 NON_NULL 을 쓰지 않는다 — `midsole: null` 이 "정보 없음" 표시의 근거). 예외: 리뷰 `likeCount` 는 값이 없으면 키를 뺀다. `liked` 는 늘 `true/false`.
-- **`terms`** — 시드에 `id 12` 가 둘이었다(json-server 응답 그대로). V17 에서 아웃솔을 13 으로 — 계약 R03 을 다시 녹화했다. 읽기 전용(쓰기 405).
+- **`terms`** — 시드에 `id 12` 가 둘이었다(json-server 응답 그대로). V17 에서 아웃솔을 13 으로 — 계약 R03 을 다시 녹화했다. `/api/terms` 는 읽기 전용(쓰기 405), 더하기는 관리 API `POST /api/admin/terms`(2026-11-14).
 - 스키마 쪽 이유는 `07_database.md`.
 
 #### 1-4. 로그인 뒤 — 권한과 서버가 정하는 값
 
-- **쓰기 판정 순서: 401 → 404 → 403.** 토큰이 없으면 대상이 있는지 보기 전에 401 `{}`. 그 뒤 없는 대상은 404, 있으면 권한(신발 쓰기 admin · 리뷰 PATCH 작성자 · 리뷰 DELETE 작성자 또는 admin).
+- **쓰기 판정 순서: 401 → 404 → 403.** 토큰이 없으면 대상이 있는지 보기 전에 401 `{}`. 그 뒤 없는 대상은 404, 있으면 권한(신발 쓰기 admin · 리뷰 PATCH 작성자 · 리뷰 DELETE 작성자).
+- **admin 도 남의 보이는 리뷰를 `DELETE /api/reviews/{id}` 로 지우지 못한다**(2026-11-15 사용자) — 403 `{code:"hide_first", message}`. 남의 리뷰는 숨긴 뒤(`POST /api/admin/reviews/{id}/hide`) 숨긴 리뷰에서만 영구 삭제한다(`DELETE /api/admin/reviews/{id}`). 작성자가 자기 리뷰를 지우는 것은 그대로다(admin 자신의 리뷰 포함). 계약 차이: 옛 기준선 spring-v14-summary Y40 · Y41 · Y43 은 admin 이 남의 리뷰를 지웠다 — 숨기기 둘 · 작성자 지우기로 바꾸고 Y42(admin → 403)를 더해 다시 녹화했다. spring-v6 에 X222 · X223. spring-v3 의 관리자 지우기 시나리오는 없어 그대로다(`contract/README.md` 「결과」).
 - **서버가 정하는 값** — 리뷰의 `author` · `userId` · `createdAt`, 신발의 `rating` · `reviewCount`(FIRST 리뷰만, 소수 한 자리) · `likeCount` · `updatedAt` · `lastChange`. 본문에 와도 버린다 — 신발은 `ShoeCollection.apply` 가 받는 칸만 읽고, 리뷰는 서버가 덮어쓴다(`ReviewCollection`).
 - **`liked`** 는 요청한 사람 기준이다(비로그인은 false). `?liked=true` 도 그 사람의 찜.
 - 리뷰 POST — 한 신발에 첫 리뷰 하나(409), 별점 1~5 · 내용 10~300자(400). 리뷰 PATCH 는 `rating` · `content` 만, PUT 은 405.
+- 관리자가 숨긴 리뷰(V22)는 공개 API 에서 없는 것과 같다 — 목록에서 빠지고 단건 · PATCH · DELETE · 도움이 돼요는 404, 신발의 `rating` · `reviewCount` 에서도 빠진다. 숨긴 리뷰가 없으면 응답은 예전과 같다(옛 기준선 그대로 PASS).
 - 데모 관리자(`DEMO_ADMIN`)는 관리 화면을 다 보지만 모든 쓰기 · 찜 · 리뷰가 403 `{code:"demo_admin", message}` — 이 오류만 본문이 있다(화면이 문구를 그대로 띄운다).
 - 인증 API(`/api/auth/*` · `/api/me`)의 오류는 `{error:{code, field, message}}`. 로그인 시도 제한(429 + `Retry-After`)은 `04_auth.md`.
 - 저장 오류는 DB 제약 이름으로 가른다 — `uk_reviews_user_first_shoe` 409, `uk_shoes_line_generation_gender` 409(숨긴 행과 겹치면 `{code:"hidden_generation"}`), 그 밖(PK 등) 500.
@@ -113,7 +124,7 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 | `baseline/spring-v3-summary` | 10 | 요약을 조회 때 Ollama 로 만들던 계약 — 이력, V14 전 |
 | `baseline/spring-v14-summary` | 23 | 요약 V14 — 배치가 만든 것을 읽기 · 쓰기 시점 stale · 3건 미만 삭제 · 관리 건수. 녹화 중 Ollama 호출이 늘지 않는지 · 배치가 하나씩 보냈는지는 스크립트가 본다 |
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 |
-| `baseline/spring-v6` | 116 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15) · 비교 · 추천 API 의 새 기능만 |
+| `baseline/spring-v6` | 184 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15) · 비교 · 추천 API · 리뷰 숨기기(V22) · 회원 목록 · 잠금 풀기 의 새 기능만 |
 
 - **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS` · `V15_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다.
 - diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만.

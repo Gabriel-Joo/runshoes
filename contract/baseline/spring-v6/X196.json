@@ -1,0 +1,88 @@
+{
+  "id": "X196",
+  "plan": null,
+  "name": "대화 턴 admin — 질문 · 답 · 갈래 · 시간",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "createdAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-conversations/contract0000000000000000000000c1",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 00:23:47 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "connId": "contract0000000000000000000000c1",
+      "turns": [
+        {
+          "turnId": 1,
+          "createdAt": "2026-11-15T00:23:47.814Z",
+          "question": "안녕",
+          "answer": "안녕하세요! 러닝화에 대해 물어보세요.",
+          "branch": "greeting",
+          "byRule": true,
+          "llmOk": null,
+          "health": false,
+          "fallbackUsed": false,
+          "shoeCount": 0,
+          "latencyMs": 10,
+          "stages": {
+            "routerMs": 4,
+            "searchMs": 0,
+            "genMs": 6,
+            "catalogMs": 0,
+            "compareMs": 0,
+            "recommendMs": 0,
+            "reviewMs": 0,
+            "summaryMs": 0
+          }
+        },
+        {
+          "turnId": 2,
+          "createdAt": "2026-11-15T00:23:47.818Z",
+          "question": "드롭이 뭐야",
+          "answer": "드롭은 뒤꿈치와 앞꿈치 높이 차이예요.",
+          "branch": "term",
+          "byRule": true,
+          "llmOk": null,
+          "health": false,
+          "fallbackUsed": false,
+          "shoeCount": 0,
+          "latencyMs": 10,
+          "stages": {
+            "routerMs": 4,
+            "searchMs": 0,
+            "genMs": 6,
+            "catalogMs": 0,
+            "compareMs": 0,
+            "recommendMs": 0,
+            "reviewMs": 0,
+            "summaryMs": 0
+          }
+        }
+      ]
+    }
+  }
+}

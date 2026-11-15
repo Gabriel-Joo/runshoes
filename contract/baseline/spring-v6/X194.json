@@ -1,0 +1,59 @@
+{
+  "id": "X194",
+  "plan": null,
+  "name": "대화 목록 admin — 체험 계정 3, 첫 질문",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "startedAt",
+    "lastAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-conversations?account=3",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sun, 15 Nov 2026 00:23:47 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "connId": "contract0000000000000000000000c1",
+          "userId": 3,
+          "nickname": "트레일새내기",
+          "demo": true,
+          "startedAt": "2026-11-15T00:23:47.814Z",
+          "lastAt": "2026-11-15T00:23:47.818Z",
+          "turns": 2,
+          "branches": [
+            "greeting",
+            "term"
+          ],
+          "firstQuestion": "안녕"
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

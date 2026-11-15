@@ -1,0 +1,45 @@
+{
+  "id": "X213",
+  "plan": null,
+  "name": "문의 되돌리기(open) → 200",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/chatbot-misses/decide",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "kind": "term",
+      "query": "힐카운터",
+      "status": "open"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "kind": "term",
+      "query": "힐카운터",
+      "rows": 2,
+      "status": "open"
+    }
+  }
+}

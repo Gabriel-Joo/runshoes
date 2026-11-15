@@ -1,0 +1,47 @@
+{
+  "id": "X204",
+  "plan": null,
+  "name": "사전 추가 admin → 201(id 14)",
+  "contract": true,
+  "expect": 201,
+  "request": {
+    "method": "POST",
+    "path": "/api/admin/terms",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "key": "heelCounter",
+      "name": "힐카운터",
+      "short": "뒤꿈치를 감싸는 단단한 부분",
+      "description": "뒤꿈치를 잡아 주는 심지예요."
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 14,
+      "key": "heelCounter",
+      "name": "힐카운터",
+      "short": "뒤꿈치를 감싸는 단단한 부분",
+      "description": "뒤꿈치를 잡아 주는 심지예요."
+    }
+  }
+}

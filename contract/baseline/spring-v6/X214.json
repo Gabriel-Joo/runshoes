@@ -1,0 +1,37 @@
+{
+  "id": "X214",
+  "plan": null,
+  "name": "문의 목록 status 틀림 → 400",
+  "contract": true,
+  "expect": 400,
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/chatbot-misses?status=x",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "connection": "close"
+    },
+    "body": {
+      "message": "status 는 open · done · ignored · all 가운데 하나예요.",
+      "code": "invalid"
+    }
+  }
+}

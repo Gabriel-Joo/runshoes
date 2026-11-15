@@ -1,0 +1,41 @@
+{
+  "id": "X207",
+  "plan": null,
+  "name": "/api/terms 쓰기는 그대로 405",
+  "contract": true,
+  "expect": 405,
+  "request": {
+    "method": "POST",
+    "path": "/api/terms",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": {
+      "key": "x",
+      "name": "y",
+      "short": "a",
+      "description": "b"
+    }
+  },
+  "response": {
+    "status": 405,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:58:27 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {}
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "X168",
+  "plan": null,
+  "name": "숨긴 리뷰 목록",
+  "contract": true,
+  "expect": 200,
+  "volatile": [
+    "hiddenAt"
+  ],
+  "request": {
+    "method": "GET",
+    "path": "/api/admin/reviews?hidden=true",
+    "headers": {
+      "Authorization": "Bearer {{admin}}"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 12:34:59 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "items": [
+        {
+          "id": 28,
+          "shoeId": 8,
+          "brand": "뉴발란스",
+          "model": "프레시폼 X 880 v15",
+          "image": "/images/880-v15.png",
+          "shoeHidden": false,
+          "userId": 22,
+          "author": "20년차러너",
+          "rating": 4,
+          "content": "쿠션이 확 늘었는데 드롭이 6mm라 예전 880과는 느낌이 많이 다릅니다. 적응 기간이 필요했어요.",
+          "createdAt": "2026-06-22T00:00:00.000Z",
+          "likeCount": 0,
+          "reviewType": "FIRST",
+          "verified": false,
+          "verifiedAt": null,
+          "hiddenAt": "2026-11-14T12:34:59.413Z",
+          "helpfulRows": 0,
+          "followups": 0
+        }
+      ],
+      "total": 1,
+      "page": 1,
+      "size": 20
+    }
+  }
+}

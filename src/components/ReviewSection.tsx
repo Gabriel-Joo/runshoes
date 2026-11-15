@@ -5,10 +5,11 @@ import { useAuth } from "../auth/useAuth";
 import { apiFetch } from "../auth/session";
 import { loginPath } from "../auth/session";
 import ReviewItem from "./ReviewItem";
-import { clampReview, contentError, reviewError, REVIEW_MAX } from "./reviewRules";
+import { clampReview, contentError, reviewError, REVIEW_MAX, WHEN_APPLIED } from "./reviewRules";
 import ReviewCounter from "./ReviewCounter";
-import { demoBlocked } from "../auth/demoAdmin";
+import { demoBlocked, serverMessage } from "../auth/demoAdmin";
 import ConfirmModal from "./ConfirmModal";
+import HideReviewConfirm from "./HideReviewConfirm";
 import "./ReviewSection.css";
 
 interface ReviewSectionProps {
@@ -36,7 +37,7 @@ const saveDraft = (shoeId: number, d: { rating: number; content: string } | null
 
 /**
  * 리뷰 — 작성자는 계정에서(닉네임 칸 없음). 폼은 셋 중 하나: 로그인 안내 / "이미 썼어요" / 작성 폼.
- * 수정은 내 리뷰만, 지우기는 내 리뷰 또는 admin. 공감은 남의 리뷰에만. 평점은 서버가 다시 센다(onReviewChange 는 목록만 다시 받는다)
+ * 수정 · 지우기는 내 리뷰만. 관리자는 남의 리뷰를 숨기기만 한다(영구 삭제는 관리자 마이페이지 숨긴 리뷰에서, 2026-11-15 사용자). 공감은 남의 리뷰에만. 평점은 서버가 다시 센다(onReviewChange 는 목록만 다시 받는다)
  */
 function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const { status, user, isAdmin, setNotice } = useAuth();
@@ -48,6 +49,8 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const [busy, setBusy] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
+  const [hideTarget, setHideTarget] = useState<Review | null>(null);
+  const [hiding, setHiding] = useState(false);
   const backHere = loginPath(`/?shoe=${shoeId}`);
 
   const getReviews = async () => {
@@ -124,6 +127,21 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
     onReviewChange();
   };
 
+  // 숨기기(관리자, 남의 리뷰) — 관리자 마이페이지 리뷰 관리와 같은 API · 같은 확인 창 · 같은 알림
+  const hideReview = async () => {
+    if (!hideTarget) return;
+    setHiding(true);
+    const res = await apiFetch(`/admin/reviews/${hideTarget.id}/hide`, { method: "POST" }).catch(() => null);
+    setHiding(false);
+    setHideTarget(null);
+    const blocked = res && (await demoBlocked(res));
+    if (blocked) return setNotice(blocked);
+    if (!res?.ok) return setNotice((res && (await serverMessage(res))) ?? "숨기지 못했어요. 잠시 뒤 다시 해 주세요.");
+    setNotice(`리뷰를 숨겼어요. ${WHEN_APPLIED}`);
+    await getReviews();
+    onReviewChange();
+  };
+
   // 공감 — 응답의 liked · likeCount 로 그 리뷰만 바꾼다(순서는 그대로 — 누르자마자 베스트가 바뀌어 튀지 않게)
   const toggleLike = async (review: Review) => {
     const res = await apiFetch(`/reviews/${review.id}/like`, { method: review.liked ? "DELETE" : "PUT" });
@@ -151,11 +169,13 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
       review={review}
       isBest={best}
       canEdit={Boolean(user && review.userId === user.id)}
-      canDelete={Boolean(user && (review.userId === user.id || isAdmin))}
+      canDelete={Boolean(user && review.userId === user.id)}
+      canHide={Boolean(user && isAdmin && review.userId !== user.id)}
       likeState={status !== "user" ? "login" : review.userId === user?.id ? "mine" : "ok"}
       loginTo={backHere}
       onUpdate={updateReview}
       onDeleteRequest={setDeleteTarget}
+      onHideRequest={setHideTarget}
       onLike={toggleLike}
     />
   );
@@ -247,6 +267,9 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
           onConfirm={deleteReview}
           onCancel={() => setDeleteTarget(null)}
         />
+      )}
+      {hideTarget && (
+        <HideReviewConfirm author={hideTarget.author} busy={hiding} onConfirm={hideReview} onCancel={() => setHideTarget(null)} />
       )}
     </section>
   );

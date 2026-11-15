@@ -1,0 +1,48 @@
+{
+  "id": "X219",
+  "plan": null,
+  "name": "공개 리뷰 79 — verified true",
+  "contract": true,
+  "expect": 200,
+  "request": {
+    "method": "GET",
+    "path": "/api/reviews/79",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "cache-control": "no-cache",
+      "access-control-allow-credentials": "true",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "0",
+      "x-frame-options": "DENY",
+      "vary": "accept-encoding",
+      "content-type": "application/json",
+      "transfer-encoding": "chunked",
+      "date": "Sat, 14 Nov 2026 13:04:05 GMT",
+      "keep-alive": "timeout=60",
+      "connection": "keep-alive"
+    },
+    "body": {
+      "id": 79,
+      "shoeId": 8,
+      "userId": 10,
+      "author": "서브4가목표",
+      "rating": 5,
+      "content": "쿠션이 정말 푹신해서 장거리 회복주에 딱입니다.",
+      "createdAt": "2026-07-25T21:19:18.668Z",
+      "likeCount": 3,
+      "liked": false,
+      "reviewType": "FIRST",
+      "parentReviewId": null,
+      "distanceKm": null,
+      "proofImageUrl": null,
+      "verified": true
+    }
+  }
+}
