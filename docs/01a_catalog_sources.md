@@ -27,13 +27,13 @@
 
 | 구분 | 곳 | 읽는 방법 |
 |---|---|---|
-| 국내 공식몰(`sources.yaml` fetch 9) | asics.co.kr · nbkorea.com · saucony.co.kr · brooksrunning.co.kr · kor.mizuno.com · salomon.co.kr · kr.puma.com · altra.co.kr · merrellkorea.co.kr | 정적 HTML 은 `local/fetch.mjs`, JS 목록은 Playwright(2026-11-01 사용자 승인) |
+| 국내 공식몰(`sources.yaml` fetch 9곳 · 호스트 12) | asics.co.kr · nbkorea.com · saucony.co.kr · brooksrunning.co.kr · kor.mizuno.com(+ m.) · salomon.co.kr · kr.puma.com · altra.co.kr · merrellkorea.co.kr(www · m. · www 없음, 2026-11-15) | 정적 HTML 은 `local/fetch.mjs`, JS 목록은 Playwright(2026-11-01 사용자 승인) |
 | 해외 공식몰(`sources.yaml` fetch · `scope: specs` 2, 2026-11-09) | saucony.com · usa.mizuno.com — **스펙 칸만**(1-2a) | `local/fetch.mjs` |
-| 리뷰 · 소매 · 보도자료(`sources-media.yaml` fetch 9) | BITR(believeintherun) · RSG(runningshoesguru) · fit2run · weartesters · 브랜드 보도자료 몇 곳 | `local/fetch.mjs` — **사이트맵 색인에 있는 주소만** |
+| 리뷰 · 소매 · 보도자료 · 위키백과(`sources-media.yaml` fetch 11) | BITR(believeintherun) · RSG(runningshoesguru) · fit2run · weartesters · 브랜드 보도자료 몇 곳 · 위키백과 en · ko(2026-11-15, 사실만 — 1-2b) | `local/fetch.mjs` — **사이트맵 색인에 있는 주소만** |
 | 국내 판매처 | ABC마트 · GRAND STAGE(같은 a-rt.com) | Playwright(2026-10-28 · 11-02 사용자 승인) |
 | 웹 검색 | 검색 결과의 제목 · 요약만 | 페이지를 열지 않는다. 브랜드 1곳 또는 비실측 도메인 2곳이 같을 때만 판정 |
 | 이미지 | KicksDB(StockX · GOAT) | `01b` |
-| **열지 않는 곳** | 나이키 · 알트라 글로벌 · 리닝 · 엑스텝 · 푸마 미국 · 살로몬 글로벌 · 호카(약관이 자동 수집 금지, `blocked`) · 아디다스 · 온 · 언더아머 · 아식스 · 뉴발란스 · 브룩스 글로벌 · 머렐 미국 · 미즈노 EMEA(약관을 못 읽음 · 403 · 지역 리다이렉트, `unknown`) · 리뷰 매체 20곳(`blocked`) · solereview · i-run(실측, `excluded`) | 코드가 거절한다(`fetch.mjs HARD_BLOCK` · 모드 검사) |
+| **열지 않는 곳** | 나이키 · 알트라 글로벌 · 리닝 · 엑스텝 · 푸마 미국 · 살로몬 글로벌 · 호카(약관이 자동 수집 금지, `blocked`) · 아디다스 · 온 · 언더아머 · 아식스 · 뉴발란스 · 브룩스 글로벌 · 머렐 미국 · 미즈노 EMEA(약관을 못 읽음 · 403 · 지역 리다이렉트, `unknown`) · 국내몰 다른 이름 호스트 5(m.nbkorea.com · pay.nbkorea.com · m.asics.co.kr · asics.co.kr · brooksrunning.co.kr, `unknown` — www 주소로 바꿔 읽는다, 1-2b) · 리뷰 매체 20곳(`blocked`) · solereview · i-run(실측, `excluded`) | 코드가 거절한다(`fetch.mjs HARD_BLOCK` · 모드 검사) |
 
 - **요청 예절**(코드가 강제): 호스트마다 5초에 1회, 동시 1개, 우리 UA(`RUNSHOES-catalog/0.1 … +https://runshoes.ronanlab.dev`), robots 의 `*` · `$` 까지 해석, 403 · 418 · 429 · 캡차면 그 호스트를 멈춘다. **우회하지 않는다.** Playwright 는 HeadlessChrome UA 뒤에 우리 UA 를 붙인다 — 일반 브라우저로 위장하지 않는다.
 - **웹 검색 요약을 근거로 쓸 때는 단위가 붙은 수치나 상표명이 그대로 있어야 한다. 모호한 서술은 쓰지 않는다**(2026-11-06 사용자). "283 g" · "10.0 oz" · "Heel-to-Toe Drop (mm) 8" · "FF Blast Max"는 쓰고, "가벼운 편" · "쿠션이 두툼하다"는 쓰지 않는다. 요약은 판단 메모에 「인용」으로 남긴다. 11-06 조사에서 검색 요약만 근거인 칸 139개(무게 91 · 미드솔 19 · 스택 14 · 드롭 9 · 카본 5 · 와이드 1)는 모두 이 조건을 만족해 그대로 뒀다(목록 `catalog/local/work/linkcheck-20261106/search-summary-fields.csv`).
@@ -72,7 +72,7 @@
 
 #### 1-2b. 약관 기록 — 판정마다 근거를 남긴다(2026-11-15 사용자)
 
-판정(`mode` · `caution`)만 있으면 「이 판정이 맞나」 싶을 때 약관을 다시 읽어야 한다. 그래서 수집처마다 아래를 `sources-media.yaml`(· `sources.yaml`) 항목에 같이 적는다. 2026-11-15 BITR · RSG 부터 채웠고, 나머지는 아직 판정만 있다.
+판정(`mode` · `caution`)만 있으면 「이 판정이 맞나」 싶을 때 약관을 다시 읽어야 한다. 그래서 수집처마다 아래를 `sources-media.yaml`(· `sources.yaml`) 항목에 같이 적는다. 2026-11-15 BITR · RSG 부터 채웠고, 같은 날 둘째 묶음(점검 세션 451)으로 corp.asics.com · mediahub.puma.com · 위키백과 en · ko · merrellkorea.co.kr · m.merrellkorea.co.kr · m.kor.mizuno.com 을 채웠다. 나머지는 아직 판정만 있다.
 
 | 키 | 내용 |
 |---|---|
@@ -82,15 +82,20 @@
 | `terms` · `terms_version` | 약관 주소 · 약관에 적힌 날짜(`sources.yaml` 과 같은 이름) |
 | `read_at` · `read_by` · `pages` | 읽은 시각(UTC) · 누가 어떻게 읽었나 · 읽은 주소마다 시각과 HTTP 상태 |
 | `robots` | 우리에게 걸리는 그룹 · 막는 경로 · AI 봇 줄이 있는지 |
+| `read_via` | (`unknown` 다른 이름 호스트에만) 그 호스트는 열지 않고 같은 경로를 이 호스트로 바꿔 읽는다 — 값은 바꿔 읽을 호스트 이름 하나(`read_via: www.nbkorea.com`) |
 
 - **해석한 판정은 `kind: 해석`으로 밝히고 무엇을 어떻게 해석했는지 `why`에 쓴다.** 원문 문장에서 바로 나오면 `원문`이다. BITR 의 「수치만」은 원문에 없고 2-2 를 적용해 너그럽게 본 해석이다(원문은 어떤 부분이든 복제 · 저장을 막는다).
 - 「금지 조항이 없다」는 원문을 읽어 확인한 사실이라 `원문`으로 둔다. 그것을 「열어도 된다」로 읽는 것은 2-2 기준이고 `why`에 그렇게 적는다.
 - **약관 전문은 저장하지 않는다**(2026-11-15 사용자). git 에는 걸리는 조항 인용 · 읽은 날 · robots 내용만 적는다 — 지문(sha256)이나 원문 파일 자리는 적지 않는다.
 - **인용은 판정에 꼭 필요한 문장만, 원문 그대로 옮긴다**(2026-11-15 사용자). `basis` 조각마다 그것을 받치는 문장만 둔다. 문장 안을 잘라야 하면 줄인 자리를 「…」로 밝히고 원문 낱말은 바꾸지 않는다. 줄바꿈 없는 공백(U+00A0)만 보통 공백으로 적는다.
-- `fetch.mjs` 는 이 파일을 줄 단위로 읽어 `host` · `mode` 만 본다. 기록 안에 `host` · `mode` 라는 키를 쓰지 않는다.
+- `fetch.mjs` 는 이 파일을 줄 단위로 읽어 `host` · `mode` 만 본다. 기록 안에 `host` · `mode` 라는 키를 쓰지 않는다. 같은 호스트를 두 번 적으면 뒤 줄이 앞 줄을 덮는다 — 한 호스트는 한 항목으로 둔다(2026-11-15 corp.asics.com 의 unknown 줄과 fetch 줄을, 수집기가 쓰던 fetch 하나로 정리했다).
+- **위키백과(en · ko)의 「열어도 된다」는 해석이다**(2026-11-15 사용자). 약관 4절의 「approved by the Wikimedia community」를 Robot policy 준수(우리 UA 를 밝힘 · robots 를 지킴 · 초당 20회 미만)로 읽었다. 글은 CC BY-SA 라 사실만 쓰고 문장은 옮기지 않는다 — 이것은 원문이 아니라 우리 기준이다. 매체 목록(`sources-media.yaml`)에 두어 주소는 색인 · 검색 결과로 얻은 것만 읽는다.
+- **보도자료의 쓰는 범위**(2026-11-15 사용자): mediahub.puma.com 은 「사실까지」(수치 · 발표일 · 기술 이름 · 겨냥한 러너처럼 평가가 아닌 것, 문장은 옮기지 않는다) — 금지 조항이 없고 첫 화면이 editorial and news use 에 풀어 둔 것이 원문이다(우리 용도가 거기 드는지는 해석). corp.asics.com 은 「수치만」 그대로 — 원문은 any content 의 이용을 막고, 「수치만」도 2-2 를 적용한 해석이다.
+- **국내몰 다른 이름 호스트는 열지 않고 www 주소로 바꿔 읽는다**(2026-11-15 사용자). 약관을 못 읽은 m.nbkorea.com · pay.nbkorea.com(→ www.nbkorea.com) · m.asics.co.kr · asics.co.kr(→ www.asics.co.kr) · brooksrunning.co.kr(→ www.brooksrunning.co.kr)은 `unknown` 에 `read_via` 를 단다. **수집기는 아직 바꿔 읽지 않는다**(`TODO.md`) — 그때까지 이 호스트의 주소는 거절된다. nbkorea.com 은 www.nbkorea.com 으로 301 이라 항목을 두지 않는다. 약관을 읽어 연 다른 이름 호스트(merrellkorea.co.kr · m.merrellkorea.co.kr · m.kor.mizuno.com)는 `fetch` 로 따로 둔다 — m.merrellkorea.co.kr 의 `/skin-*/` 아래 상품 주소는 robots 가 막는다.
+- **기록과 지금이 다른 곳**(2026-11-15 점검): www.asics.co.kr 은 기록상 `fetch` 인데 첫 화면이 NetFunnel 대기열 페이지이고, `fetch.mjs` 는 캡차 낱말이 없어 이것을 정상 페이지로 캐시한다. www.brooksrunning.co.kr 은 기록상 `fetch` 인데 443 연결이 거절된다. 둘 다 `TODO.md`.
 - **다시 읽는 때**(2026-11-15 사용자): 그 출처에서 새 수집 작업을 하기 전, 판정이 의심될 때, 반년마다. 다시 읽기 전에 매번 기계로 먼저 거른다 — 약관 페이지를 받아 `terms_version` 날짜와 `clauses` 인용 문구가 그대로인지만 보고, 달라졌을 때만 사람이 다시 읽는다. 거르는 도구는 아직 없다(`TODO.md`).
-- **채우는 곳**(2026-11-15 사용자): 값을 가져오는 곳(`mode: fetch`)만 채운다. `blocked` · `unknown` · `excluded` 는 채우지 않는다. BITR · RSG 다음으로 남은 fetch 18항목(호스트 17곳, www.saucony.com 이 두 파일에 다 있다)을 몇 번에 나눠 채운다:
-  - `sources-media.yaml` 7: www.fit2run.com · weartesters.com · www.newswire.co.kr · corp.asics.com · www.saucony.com · mediahub.puma.com · www.amersports.com
+- **채우는 곳**(2026-11-15 사용자): 값을 가져오는 곳(`mode: fetch`)만 채운다. `blocked` · `unknown` · `excluded` 는 채우지 않는다. 둘째 묶음 다음으로 남은 fetch 16항목(호스트 15곳, www.saucony.com 이 두 파일에 다 있다)을 몇 번에 나눠 채운다:
+  - `sources-media.yaml` 5: www.fit2run.com · weartesters.com · www.newswire.co.kr · www.saucony.com · www.amersports.com
   - `sources.yaml` 11: www.asics.co.kr · www.nbkorea.com · saucony.co.kr · www.brooksrunning.co.kr · kor.mizuno.com · salomon.co.kr · kr.puma.com · altra.co.kr · www.merrellkorea.co.kr · www.saucony.com · usa.mizuno.com
 
 #### 1-3. 무게
@@ -131,7 +136,7 @@
 - 카본은 예/아니오라 출처 URL 을 요구하지 않는다(모델 · 용도로 거의 정해진다). 비어도 적재를 막지 않는다.
 - **카본은 판(plate) 형태일 때만 true 다**(2026-11-09 사용자 — 화면 칸 이름이 "카본 플레이트"다). 카본이 섞인 테 · 막대처럼 판이 아닌 구조는 false — 아디제로 아디오스 프로 5 · 아디오스 프로 에보 3 의 EnergyRim(BITR "No rods, no plate under the ball of the foot")을 false 로 바꿨다. 그 구조는 설명문에 이름(EnergyRim)으로 쓴다. 카본이 섞인 고무("carbon rubber" 아웃솔)도 판이 아니다.
 - **출처가 갈리면 — 다수 쪽 근거가 있으면 남기고 flag, 다수가 없으면 비운다**(2026-11-09 사용자).
-  - 다수 쪽 값이 근거 조건(1-2)을 채우면 그 값을 남기고 판단에 `flag` 를 단다(사람이 다시 볼 목록에 남는다). 본디 8 스택 33 · 드롭 4 — BITR 31 · weartesters · REI 33 · 호카 공식 드롭이 나라마다 4 · 5 로 갈리지만 다수 쪽 근거가 있어 남겼다. 비우면 숫자 칸이 하나만 남아 적재 조건(1-1)에 걸려 행이 빠진다 — 인기 라인을 빼는 것이 더 손해다.
+  - 다수 쪽 값이 근거 조건(1-2)을 채우면 그 값을 남기고 판단에 `flag` 를 단다(사람이 다시 볼 목록에 남는다). 본디 8 드롭 4 — 호카 공식 드롭이 나라마다 4 · 5 로 갈리지만 다수 쪽 근거가 있어 남겼다(같은 행의 힐 스택은 2026-11-15 사용자가 41mm 로 고쳤다 — 9세대 43mm 와 RSG 「9세대가 8세대보다 힐 · 앞발 모두 2mm 더 두껍다」에서). 비우면 숫자 칸이 하나만 남아 적재 조건(1-1)에 걸려 행이 빠진다 — 인기 라인을 빼는 것이 더 손해다.
   - 다수가 없거나 브랜드와 리뷰가 맞서면 비운다(벨로시티 엘리트 2 드롭 — 리뷰 2 · 언더아머 공식 8).
   - 실측(Running Warehouse · RunRepeat 등)은 다수를 셀 때 넣지 않는다.
 - **다른 판 · 다른 모델 · 모음 글은 어느 칸에도 쓰지 않는다**(`variant.mjs`) — 주소에 라인 이름에 없는 변형 낱말(GRVL · GTX · Hike · Mid · Max · Trail …)이 있거나 `best-…` · `…-vs-…` 글이면 다른 신발이다.

@@ -14350,16 +14350,27 @@
   "hoka:bondi#8": {
    "stack_heel_mm": {
     "action": "use_source",
-    "value": 33,
-    "source": "https://ca.news.yahoo.com/hoka-bondi-8-trainer-reviewed-081933528.html",
+    "value": 41,
+    "source": "https://www.runningshoesguru.com/comparison/hoka-bondi-9-vs-hoka-bondi-8/",
     "sources_more": [
-     "https://www.rei.com/product/208679",
-     "https://gearjunkie.com/?p=148312"
+     "https://www.runningshoesguru.com/reviews/road/hoka-bondi-9-review/",
+     "https://weartesters.com/hoka-bondi-9-performance-review/"
     ],
-    "via": "web",
-    "by": "claude",
-    "note": "Claude 웹 검색(2026-10-24): 남성 공식 33/29mm · 드롭 4mm 3곳 일치(Yahoo 열람 · REI · GearJunkie 검색 요약). BITR 31/27 은 여성 스펙이었다. 이전 판단: review(31mm 의심, 사용자)",
-    "flag": "사용자(2026-11-09): 값을 둔다 — 출처가 갈려도 다수 쪽 근거가 있으면 남기고 flag. 스택 BITR 31 · weartesters · REI 33 · Running Warehouse 39(실측, 제외). 드롭 호카 공식(검색 요약) US · CA 5 · UK · AU 4. 본디 9(43)가 \"2mm 두꺼워졌다\"는 리뷰와 안 맞음(재는 법이 다른 것으로 보임). field-audit-result-A.md"
+    "by": "user",
+    "note": "사용자(2026-11-15): 본디 8세대 힐 스택을 41mm 로 고친다. 9세대 힐 43mm(weartesters 9세대 \"Drop: 5mm (43mm heel, 38mm forefoot)\" · RSG 9세대 \"It’s 43 mm in the heel, 38 mm in the forefoot, 2 mm more in the heel and forefoot than its predecessor\")에서 RSG 비교 글 \"The stack heights of the Bondi 9 are 2 mm more than the Bondi 8 in both the forefoot and heel\" 의 2mm 를 뺀 값. 근거는 세션 452 가 찾았고, 세 문장은 원본 캐시(RSG 9세대 2026-10-21 · weartesters 2026-10-23 · RSG 비교 2026-11-08 받음)에서 2026-11-15 다시 확인했다. 드롭 · 앞발 스택은 이 결정에 들지 않는다",
+    "previous": {
+     "action": "use_source",
+     "value": 33,
+     "source": "https://ca.news.yahoo.com/hoka-bondi-8-trainer-reviewed-081933528.html",
+     "sources_more": [
+      "https://www.rei.com/product/208679",
+      "https://gearjunkie.com/?p=148312"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-24): 남성 공식 33/29mm · 드롭 4mm 3곳 일치(Yahoo 열람 · REI · GearJunkie 검색 요약). BITR 31/27 은 여성 스펙이었다. 이전 판단: review(31mm 의심, 사용자)",
+     "flag": "사용자(2026-11-09): 값을 둔다 — 출처가 갈려도 다수 쪽 근거가 있으면 남기고 flag. 스택 BITR 31 · weartesters · REI 33 · Running Warehouse 39(실측, 제외). 드롭 호카 공식(검색 요약) US · CA 5 · UK · AU 4. 본디 9(43)가 \"2mm 두꺼워졌다\"는 리뷰와 안 맞음(재는 법이 다른 것으로 보임). field-audit-result-A.md"
+    }
    },
    "price_krw": {
     "action": "use_source",

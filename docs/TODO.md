@@ -28,7 +28,11 @@
 #### 카탈로그
 
 - [ ] 약관 다시 읽기 전 거르는 도구 — 약관 페이지를 받아 `terms_version` 날짜와 `clauses` 인용 문구가 그대로인지 본다 → `01a_catalog_sources.md` 1-2b 「다시 읽는 때」
-- [ ] 약관 기록 남은 fetch 18항목(호스트 17곳)을 BITR · RSG 꼴로 몇 번에 나눠 채우기 — 목록은 → `01a_catalog_sources.md` 1-2b 「채우는 곳」
+- [ ] 약관 기록 남은 fetch 16항목(호스트 15곳)을 BITR · RSG 꼴로 몇 번에 나눠 채우기 — 목록은 → `01a_catalog_sources.md` 1-2b 「채우는 곳」
+- [ ] 수집기(`local/fetch.mjs`)에 www 바꿔 읽기 — `read_via` 가 달린 다른 이름 호스트의 주소를 같은 경로의 www 주소로 바꿔 받는다 → `01a_catalog_sources.md` 1-2b
+- [ ] 수집기가 아식스 NetFunnel 대기열 페이지를 정상 페이지로 캐시한다(캡차 낱말이 없어 멈추지 않음) — 대기열을 알아보고 멈추게 → `01a_catalog_sources.md` 1-2b 「기록과 지금이 다른 곳」
+- [ ] www.asics.co.kr(대기열) · www.brooksrunning.co.kr(443 접속 거절)은 기록상 `fetch` 인데 지금 열리지 않는다 — 판정을 둘지 사람이 정한다 → `01a_catalog_sources.md` 1-2b 「기록과 지금이 다른 곳」
+- [ ] 수집기의 캡차 판정(본문 앞 5000자에 `captcha`)이 위키백과 머리 스크립트의 설정값(`"wgConfirmEditCaptchaNeededForGenericEdit":"hcaptcha"`)에 걸려 위키백과 호스트를 멈춘다 — 위키백과를 실제로 읽기 전에 고친다 → `01a_catalog_sources.md` 1-2b
 
 - [ ] 와이드 정보 없음 4켤레(사용자가 MAN 으로) · 울트라부스트 5X 의 와이드 · 정가 · 카본 → `01a_catalog_sources.md` 4절
 - [ ] GTX 판을 별도 행으로 → `01a_catalog_sources.md` 4절
