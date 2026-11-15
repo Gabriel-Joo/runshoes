@@ -5,6 +5,15 @@ import { logout } from "../auth/session";
 import { loginPath } from "../auth/session";
 import "./Header.css";
 
+/**
+ * 머리 메뉴의 닉네임 — 6자까지 그대로, 7자 이상은 앞 5자 + 「…」(모두 6칸). 닉네임은 12자까지라 다 쓰면 메뉴가 넘쳤다(2026-11-15 사용자).
+ * 글자 수로 센다(폭 말줄임은 한글 · 영문 폭이 달라 6자가 맞지 않는다). 전체는 title · aria-label 로. 서랍 · 마이페이지는 자르지 않는다
+ */
+const shortNick = (nick: string) => {
+  const chars = Array.from(nick);
+  return chars.length <= 6 ? nick : chars.slice(0, 5).join("") + "…";
+};
+
 const NAV: [string, string][] = [["/", "홈"], ["/recommend", "추천받기"], ["/compare", "비교하기"], ["/best", "러너들의 선택"]];
 
 /** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 신발 관리는 admin · 데모 관리자(보기만)에게 */
@@ -45,8 +54,13 @@ function Header() {
     setNotice("로그아웃했어요.");
   };
 
-  const drawerLink = (to: string, label: string, extra = "") => (
-    <Link key={to} to={to} className={`header__drawerlink ${extra} ${location.pathname === to ? "is-active" : ""}`} onClick={close}>
+  // 신발 관리는 목록 · 등록 · 수정이 한 흐름이라 셋 다 「보고 있음」(2026-11-15 사용자)
+  const inAdmin = location.pathname === "/admin" || location.pathname === "/new" || location.pathname.startsWith("/edit/");
+  // 로그인은 메뉴가 아니라 버튼이라 신발 관리와 같은 배지 — 로그인 · 회원가입이 한 흐름이라 둘 다 채운다(2026-11-15 사용자)
+  const inLogin = location.pathname === "/login" || location.pathname === "/signup";
+
+  const drawerLink = (to: string, label: string, extra = "", active = location.pathname === to) => (
+    <Link key={to} to={to} className={`header__drawerlink ${extra} ${active ? "is-active" : ""}`} onClick={close}>
       {label}
     </Link>
   );
@@ -66,19 +80,19 @@ function Header() {
             </Link>
           ))}
           {canViewAdmin && (
-            <Link to="/admin" className={`header__link header__link--admin ${location.pathname === "/admin" ? "is-active" : ""}`}>
-              신발 관리
+            <Link to="/admin" className={`header__link header__link--admin ${inAdmin ? "is-active" : ""}`}>
+              <span className="header__badge">신발 관리</span>
             </Link>
           )}
           {status === "anonymous" && (
-            <Link to={toLogin} className="header__link header__link--auth">
-              로그인
+            <Link to={toLogin} className={`header__link header__link--auth ${inLogin ? "is-active" : ""}`}>
+              <span className="header__badge">로그인</span>
             </Link>
           )}
           {user && (
             <div className="header__user" ref={menuRef}>
-              <button className="header__link header__link--auth header__userbtn" onClick={() => setMenu(!menu)} aria-haspopup="menu" aria-expanded={menu}>
-                <span className="header__nick">{user.nickname}</span>
+              <button className="header__link header__link--auth header__userbtn" onClick={() => setMenu(!menu)} aria-haspopup="menu" aria-expanded={menu} aria-label={user.nickname}>
+                <span className="header__nick" title={user.nickname}>{shortNick(user.nickname)}</span>
                 <span className="header__caret" aria-hidden="true" />
               </button>
               {menu && (
@@ -110,7 +124,8 @@ function Header() {
       {open && (
         <nav className="header__drawer">
           {NAV.map(([to, label]) => drawerLink(to, label))}
-          {canViewAdmin && drawerLink("/admin", "신발 관리", "header__drawerlink--admin")}
+          {/* 서랍은 배지 없이 글씨로 — 지금 보는 화면만 청록(머리 메뉴에서만 배지, 2026-11-15 사용자) */}
+          {canViewAdmin && drawerLink("/admin", "신발 관리", "", inAdmin)}
           {status === "anonymous" && (
             <Link to={toLogin} className="header__drawerlink header__drawerlink--auth" onClick={close}>
               로그인

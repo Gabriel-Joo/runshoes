@@ -1,8 +1,23 @@
+/*
+ * 머리 메뉴 크기는 폭마다 구간을 나누지 않고 한 규칙으로 정한다(2026-11-15 사용자 — 구간마다 숫자를 박으니 경계마다 로고와 「홈」이 붙거나 메뉴가 넘쳤다).
+ * 서랍이 끝나는 768px 에서 1300px 까지 로고 · 메뉴 글자 · 간격 · 여백이 함께 곧게 커지고, 그 밖은 양 끝 값에 머문다.
+ * 모두 폭에 곧게 비례하니 양 끝(768 · 1300)에서 들어가면 사이 폭에서도 들어간다. 1300 은 관리자 + 닉네임 6칸(영문 W)이 가장 큰 값(로고 64px)으로 들어가는 폭,
+ * 768 의 작은 값은 관리자 + 한글 닉네임 6칸이 다 보이는 값이다.
+ * 그래도 모자라면(가장 넓은 영문 닉네임 등) 닉네임이 줄어들어 말줄임으로 받는다 — 로고와 메뉴 사이 16px, 오른쪽 여백은 늘 지킨다.
+ * 휴대폰(767px 이하)은 서랍이라 양 끝 중 작은 값(로고 30px, 여백 14px 20px).
+ */
 .header {
+  --hd-t: calc((100vw - 768px) / 532);
+  --hd-logo: clamp(30px, calc(30px + 34 * var(--hd-t)), 64px);
+  --hd-link: clamp(17px, calc(17px + 6 * var(--hd-t)), 23px);
+  --hd-gap: clamp(8px, calc(8px + 20 * var(--hd-t)), 28px);
+  --hd-sep: clamp(10px, calc(10px + 10 * var(--hd-t)), 20px);
+  --hd-pad-x: clamp(20px, calc(20px + 28 * var(--hd-t)), 48px);
+  --hd-pad-y: clamp(14px, calc(14px + 6 * var(--hd-t)), 20px);
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 20px 48px;
+  padding: var(--hd-pad-y) var(--hd-pad-x);
   background: oklch(0.965 0.002 90 / 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
@@ -11,24 +26,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  column-gap: 16px;
 }
 .header__logo {
+  flex-shrink: 0;
   font-family: "Archivo Black", sans-serif;
-  font-size: 64px;
+  font-size: var(--hd-logo);
   font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--accent);
 }
 
+/* 메뉴는 남는 자리까지만 — 넘치면 닉네임(.header__user)만 줄어든다 */
 .header__nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: var(--hd-gap);
+  min-width: 0;
+}
+.header__nav > * {
+  flex-shrink: 0;
 }
 
 .header__link {
   font-family: "Archivo Black", sans-serif;
-  font-size: 23px;
+  font-size: var(--hd-link);
   font-weight: 600;
   color: var(--text-strong);
   white-space: nowrap;
@@ -39,21 +61,29 @@
 }
 .header__link--admin {
   border-left: 1px solid #000000;
-  padding-left: 20px;
+  padding-left: var(--hd-sep);
   font-weight: 600;
-  color: var(--coral-strong);
 }
-/* 신발 관리는 관리자만 보는 메뉴라 늘 코랄 — 「지금 화면만 틸」의 예외. 보고 있을 때는 색 대신 밑줄(2026-11-15 사용자) */
-.header__nav .header__link--admin.is-active {
-  color: var(--coral-strong);
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+/*
+ * 신발 관리는 관리자만 보는 메뉴라 배지로 둔다 — 평소 청록 테두리, 신발 관리 화면(/admin · /new · /edit/:id)을 보고 있을 때는
+ * 청록 채움에 흰 글자(2026-11-15 사용자). 배지는 머리 메뉴에서만 — 서랍은 글씨로 두고 지금 보는 화면만 청록(같은 날 사용자).
+ * 로그인도 메뉴가 아니라 버튼이라 같은 배지 — 홈의 「지금 보는 화면」 청록과 섞이지 않게. 로그인 화면(/login)에서 채운다(같은 날 사용자).
+ * 배지는 글자를 감싼 span(inline)에 둔다 — inline 의 세로 여백은 줄 높이를 바꾸지 않아 메뉴 줄 높이와 앞 세로줄이 그대로다.
+ * 모양은 관리 화면 「보기 전용」 배지(.admin__demo — 1px 청록 테두리, 모서리 없음)를 따른다.
+ */
+.header__badge {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.is-active > .header__badge {
+  background: var(--accent);
+  color: var(--surface-white);
 }
 /* 로그인 · 닉네임 — 메뉴 맨 끝, 앞과 줄로 나눈다(admin 이면 신발 관리 뒤) */
 .header__link--auth {
   border-left: 1px solid var(--text-strong);
-  padding-left: 20px;
+  padding-left: var(--hd-sep);
   color: var(--accent);
 }
 
@@ -63,21 +93,32 @@
   padding-left: 0;
 }
 
-.header__user {
+.header__nav > .header__user {
   position: relative;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .header__userbtn {
   display: flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
   background: none;
 }
 
+/*
+ * 닉네임은 먼저 글자 수로 자른다(Header.tsx shortNick — 6자까지 그대로, 7자 이상은 앞 5자 + 「…」, 2026-11-15 사용자).
+ * 그래도 자리가 모자라면(가장 넓은 영문 등) 여기서 폭으로 한 번 더 줄인다 — 메뉴가 오른쪽 여백을 넘지 않게
+ */
 .header__nick {
-  max-width: 12em;
+  min-width: 0;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+}
+.header__caret {
+  flex-shrink: 0;
 }
 
 .header__caret {
@@ -170,17 +211,6 @@
   color: var(--accent);
 }
 
-/* 서랍의 신발 관리도 늘 코랄, 보고 있을 때는 밑줄(머리 메뉴와 같은 예외) */
-.header__drawerlink--admin,
-.header__drawerlink--admin.is-active {
-  color: var(--coral-strong);
-}
-.header__drawerlink--admin.is-active {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-
 .header__drawerlink--auth {
   color: var(--accent);
 }
@@ -198,64 +228,8 @@
   font-family: inherit;
 }
 
-/* 태블릿 */
-@media (max-width: 1199px) {
-  .header {
-    padding: 16px 32px;
-  }
-  .header__logo {
-    font-size: 40px;
-  }
-  .header__nav {
-    gap: 20px;
-  }
-}
-
-/* 태블릿 — 로그인하면 메뉴가 하나 는다(닉네임, admin 은 신발 관리까지). 닉네임은 6글자 폭에서 말줄임 */
-@media (max-width: 1199px) {
-  .header__nick {
-    max-width: 6em;
-  }
-}
-
-@media (max-width: 1023px) {
-  .header__nav {
-    gap: 16px;
-  }
-  .header__link {
-    font-size: 20px;
-  }
-  .header__link--admin,
-  .header__link--auth {
-    padding-left: 16px;
-  }
-}
-
-/* 좁은 태블릿(768~899px) — 메뉴가 넷(비교하기 추가, 2026-11-09)이라 관리자 · 닉네임까지 붙으면 헤더가 폭을 넘어 페이지가 옆으로 밀렸다(768px 에서 784/689px) */
-@media (max-width: 899px) {
-  .header__logo {
-    font-size: 32px;
-  }
-  .header__nav {
-    gap: 12px;
-  }
-  .header__link {
-    font-size: 17px;
-  }
-  .header__link--admin,
-  .header__link--auth {
-    padding-left: 12px;
-  }
-}
-
-/* 모바일 */
+/* 휴대폰 — 머리 메뉴 대신 서랍(크기는 위 한 규칙의 작은 끝 값) */
 @media (max-width: 767px) {
-  .header {
-    padding: 14px 20px;
-  }
-  .header__logo {
-    font-size: 30px;
-  }
   .header__nav {
     display: none;
   }
