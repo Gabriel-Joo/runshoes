@@ -12,7 +12,7 @@ type Tab = "reviews" | "hidden" | "members" | "misses" | "turns";
 const TABS: Tab[] = ["reviews", "hidden", "members", "misses", "turns"];
 
 /**
- * 관리자 마이페이지(2026-11-14 사용자) — 관리자 · 데모 관리자로 로그인하면 마이페이지가 이것으로 바뀐다.
+ * 관리자 페이지(2026-11-14 사용자, 이름은 2026-11-15 「관리자 마이페이지」에서 바꿈) — 관리자 · 데모 관리자로 로그인하면 마이페이지(/account)가 이것으로 바뀐다. 주소는 같다.
  * 일반 회원의 메뉴(내 리뷰 · 찜 · 회원 탈퇴)는 관리자에게 쓸모가 없고, 관리자는 닉네임 변경 · 탈퇴가 서버에서 막혀 있어 회원정보 수정도 넣지 않는다.
  * 신발은 신발 관리 탭(/admin)이 맡는다. 첫 화면(할 일 모음)은 두지 않는다 — 숫자는 Grafana 가 본다.
  * 모양은 일반 마이페이지 그대로(왼쪽 목차 mypage__nav · 오른쪽 표 mypage__table). 목차는 ?tab= — 거르기 · 쪽도 주소에 둔다.
@@ -33,8 +33,8 @@ function AdminMy() {
 
   return (
     <div className="mypage">
-      <nav className="mypage__nav" aria-label="관리자 마이페이지 목차">
-        <h2 className="mypage__navtitle">마이페이지</h2>
+      <nav className="mypage__nav" aria-label="관리자 페이지 목차">
+        <h2 className="mypage__navtitle">관리자 페이지</h2>
         <p className="mypage__navgroup">리뷰 관리</p>
         {nav("reviews", "전체 리뷰")}
         {nav("hidden", "숨긴 리뷰")}

@@ -28,7 +28,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 |---|---|---|
 | 카탈로그 | 후보 · 수집 · 사람 판단(`decisions.json`) · 이미지 · 적재기 · 문구 · 시드 리뷰 | `01a` · `01b` · `01c` · `01d` · `01e` |
 | 화면 | 홈 · 상세 모달 · 추천받기 · 비교하기 · 러너들의 선택 · 마이페이지 · 로그인 | `02_screens.md` · `02b_design_system.md` |
-| 관리 화면 | 등록 · 수정 · 출처 · 보완 필요 · 숨김 · 영구 삭제 · 수정 이력, 관리자 마이페이지(리뷰 · 회원 · 챗봇) | `03_admin.md` |
+| 관리 화면 | 등록 · 수정 · 출처 · 보완 필요 · 숨김 · 영구 삭제 · 수정 이력, 관리자 페이지(리뷰 · 회원 · 챗봇) | `03_admin.md` |
 | 계정 | JWT · refresh 쿠키 · 체험 계정 · 시도 제한 · 활동 로그 | `04_auth.md` |
 | API | json-server 계약 재현 + 새 기능, 계약 시험 | `05_api_contract.md` |
 | 배포 | Jenkins(BuildKit) → Harbor → 인프라 리포 태그 → ArgoCD | `06_deployment.md` |

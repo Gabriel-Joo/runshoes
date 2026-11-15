@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from "react";
 
 /**
  * 글 전문 — 읽기 전용 모달(2026-10-30 사용자 — 표 안에서 펼치면 300자에 줄이 흔들린다). 마이페이지의 내 리뷰 · 도움받은 리뷰,
- * 관리자 마이페이지의 리뷰 관리 · 챗봇 문의(질문 원문, 2026-11-15 — 휴대폰은 마우스 툴팁을 볼 수 없다)가 같이 쓴다. 모양(.reader)은 Account.css
+ * 관리자 페이지의 리뷰 관리 · 챗봇 문의(질문 원문, 2026-11-15 — 휴대폰은 마우스 툴팁을 볼 수 없다)가 같이 쓴다. 모양(.reader)은 Account.css
  */
 function ReviewReader({ title, meta, content, onClose, label = "리뷰 전문" }: { title: string; meta: ReactNode; content: string; onClose: () => void; label?: string }) {
   useEffect(() => {

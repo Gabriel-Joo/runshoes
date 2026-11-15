@@ -4,7 +4,7 @@ import { useDebounced } from "../../useDebounced";
 import { PAGE_GROUP, PAGE_SIZES, pageGroup } from "../../utils/pageGroup";
 
 /**
- * 관리자 마이페이지의 작은 부품 — 새 모양을 만들지 않고 지금 있는 것을 쓴다(2026-11-14 사용자 「통일감」):
+ * 관리자 페이지의 작은 부품 — 새 모양을 만들지 않고 지금 있는 것을 쓴다(2026-11-14 사용자 「통일감」):
  * 검색 칸은 홈 · 신발 관리의 SearchBox, 쪽 버튼은 신발 관리의 정렬 글자(admin__sort), 날짜는 브라우저 날짜 칸
  */
 

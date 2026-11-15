@@ -11,6 +11,10 @@
 
 .confirm__box {
   width: 100%;
+  /* 줄이 바뀌어도 낱말 중간에서 끊지 않는다(한국어 기본값은 글자 단위라 「합니 / 다」처럼 끊겼다, 2026-11-15 사용자).
+     띄어쓰기 없는 긴 글(이메일 · 주소 · 긴 영문)은 창을 넘지 않게 그 안에서만 끊는다 */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   max-width: 380px;
   padding: 28px 26px 22px;
   background: #fff;

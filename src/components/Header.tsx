@@ -7,7 +7,7 @@ import "./Header.css";
 
 /**
  * 머리 메뉴의 닉네임 — 6자까지 그대로, 7자 이상은 앞 5자 + 「…」(모두 6칸). 닉네임은 12자까지라 다 쓰면 메뉴가 넘쳤다(2026-11-15 사용자).
- * 글자 수로 센다(폭 말줄임은 한글 · 영문 폭이 달라 6자가 맞지 않는다). 전체는 title · aria-label 로. 서랍 · 마이페이지는 자르지 않는다
+ * 글자 수로 센다(폭 말줄임은 한글 · 영문 폭이 달라 6자가 맞지 않는다). 전체는 title · aria-label 로. 서랍 · 마이페이지(관리자 페이지)는 자르지 않는다
  */
 const shortNick = (nick: string) => {
   const chars = Array.from(nick);
@@ -16,7 +16,10 @@ const shortNick = (nick: string) => {
 
 const NAV: [string, string][] = [["/", "홈"], ["/recommend", "추천받기"], ["/compare", "비교하기"], ["/best", "러너들의 선택"]];
 
-/** 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 신발 관리는 admin · 데모 관리자(보기만)에게 */
+/**
+ * 오른쪽 끝: 로그인 안 했으면 "로그인", 했으면 닉네임 메뉴(마이페이지 · 로그아웃). 신발 관리는 admin · 데모 관리자(보기만)에게.
+ * admin · 데모 관리자에게 마이페이지는 「관리자 페이지」라고 부른다(주소는 같은 /account, 2026-11-15 사용자)
+ */
 function Header() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -30,6 +33,7 @@ function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const close = () => setOpen(false);
+  const accountLabel = canViewAdmin ? "관리자 페이지" : "마이페이지";
   const here = location.pathname + location.search;
   const toLogin = location.pathname === "/login" || location.pathname === "/signup" ? location.pathname + location.search : loginPath(here);
 
@@ -98,7 +102,7 @@ function Header() {
               {menu && (
                 <div className="header__menu" role="menu">
                   <Link to="/account" className="header__menuitem" role="menuitem">
-                    마이페이지
+                    {accountLabel}
                   </Link>
                   <button className="header__menuitem" role="menuitem" onClick={signOut}>
                     로그아웃
@@ -134,7 +138,7 @@ function Header() {
           {user && (
             <>
               <p className="header__drawernick">{user.nickname}님</p>
-              {drawerLink("/account", "마이페이지")}
+              {drawerLink("/account", accountLabel)}
               <button className="header__drawerlink header__drawerbtn" onClick={signOut}>
                 로그아웃
               </button>

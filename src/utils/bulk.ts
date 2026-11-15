@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { demoBlocked } from "../auth/demoAdmin";
 
-/** 여러 개 고르기 — 목록이 바뀌면 사라진 id 는 저절로 빠진다(마이페이지 · 관리자 마이페이지) */
+/** 여러 개 고르기 — 목록이 바뀌면 사라진 id 는 저절로 빠진다(마이페이지 · 관리자 페이지) */
 export function useSelection(ids: number[]) {
   const [picked, setPicked] = useState<Set<number>>(new Set());
   const live = new Set([...picked].filter((id) => ids.includes(id)));

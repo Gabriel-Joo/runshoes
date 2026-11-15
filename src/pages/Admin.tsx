@@ -13,7 +13,7 @@ import SearchBox from "../components/SearchBox";
 import { Pager, SizeChoice } from "./adminmy/parts";
 import { PAGE_SIZES, pageSize } from "../utils/pageGroup";
 import "./Admin.css";
-import "./AdminMy.css";   // 쪽 번호 · 몇 개씩 보기 칸(adminmy__pager · adminmy__choice) — 관리자 마이페이지와 같은 모양
+import "./AdminMy.css";   // 쪽 번호 · 몇 개씩 보기 칸(adminmy__pager · adminmy__choice) — 관리자 페이지와 같은 모양
 
 // 정렬(2026-11-01 사용자) — 기본 최근 수정순. 고른 것을 다시 누르면 방향이 바뀐다: ↓ 최근 · 가나다 / ↑ 오래된 · 역순.
 //   목록 · 정렬 · 빈 칸 판정 · 쪽 나누기는 서버가 한다(GET /api/admin/shoes, 2026-11-15 — 리뷰 · 회원 관리와 같은 {items, total, page, size}).
@@ -103,7 +103,7 @@ function Admin() {
   // 리뷰 요약(V14) — 다시 만들 것 · 아직 없는 것. 읽기만(만드는 것은 매일 03:30 CronJob — 화면에서 돌리지 않는다, 2026-11-10 사용자)
   const [summaries, setSummaries] = useState<{ stale: number; pending: number; generated: number; total: number } | null>(null);
   // 등록된 신발 · 숨긴 신발 · 보완 필요(2026-10-30 — 목록 끝까지 내리지 않게 개수 줄 오른쪽에).
-  //   챗봇 문의 탭은 관리자 마이페이지(/account?tab=misses)로 옮겼다(2026-11-14 사용자 — 이 탭은 신발 전용)
+  //   챗봇 문의 탭은 관리자 페이지(/account?tab=misses)로 옮겼다(2026-11-14 사용자 — 이 탭은 신발 전용)
   const [tab, setTab] = useState<"list" | "hidden" | "gaps" | "purged">(() => oneOf(params.get("tab"), ["list", "hidden", "gaps", "purged"] as const, "list"));
   // 영구 삭제 기록 탭(V11 shoe_purges, 2026-11-14 사용자) — 읽기만, 최근 먼저
   // 보완 필요 탭 — 필터(칸 하나, null = 전체) · 정렬은 등록된 신발 탭과 따로(기본 빈 칸 적은 순)
@@ -281,7 +281,7 @@ function Admin() {
       </div>
 
       <div className="admin__countbar">
-        {/* 개수 오른쪽에 몇 개씩 보기 — 관리자 마이페이지와 같은 칸(adminmy/parts SizeChoice) */}
+        {/* 개수 오른쪽에 몇 개씩 보기 — 관리자 페이지와 같은 칸(adminmy/parts SizeChoice) */}
         <div className="adminmy__countbar admin__countmain">
           <p className="admin__count">
             {!counts ? "" : tab === "list" ? `${counts.list}개 / 전체 ${counts.all}개` : tab === "hidden" ? `숨긴 신발 ${counts.hidden}개` : tab === "purged" ? `영구 삭제한 신발 ${counts.purged}개` : `보완 필요 ${loaded ? data.total : counts.gaps}개 / 전체 ${counts.list}개`}

@@ -37,7 +37,7 @@ const saveDraft = (shoeId: number, d: { rating: number; content: string } | null
 
 /**
  * 리뷰 — 작성자는 계정에서(닉네임 칸 없음). 폼은 셋 중 하나: 로그인 안내 / "이미 썼어요" / 작성 폼.
- * 수정 · 지우기는 내 리뷰만. 관리자는 남의 리뷰를 숨기기만 한다(영구 삭제는 관리자 마이페이지 숨긴 리뷰에서, 2026-11-15 사용자). 공감은 남의 리뷰에만. 평점은 서버가 다시 센다(onReviewChange 는 목록만 다시 받는다)
+ * 수정 · 지우기는 내 리뷰만. 관리자는 남의 리뷰를 숨기기만 한다(영구 삭제는 관리자 페이지 숨긴 리뷰에서, 2026-11-15 사용자). 공감은 남의 리뷰에만. 평점은 서버가 다시 센다(onReviewChange 는 목록만 다시 받는다)
  */
 function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
   const { status, user, isAdmin, setNotice } = useAuth();
@@ -127,7 +127,7 @@ function ReviewSection({ shoeId, onReviewChange }: ReviewSectionProps) {
     onReviewChange();
   };
 
-  // 숨기기(관리자, 남의 리뷰) — 관리자 마이페이지 리뷰 관리와 같은 API · 같은 확인 창 · 같은 알림
+  // 숨기기(관리자, 남의 리뷰) — 관리자 페이지 리뷰 관리와 같은 API · 같은 확인 창 · 같은 알림
   const hideReview = async () => {
     if (!hideTarget) return;
     setHiding(true);

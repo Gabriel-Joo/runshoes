@@ -2,7 +2,7 @@ import ConfirmModal from "./ConfirmModal";
 import { WHEN_APPLIED } from "./reviewRules";
 
 /**
- * 리뷰 하나 숨기기 확인 창 — 관리자 마이페이지 리뷰 관리와 상세 모달이 같은 창을 쓴다(2026-11-15 사용자: 상세 모달에는 숨기기만).
+ * 리뷰 하나 숨기기 확인 창 — 관리자 페이지 리뷰 관리와 상세 모달이 같은 창을 쓴다(2026-11-15 사용자: 상세 모달에는 숨기기만).
  * 둘 다 POST /api/admin/reviews/{id}/hide 를 부른다
  */
 function HideReviewConfirm({

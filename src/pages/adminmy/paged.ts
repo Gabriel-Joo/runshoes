@@ -13,7 +13,7 @@ export interface Paged<T> {
 }
 
 /**
- * 관리자 마이페이지의 목록 받기 — path(쿼리까지)가 바뀌면 다시 받는다. reload() 는 같은 주소를 다시(숨기기 · 되살리기 뒤).
+ * 관리자 페이지의 목록 받기 — path(쿼리까지)가 바뀌면 다시 받는다. reload() 는 같은 주소를 다시(숨기기 · 되살리기 뒤).
  * 실패하면 data 는 null, error 에 문구. 늦게 온 앞 응답이 새 응답을 덮지 않게 이전 요청은 끊는다
  */
 export function usePaged<T>(path: string) {

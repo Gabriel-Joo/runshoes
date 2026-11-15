@@ -18,9 +18,9 @@ MySQL 8 하나에 테이블 9개(+ `flyway_schema_history`)다. 스키마는 **F
 | `refresh_tokens` | 10 | refresh token 의 SHA-256 · family · `replaced_by` |
 | `activity_logs` | 10 | 인증 · 리뷰 · 찜 · 신발 조회 · 비교 · 관리 화면 쓰기 이력. 로그인 시도 제한도 여기서 센다 |
 | `shoe_purges` | 11 | 영구 삭제한 신발의 기록(행이 없으니 FK 아님) |
-| `terms` | 6 | 용어 설명. `row_no` 가 키 — 시드에 `id 12` 가 둘이었고 V17 에서 아웃솔을 13 으로. 관리자 마이페이지가 더한다(2026-11-14, `POST /api/admin/terms` — id 는 가장 큰 id + 1) |
-| `chatbot_misses` | 8 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리자 마이페이지가 이름으로 묶어 보이고 처리 상태를 적는다(V23 `status` · `decided_at` · `decided_by`, V24 사유 `decided_note`) |
-| `chatbot_turns` | 21 | 챗봇 대화 한 턴에 한 줄(V19) — 연결 id · 계정 id · 질문 · 답 · 갈래 · 판정 표시 · 신발 수 · 단계별 시간(라우터 · 검색 · 생성 · API 다섯). 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 대시보드가 복제본을 읽되 질문 · 답 칸은 권한으로 막는다. 관리자 마이페이지의 대화 보기가 원문을 읽는다(2026-11-14 — V19 의 「읽는 API 를 두지 않는다」를 바꿨다, 데모 관리자에게는 질문 · 답을 빼고 준다). `user_id` 는 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다) — `09_chatbot_rag.md` 18절 |
+| `terms` | 6 | 용어 설명. `row_no` 가 키 — 시드에 `id 12` 가 둘이었고 V17 에서 아웃솔을 13 으로. 관리자 페이지가 더한다(2026-11-14, `POST /api/admin/terms` — id 는 가장 큰 id + 1) |
+| `chatbot_misses` | 8 | 챗봇이 찾지 못한 신발 · 용어 · 답하지 못한 특성 질문(V18, kind `shoe` · `term` · `feature`) — 뽑은 이름 · 원문 · 시각. 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 관리자 페이지가 이름으로 묶어 보이고 처리 상태를 적는다(V23 `status` · `decided_at` · `decided_by`, V24 사유 `decided_note`) |
+| `chatbot_turns` | 21 | 챗봇 대화 한 턴에 한 줄(V19) — 연결 id · 계정 id · 질문 · 답 · 갈래 · 판정 표시 · 신발 수 · 단계별 시간(라우터 · 검색 · 생성 · API 다섯). 챗봇 사이드카만 쓴다(내부 POST, 127.0.0.1). 대시보드가 복제본을 읽되 질문 · 답 칸은 권한으로 막는다. 관리자 페이지의 대화 보기가 원문을 읽는다(2026-11-14 — V19 의 「읽는 API 를 두지 않는다」를 바꿨다, 데모 관리자에게는 질문 · 답을 빼고 준다). `user_id` 는 계정이지 사람이 아니다(체험 계정을 여럿이 쓴다) — `09_chatbot_rag.md` 18절 |
 | `summary_batch_runs` | 11 | 요약 배치 한 실행 한 줄(V20) — 시작 · 끝 · 결과(`running` · `ran` · `skipped` · `error`) · 대상 · 성공 · 실패 · 다시 stale · 사라짐 · 걸린 시간 · 오류 글. 배치가 바로 쓴다 — `09_chatbot_rag.md` 5절 「실행 기록」 |
 | `summary_batch_failures` | 5 | 요약 배치가 만들지 못한 켤레 한 줄(V20) — 실행 id(FK, CASCADE) · 신발 id(FK 없음) · 까닭 · 시각 |
 | `grafana_compare_views`(뷰) | 4 | `activity_logs` 의 `compare.view` 행에서 비교한 신발 번호만(V21). 대시보드 읽기 계정이 `meta` 없이 비교 조합을 센다 — 1-6절 |
