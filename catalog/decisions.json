@@ -17012,14 +17012,27 @@
    },
    "drop_mm": {
     "action": "use_source",
-    "value": 10,
-    "source": "https://in.puma.com/in/en/pd/electrify-nitro-4-mens-running-shoes/310789?swatch=06",
+    "value": 8,
+    "source": "https://eu.puma.com/de/en/pd/electrify-nitro-4-running-shoes-men/310789",
     "sources_more": [
-     "https://www.correrunamaraton.com/comparar/zapatillas-running/puma-electrify-nitro-4/"
+     "https://www.galaxus.ch/en/s3/product/puma-electrify-nitro-4-485-running-shoes-44927532",
+     "https://www.theiconic.com.au/electrify-nitro-4-men-2831386.html"
     ],
     "via": "web",
     "by": "claude",
-    "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「Drop: 10mm heel-to-toe」(opened)"
+    "note": "Claude 웹 검색(2026-11-15, 검색 요약만 · 페이지 열지 않음, 01a 1-4 「출처가 갈리면 다수 쪽」): 같은 품번 310789 에서 푸마 유럽 공식몰 여러 나라 페이지 「Heel-to-toe drop: 8mm」(스택 표기 없음) · Galaxus 8 mm · The Iconic 8 mm(2026-10-24 요약) 대 푸마 인도 공식몰 「Drop: 10mm heel-to-toe; Stack Height: 35mm/25mm」 · correrunamaraton(비교 사이트) 10. 도메인 3 대 2 로 8. 국내몰 kr.puma.com 상품 페이지(fetch 허용)는 2026-11-15 우리 수집기로 다시 받았으나 HTTP 404 — 상품이 내려가 근거로 못 씀. 보도자료(mediahub.puma.com)에는 이 모델이 없다",
+    "flag": "브랜드 공식몰끼리 갈림(유럽 8 · 인도 10). 인도 표(35/25/10)가 3세대 310487 의 값과 똑같아 옮겨 적은 값일 수 있다 — 같은 표에서 온 힐 스택 35 도 같은 의심이 있다(이번에는 그대로 둠). 사람이 다시 볼 것",
+    "previous": {
+     "action": "use_source",
+     "value": 10,
+     "source": "https://in.puma.com/in/en/pd/electrify-nitro-4-mens-running-shoes/310789?swatch=06",
+     "sources_more": [
+      "https://www.correrunamaraton.com/comparar/zapatillas-running/puma-electrify-nitro-4/"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-28) — 브랜드 페이지: 「Drop: 10mm heel-to-toe」(opened)"
+    }
    },
    "stack_heel_mm": {
     "action": "use_source",
@@ -17981,14 +17994,27 @@
    "weight_g": {
     "action": "use_source",
     "value": 298,
-    "source": "https://www.roadtrailrun.com/2026/03/under-armour-velociti-distance-review-2.html",
+    "source": "https://www.underarmour.com/en-us/p/ua_velociti_distance_mens_running_shoes/6006030.html",
     "sources_more": [
-     "https://runtothefinish.com/under-armour-velociti-distance-review/"
+     "https://www.underarmour.co.uk/en-gb/p/running/ua_velociti_distance_mens_running_shoes/6006030.html",
+     "https://runoregonblog.com/2026/03/06/under-armour-velociti-distance-built-for-the-long-haul/"
     ],
     "via": "web",
     "by": "claude",
-    "note": "Claude 웹 검색(2026-10-28) — 비실측 2곳 일치: 「official weight is 298 g (10.5 oz) for men's EU 42 / US 8.5」(search summary)",
-    "weight_basis": "US_M8.5"
+    "note": "Claude 웹 검색(2026-11-15, 검색 요약만 · 페이지 열지 않음 — www.underarmour.com 은 unknown 이라 열지 않는다, 01a 1-2a): 언더아머 미국 공식몰 「Weight: 10.5 oz」 · 영국 공식몰 298 g, 둘 다 사이즈 표기 없음 → 공식몰 규칙으로 M9(01a 1-3 · 2-7). Run Oregon 「10.5 oz (Men's size 9)」 이 M9 를 밝힘. 반대: Road Trail Run(blocked, 요약) 「official 298 g / 10.5 oz (men's EU 42 / US 8.5)」 하나뿐 → 우선순위(M9 확인값 먼저)로 M9. 값 298 은 그대로, 기준 사이즈만 M8.5 → M9",
+    "weight_basis": "US_M9",
+    "previous": {
+     "action": "use_source",
+     "value": 298,
+     "source": "https://www.roadtrailrun.com/2026/03/under-armour-velociti-distance-review-2.html",
+     "sources_more": [
+      "https://runtothefinish.com/under-armour-velociti-distance-review/"
+     ],
+     "via": "web",
+     "by": "claude",
+     "note": "Claude 웹 검색(2026-10-28) — 비실측 2곳 일치: 「official weight is 298 g (10.5 oz) for men's EU 42 / US 8.5」(search summary)",
+     "weight_basis": "US_M8.5"
+    }
    },
    "wide_available": {
     "action": "use_source",
