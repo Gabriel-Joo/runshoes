@@ -41,7 +41,14 @@
   border-left: 1px solid #000000;
   padding-left: 20px;
   font-weight: 600;
-  color: var(--text-weak);
+  color: var(--coral-strong);
+}
+/* 신발 관리는 관리자만 보는 메뉴라 늘 코랄 — 「지금 화면만 틸」의 예외. 보고 있을 때는 색 대신 밑줄(2026-11-15 사용자) */
+.header__nav .header__link--admin.is-active {
+  color: var(--coral-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
 }
 /* 로그인 · 닉네임 — 메뉴 맨 끝, 앞과 줄로 나눈다(admin 이면 신발 관리 뒤) */
 .header__link--auth {
@@ -161,6 +168,17 @@
 
 .header__drawerlink.is-active {
   color: var(--accent);
+}
+
+/* 서랍의 신발 관리도 늘 코랄, 보고 있을 때는 밑줄(머리 메뉴와 같은 예외) */
+.header__drawerlink--admin,
+.header__drawerlink--admin.is-active {
+  color: var(--coral-strong);
+}
+.header__drawerlink--admin.is-active {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 .header__drawerlink--auth {

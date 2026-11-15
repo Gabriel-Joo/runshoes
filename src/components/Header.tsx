@@ -45,8 +45,8 @@ function Header() {
     setNotice("로그아웃했어요.");
   };
 
-  const drawerLink = (to: string, label: string) => (
-    <Link key={to} to={to} className={`header__drawerlink ${location.pathname === to ? "is-active" : ""}`} onClick={close}>
+  const drawerLink = (to: string, label: string, extra = "") => (
+    <Link key={to} to={to} className={`header__drawerlink ${extra} ${location.pathname === to ? "is-active" : ""}`} onClick={close}>
       {label}
     </Link>
   );
@@ -66,7 +66,7 @@ function Header() {
             </Link>
           ))}
           {canViewAdmin && (
-            <Link to="/admin" className="header__link header__link--admin">
+            <Link to="/admin" className={`header__link header__link--admin ${location.pathname === "/admin" ? "is-active" : ""}`}>
               신발 관리
             </Link>
           )}
@@ -110,7 +110,7 @@ function Header() {
       {open && (
         <nav className="header__drawer">
           {NAV.map(([to, label]) => drawerLink(to, label))}
-          {canViewAdmin && drawerLink("/admin", "신발 관리")}
+          {canViewAdmin && drawerLink("/admin", "신발 관리", "header__drawerlink--admin")}
           {status === "anonymous" && (
             <Link to={toLogin} className="header__drawerlink header__drawerlink--auth" onClick={close}>
               로그인
