@@ -27,6 +27,9 @@
 
 #### 카탈로그
 
+- [ ] 약관 다시 읽기 전 거르는 도구 — 약관 페이지를 받아 `terms_version` 날짜와 `clauses` 인용 문구가 그대로인지 본다 → `01a_catalog_sources.md` 1-2b 「다시 읽는 때」
+- [ ] 약관 기록 남은 fetch 18항목(호스트 17곳)을 BITR · RSG 꼴로 몇 번에 나눠 채우기 — 목록은 → `01a_catalog_sources.md` 1-2b 「채우는 곳」
+
 - [ ] 와이드 정보 없음 4켤레(사용자가 MAN 으로) · 울트라부스트 5X 의 와이드 · 정가 · 카본 → `01a_catalog_sources.md` 4절
 - [ ] GTX 판을 별도 행으로 → `01a_catalog_sources.md` 4절
 - [ ] 정가 빈 칸을 채울 방법(국내 공식몰 아카이브 · MAN) → `01a_catalog_sources.md` 4절

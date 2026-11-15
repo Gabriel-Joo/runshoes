@@ -1,5 +1,7 @@
 # 매체 · 보도자료 수집처 — 2단계(공식몰에서 못 받는 라인)와 1단계의 드롭 · 스택 보충. 확인 2026-10-21(robots + 약관).
 # mode 는 sources.yaml 과 같다. fetch 만 catalog/local/fetch.mjs 가 받는다. 사실 수치만 쓰고 필드마다 출처 URL 을 남긴다.
+# 약관 기록(verdict · basis · clauses · read_at · robots)의 꼴과 규칙은 docs/01a_catalog_sources.md 1-2b. 약관 전문은 저장하지 않는다.
+#   2026-11-15 BITR · RSG 부터 채웠다. fetch.mjs 는 줄 단위로 host · mode 만 읽으므로 기록 안에 host · mode 라는 키를 쓰지 않는다.
 checked_at: 2026-10-21
 domains:
   - host: roadtrailrun.blogspot.com
@@ -8,12 +10,81 @@ domains:
   - host: believeintherun.com
     mode: fetch
     caution: '라이선스 "private, personal and non-commercial use" · 복제 · 편집물 금지 → 수치(사실)만, 문장 · 표는 옮기지 않는다'
+    verdict: '자동으로 읽는다(fetch). 쓰는 것은 수치 · 상표명 같은 사실 값뿐이고, 문장 · 표 · 번역은 옮기지 않는다'
+    basis:
+      - claim: '자동으로 읽어도 된다'
+        kind: 원문
+        why: '원문에 스크래핑 · 크롤링 · 로봇 · 데이터 마이닝 금지 조항이 없다(Disruptive Behavior 는 IRC 봇 · 서비스 방해 · DoS 만 다룬다). robots 가 리뷰 경로를 막지 않는다. 금지가 없으면 연다는 것은 01a 2-2 기준'
+      - claim: '문장 · 표 · 번역은 옮기지 않는다'
+        kind: 원문
+        why: 'Use of the BR Platform 둘째 문단 (i) translate, adapt · (ii) reproduce … any part thereof · (iii) store … compilations or derivative works 가 바로 막는다'
+      - claim: '수치(사실 값)는 쓴다'
+        kind: 해석
+        why: '원문에 수치를 써도 된다는 문장은 없다. 원문은 오히려 어떤 부분이든 복제 · 저장을 막고(ii · iii), 허락 범위는 private, personal and non-commercial use 이며, 데이터의 compilation and arrangement 에 권리를 주장한다. 01a 2-2(사실 값은 지재권 대상이 아니다)를 적용하고, 2-2 의 세 예외(사실 값 자체를 권리 대상으로 선언 · 자동 수집 금지 · robots 차단)에 걸리지 않아 우리 기준으로 너그럽게 본 판정이다. 한 곳에서 많이 가져올수록 compilation 주장에 가까워진다'
+    terms: https://believeintherun.com/terms-of-conditions-and-use/
+    terms_version: '2020-08-10 (페이지 머리 「Updated • 08/10/20」)'
+    read_at: '2026-11-15T07:10Z'
+    read_by: '점검 세션 446, 우리 UA, 호스트 간격 5초 이상'
+    pages:
+      - {url: 'https://believeintherun.com/robots.txt', at: '2026-11-15T07:10:11Z', status: 200}
+      - {url: 'https://believeintherun.com/', at: '2026-11-15T07:10:17Z', status: 200, why: '바닥글에서 약관 링크를 찾음'}
+      - {url: 'https://believeintherun.com/terms-of-conditions-and-use/', at: '2026-11-15T07:10:30Z', status: 200, why: 'Vercel 캐시 응답(x-vercel-cache STALE, Date 2026-11-14T16:13:09Z)'}
+      - {url: 'https://believeintherun.com/privacy-policy/', at: '2026-11-15T07:10:36Z', status: 200}
+    robots:
+      group: '*'
+      disallow: [/admin, /studio, /account, /api/, /preview/, /go/]
+      note: 'AI 봇을 이름으로 막는 그룹 · Content-Signal 없음. 리뷰 · 약관 경로는 막히지 않는다'
+    clauses_note: '2026-11-15 점검 때 읽은 원문에서 옮김(전문은 저장하지 않는다). 판정에 꼭 필요한 문장만 원문 그대로, 문장 안을 줄인 자리는 「…」'
+    clauses:
+      - where: 'Use of the BR Platform, 첫째 문단 (허락 범위)'
+        supports: '수치(사실 값)는 쓴다'
+        text: |
+          … BR grants you a non-transferable, non-exclusive and non-sublicensable limited right and license to view, use and access the BR Platform to (a) incidentally view, print and download the images, text, graphics, photographs, audio, video and other content available within the BR Platform solely for your informational purposes and for your immediate, private, personal and non-commercial use, …
+      - where: 'Use of the BR Platform, 둘째 문단 (금지 (i) · (ii) · (iii))'
+        supports: '문장 · 표 · 번역은 옮기지 않는다'
+        text: |
+          … you agree not to: (i) reverse engineer, decompile, reverse compile, translate, adapt, or disassemble or otherwise access the BR Platform, or any part thereof; (ii) copy, distribute, display, transmit or reproduce the BR Platform, or any part thereof, in any form; (iii) publish, display, disclose, sell, rent, lease, modify, store, loan, distribute, publicly display or perform, co-brand, frame, permit third parties to link to, or create compilations or derivative works of the BR Platform, or any part thereof; …
+      - where: 'Intellectual Property (편집물 권리 주장)'
+        supports: '수치(사실 값)는 쓴다'
+        text: |
+          The compilation and arrangement of all content, data and other information found within the BR Platform is also the sole and exclusive property of BR and its licensors and is protected by U.S. and international intellectual property laws.
+      - where: 'Disruptive Behavior (자동화에 닿는 유일한 조항, 봇은 IRC 봇뿐)'
+        supports: '자동으로 읽어도 된다'
+        text: |
+          You agree not to: … (b) use Internet Relay Chat (IRC) bots via this BR Platform (i.e., programs that utilize excessive resources by connecting to an IRC network and running 24 hours per day); … and (k) engage in denial of service attacks (i.e., actions designed to impair network access by flooding the BR Platform with useless traffic).
   - host: www.solereview.com
     mode: excluded
     caution: '"not to copy, publish … any part of this website" → 수치만'
     note: '2026-10-23 사용자: 소스에서 뺀다(반 켤레 실측 · 스택 실측으로 보여 공시값이 아니다). 받지 않고, 이미 모은 값은 쓰지 않는다(build.mjs EXCLUDED)'
   - host: www.runningshoesguru.com
     mode: fetch
+    verdict: '자동으로 읽는다(fetch). 쓰는 것은 수치 · 상표명 같은 사실 값뿐이고, 문장 · 표는 옮기지 않는다'
+    basis:
+      - claim: '자동으로 읽어도 된다'
+        kind: 원문
+        why: '이용약관(Terms of Use) 페이지가 없다. 바닥글의 정책 페이지는 Legal Disclaimer · Privacy Policy 둘뿐이고(사이트맵 정책 페이지도 이 둘), Legal Disclaimer 는 보증 부인 · 책임 제한 · 제휴 고지뿐이라 수집 · 복제 · 상업 이용 · AI 학습에 관한 조항이 없다. robots 의 * 그룹이 리뷰 경로를 막지 않는다'
+      - claim: '문장 · 표는 옮기지 않는다'
+        kind: 해석
+        why: '막는 조항은 없지만 이용을 허락하는 문구도 없고 저작권 표시(© 2026 RSGMedia)만 있다. 문장에는 기본 저작권이 그대로 걸린다고 보고 01a 1-2(글 · 사진은 옮기지 않는다)를 적용했다'
+      - claim: '수치(사실 값)는 쓴다'
+        kind: 해석
+        why: '원문에 수치에 관한 말이 없다. 01a 2-2(사실 값은 지재권 대상이 아니다)를 적용했다'
+    terms: null
+    terms_version: null
+    read_at: '2026-11-15T07:10Z'
+    read_by: '점검 세션 446, 우리 UA, 호스트 간격 5초 이상'
+    pages:
+      - {url: 'https://www.runningshoesguru.com/robots.txt', at: '2026-11-15T07:10:12Z', status: 200}
+      - {url: 'https://www.runningshoesguru.com/', at: '2026-11-15T07:10:19Z', status: 200, why: '바닥글 정책 링크 확인'}
+      - {url: 'https://www.runningshoesguru.com/running-shoes-guru-legal-disclaimer/', at: '2026-11-15T07:10:31Z', status: 200}
+      - {url: 'https://www.runningshoesguru.com/privacy-policy/', at: '2026-11-15T07:10:36Z', status: 200}
+      - {url: 'https://www.runningshoesguru.com/about-2/', at: '2026-11-15T07:10:42Z', status: 200}
+    robots:
+      group: '*'
+      disallow: [/wp-admin/, /ex/, /go/]
+      note: '나머지 그룹은 SEO 봇 7종(SeekportBot · Bytespider · MJ12bot · DotBot · PetalBot · AhrefsBot · SemrushBot)만 전부 막는다. AI 봇을 이름으로 막는 그룹 · Content-Signal 없음'
+    clauses: []
+    clauses_note: '이용약관 페이지 없음. 법적 고지(Legal Disclaimer)에 복제 · 인용 · 수집 · 상업 이용 조항 없음. 그 절은 No warranties · Limitations of liability · Exceptions · Reasonableness · Other parties · Unenforceable provisions · Affiliate Disclosure(Amazon 제휴)'
   - host: www.roadtrailrun.com
     mode: blocked
     reason: Cloudflare 챌린지(403) — 우회하지 않는다

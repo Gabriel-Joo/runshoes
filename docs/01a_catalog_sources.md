@@ -69,6 +69,29 @@
 - 열지 못하는 해외 공식몰도 **웹 검색 요약**(1-2 표의 조건 — 단위가 붙은 수치 · 상표명, 브랜드 1곳)으로는 쓴다. 이때도 무게는 요약에 사이즈 표기가 있으면 그 사이즈로, 없으면 M9 로 적는다(1-3). 같은 상품의 다른 나라 페이지가 사이즈를 밝혔으면 그쪽을 따른다 — 베이퍼플라이 4 의 나이키 190g 은 미국 페이지가 "Men's US 10", 캐나다가 "UK 9"로 밝혀 M10 이었다(11-09 조사).
 - 출처 코드는 1-8 그대로 `STORE`(해외 공식몰 상품 페이지도 STORE).
 
+#### 1-2b. 약관 기록 — 판정마다 근거를 남긴다(2026-11-15 사용자)
+
+판정(`mode` · `caution`)만 있으면 「이 판정이 맞나」 싶을 때 약관을 다시 읽어야 한다. 그래서 수집처마다 아래를 `sources-media.yaml`(· `sources.yaml`) 항목에 같이 적는다. 2026-11-15 BITR · RSG 부터 채웠고, 나머지는 아직 판정만 있다.
+
+| 키 | 내용 |
+|---|---|
+| `verdict` | 판정 문장(무엇을 읽고 무엇을 쓰나). `mode` · `caution` 은 그대로 둔다 |
+| `basis` | 판정을 나눈 목록 — `claim`(판정 한 조각) · `kind`(`원문` 또는 `해석`) · `why` |
+| `clauses` | 걸리는 조항 — `where`(조항 자리) · `supports`(받치는 `basis` 조각) · `text`(판정에 꼭 필요한 문장만, 원문 그대로). 걸리는 조항이 없으면 빈 목록과 `clauses_note` |
+| `terms` · `terms_version` | 약관 주소 · 약관에 적힌 날짜(`sources.yaml` 과 같은 이름) |
+| `read_at` · `read_by` · `pages` | 읽은 시각(UTC) · 누가 어떻게 읽었나 · 읽은 주소마다 시각과 HTTP 상태 |
+| `robots` | 우리에게 걸리는 그룹 · 막는 경로 · AI 봇 줄이 있는지 |
+
+- **해석한 판정은 `kind: 해석`으로 밝히고 무엇을 어떻게 해석했는지 `why`에 쓴다.** 원문 문장에서 바로 나오면 `원문`이다. BITR 의 「수치만」은 원문에 없고 2-2 를 적용해 너그럽게 본 해석이다(원문은 어떤 부분이든 복제 · 저장을 막는다).
+- 「금지 조항이 없다」는 원문을 읽어 확인한 사실이라 `원문`으로 둔다. 그것을 「열어도 된다」로 읽는 것은 2-2 기준이고 `why`에 그렇게 적는다.
+- **약관 전문은 저장하지 않는다**(2026-11-15 사용자). git 에는 걸리는 조항 인용 · 읽은 날 · robots 내용만 적는다 — 지문(sha256)이나 원문 파일 자리는 적지 않는다.
+- **인용은 판정에 꼭 필요한 문장만, 원문 그대로 옮긴다**(2026-11-15 사용자). `basis` 조각마다 그것을 받치는 문장만 둔다. 문장 안을 잘라야 하면 줄인 자리를 「…」로 밝히고 원문 낱말은 바꾸지 않는다. 줄바꿈 없는 공백(U+00A0)만 보통 공백으로 적는다.
+- `fetch.mjs` 는 이 파일을 줄 단위로 읽어 `host` · `mode` 만 본다. 기록 안에 `host` · `mode` 라는 키를 쓰지 않는다.
+- **다시 읽는 때**(2026-11-15 사용자): 그 출처에서 새 수집 작업을 하기 전, 판정이 의심될 때, 반년마다. 다시 읽기 전에 매번 기계로 먼저 거른다 — 약관 페이지를 받아 `terms_version` 날짜와 `clauses` 인용 문구가 그대로인지만 보고, 달라졌을 때만 사람이 다시 읽는다. 거르는 도구는 아직 없다(`TODO.md`).
+- **채우는 곳**(2026-11-15 사용자): 값을 가져오는 곳(`mode: fetch`)만 채운다. `blocked` · `unknown` · `excluded` 는 채우지 않는다. BITR · RSG 다음으로 남은 fetch 18항목(호스트 17곳, www.saucony.com 이 두 파일에 다 있다)을 몇 번에 나눠 채운다:
+  - `sources-media.yaml` 7: www.fit2run.com · weartesters.com · www.newswire.co.kr · corp.asics.com · www.saucony.com · mediahub.puma.com · www.amersports.com
+  - `sources.yaml` 11: www.asics.co.kr · www.nbkorea.com · saucony.co.kr · www.brooksrunning.co.kr · kor.mizuno.com · salomon.co.kr · kr.puma.com · altra.co.kr · www.merrellkorea.co.kr · www.saucony.com · usa.mizuno.com
+
 #### 1-3. 무게
 
 - **US M9 기준**이다. 값은 `official_weight_g`, 기준 사이즈는 `official_weight_size`(M9 · M10 · M9.5 …, 출처가 밝히지 않으면 null).
