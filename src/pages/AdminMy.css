@@ -138,6 +138,12 @@
   grid-template-columns: minmax(0, 2fr) 86px 120px 44px minmax(110px, 1fr) 84px;
 }
 
+/* 닉네임 · 이메일 — 띄어쓰기 없는 긴 값도 칸 안에서 줄을 바꾼다(확인 창과 같은 규칙) */
+.adminmy__members .mypage__model {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
 .adminmy__members .mypage__row.is-withdrawn {
   color: var(--text-weak);
 }
