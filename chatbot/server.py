@@ -29,7 +29,7 @@ from .search.service import Searcher
 
 FALLBACK_ERROR = "지금은 답을 만들지 못했어요. 잠시 뒤에 다시 물어봐 주세요."
 AUTH_TIMEOUT = 10   # 초 — 화면은 연결되자마자 보낸다. 느린 모바일 망에서도 넉넉하고, 붙기만 하고 말 없는 연결은 오래 두지 않는다
-AUTH_UNAVAILABLE = "지금은 챗봇에 연결하지 못했어요. 잠시 뒤 창을 닫았다가 다시 열어 주세요."
+AUTH_UNAVAILABLE = "지금은 챗봇에 연결하지 못했어요. 잠시 뒤 다시 연결을 눌러 주세요."   # 화면이 이 문장 아래 [다시 연결]을 붙인다
 # 닫는 코드(화면은 코드가 아니라 앞서 보낸 프레임으로 가른다 — 기록 · 디버깅용)
 CLOSE_AUTH_FAILED, CLOSE_AUTH_UNAVAILABLE = 4401, 4503
 

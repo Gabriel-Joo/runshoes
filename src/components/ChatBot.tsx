@@ -4,7 +4,7 @@ import Markdown, { type MarkdownToJSX } from "markdown-to-jsx/react";
 import "./ChatBot.css";
 import { CHATBOT_WS_URL } from "../api";
 import { useAuth } from "../auth/useAuth";
-import { chatToken, loginPath, logout, refresh } from "../auth/session";
+import { NETWORK_MESSAGE, chatToken, loginPath, logout, refreshSession } from "../auth/session";
 
 /**
  * 챗봇 답은 마크다운으로 그린다(5-2 2차 수정) — 인용 블록(리뷰 원문, 코드가 붙인다) · 굵게 · 목록 모두.
@@ -37,24 +37,30 @@ const internalLinks = (links: unknown): ChatLink[] =>
 
 const LOGIN_GUIDE = "챗봇은 로그인한 뒤에 쓸 수 있어요. 체험 계정으로 바로 둘러볼 수 있어요.";
 const RELOGIN_GUIDE = "로그인 정보를 확인하지 못했어요. 다시 로그인하면 이어서 물어볼 수 있어요.";
-const CLOSED = "연결이 끊겼어요. 창을 닫았다가 다시 열어 주세요.";
+const CLOSED = "연결이 끊겼어요. 다시 연결을 눌러 주세요.";
 
-const LoginGuide = ({ text, onLogin }: { text: string; onLogin: () => void }) => (
+/** 안내 문장 + 버튼 하나 — 로그인 안내와 다시 연결이 같은 꼴 */
+const Guide = ({ text, button, onClick }: { text: string; button: string; onClick: () => void }) => (
   <div className="chatbot-login">
     <p>{text}</p>
-    <button onClick={onLogin}>로그인</button>
+    <button onClick={onClick}>{button}</button>
   </div>
 );
+
+const LoginGuide = ({ text, onLogin }: { text: string; onLogin: () => void }) => <Guide text={text} button="로그인" onClick={onLogin} />;
 
 /**
  * 로그인 확인(docs/04_auth.md 4절 · 09 17절) — 연결 직후 첫 메시지 {type:"auth", token}. 주소에는 넣지 않는다(로그에 남는다).
  * - 서버가 인사(system)를 보내면 질문을 받는다. 메시지마다 다시 확인하지 않는다(15분 토큰으로 오래 연 창이 막히지 않게)
- * - auth_failed → refresh 한 번 뒤 다시 연결. refresh 가 실패하면 로그아웃 상태가 되어 이 컴포넌트가 내려가고(소켓도 닫힘) 로그인 안내가 뜬다.
- *   다시 붙어도 실패하면 다시 로그인 안내
- * - auth_unavailable(백엔드가 아직 안 뜸 등) → 서버 문구 그대로. 토큰 탓이 아니라 refresh 하지 않는다
+ * - auth_failed → refresh 한 번 뒤 다시 연결. 서버가 refresh 를 거절하면 로그아웃 상태가 되어 이 컴포넌트가 내려가고(소켓도 닫힘)
+ *   로그인 안내가 뜬다. refresh 가 서버에 닿지 못하면(재시도까지 실패) 로그인은 그대로라 retry 로 — [다시 연결].
+ *   다시 붙어도 auth_failed 면 다시 로그인 안내
+ * - auth_unavailable(백엔드가 아직 안 뜸 등) → 서버 문구 그대로 + [다시 연결]. 토큰 탓이 아니라 refresh 하지 않는다
+ * - 인사 뒤 끊김 · 아무 답 없이 끊김 → closed + [다시 연결]
+ *   retry · unavailable · closed 셋 다 「로그인은 멀쩡한데 연결만 안 된」 상태라 같은 버튼, 처음 연결과 같은 길(2026-11-17)
  * 로그인한 사람마다 새로 붙는다(key = user id) — 로그아웃 · 다른 계정으로 바뀌면 소켓을 닫고 대화도 지운다.
  */
-type Phase = "connecting" | "ready" | "relogin" | "closed" | "unavailable";
+type Phase = "connecting" | "ready" | "relogin" | "retry" | "closed" | "unavailable";
 
 const ChatSession = ({ onLink, onLogin }: { onLink: (href: string) => void; onLogin: () => void }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -64,10 +70,11 @@ const ChatSession = ({ onLink, onLogin }: { onLink: (href: string) => void; onLo
   const [notice, setNotice] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const reconnectRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     let cancelled = false;
-    let retried = false;
+    let retried = false;   // 이번 연결 시도에서 auth_failed 뒤 refresh 를 이미 했는가
 
     const open = () => {
       const socket = new WebSocket(CHATBOT_WS_URL);
@@ -83,8 +90,11 @@ const ChatSession = ({ onLink, onLogin }: { onLink: (href: string) => void; onLo
           if (!retried) {
             retried = true;
             setPhase("connecting");
-            refresh().then((ok) => {
-              if (ok && !cancelled) open();
+            refreshSession().then((r) => {
+              if (cancelled) return;
+              if (r === "ok") open();
+              else if (r === "unavailable") setPhase("retry");
+              // loggedOut — 로그아웃 상태가 되어 이 컴포넌트가 내려간다
             });
           } else {
             setPhase("relogin");
@@ -112,6 +122,22 @@ const ChatSession = ({ onLink, onLogin }: { onLink: (href: string) => void; onLo
         // 인사를 받은 뒤 끊김(배포 등) · 아무 답 없이 끊김 — 인증 실패는 위에서 따로 보여 준다
         setPhase((p) => (p === "ready" || !settled ? "closed" : p));
       };
+    };
+
+    // [다시 연결] — 처음 연결과 같은 길(토큰이 만료됐으면 다시 auth_failed → refresh)
+    reconnectRef.current = () => {
+      if (cancelled) return;
+      const old = socketRef.current;   // 서버가 아직 닫지 않은 소켓(unavailable 직후 등)은 조용히 닫는다
+      if (old) {
+        old.onclose = null;
+        old.onmessage = null;
+        old.close();
+        socketRef.current = null;
+      }
+      retried = false;
+      setNotice("");
+      setPhase("connecting");
+      open();
     };
 
     open();
@@ -173,8 +199,12 @@ const ChatSession = ({ onLink, onLogin }: { onLink: (href: string) => void; onLo
         ))}
         {loading && <p className="chatbot-message--loading">답변을 준비하고 있어요…</p>}
         {phase === "relogin" && <LoginGuide text={RELOGIN_GUIDE} onLogin={() => void logout().catch(() => {}).finally(onLogin)} />}
-        {(phase === "closed" || phase === "unavailable") && (
-          <p className="chatbot-message--loading">{phase === "unavailable" ? notice : CLOSED}</p>
+        {(phase === "retry" || phase === "closed" || phase === "unavailable") && (
+          <Guide
+            text={phase === "retry" ? NETWORK_MESSAGE : phase === "unavailable" ? notice : CLOSED}
+            button="다시 연결"
+            onClick={() => reconnectRef.current()}
+          />
         )}
         <div ref={messagesEndRef} />
       </div>

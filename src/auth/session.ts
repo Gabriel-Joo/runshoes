@@ -73,13 +73,16 @@ export function setUser(u: User) {
   listeners.forEach((fn) => fn(user));
 }
 
+/** 서버에 닿지 못했을 때의 문장 — 로그인 · refresh · 챗봇 연결이 같은 말을 쓴다 */
+export const NETWORK_MESSAGE = "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요.";
+
 /** 인증 API 호출 — 실패하면 AuthError(서버 메시지) */
 async function authCall(path: string, init: RequestInit = {}): Promise<Response> {
   let res: Response;
   try {
     res = await fetch(`${API}${path}`, { credentials: "same-origin", ...init });
   } catch {
-    throw new AuthError(0, "NETWORK", "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요.");
+    throw new AuthError(0, "NETWORK", NETWORK_MESSAGE);
   }
   if (!res.ok) {
     const body = await res.json().catch(() => null);
@@ -162,7 +165,7 @@ export const refresh = async () => (await refreshSession()) === "ok";
 
 /** refresh 가 서버에 닿지 못했을 때 apiFetch 가 돌려주는 응답 — 401 이 아니므로 화면이 로그인으로 보내지 않고 오류 문장을 보인다 */
 const unavailable = () =>
-  new Response(JSON.stringify({ error: { code: "UNAVAILABLE", message: "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요." } }), {
+  new Response(JSON.stringify({ error: { code: "UNAVAILABLE", message: NETWORK_MESSAGE } }), {
     status: 503,
     headers: { "Content-Type": "application/json" },
   });
