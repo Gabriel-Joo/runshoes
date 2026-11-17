@@ -10,9 +10,10 @@ not_code = [".md", ".png", ".jpg", ".lock", "*package-lock.json", "*package.json
 
 [sets]
 docs = "docs/"
+notion = "notion/"                    # 사람이 읽는 노션 원고(2026-11-17 5단계에서 새로 씀). 차례는 docs/style_guide.md 1절
 
 [check]
-sets = ["docs"]
+sets = ["docs", "notion"]
 numbered_only = []                    # 번호 없는 편(README, requirements, overview, HISTORY, TODO)도 노션에 나가므로 20편 모두 본다
 head_at = "top"
 fenced = true
@@ -20,6 +21,6 @@ kinds = ["c", "docs", "code"]
 files_at = "read"
 claim = '\d|“|”'
 claim_min = 0
-banned = []                           # 금지어는 사람이 읽는 원고(notion/, 5단계)에만 건다. docs는 내부 주소를 써도 된다
+banned = ["notion"]                   # 금지어(IP, 도메인, 홈 경로, 토큰 꼴, 포트)는 사람이 읽는 원고에만 건다. docs는 내부 주소를 써도 된다
 cover_by = ["docs"]
 dashdot_base = "606b730"              # 새 줄 em dash와 가운뎃점 검사의 기준 커밋. 넣은 때의 런슈즈 main(2026-11-17). 기존 줄은 3단계에서
