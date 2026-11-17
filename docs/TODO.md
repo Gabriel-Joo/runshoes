@@ -62,6 +62,7 @@
 - [ ] 토큰 밖 색 둘을 토큰으로 옮길지 → `02b_design_system.md` 4절
 - [ ] 서버도 와이드 "없음"의 출처를 요구할지 → `03_admin.md` 4절
 - [ ] 목록 페이지 나누기 → `05_api_contract.md` 4절
+- [ ] 코드 주석 둘이 체험 계정을 아직 「시드 3」이라고 적는다(실제는 시드 30과 데모 관리자 1). 동작은 맞고 주석만 낡았다(2026-11-17 문서 근거 달기에서 찾음) [code:backend/src/main/resources/application.yml:36] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:80]
 - [ ] 실사용 인증을 다시 켤지 — 실사용 후기 · 기록 앱 스크린샷 같은 근거가 생긴 뒤. 칸(V3 `verified`)은 남아 있다 → `03_admin.md` 1-6 [code:backend/src/main/resources/db/migration/V3__auth.sql:57-59] [docs:03_admin.md]
 - [ ] 사전에 더한 용어를 고치거나 지울 화면 → `07_database.md` 4절
 - [ ] 계약 시험을 둘이 함께 돌리지 않게 할지(컨테이너 이름 · 포트가 고정) → `contract/README.md` 「결과」 [code:contract/run-spring-local.sh:86-87] [code:contract/run-spring-local.sh:31] [code:contract/README.md:72]

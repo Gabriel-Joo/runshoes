@@ -4,7 +4,9 @@ records = ["log/", "docs/archive/"]   # 기록 폴더. 문서도 아니고 걸�
 pair_numbers = false                  # 짝이 될 원고 폴더(notion/)가 아직 없다(5단계)
 read_commit = "piece"                 # 읽은 커밋은 편마다 따로
 allowed_domains = ["ronanlab.dev"]
-not_code = [".md", ".png", ".jpg", ".lock", "*package-lock.json"]   # 바뀌어도 코드로 세지 않는 것(글, 화면 사진과 신발 이미지, 잠금 파일)
+# 바뀌어도 코드로 세지 않는 것: 글, 화면 사진과 신발 이미지, 잠금 파일, 빌드와 도구 설정, 저장소 규칙(2026-11-17 사용자, 문서로 설명할 까닭이 없다)
+not_code = [".md", ".png", ".jpg", ".lock", "*package-lock.json", "*package.json", "tsconfig*.json", "*vite.config.ts", "*eslint.config.js",
+            ".gitignore", ".claude/*", ".foreman/*"]
 
 [sets]
 docs = "docs/"

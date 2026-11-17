@@ -14,7 +14,7 @@
 
 - **StockX** — KicksDB(`api.kicks.dev v3/stockx`) 검색 결과의 이미지 주소. 흰 바탕 · 측면 · 앞코 오른쪽 · 같은 크롭(신발이 가로의 97~99.7%)이라 300켤레가 한 줄에 놓여도 통일된다. [code:catalog/stockx.mjs:12] (2026-11-02 기준) [c:a6bf21e]
 - **GOAT** — StockX 에 없는 세대만(2026-11-01 사용자). 남성 · 공용 기본 색상만. 주소는 원본(`image.goat.com/1000/…png`, 1000×1000 정사각)이 아니라 **`image.goat.com/transform/v1/…png?action=crop&width=700`** — 바깥 투명 여백을 잘라 신발이 가로의 98%(StockX 99%와 같다)를 채운 700px 폭 PNG다(2026-11-05 사용자 "사진 크기를 StockX 에 맞춰라"). 바탕은 투명하다. [code:catalog/stockx.mjs:97-105] [code:catalog/decisions.json:22023-22028] [c:fa31029]
-- **저장하지 않는다.** DB 의 `image` · `images` 에는 주소만 들어간다. 크기는 imgix 인자(`w` · `h` · `dpr`)로 화면이 정한다. 기준 주소: `fit=fill&bg=FFFFFF&trim=color&w=700&h=500&dpr=2&fm=webp&q=90`. [code:backend/src/main/resources/db/migration/V1__schema.sql:25-26] [code:catalog/stockx.mjs:114] [code:src/components/ShoeImage.tsx:24] [code:catalog/decisions.json:21965] <!-- 안 맞음: 문서는 「크기는 imgix 인자로 화면이 정한다」, 코드는 「적재 때 주소에 w=700&h=500 을 박고(stockx.mjs:114) 화면 ShoeImage 는 주소를 그대로 쓴다, 실제 주소에는 auto=compress 도 붙는다」 -->
+- **저장하지 않는다.** DB 의 `image` · `images` 에는 주소만 들어간다. 크기는 imgix 인자(`w` · `h` · `dpr`)로 적재 때 주소에 박고, 화면은 주소를 그대로 쓴다. 기준 주소: `fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color`. [code:backend/src/main/resources/db/migration/V1__schema.sql:25-26] [code:catalog/stockx.mjs:114] [code:src/components/ShoeImage.tsx:24] [code:catalog/decisions.json:21965]
 - **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX" · "Image: GOAT"(`ShoeGallery creditOf` — 주소의 호스트로 판단, 칸이 따로 없다). 화면에서는 가려 둔다(2026-11-03 사용자, 지우지 않는다) — PC 는 사진 칸을 30px 올려 칸 위로 나가고, 휴대폰은 사진 뒤에 놓인다. [code:src/components/ShoeGallery.tsx:12-20] [code:src/components/ShoeGallery.tsx:76] [code:src/components/ShoeModal.css:83-89] [code:src/components/ShoeGallery.css:25-38]
 - 국내 공식몰 사진 · 여성용 · 변형 색상은 쓰지 않는다(신발 모양이 다를 수 있다). [code:catalog/stockx.mjs:16-20] [code:catalog/stockx.mjs:140] [code:catalog/colors-plan.mjs:42]
 
@@ -63,7 +63,7 @@
 
 배경 · 각도 · 크롭이 통일된 소스가 StockX 다. GOAT 원본은 정사각에 신발이 가로 약 85% 라 나란히 놓으면 작게 보인다. 그래서 StockX 에 없는 세대만 GOAT 를 쓴다. [code:catalog/stockx.mjs:97] (2026-11-05 기준) [c:fa31029]
 
-크기는 GOAT 이미지 서버의 `transform/v1 … action=crop` 으로 맞춘다. 이 인자는 투명 여백을 신발 윤곽까지 자르고 폭에 맞춰 줄인다(`height` 를 줘도 700×500 판이 되지 않고 신발 비율 그대로 — 700×319~376). 화면의 사진 칸(카드 1:1 · 상세 400×300 · 휴대폰 폭×300)은 모두 가로가 먼저 차는 비율이라, 신발이 칸 폭에 맞춰지는 크기가 StockX 700×500 과 같아진다. CSS 를 호스트별로 나누지 않아도 된다. [code:catalog/decisions.json:22023] [code:src/components/ShoeCard.css:17] [code:src/components/ShoeModal.css:46-62] [code:src/components/ShoeModal.css:84-89] [code:src/components/ShoeModal.css:282-285] (2026-11-05 기준) [c:fa31029] <!-- 안 맞음: 문서는 「상세 400×300, 휴대폰 폭×300」, 코드는 「PC 상세 사진 칸 height: 622px(ShoeModal.css:87), 휴대폰 aspect-ratio: 7 / 5(ShoeModal.css:284)」 -->
+크기는 GOAT 이미지 서버의 `transform/v1 … action=crop` 으로 맞춘다. 이 인자는 투명 여백을 신발 윤곽까지 자르고 폭에 맞춰 줄인다(`height` 를 줘도 700×500 판이 되지 않고 신발 비율 그대로 — 700×319~376). 화면의 사진 칸(카드 1:1 · 상세 400×622 · 휴대폰 7:5)은 모두 가로가 먼저 차는 비율이라, 신발이 칸 폭에 맞춰지는 크기가 StockX 700×500 과 같아진다. CSS 를 호스트별로 나누지 않아도 된다. [code:catalog/decisions.json:22023] [code:src/components/ShoeCard.css:17] [code:src/components/ShoeModal.css:46-62] [code:src/components/ShoeModal.css:84-89] [code:src/components/ShoeModal.css:282-285] (2026-11-05 기준) [c:fa31029]
 
 #### 2-3. 색상 검증을 자동으로
 

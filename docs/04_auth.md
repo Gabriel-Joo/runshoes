@@ -1,5 +1,5 @@
 <!--
-다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx
+다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx, tests/refreshPolicy.test.ts
 읽은 커밋: 606b730
 -->
 > 상태: 운영에서 쓰는 중(2026-11-02). 체험 로그인 켜짐 — `GET /api/auth/demo-accounts` 가 31장(시드 30 + 데모 관리자)을 준다(공개 API 로 확인). 원천: `backend/…/auth/*` · `activity/*` · `application.yml` · `V3` · `V7` · `V9` · `src/auth/*` · `pages/Login.tsx` · `Signup.tsx` · `Account.tsx` [c:a6bf21e] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:245-248] [code:backend/src/main/resources/db/migration/V3__auth.sql:136-165] [code:backend/src/main/resources/application.yml:37] <!-- 확인 못 함: 운영에서 체험 로그인이 켜졌는지와 31장은 운영 env 와 공개 API 의 값, 저장소 기본값은 꺼짐 -->
@@ -93,7 +93,7 @@
 
 #### 1-6. 화면
 
-- 로그인 · 회원가입 — 서로 오가는 문구 "처음이세요? 회원가입 화면으로 →" · "이미 계정이 있으세요? 로그인 화면으로 →". 비밀번호 칸 오른쪽 끝에 보기 단추. [code:src/pages/Login.tsx:84-86] [code:src/pages/Signup.tsx:99-101] [code:src/auth/Field.tsx:36] <!-- 안 맞음: 문서는 「처음이세요? 회원가입 화면으로 →」 「이미 계정이 있으세요? 로그인 화면으로 →」, 코드는 「처음이세요? 회원가입(링크) 화면으로 이동합니다」 「이미 계정이 있으세요? 로그인(링크) 화면으로 이동합니다」 -->
+- 로그인 · 회원가입 — 서로 오가는 문구 "처음이세요? 회원가입 화면으로 이동합니다" · "이미 계정이 있으세요? 로그인 화면으로 이동합니다"(회원가입, 로그인 낱말이 링크). 비밀번호 칸 오른쪽 끝에 보기 단추. [code:src/pages/Login.tsx:84-86] [code:src/pages/Signup.tsx:99-101] [code:src/auth/Field.tsx:36]
 - 마이페이지(`/account`) — 왼쪽 목차(회원정보 수정 · 내 활동(내 리뷰 · 찜 목록 · 도움받은 리뷰) · 회원 탈퇴) · 오른쪽 본문, 맨 위 활동 요약(리뷰 · 찜 · 도움이 돼요 · 가입일). 화면 모양은 `02_screens.md`. [code:src/pages/Account.tsx:34] [code:src/pages/Account.tsx:79-84] [code:src/pages/Account.tsx:91] [docs:02_screens.md]
 
 #### 2. 왜 이렇게 했나

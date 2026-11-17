@@ -41,7 +41,7 @@ shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 309) ─ load.mjs ─
 | `review` | 다시 볼 때까지 적재하지 않는다(지금 0) [code:catalog/build.mjs:229-230] [code:catalog/build.mjs:374] (2026-11-10 기준) [c:6bef573] |
 | `accept_image` | 판정이 애매한 이미지를 받아들인다(1) [code:catalog/build.mjs:368] (2026-11-10 기준) [c:a6bf21e] |
 
-- `by`(user · claude)와 `via`(web · manual · admin · abcmart · store · review)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색(claude · web) 618 · 관리 화면(admin) 471 · 사람(by user, via 없음) 150 · 사람 웹 확인(user · web) 111 · 직접 확인(manual) 46 · 그 밖 95. [code:catalog/decisions.json:3] (2026-11-10 기준) [c:6bef573] <!-- 안 맞음: 문서는 「claude, web 618, 사람(by user, via 없음) 150」, 코드는 「606b730 decisions.json 의 action 있는 1,491칸을 세면 claude, web 617, by user 이고 via 없음 151, 나머지 넷은 같다」 -->
+- `by`(user · claude)와 `via`(web · manual · admin · abcmart · store · review)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색(claude · web) 617 · 관리 화면(admin) 471 · 사람(by user, via 없음) 151 · 사람 웹 확인(user · web) 111 · 직접 확인(manual) 46 · 그 밖 95. [code:catalog/decisions.json:3] (2026-11-17 기준) [c:606b730]
 - 고칠 때 이전 판단을 `previous` 에, 이미지를 바꿀 때 이전 대표를 `was` 에 남긴다. [code:catalog/pull-admin.mjs:83] [code:catalog/pull-admin.mjs:101] [code:catalog/pull-admin.mjs:230]
 - 같은 파일에 `image_overrides`(이미지, `01b`) · `hidden` · `purged`(숨김 · 영구 삭제) · 시드 전용 값이 있다. [code:catalog/decisions.json:21963] [code:catalog/decisions.json:21974] [code:catalog/decisions.json:22823] [code:catalog/build.mjs:378-381]
 

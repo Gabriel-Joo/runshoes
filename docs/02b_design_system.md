@@ -22,7 +22,7 @@
 | 토큰 | 값 | 쓰는 곳 |
 |---|---|---|
 | `--accent` | `#1d7a72` 딥 틸 | 고른 필터 칩 · 찜 하트 · 평점 숫자 · 고른 정렬 · 토글 · 주요 버튼 [code:src/index.css:3] [code:src/components/FilterBar.css:37-38] [code:src/components/ShoeCard.css:85-86] [code:src/components/SortBar.css:20] [code:src/components/SortBar.css:43] |
-| `--coral` · `--coral-strong` · `--coral-soft` · `--coral-border` | `#ff7a59` · `#c2462a` · 옅은 배경 · 테두리 | **보조 강조** — AI 리뷰 요약 상자, 관리 화면 "보완 필요" 탭, 비교하기의 안내 줄(`.ctable__note`) · 분포 그래프의 다른 신발 눈금 · 범례(`.cdist__other`). 글자 · 선은 `--coral-strong` [code:src/index.css:15-18] [code:src/components/ReviewSummary.css:3-5] [code:src/pages/Admin.css:327-336] [code:src/pages/Compare.css:533-539] [code:src/pages/Compare.css:583-584] [code:src/pages/Compare.css:628-629] <!-- 안 맞음: 문서는 「비교하기의 안내 줄(.ctable__note)」에 코랄, 코드는 「.ctable__note { color: var(--text-weak); background: var(--bg-light) }」로 코랄을 쓰지 않는다 --> |
+| `--coral` · `--coral-strong` · `--coral-soft` · `--coral-border` | `#ff7a59` · `#c2462a` · 옅은 배경 · 테두리 | **보조 강조** — AI 리뷰 요약 상자, 관리 화면 "보완 필요" 탭, 비교하기의 분포 그래프의 다른 신발 눈금 · 범례(`.cdist__other`). 글자 · 선은 `--coral-strong` [code:src/index.css:15-18] [code:src/components/ReviewSummary.css:3-5] [code:src/pages/Admin.css:327-336] [code:src/pages/Compare.css:583-584] [code:src/pages/Compare.css:628-629] |
 | `--bg-dark` · `--bg-panel` | `oklch(0.11 0 0)` · `oklch(0.13 0 0)` | 히어로 [code:src/index.css:4-5] |
 | `--bg-light` | `oklch(0.965 0.002 90)` | 본문 바탕(갤러리 톤 오프화이트) [code:src/index.css:6] [code:src/index.css:39] |
 | `--text-strong` · `--text-mid` · `--text-weak` · `--text-invert` | `oklch(0.16 / 0.42 / 0.58 / 0.97 0 0)` | 글자 위계 [code:src/index.css:9-12] |
@@ -82,13 +82,13 @@
 
 #### 4. 남은 한계
 
-- **토큰 밖의 유채색이 하나 있다.** 챗봇 단추 · 말풍선 `#14807a`(`ChatBot.css`, 딥 틸과 비슷하지만 다른 값). 원칙("딥 틸 외의 유채색 없음")과 다르고 토큰도 아니다. 무채색으로는 챗봇 회색 둘과 헤더 관리 링크 왼쪽 선 `#000000`(`Header.css`)이 토큰 밖이다. 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/ChatBot.css:12] [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] [code:src/components/Header.tsx:17] <!-- 안 맞음: 문서는 「챗봇 회색 둘」, 코드는 ChatBot.css 에 회색 셋 「background: #f0f0f0;」(79줄), 「background: #fafafa;」(94줄), 「background: #f5f5f5;」(183줄) -->
+- **토큰 밖의 유채색이 하나 있다.** 챗봇 단추 · 말풍선 `#14807a`(`ChatBot.css`, 딥 틸과 비슷하지만 다른 값). 원칙("딥 틸 외의 유채색 없음")과 다르고 토큰도 아니다. 무채색으로는 챗봇 회색 셋과 헤더 관리 링크 왼쪽 선 `#000000`(`Header.css`)이 토큰 밖이다. 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/ChatBot.css:12] [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] [code:src/components/Header.tsx:17]
 - **리뷰 요약 상자의 옅은 그라데이션.** 장식용 그라데이션을 쓰지 않는다는 원칙의 경계에 있다(코랄 옅은 배경 → 더 옅은 배경). [code:src/components/ReviewSummary.css:3]
 - **다크 모드가 없다.** [code:src/index.css:1-29]
 - **이미지 각도 통일은 데이터에 달렸다.** 카탈로그 302켤레의 대표 이미지는 같은 방향 정측면을 고르지만, 출처 사진에 따라 배율 · 여백이 조금씩 다르다. [docs:01b_catalog_images.md] (2026-11-02 기준) [c:a6bf21e]
 
 #### 5. 검증 항목
 
-- 새 색을 쓸 때 `index.css` 토큰인지 — `grep -rhoE "#[0-9A-Fa-f]{6}" src --include=*.css` 로 토큰 밖 값을 센다(지금 토큰 정의 외 `#14807a` · 회색 둘 · `#000000`). [code:src/components/ChatBot.css:12] [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] <!-- 안 맞음: 문서는 「회색 둘」, 코드는 토큰 밖 회색이 셋 「#f0f0f0」(ChatBot.css:79), 「#fafafa」(ChatBot.css:94), 「#f5f5f5」(ChatBot.css:183) -->
+- 새 색을 쓸 때 `index.css` 토큰인지 — `grep -rhoE "#[0-9A-Fa-f]{6}" src --include=*.css` 로 토큰 밖 값을 센다(지금 토큰 정의 외 `#14807a` · 회색 셋 · `#000000`). [code:src/components/ChatBot.css:12] [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63]
 - 글자 · 선 대비 4.5:1 이상(코랄은 `--coral-strong` 만 글자에). [code:src/index.css:14-16]
 - 1200 · 768 · 375px 폭에서 그리드 열 수 · 헤더 · 떠 있는 버튼이 글자를 가리지 않는지.

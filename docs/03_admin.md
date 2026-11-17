@@ -1,5 +1,5 @@
 <!--
-다루는 곳: src/pages/Admin.tsx, src/pages/ShoeForm.tsx, src/pages/AdminMy.tsx, src/pages/adminmy/, src/components/, src/utils/pageGroup.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/resources/db/migration/, catalog/, contract/
+다루는 곳: src/pages/Admin.tsx, src/pages/ShoeForm.tsx, src/pages/AdminMy.tsx, src/pages/adminmy/, src/components/, src/utils/pageGroup.ts, tests/pageGroup.test.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/resources/db/migration/, catalog/, contract/
 읽은 커밋: 606b730
 -->
 > 상태: 운영에서 쓰는 중(2026-11-02). 운영 302켤레 중 보완 필요 261 · 관리 화면에서 고친 적 있는 신발 31(공개 API `updatedAt` 로 센 수). 원천: `src/pages/Admin.tsx` · `ShoeForm.tsx` · `components/HideShoeConfirm.tsx` · `api/ShoeCollection.java` · `AdminController.java` [code:src/pages/Admin.tsx] [code:src/pages/ShoeForm.tsx] [code:src/components/HideShoeConfirm.tsx] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java] [c:a6bf21e] <!-- 확인 못 함: 302, 261, 31 은 운영 공개 API 로 센 수 -->
@@ -53,7 +53,7 @@
 | 발볼 · 카본 | 값 · 정보 없음 | 정보 없음 = `null` [code:src/pages/ShoeForm.tsx:14] [code:src/pages/ShoeForm.tsx:532-538] [code:src/pages/ShoeForm.tsx:552-555] [code:src/pages/ShoeForm.tsx:33-35] |
 | 중량 기준 사이즈 | US M9 · M9.5 · M10 · M10.5 · M8.5 · 불명 | 불명 = `null` [code:src/pages/ShoeForm.tsx:15-16] [code:src/pages/ShoeForm.tsx:507-513] [code:src/pages/ShoeForm.tsx:267] |
 | 가격 출처 | 공식몰 · ABC마트 · 크림 · MAN(직접 확인) | 종류는 늘 `발매가`. 기존 `다나와` 는 회색으로만 [code:src/pages/ShoeForm.tsx:22-23] [code:src/pages/ShoeForm.tsx:277] [code:src/pages/ShoeForm.tsx:392] [code:src/pages/ShoeForm.tsx:564-575] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:341-343] |
-| 성별 | 남성 · 여성 · 공용 | `men` · `women` · `unisex` [code:src/pages/ShoeForm.tsx:17] [code:src/pages/ShoeForm.tsx:477-484] [code:src/pages/ShoeForm.tsx:263] <!-- 안 맞음: 문서는 선택지 셋(남성, 여성, 공용), 코드는 ShoeForm.tsx:478 「<option value="">정보 없음</option>」도 있어 성별을 비워(null) 저장할 수 있다 --> |
+| 성별 | 남성 · 여성 · 공용, 정보 없음 | `men` · `women` · `unisex`, 정보 없음은 NULL [code:src/pages/ShoeForm.tsx:17] [code:src/pages/ShoeForm.tsx:477-484] [code:src/pages/ShoeForm.tsx:263] |
 
 **근거 없는 값을 막는 규칙**
 - 값을 바꾸면 **그 칸의 출처를 다시 고르게** 한다 — 옛 출처가 새 값에 붙지 않게. 가격을 바꾸면 확인한 날 · 출처도 다시. [code:src/pages/ShoeForm.tsx:196-201] [code:src/pages/ShoeForm.tsx:208-216]

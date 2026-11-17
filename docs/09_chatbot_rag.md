@@ -262,7 +262,7 @@ cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 Reac
 2. 집계 → 그 신발 리뷰를 전부 가져와서 센다 [code:chatbot/branches/experience.py:5-7] [code:chatbot/branches/experience.py:362]
 3. 답변 → 전체 기준으로 말한다 [code:chatbot/branches/experience.py:8-9]
 
-신발당 리뷰 중앙값 4건, 최대 38건(약 2,500자)이라 전부 넣어도 들어간다. 미리 요약하지 않고 원문을 넣는다. "발볼 끼어?" 같은 세부 질문은 원문이 있어야 답한다. (5절 요약 배치는 화면 성능용이고, 챗봇 검색과 별개다.) [code:chatbot/branches/experience.py:10] [code:chatbot/branches/experience.py:27] (2026-11-10 기준) [c:e0a0bd8] <!-- 안 맞음: 문서는 「신발당 최대 38건이라 원문을 전부 넣는다」, 코드는 「CAP = 30, 리뷰는 30건까지 넣고 넘으면 추천 많은 순으로 자른다(experience.py:10, 27)」 -->
+신발당 리뷰 중앙값 4건, 최대 38건(약 2,500자)이다. 답에는 30건까지 넣고, 넘으면 추천 많은 순으로 자르고 잘랐다고 밝힌다. 미리 요약하지 않고 원문을 넣는다. "발볼 끼어?" 같은 세부 질문은 원문이 있어야 답한다. (5절 요약 배치는 화면 성능용이고, 챗봇 검색과 별개다.) [code:chatbot/branches/experience.py:10] [code:chatbot/branches/experience.py:27] (2026-11-10 기준) [c:e0a0bd8]
 
 **한쪽만 말하기 금지.** 한쪽만 있으면 "모두 좋다는 쪽이에요"처럼 반대쪽이 없다는 것을 집계 문장이 말한다. 그 문장은 코드가 쓴다(5-2 2차 수정부터 — 모델이 반대쪽 세기를 건너뛸 수 없다). [code:chatbot/branches/experience.py:180-203]
 
@@ -333,7 +333,7 @@ DB `terms` 13개 + 프런트 2개(`WIDE_TERM`, `stabilityTerm` — `src/utils/te
 **통증 항목 보강**(2026-11-13 사용자 — 지금 하지 않는다, `TODO.md`). 신발 살 때 가장 많이 묻는 것이라 생략하지 않는다. [docs:TODO.md]
 
 - 통증 관련 항목을 사전에 넣어 병명 → 신발 다리를 놓는다("족저근막염은 발바닥에 충격이 쌓여 … 그래서 쿠션이 두꺼운 쪽이 …"). 지금 사전에는 이 다리가 없어, 통증 질문에 챗봇이 신발을 고르면 "이 병에는 이 신발"로 읽힌다 — 그래서 5-2 1차 수정에서 통증 질문의 설명문 신발 이름 · 버튼을 뺐다(16절). [code:chatbot/branches/explain.py:83-85]
-- 전문의 안내를 답 앞으로 뺄지 검토한다 — 선을 먼저 긋고 시작하면 뒤에 무엇을 말해도 조언으로 읽히지 않는다. 지금은 답 끝(코드 끝 안내 앞)에 한 번이다(7절). [code:chatbot/reply.py:303-305] [code:chatbot/prompt.py:14-16] <!-- 안 맞음: 문서는 「지금은 답 끝(코드 끝 안내 앞)에 한 번이다」, 코드는 「with_doctor 가 의료 안내를 답 맨 앞에 붙인다(reply.py:303-305)」 -->
+- 전문의 안내를 답 앞으로 뺄지 검토한다 — 선을 먼저 긋고 시작하면 뒤에 무엇을 말해도 조언으로 읽히지 않는다. 지금은 답 맨 앞에 한 번이다(5-2 4차에서 바꿈, 7절). [code:chatbot/reply.py:303-305] [code:chatbot/prompt.py:14-16]
 - 통증 항목은 출처가 필요하다 — 사이트가 의학 정보를 말하는 것이 된다.
 
 #### 9. 생성 모델과 말투
@@ -342,7 +342,7 @@ DB `terms` 13개 + 프런트 2개(`WIDE_TERM`, `stabilityTerm` — `src/utils/te
 
 VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습 때 OOM 이 난다. (2026-11-10 기준) [c:e0a0bd8] <!-- 확인 못 함: nvidia-smi 값은 서버 PC -->
 
-라우팅 JSON 출력이 작은 모델에서 불안할 수 있다. 함수 호출에는 기대지 않고 `format: json` 으로 받되, 1차 갈래 나누기는 규칙으로 처리하고 애매할 때만 LLM 에 묻는다. [code:chatbot/llm.py:32-33] [code:chatbot/router.py:172-180] <!-- 안 맞음: 문서는 「1차 갈래 나누기는 규칙으로 하고 애매할 때만 LLM 에 묻는다」, 코드는 「라우터 LLM 을 매 질문 한 번 부르고, 규칙이 정하면 LLM 의 branch 만 버린다(router.py:172-180)」 -->
+라우팅 JSON 출력이 작은 모델에서 불안할 수 있다. 함수 호출에는 기대지 않고 `format: json` 으로 받되, 라우터 LLM 은 매 질문 한 번 부르고, 갈래는 규칙이 정하면 규칙을 따르고 규칙이 못 정할 때만 LLM 의 답을 쓴다. [code:chatbot/llm.py:32-33] [code:chatbot/router.py:172-180]
 
 **말투 전면 교체.** 옛 프롬프트(지운 `chatbot_server.py` 의 `SYSTEM_PROMPT`)는 반말 + 이모지 1~2개였다 — 다음으로 바꿨다(5-1, `chatbot/prompt.py`). [code:chatbot/prompt.py:35-41] [code:Dockerfile.chatbot:6]
 
@@ -365,7 +365,7 @@ VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습
 |---|---|
 | 없는 신발 | "그 모델은 이 사이트에 등록되어 있지 않아요. 비슷한 모델로 찾아볼까요?" [code:chatbot/prompt.py:10] |
 | 없는 용어 | "이 사이트에서는 다루지 않는 용어예요. 대신 OO은 설명해드릴 수 있어요." [code:chatbot/prompt.py:11] [code:chatbot/branches/term.py:17] |
-| 범위 밖 | "저는 러닝화 안내를 담당하고 있어서 그 질문은 어려워요. 신발 쪽은 뭐든 물어보세요!" [code:chatbot/prompt.py:12] <!-- 안 맞음: 문서는 「그 질문은 어려워요. 신발 쪽은 뭐든 물어보세요!」, 코드는 「그 질문은 도와드리기 어려워요. 대신 신발 쪽은 무엇이든 편하게 물어보세요!(prompt.py:12)」 --> |
+| 범위 밖 | "저는 러닝화 안내를 담당하고 있어서 그 질문은 도와드리기 어려워요. 대신 신발 쪽은 무엇이든 편하게 물어보세요!" [code:chatbot/prompt.py:12] |
 | 근거 없음 | "그 부분은 등록된 정보에 없어서 확인이 어려워요." [code:chatbot/prompt.py:13] |
 
 원칙: 거절로 끝내지 않고 항상 할 수 있는 것을 하나 제시한다. "제가 모른다"가 아니라 "등록되어 있지 않다"로 말한다. [code:chatbot/prompt.py:10-13] [code:chatbot/prompt.py:29]
@@ -398,7 +398,7 @@ VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습
 
 `shoes.description` 한 칸에 통으로 들어 있고 줄바꿈이 0개다. 5단 구조(라인 · 변화 · 구조 · 핏 · 쓰임, `01d_catalog_copy.md`)는 작성 규칙일 뿐 경계 표시가 없다. [docs:01d_catalog_copy.md] (2026-11-10 기준) [c:e0a0bd8]
 
-기준: 300자 안쪽이면 통으로 1문서, 600자 넘으면 문장 단위로 쪼갠다. [code:chatbot/search/corpus.py:37-38] [code:chatbot/search/corpus.py:63-68] <!-- 안 맞음: 문서는 「300자 안쪽이면 통으로 1문서, 600자 넘으면 문장 단위」, 코드는 「길이와 상관없이 모든 설명문을 문장으로 나눈다(corpus.py:63-68, 410줄의 결정과는 맞음)」 -->
+기준: 길이와 상관없이 모든 설명문을 문장 단위로 쪼갠다. [code:chatbot/search/corpus.py:37-38] [code:chatbot/search/corpus.py:63-68]
 
 길이 (2026-11-10, 공개 API 310켤레, `description.length` — 공백 포함 글자 수) [c:e0a0bd8]
 
@@ -424,9 +424,9 @@ VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습
 
 #### 12. 평가
 
-골든셋 60문항. 사용자가 작성하되 기계적인 부분은 나눠 맡을 수 있다. [code:chatbot/eval/golden.jsonl:1] [code:chatbot/eval/golden-boundary.jsonl:1]
+골든셋 61문항. 사용자가 작성하되 기계적인 부분은 나눠 맡을 수 있다. [code:chatbot/eval/golden.jsonl:1] [code:chatbot/eval/golden-boundary.jsonl:1]
 
-- 용어 10 / 스펙 10 / 비교 10 / 추천 15 / 경계 15 [code:chatbot/eval/golden.jsonl:1] <!-- 안 맞음: 문서는 「추천 15」, 코드는 「golden.jsonl 의 추천 문항은 R 16개(용어 10, 스펙 10, 비교 10, 추천 16), 경계 15 와 합쳐 61문항」 -->
+- 용어 10 / 스펙 10 / 비교 10 / 추천 16 / 경계 15 [code:chatbot/eval/golden.jsonl:1] [code:chatbot/eval/golden-boundary.jsonl:1]
 - 경계 15 = 완전 거절 5 + 통증 · 우열 유도 10 [code:chatbot/eval/golden-boundary.jsonl:1]
 - 경계 문항은 키워드가 안 걸리는 문장으로 쓴다. "며칠 전부터 발 디딜 때마다 찌릿해요" 같은 식. 라우터가 진짜 의미를 보는지 여기서 판가름 난다
 
@@ -1275,7 +1275,7 @@ DB 에 CHECK 를 두지 않았다 — 챗봇에 갈래가 늘 때 기록이 실�
 
 확인(2026-11-14)
 
-- 단위 시험 77건(`chatbot/tests/test_turns.py` 9건 더함 — 기록이 예외를 던지거나 3초 걸려도 답이 그대로 · 곧바로 나감, 닿지 않는 백엔드, 예외로 끝난 턴은 `error`, 단계를 두 번 세지 않음, 연결마다 다른 `conn_id` · `/api/me` 의 계정 id). 백엔드 시험 52건(`ChatbotTurnTest` 5건 — 본문 검사). [code:chatbot/tests/test_turns.py:34-148] [code:backend/src/test/java/com/kopo17/runshoes/api/ChatbotTurnTest.java:38-79] (2026-11-14 기준) [c:3553716] <!-- 안 맞음: 문서는 「test_turns.py 9건 더함」「ChatbotTurnTest 5건」, 코드는 test_turns.py 시험 함수 10개, ChatbotTurnTest @Test 6개(이 줄을 쓴 3553716 에서도 10개, 6개) -->
+- 단위 시험 77건(`chatbot/tests/test_turns.py` 10건 더함 — 기록이 예외를 던지거나 3초 걸려도 답이 그대로 · 곧바로 나감, 닿지 않는 백엔드, 예외로 끝난 턴은 `error`, 단계를 두 번 세지 않음, 연결마다 다른 `conn_id` · `/api/me` 의 계정 id). 백엔드 시험 52건(`ChatbotTurnTest` 6건 — 본문 검사). [code:chatbot/tests/test_turns.py:34-174] [code:backend/src/test/java/com/kopo17/runshoes/api/ChatbotTurnTest.java:38-114] (2026-11-14 기준) [c:3553716]
 - 끝에서 끝: 빈 임시 MySQL(tmpfs, 끝나면 사라짐)에 V1~V19 를 Flyway 로 올리고, 실제 `server.handler` + 체험 로그인 토큰 + 로컬 Ollama 로 여섯 턴 → 표에 여섯 줄(같은 `conn_id`, 계정 id 1, 한글 그대로). 내부 POST 는 루프백 204, 호스트 주소로 들어오면 404(`X-Forwarded-For: 127.0.0.1` 을 붙여도 404), 틀린 본문 400. [code:backend/src/main/java/com/kopo17/runshoes/api/ChatbotTurnController.java:53-55] [code:backend/src/main/java/com/kopo17/runshoes/api/ChatbotTurnController.java:64] [code:backend/src/main/java/com/kopo17/runshoes/api/ChatbotMissController.java:184-193] [code:chatbot/server.py:79-82] (2026-11-14 기준) [c:3553716]
 - 같은 임시 DB 에서 컬럼 단위 권한 미리 보기: 질문 · 답을 뺀 칸만 준 계정은 집계가 되고, `question` · `answer` 를 읽으면 `ERROR 1143`, `SELECT *` 는 `ERROR 1142`. (2026-11-14 기준) [c:3553716]
 - 평가(운영 공개 API 읽기만 + 로컬 Ollama · model-service): **94/94**, 수치 불일치 0 · 전문의 누락 0, 평균 2.6초. 문항마다 턴 기록이 한 줄이고 답 · 갈래 · 신발 수가 실제와 같은지 본다(실패 0). 단계 평균 latency 2,441 · router 968 · search 7 · gen 1,007ms. 예: T01 용어 877 = 라우터 877, S01 스펙 1,781(라우터 954 · 생성 825), E01 경험·후기 2,529(라우터 928 · 검색 15 · 생성 1,366). 검색이 잡힌 문항 26개. [code:chatbot/eval/run.py:69] [c:3553716]
