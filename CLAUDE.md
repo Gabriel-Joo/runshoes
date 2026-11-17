@@ -65,6 +65,7 @@ Claude는 운영 DB에 직접 접근하지 않는다 — `kubectl exec … mysql
 ## 문서 자리
 
 - `docs/README.md`(문서 표) · `docs/TODO.md`(남은 일) · `docs/HISTORY.md`(한 일) · `docs/archive/`(지난 설계 · 계획)
+- 문서 점검(`scripts/docs-check.py`)은 FOREMAN 문서 도구를 부르는 껍데기다. FOREMAN 폴더는 환경 변수 `FOREMAN_DIR`가 먼저, 없으면 기본 경로 `~/AI_programming/foreman`이다(`scripts/foreman_tool.py`의 `DEFAULT`와 같게 둔다). 못 찾으면 종료 코드 2로 멈추니 `|| true`로 덮지 않는다. 이 저장소만의 값은 `.foreman/docs.toml`, 점검 규칙을 고칠 일은 FOREMAN 관리자에게 부탁한다(2026-11-17 사용자)
 - docs push는 Notion 「RUNSHOES」 기술문서에 나간다 — FOREMAN 자동 맞추기가 `origin/main` 기준이라 push한 것만, 30분 뒤 나간다
 
 ## 커밋 메시지

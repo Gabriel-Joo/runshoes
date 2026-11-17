@@ -1,0 +1,23 @@
+# 문서 규칙(FOREMAN 문서 도구가 읽는다, tools/docs.py). 없는 칸은 FOREMAN 기본값. 본은 ronanlab-infra .foreman/docs.toml
+# 2026-11-17 런슈즈 문서를 FOREMAN 문서 도구 위로 옮기는 1단계. 원고는 지금 docs/ 20편(노션 「기술문서」 20편과 일대일)
+records = ["log/", "docs/archive/"]   # 기록 폴더. 문서도 아니고 걸게 하지도 않는다(log/ 작업 기록 셋, docs/archive/ 옛 계획서)
+pair_numbers = false                  # 짝이 될 원고 폴더(notion/)가 아직 없다(5단계)
+read_commit = "piece"                 # 읽은 커밋은 편마다 따로
+allowed_domains = ["ronanlab.dev"]
+not_code = [".md", ".png", ".jpg", ".lock", "*package-lock.json"]   # 바뀌어도 코드로 세지 않는 것(글, 화면 사진과 신발 이미지, 잠금 파일)
+
+[sets]
+docs = "docs/"
+
+[check]
+sets = ["docs"]
+numbered_only = []                    # 번호 없는 편(README, requirements, overview, HISTORY, TODO)도 노션에 나가므로 20편 모두 본다
+head_at = "top"
+fenced = true
+kinds = ["c", "docs", "code"]
+files_at = "read"
+claim = '\d|“|”'
+claim_min = 0
+banned = []                           # 금지어는 사람이 읽는 원고(notion/, 5단계)에만 건다. docs는 내부 주소를 써도 된다
+cover_by = ["docs"]
+dashdot_base = "606b730"              # 새 줄 em dash와 가운뎃점 검사의 기준 커밋. 넣은 때의 런슈즈 main(2026-11-17). 기존 줄은 3단계에서
