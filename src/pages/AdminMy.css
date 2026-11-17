@@ -318,6 +318,17 @@
   color: var(--accent);
 }
 
+/* 90일이 지나 질문 · 답을 지운 대화 — 고장이 아니라 지운 것임을 안내 문장(adminmy__note)과 같은 결로 */
+.adminmy__cleared {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-weak);
+}
+
+.adminmy__convfirst.adminmy__cleared {
+  margin-top: 6px;
+}
+
 @media (max-width: 899px) {
   .adminmy__members .mypage__row {
     grid-template-columns: minmax(0, 1fr) auto;

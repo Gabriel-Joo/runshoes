@@ -44,6 +44,12 @@ const STAGE: Record<string, string> = {
 const seconds = (ms: number) => `${(ms / 1000).toFixed(1)}초`;
 
 /**
+ * 90일이 지나 정리가 질문 · 답을 빈 글로 바꾼 턴(activity/ActivityCleanup, 보관 app.activity.retention-chatbot-text).
+ * 챗봇은 빈 질문을 기록하지 않으므로(api/ChatbotTurnController 가 400) 질문이 빈 글이면 정리로 비운 것이다
+ */
+const CLEARED = "90일이 지나 질문과 답을 지웠어요.";
+
+/**
  * 대화 보기 — 날짜 최신순(마지막 턴), 거르기 날짜 · 계정 · 갈래. 계정 칸은 숫자(계정 번호)도 그대로 찾지만 안내에는 닉네임만 적는다(2026-11-15 사용자). 펼치면 턴마다 질문과 답 전체, 갈래, 걸린 시간.
  * 펼치기는 상세 모달의 리뷰 「전체보기」(review__more)를 따른다 — 관리 화면에는 펼치기 행이 없었다.
  * 숫자 · 추세는 Grafana 가 본다 — 여기는 개별 대화를 읽는 곳이다(합계 · 그래프를 그리지 않는다)
@@ -66,7 +72,8 @@ function Conversations() {
       </div>
       <p className="adminmy__note">
         챗봇 창을 한 번 열고 닫을 때까지가 대화 하나예요. <strong>체험 계정의 대화는 한 사람의 것이 아니에요.</strong> 체험 계정은 누구나 함께 쓰므로
-        같은 계정의 대화도 서로 다른 사람일 수 있어요.      </p>
+        같은 계정의 대화도 서로 다른 사람일 수 있어요. 90일이 지난 대화는 질문과 답을 지우고 갈래와 걸린 시간만 남겨요.
+      </p>
 
       <div className="adminmy__filters">
         <DateRange from={q.get("from")} to={q.get("to")} onChange={(from, to) => q.set({ from, to })} />
@@ -96,7 +103,11 @@ function Conversations() {
               </span>
               <span className="adminmy__convmeta">턴 {c.turns} · {c.branches.map((b) => BRANCH[b] ?? b).join(" · ")}</span>
             </div>
-            <p className="adminmy__convfirst">{c.firstQuestion}</p>
+            {c.firstQuestion ? (
+              <p className="adminmy__convfirst">{c.firstQuestion}</p>
+            ) : (
+              <p className="adminmy__convfirst adminmy__cleared">{CLEARED}</p>
+            )}
             <button className="review__more adminmy__more" onClick={() => setOpen(open === c.connId ? null : c.connId)} aria-expanded={open === c.connId}>
               {open === c.connId ? "대화 접기" : `대화 펼치기 (턴 ${c.turns}개)`}
             </button>
@@ -133,8 +144,14 @@ function Turns({ connId }: { connId: string }) {
               {t.shoeCount > 0 && ` · 신발 버튼 ${t.shoeCount}`}
             </span>
           </p>
-          <p className="adminmy__q">{t.question}</p>
-          <p className="adminmy__a">{t.answer || "(답 없음 — 턴이 오류로 끝남)"}</p>
+          {t.question ? (
+            <>
+              <p className="adminmy__q">{t.question}</p>
+              <p className="adminmy__a">{t.answer || "(답 없음 — 턴이 오류로 끝남)"}</p>
+            </>
+          ) : (
+            <p className="adminmy__cleared">{CLEARED}</p>
+          )}
         </li>
       ))}
     </ol>

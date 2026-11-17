@@ -65,7 +65,7 @@
 #### 인프라 · DB
 
 - [ ] MySQL 정기 백업(덤프 CronJob, 저장소 밖 보관) → `06_deployment.md` 4절
-- [ ] ShedLock — activity_logs 정리를 Pod 하나만 돌게, 그 뒤 infra Deployment env `ACTIVITY_CLEANUP_CRON` 빼기 → `06_deployment.md` 4절. 그때 chatbot_turns 질문 · 답 90일 정리도 함께 켠다
+- [ ] 데이터 정리 켜기 — 잠금(`GET_LOCK`, 2026-11-17 코드)이 든 이미지가 운영에 오른 뒤 인프라 관리자에게 infra Deployment env `ACTIVITY_CLEANUP_CRON` 빼기를 부탁한다. 빼면 activity_logs 정리와 chatbot_turns 질문 · 답 90일 비우기가 함께 켜진다. 다음 날 04:00 로그(「데이터 정리 —」 한 줄, 다른 Pod 는 「넘어간다」)를 본다 → `06_deployment.md` 4절
 - [ ] MySQL 승격을 앱 트래픽까지 옮겨 한 번 해 보기(점검 시간에 — Replica · 런북은 2026-11-10 인프라 묶음 2에서 생김) → `06_deployment.md` 4절
 - [ ] Argo Rollouts(카나리) · 사이드카 로그 수집 · CronJob 리뷰 통계 스냅샷 → 상세 문서 없음(전에 `overview.md` 표에만 있던 것)
 - [ ] 옛 칸 정리 마이그레이션(옛 칸 · `liked` 삭제 · NOT NULL 조이기 · `legacy*`) → `07_database.md` 4절
