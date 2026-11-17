@@ -22,113 +22,113 @@ build.mjs ← decisions.json(사람 판단) · copy.json(요약 · 설명) · ex
 shoes.jsonl(408행, 상태 ok · partial 만 적재 대상 309) ─ load.mjs ─ 관리자 API(/api/shoes) ─ 운영 DB
 ```
 
-- **적재 경로는 앱의 관리자 API 다.** DB 에 직접 쓰지 않는다 — 앱 검증(값 범위 · 출처 형식 · 품번 형식)을 그대로 탄다. [code:catalog/load.mjs:89-94] [code:catalog/load.mjs:216-221] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:28]
-- 운영 행은 `lineKey + generation` 으로 맞춘다. 없으면 POST(id 는 DB 가 매긴다), 사실 값이 다르면 PATCH, 같으면 건너뛴다. 비교하는 칸은 `live-fields.mjs FACTS`(스펙 · 가격 메타 · 세대 · 스펙 출처 · 품번 · 와이드 범위 · 영어 이름 · 다른 표기). [code:catalog/load.mjs:124-138] [code:catalog/live-fields.mjs:2-9]
-- 적재기의 요청에는 `X-Runshoes-Client: loader` 를 붙인다. 서버는 적재기의 등록 · 수정에 **수정 시각 · 바뀐 칸(V11)을 찍지 않는다** — 관리 화면의 "최근 수정순"이 사람의 수정만 보이게. [code:catalog/load.mjs:90-91] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:36] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:95-96] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:268-270] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:281] [code:backend/src/main/resources/db/migration/V11__admin_history.sql]
-- 운영 행의 `purpose`(용도)는 사람이 검수한 분류라 덮지 않는다. 시드 20켤레의 요약 · 설명은 사람이 고른 것(`copy.json seed_choice`)만 쓴다. [code:catalog/load.mjs:14-16] [code:catalog/load.mjs:133] [code:catalog/live-fields.mjs:3-9]
+- **적재 경로는 앱의 관리자 API 다.** DB 에 직접 쓰지 않는다. 앱 검증(값 범위, 출처 형식, 품번 형식)을 그대로 탄다. [code:catalog/load.mjs:89-94] [code:catalog/load.mjs:216-221] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:28]
+- 운영 행은 `lineKey + generation` 으로 맞춘다. 없으면 POST(id 는 DB 가 매긴다), 사실 값이 다르면 PATCH, 같으면 건너뛴다. 비교하는 칸은 `live-fields.mjs FACTS`(스펙, 가격 메타, 세대, 스펙 출처, 품번, 와이드 범위, 영어 이름, 다른 표기). [code:catalog/load.mjs:124-138] [code:catalog/live-fields.mjs:2-9]
+- 적재기의 요청에는 `X-Runshoes-Client: loader` 를 붙인다. 서버는 적재기의 등록과 수정에 **수정 시각과 바뀐 칸(V11)을 찍지 않는다**. 관리 화면의 "최근 수정순"이 사람의 수정만 보이게. [code:catalog/load.mjs:90-91] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:36] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:95-96] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:268-270] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:281] [code:backend/src/main/resources/db/migration/V11__admin_history.sql]
+- 운영 행의 `purpose`(용도)는 사람이 검수한 분류라 덮지 않는다. 시드 20켤레의 요약과 설명은 사람이 고른 것(`copy.json seed_choice`)만 쓴다. [code:catalog/load.mjs:14-16] [code:catalog/load.mjs:133] [code:catalog/live-fields.mjs:3-9]
 
-#### 1-2. 사람 판단 — `decisions.json`
+#### 1-2. 사람 판단: `decisions.json`
 
 - 행 키는 `line_key#generation`, 칸마다 판단 하나. [code:catalog/decisions.json:3] [code:catalog/build.mjs:224-226]
 
 | action | 뜻 |
 |---|---|
-| `use_source` | 이 값 · 이 출처로 바꾼다(1,455칸) [code:catalog/build.mjs:232-233] (2026-11-10 기준) [c:6bef573] |
+| `use_source` | 이 값과 이 출처로 바꾼다(1,455칸) [code:catalog/build.mjs:232-233] (2026-11-10 기준) [c:6bef573] |
 | `keep_db` | 시드의 기존 값을 유지한다(6) [code:catalog/build.mjs:172] [code:catalog/build.mjs:177] (2026-11-10 기준) [c:a6bf21e] |
 | `clear` | 비운다(23) [code:catalog/build.mjs:231] (2026-11-10 기준) [c:6bef573] |
 | `resolve_official` | 충돌을 공식값으로 정리했다(3) [code:catalog/build.mjs:127] (2026-11-10 기준) [c:a6bf21e] |
-| `flag` · `hold` | 값은 두고 사람이 다시 본다(flag 3 · hold 0) [code:catalog/build.mjs:227-228] (2026-11-10 기준) [c:6bef573] |
+| `flag`, `hold` | 값은 두고 사람이 다시 본다(flag 3, hold 0) [code:catalog/build.mjs:227-228] (2026-11-10 기준) [c:6bef573] |
 | `review` | 다시 볼 때까지 적재하지 않는다(지금 0) [code:catalog/build.mjs:229-230] [code:catalog/build.mjs:374] (2026-11-10 기준) [c:6bef573] |
 | `accept_image` | 판정이 애매한 이미지를 받아들인다(1) [code:catalog/build.mjs:368] (2026-11-10 기준) [c:a6bf21e] |
 
-- `by`(user · claude)와 `via`(web · manual · admin · abcmart · store · review)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색(claude · web) 617 · 관리 화면(admin) 471 · 사람(by user, via 없음) 151 · 사람 웹 확인(user · web) 111 · 직접 확인(manual) 46 · 그 밖 95. [code:catalog/decisions.json:3] (2026-11-17 기준) [c:606b730]
+- `by`(user, claude)와 `via`(web, manual, admin, abcmart, store, review)로 누가 어떻게 정했는지 남긴다. 지금 Claude 웹 검색(claude, web) 617, 관리 화면(admin) 471, 사람(by user, via 없음) 151, 사람 웹 확인(user, web) 111, 직접 확인(manual) 46, 그 밖 95. [code:catalog/decisions.json:3] (2026-11-17 기준) [c:606b730]
 - 고칠 때 이전 판단을 `previous` 에, 이미지를 바꿀 때 이전 대표를 `was` 에 남긴다. [code:catalog/pull-admin.mjs:83] [code:catalog/pull-admin.mjs:101] [code:catalog/pull-admin.mjs:230]
-- 같은 파일에 `image_overrides`(이미지, `01b`) · `hidden` · `purged`(숨김 · 영구 삭제) · 시드 전용 값이 있다. [code:catalog/decisions.json:21963] [code:catalog/decisions.json:21974] [code:catalog/decisions.json:22823] [code:catalog/build.mjs:378-381]
+- 같은 파일에 `image_overrides`(이미지, `01b`), `hidden`, `purged`(숨김, 영구 삭제), 시드 전용 값이 있다. [code:catalog/decisions.json:21963] [code:catalog/decisions.json:21974] [code:catalog/decisions.json:22823] [code:catalog/build.mjs:378-381]
 
-#### 1-3. 관리 화면 수정 보호(2026-10-29 사용자 — "진짜 관리자가 고친 값이 적재 때 되돌아가면 안 된다")
+#### 1-3. 관리 화면 수정 보호(2026-10-29 사용자, "진짜 관리자가 고친 값이 적재 때 되돌아가면 안 된다")
 
-1. **스냅숏** — 적재가 끝나면 그 직후의 운영 값을 `local/work/snapshot-<호스트>.json` 에 둔다. **한 행을 쓸 때마다 그 행을 스냅숏에 바로 반영한다** — 적재가 중간에 끊겨도 적재기가 쓴 값이 "사람의 수정"으로 보이지 않게. [code:catalog/live-fields.mjs:13-14] [code:catalog/load.mjs:212-214] [code:catalog/load.mjs:219-224]
-2. **알아보기** — 스냅숏과 지금 운영 값이 다른 칸 = 관리 화면에서 고친 칸. 데모 관리자는 서버가 쓰기를 막으니 진짜 관리자의 수정이다. [code:catalog/pull-admin.mjs:5-6] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:28]
-3. **저절로 가져오기** — `--apply` 는 쓰기 전에 `pull-admin.mjs --write` 로 그 칸을 판단으로 옮기고 `build.mjs` 를 다시 돌린 뒤 진행한다(2026-10-30 사용자 — 멈추지 말고 끌어와서 진행). 로그에 `어드민 수정 N건을 decisions.json에 반영했다` 와 칸마다 전 → 후. [code:catalog/load.mjs:36-51] [code:catalog/pull-admin.mjs:3-4]
-   - 스펙 · 가격 · 세대 · 현행 · 성별 · 실측 · 스펙 출처 · 품번 · 와이드 범위 · 영어 이름 · 검색용 다른 표기 → `decisions.json rows`(`by: user`, `via: admin`) [code:catalog/pull-admin.mjs:8-9] [code:catalog/pull-admin.mjs:45-53] [code:catalog/pull-admin.mjs:167-180]
-   - 요약 · 설명 → `copy.json`, 대표 · 목록 이미지 → `image_overrides`(`via: admin`) [code:catalog/pull-admin.mjs:100-101] [code:catalog/pull-admin.mjs:153] [code:catalog/pull-admin.mjs:211-217]
-   - 숨김 · 되살리기 → `rows.hidden`, 영구 삭제 → `rows.purged`(다시 넣지 않는다) [code:catalog/pull-admin.mjs:82-85] [code:catalog/pull-admin.mjs:227-232] [code:catalog/pull-admin.mjs:235-245]
+1. **스냅숏**: 적재가 끝나면 그 직후의 운영 값을 `local/work/snapshot-<호스트>.json` 에 둔다. **한 행을 쓸 때마다 그 행을 스냅숏에 바로 반영한다**. 적재가 중간에 끊겨도 적재기가 쓴 값이 "사람의 수정"으로 보이지 않게. [code:catalog/live-fields.mjs:13-14] [code:catalog/load.mjs:212-214] [code:catalog/load.mjs:219-224]
+2. **알아보기**: 스냅숏과 지금 운영 값이 다른 칸 = 관리 화면에서 고친 칸. 데모 관리자는 서버가 쓰기를 막으니 진짜 관리자의 수정이다. [code:catalog/pull-admin.mjs:5-6] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:28]
+3. **저절로 가져오기**: `--apply` 는 쓰기 전에 `pull-admin.mjs --write` 로 그 칸을 판단으로 옮기고 `build.mjs` 를 다시 돌린 뒤 진행한다(2026-10-30 사용자, 멈추지 말고 끌어와서 진행). 로그에 `어드민 수정 N건을 decisions.json에 반영했다` 와 칸마다 전 → 후. [code:catalog/load.mjs:36-51] [code:catalog/pull-admin.mjs:3-4]
+   - 스펙, 가격, 세대, 현행, 성별, 실측, 스펙 출처, 품번, 와이드 범위, 영어 이름, 검색용 다른 표기 → `decisions.json rows`(`by: user`, `via: admin`) [code:catalog/pull-admin.mjs:8-9] [code:catalog/pull-admin.mjs:45-53] [code:catalog/pull-admin.mjs:167-180]
+   - 요약과 설명 → `copy.json`, 대표와 목록 이미지 → `image_overrides`(`via: admin`) [code:catalog/pull-admin.mjs:100-101] [code:catalog/pull-admin.mjs:153] [code:catalog/pull-admin.mjs:211-217]
+   - 숨김과 되살리기 → `rows.hidden`, 영구 삭제 → `rows.purged`(다시 넣지 않는다) [code:catalog/pull-admin.mjs:82-85] [code:catalog/pull-admin.mjs:227-232] [code:catalog/pull-admin.mjs:235-245]
 4. **멈추는 것**(`--apply` 만, exit 3): 관리 화면에서 **새로 넣은 신발**(후보 목록에 넣을지 사람이 정한 뒤 `--structure-ok`), 숨긴 신발을 다시 넣으려 할 때, 끌어온 뒤에도 되돌릴 칸이 남을 때, 스냅숏이 없을 때. [code:catalog/load.mjs:187-206]
-5. 앱이 그 칸을 모르는 옛 버전이면(V4 · V6 · V11 · V13 전) `--apply` 하지 않는다(exit 2). [code:catalog/load.mjs:115-122]
-6. **일괄 판단을 쓸 때도 사람 판단을 덮지 않는다**(2026-11-02 사용자). 적재기는 사람의 수정을 먼저 가져가지만, 재조사처럼 여러 행의 판단을 `decisions.json` 에 한꺼번에 쓰는 단계는 그 칸의 사람 판단을 `previous` 로 밀어낼 수 있다 — 이미 옮겨진 수정은 운영 값과 스냅숏이 같아 `pull-admin` 이 다시 알아채지 못한다. 그래서: [code:catalog/pull-admin.mjs:70] <!-- 확인 못 함: 여러 행의 판단을 한꺼번에 쓰는 재조사 단계의 스크립트가 저장소에 없다 -->
+5. 앱이 그 칸을 모르는 옛 버전이면(V4, V6, V11, V13 전) `--apply` 하지 않는다(exit 2). [code:catalog/load.mjs:115-122]
+6. **일괄 판단을 쓸 때도 사람 판단을 덮지 않는다**(2026-11-02 사용자). 적재기는 사람의 수정을 먼저 가져가지만, 재조사처럼 여러 행의 판단을 `decisions.json` 에 한꺼번에 쓰는 단계는 그 칸의 사람 판단을 `previous` 로 밀어낼 수 있다. 이미 옮겨진 수정은 운영 값과 스냅숏이 같아 `pull-admin` 이 다시 알아채지 못한다. 그래서: [code:catalog/pull-admin.mjs:70] <!-- 확인 못 함: 여러 행의 판단을 한꺼번에 쓰는 재조사 단계의 스크립트가 저장소에 없다 -->
    1. 쓰기 전에 `pull-admin` 을 건조 실행으로 돌려 아직 옮겨지지 않은 관리 화면 수정을 먼저 읽는다. [code:catalog/pull-admin.mjs:2] <!-- 확인 못 함: 재조사 단계의 스크립트가 저장소에 없다 -->
-   2. 그 행, 또는 `decisions.json` 에 이미 사람 판단(`by: user`, 그리고 `by` · `via` 가 없는 옛 판단 — 적재기가 넣은 판단에는 출처가 붙는다)이 있는 행의 그 칸은 건너뛴다. <!-- 확인 못 함: 건너뛰는 코드가 저장소에 없다(재조사 단계는 git 밖) -->
+   2. 그 행, 또는 `decisions.json` 에 이미 사람 판단(`by: user`, 그리고 `by`, `via` 가 없는 옛 판단. 적재기가 넣은 판단에는 출처가 붙는다)이 있는 행의 그 칸은 건너뛴다. <!-- 확인 못 함: 건너뛰는 코드가 저장소에 없다(재조사 단계는 git 밖) -->
    3. 건너뛴 행은 결과와 함께 목록(사람 판단 ↔ 새 결과)으로 사용자에게 보인다. <!-- 확인 못 함: 사람에게 보이는 절차라 저장소 밖 -->
-7. **출처 묶음의 와이드 칸은 와이드 판단을 따른다**(2026-11-02 사용자). 관리 화면은 저장할 때 스펙 출처를 묶음째 보내서, 다른 칸만 고쳐도 묶음 전체가 `spec_sources` 판단으로 옮겨진다. 빌드는 그 묶음을 쓰되 와이드 칸만 와이드 판단(`wide_available`)의 값 · 출처에서 다시 만든다(값이 비면 칸도 없다). 와이드 판단이 관리 화면 것(`via: admin`)이면 고른 그대로 둔다. 관리 화면에서 **와이드 출처만** 고친 수정은 `pull-admin` 이 와이드 판단으로도 옮긴다(범위 `scope` 도 함께 — 빌드가 범위를 이 판단에서 읽는다). [code:catalog/build.mjs:335-340] [code:catalog/build.mjs:345-346] [code:catalog/pull-admin.mjs:183-192] [code:catalog/pull-admin.mjs:196-198]
+7. **출처 묶음의 와이드 칸은 와이드 판단을 따른다**(2026-11-02 사용자). 관리 화면은 저장할 때 스펙 출처를 묶음째 보내서, 다른 칸만 고쳐도 묶음 전체가 `spec_sources` 판단으로 옮겨진다. 빌드는 그 묶음을 쓰되 와이드 칸만 와이드 판단(`wide_available`)의 값과 출처에서 다시 만든다(값이 비면 칸도 없다). 와이드 판단이 관리 화면 것(`via: admin`)이면 고른 그대로 둔다. 관리 화면에서 **와이드 출처만** 고친 수정은 `pull-admin` 이 와이드 판단으로도 옮긴다(범위 `scope` 도 함께. 빌드가 범위를 이 판단에서 읽는다). [code:catalog/build.mjs:335-340] [code:catalog/build.mjs:345-346] [code:catalog/pull-admin.mjs:183-192] [code:catalog/pull-admin.mjs:196-198]
 
-8. **영어 이름 · 검색용 다른 표기**(V13, 2026-11-03 사용자) — `names.mjs` 가 행마다 만든다(새 요청 없이 받아 둔 자료만). 관리 화면에서 고친 값(`model_en` · `model_alias` 판단)이 먼저다. [code:catalog/names.mjs:1] [code:catalog/build.mjs:347-350] [code:backend/src/main/resources/db/migration/V13__model_en.sql]
-   - 영어 이름: KicksDB(StockX) 상품명의 모델 부분이 "앞에 붙은 기술명 + `line_en`"과 맞으면 그것(출처 SX — `FuelCell SuperComp Elite v6`), 아니면 `candidates.csv` 의 `line_en`. **나이키는 `line_en`** — "Next% 3" 같은 StockX 표기를 공식몰(접근 금지)로 확인할 수 없다. 국내 공식몰 상품명은 대부분 한글이라 영어 이름으로 쓰지 못했다. [code:catalog/names.mjs:2-4] [code:catalog/names.mjs:90-94] [code:catalog/names.mjs:135]
-   - 다른 표기는 검색이 **못 찾는 표기만** 만든다 — 검색이 부분 문자열 · 공백 무시라 앞부분을 뗀 형태(`GEL-Kayano` → `Kayano`)는 이미 찾아진다. 근거는 엄격하지 않다(틀려도 검색이 안 될 뿐 화면에 보이지 않는다). [code:catalog/names.mjs:5-6] [code:catalog/names.mjs:15]
+8. **영어 이름과 검색용 다른 표기**(V13, 2026-11-03 사용자): `names.mjs` 가 행마다 만든다(새 요청 없이 받아 둔 자료만). 관리 화면에서 고친 값(`model_en`, `model_alias` 판단)이 먼저다. [code:catalog/names.mjs:1] [code:catalog/build.mjs:347-350] [code:backend/src/main/resources/db/migration/V13__model_en.sql]
+   - 영어 이름: KicksDB(StockX) 상품명의 모델 부분이 "앞에 붙은 기술명 + `line_en`"과 맞으면 그것(출처 SX, `FuelCell SuperComp Elite v6`), 아니면 `candidates.csv` 의 `line_en`. **나이키는 `line_en`**. "Next% 3" 같은 StockX 표기를 공식몰(접근 금지)로 확인할 수 없다. 국내 공식몰 상품명은 대부분 한글이라 영어 이름으로 쓰지 못했다. [code:catalog/names.mjs:2-4] [code:catalog/names.mjs:90-94] [code:catalog/names.mjs:135]
+   - 다른 표기는 검색이 **못 찾는 표기만** 만든다. 검색이 부분 문자열, 공백 무시라 앞부분을 뗀 형태(`GEL-Kayano` → `Kayano`)는 이미 찾아진다. 근거는 엄격하지 않다(틀려도 검색이 안 될 뿐 화면에 보이지 않는다). [code:catalog/names.mjs:5-6] [code:catalog/names.mjs:15]
 
    | 규칙 | 무엇 | 운영 301켤레에서 (2026-11-03 기준) [c:0afa782] |
    |---|---|---|
-   | R1 한글 오독 | 낱말 표 — 퓨얼셀→퓨어셀, 프레시폼→프레쉬폼 · 후레쉬폼, 젤→겔, 엔돌핀→엔도르핀, 페가수스→페가서스, 클리프톤→클리프턴 · 클립톤, 이에로→히에로 … 20낱말 | 98 [code:catalog/names.mjs:22-25] [code:catalog/names.mjs:107] (2026-11-03 기준) [c:0afa782] |
+   | R1 한글 오독 | 낱말 표: 퓨얼셀→퓨어셀, 프레시폼→프레쉬폼과 후레쉬폼, 젤→겔, 엔돌핀→엔도르핀, 페가수스→페가서스, 클리프톤→클리프턴과 클립톤, 이에로→히에로 … 20낱말 | 98 [code:catalog/names.mjs:22-25] [code:catalog/names.mjs:107] (2026-11-03 기준) [c:0afa782] |
    | R2 브랜드 약어 | 뉴발란스 SuperComp → SC(nbkorea 상품명 "SC Elite V6") | 7 [code:catalog/names.mjs:8] [code:catalog/names.mjs:108-109] (2026-11-03 기준) [c:0afa782] |
    | R3 다른 영어 표기 | 영어 이름과 다른 `line_en`, 하이픈을 띄운 형태 | 0 [code:catalog/names.mjs:9] [code:catalog/names.mjs:110-111] (2026-11-03 기준) [c:0afa782] |
-   | R4 약자 한글 읽기 | X→엑스 · SL→에스엘 · GTS→지티에스 · S/LAB→에스랩 … | 39 [code:catalog/names.mjs:26] [code:catalog/names.mjs:112] (2026-11-03 기준) [c:0afa782] |
-   | R5 나이키 옛 표기 | KicksDB 상품명에만 있는 Next% · ZoomX · Air Zoom — 영어 그대로와 한글(줌X 베이퍼플라이 넥스트% 4) | 16 [code:catalog/names.mjs:11] [code:catalog/names.mjs:27] [code:catalog/names.mjs:113-121] (2026-11-03 기준) [c:0afa782] |
-   | R6 브랜드 기술명 | 영어 이름 · KicksDB 상품명에는 있고 한글 이름에는 없는 FuelCell · Fresh Foam · Flow · ZoomX · Air Zoom · Air 를 붙인 형태(퓨얼셀 · 퓨어셀 슈퍼컴프 엘리트 v6). **라인 단위** — 한 라인의 어느 세대에서든 확인되면 그 라인의 모든 세대에(1080 v14 → v15, 2026-11-03 사용자) | 22 [code:catalog/names.mjs:12-14] [code:catalog/names.mjs:29-30] [code:catalog/names.mjs:72-77] [code:catalog/names.mjs:123-131] (2026-11-03 기준) [c:e86e5fb] |
+   | R4 약자 한글 읽기 | X→엑스, SL→에스엘, GTS→지티에스, S/LAB→에스랩 … | 39 [code:catalog/names.mjs:26] [code:catalog/names.mjs:112] (2026-11-03 기준) [c:0afa782] |
+   | R5 나이키 옛 표기 | KicksDB 상품명에만 있는 Next%, ZoomX, Air Zoom. 영어 그대로와 한글(줌X 베이퍼플라이 넥스트% 4) | 16 [code:catalog/names.mjs:11] [code:catalog/names.mjs:27] [code:catalog/names.mjs:113-121] (2026-11-03 기준) [c:0afa782] |
+   | R6 브랜드 기술명 | 영어 이름 또는 KicksDB 상품명에는 있고 한글 이름에는 없는 FuelCell, Fresh Foam, Flow, ZoomX, Air Zoom, Air 를 붙인 형태(퓨얼셀 또는 퓨어셀 슈퍼컴프 엘리트 v6). **라인 단위**. 한 라인의 어느 세대에서든 확인되면 그 라인의 모든 세대에(1080 v14 → v15, 2026-11-03 사용자) | 22 [code:catalog/names.mjs:12-14] [code:catalog/names.mjs:29-30] [code:catalog/names.mjs:72-77] [code:catalog/names.mjs:123-131] (2026-11-03 기준) [c:e86e5fb] |
 
-   합계 115켤레 · 182개(2026-11-03). [c:e86e5fb] <!-- 확인 못 함: 운영 301켤레에서 센 수 -->
+   합계 115켤레, 182개(2026-11-03). [c:e86e5fb] <!-- 확인 못 함: 운영 301켤레에서 센 수 -->
 
-#### 1-4. 운영 적재 — `scripts/load-prod.sh`
+#### 1-4. 운영 적재: `scripts/load-prod.sh`
 
 ```
 scripts/load-prod.sh            # 건조 실행 — 비밀번호를 읽지 않는다
 scripts/load-prod.sh --apply    # 적용
 ```
 
-- 운영 VIP · Host 를 정해 두고(`--base` · `--host` 를 넘기면 거절한다), 그 밖의 인자(`--only` · `--revert` …)는 `load.mjs` 로 넘긴다. [code:scripts/load-prod.sh:10-26]
-- `--apply` 때만 관리자 비밀번호를 Kubernetes Secret `runshoes-auth` 에서 **스크립트 안의 변수로만** 읽는다 — 명령줄 · 출력에 나오지 않고, 적재가 끝나면 지운다. [code:scripts/load-prod.sh:29-36]
-- 끝나면 적재 기록(`catalog/loads/<시각>.json` — 넣은 id · 바꾸기 전 값 · 끌어온 수정)을 `~/k8s-cluster/backup/<날짜>-runshoes-load/`(권한 600)에 두고, 다시 건조 실행해 0건인지 보인다. [code:scripts/load-prod.sh:12] [code:scripts/load-prod.sh:34-44] [code:catalog/load.mjs:208-209]
-- `--revert loads/<시각>.json` 으로 되돌린다 — 리뷰가 붙기 전까지만 깔끔하다. [code:catalog/load.mjs:5] [code:catalog/load.mjs:101-107]
+- 운영 VIP 와 Host 를 정해 두고(`--base`, `--host` 를 넘기면 거절한다), 그 밖의 인자(`--only`, `--revert` …)는 `load.mjs` 로 넘긴다. [code:scripts/load-prod.sh:10-26]
+- `--apply` 때만 관리자 비밀번호를 Kubernetes Secret `runshoes-auth` 에서 **스크립트 안의 변수로만** 읽는다. 명령줄과 출력에 나오지 않고, 적재가 끝나면 지운다. [code:scripts/load-prod.sh:29-36]
+- 끝나면 적재 기록(`catalog/loads/<시각>.json`: 넣은 id, 바꾸기 전 값, 끌어온 수정)을 `~/k8s-cluster/backup/<날짜>-runshoes-load/`(권한 600)에 두고, 다시 건조 실행해 0건인지 보인다. [code:scripts/load-prod.sh:12] [code:scripts/load-prod.sh:34-44] [code:catalog/load.mjs:208-209]
+- `--revert loads/<시각>.json` 으로 되돌린다. 리뷰가 붙기 전까지만 깔끔하다. [code:catalog/load.mjs:5] [code:catalog/load.mjs:101-107]
 - Claude Code 에서는 이 스크립트만 허용 규칙(`.claude/settings.local.json`, 커밋하지 않음)으로 실행한다. [code:.gitignore:46-47] <!-- 확인 못 함: 허용 규칙의 내용은 커밋하지 않은 파일에 있다 -->
 
 #### 2. 왜 이렇게 했나
 
 #### 2-1. 카탈로그가 정답이되, 사람의 수정이 이긴다
 
-카탈로그는 출처가 붙은 판단의 모음이라 운영과 다르면 되돌리는 것이 기본이다. 그런데 관리 화면은 실제로 쓰는 화면이고, 관리자가 거기서 고친 값(크림 발매가 · 대표 사진 순서 · 이름 표기)은 카탈로그보다 새로운 판단이다. 둘을 같이 살리려면 "누가 고쳤나"를 알아야 하고, 그것을 운영 DB 에 칸마다 저장하는 대신 **적재 직후 스냅숏과의 차이**로 알아본다 — 스키마를 바꾸지 않고 된다. [code:catalog/load.mjs:7-8] [code:catalog/pull-admin.mjs:5]
+카탈로그는 출처가 붙은 판단의 모음이라 운영과 다르면 되돌리는 것이 기본이다. 그런데 관리 화면은 실제로 쓰는 화면이고, 관리자가 거기서 고친 값(크림 발매가, 대표 사진 순서, 이름 표기)은 카탈로그보다 새로운 판단이다. 둘을 같이 살리려면 "누가 고쳤나"를 알아야 하고, 그것을 운영 DB 에 칸마다 저장하는 대신 **적재 직후 스냅숏과의 차이**로 알아본다. 스키마를 바꾸지 않고 된다. [code:catalog/load.mjs:7-8] [code:catalog/pull-admin.mjs:5]
 
 #### 2-2. 관리자 API 로만 쓴다
 
-DB 에 직접 쓰면 빠르지만 앱의 검증을 건너뛰고, 앱이 계산하는 값(평점 · 찜)과 어긋날 수 있다. API 로 쓰면 관리 화면과 같은 규칙을 탄다. [code:catalog/load.mjs:89-94] [code:backend/src/main/java/com/kopo17/runshoes/api/Ratings.java:28]
+DB 에 직접 쓰면 빠르지만 앱의 검증을 건너뛰고, 앱이 계산하는 값(평점, 찜)과 어긋날 수 있다. API 로 쓰면 관리 화면과 같은 규칙을 탄다. [code:catalog/load.mjs:89-94] [code:backend/src/main/java/com/kopo17/runshoes/api/Ratings.java:28]
 
 #### 2-3. 적재기의 수정은 이력에 남기지 않는다
 
 300켤레를 한 번 적재하면 전부 "최근 수정"이 된다. 관리 화면의 수정 이력은 사람이 무엇을 고쳤는지 추적하는 용도라, 적재기 수정은 빼야 의미가 있다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:36]
 
-#### 2-4. 기본은 건조 실행 · 비밀은 명령줄 밖
+#### 2-4. 기본은 건조 실행, 비밀은 명령줄 밖
 
-운영 쓰기는 되돌리기 어렵다. 무엇이 바뀌는지 먼저 보이고, 칸 종류가 예상과 다르면 멈춘다(실제로 여러 번 사람의 수정을 여기서 찾았다). 비밀번호를 명령줄에 두면 셸 기록 · 프로세스 목록 · 권한 판단기에 노출된다. [code:catalog/load.mjs:1] [code:scripts/load-prod.sh:3-4]
+운영 쓰기는 되돌리기 어렵다. 무엇이 바뀌는지 먼저 보이고, 칸 종류가 예상과 다르면 멈춘다(실제로 여러 번 사람의 수정을 여기서 찾았다). 비밀번호를 명령줄에 두면 셸 기록, 프로세스 목록, 권한 판단기에 노출된다. [code:catalog/load.mjs:1] [code:scripts/load-prod.sh:3-4]
 
 #### 3. 시도했던 것들
 
-- **적재 순서 30 → 100 → 300(2026-10-28 · 10-29).** 첫 30켤레에서 화면과 응답 크기(300켤레 약 450KB)를 보고 늘렸다. [code:catalog/load.mjs:30] [c:a6bf21e]
+- **적재 순서 30 → 100 → 300(2026-10-28, 10-29).** 첫 30켤레에서 화면과 응답 크기(300켤레 약 450KB)를 보고 늘렸다. [code:catalog/load.mjs:30] [c:a6bf21e]
 - **사람의 수정이 되돌아갈 뻔했다 → 스냅숏을 만들었다(10-29).** 처음 설계는 카탈로그가 늘 정답이었다. 관리 화면이 생기자 사람이 고친 값을 적재가 덮을 수 있었다. 처음엔 사람 수정을 찾으면 멈추게(exit 3) 했고, 이튿날 "멈추지 말고 끌어와서 진행"으로 바꿨다(10-30 사용자). [code:catalog/load.mjs:7-12]
-- **덤프로 DB 를 되돌렸더니 96칸이 사람의 수정으로 끌려왔다(10-30, 로컬).** 되돌린 DB 와 적재 직후 스냅숏의 차이를 가져오기가 "관리 화면 수정"으로 읽었다. 판단 파일을 되돌리고 규칙을 적었다 — DB 를 되돌리면 스냅숏도 맞춘다(`--snapshot`). [code:catalog/load.mjs:6] [code:catalog/load.mjs:123] [c:a6bf21e]
+- **덤프로 DB 를 되돌렸더니 96칸이 사람의 수정으로 끌려왔다(10-30, 로컬).** 되돌린 DB 와 적재 직후 스냅숏의 차이를 가져오기가 "관리 화면 수정"으로 읽었다. 판단 파일을 되돌리고 규칙을 적었다. DB 를 되돌리면 스냅숏도 맞춘다(`--snapshot`). [code:catalog/load.mjs:6] [code:catalog/load.mjs:123] [c:a6bf21e]
 - **끊긴 적재 뒤 적재기의 쓰기가 사람의 수정처럼 보였다(V11 리허설).** 스냅숏을 적재가 끝날 때만 적어서, 중간에 끊기면 이미 쓴 행이 스냅숏과 달랐다 → 한 행을 쓸 때마다 스냅숏을 갱신하게 바꿨다. [code:catalog/load.mjs:212-214]
 - **관리 화면에서 대표 사진을 바꾸자 품번이 되돌아갔다(11-02).** 관리 화면 이미지 판단에는 품번이 없어서, 빌드가 StockX 조회 결과의 품번으로 채웠다(슈퍼블라스트 2 가 에키덴 품번이 됐다). 처음엔 이전 판단의 품번을 잇게 고쳤다가, 사용자 기준("품번은 대표 이미지를 따른다")에 맞춰 대표 이미지 주소로 캐시에서 상품을 찾게 바꿨다(`01b` 1-3). [code:catalog/build.mjs:58-62] [docs:01b_catalog_images.md]
-- **다른 칸을 저장하자 옛 와이드 출처가 묶음째 굳었다(11-02).** 와이드 재조사를 적재하고 보니 9켤레의 와이드 출처가 재조사 전 것(리뷰 주소 · DB)으로 남았고, 보스턴 12는 값을 비웠는데 출처가 남았다. 관리 화면에서 발볼 · 가격을 저장할 때 출처 묶음 전체가 사람 판단으로 옮겨졌고, 빌드가 그 묶음을 통째로 썼기 때문이다. 9켤레의 와이드 칸만 맞춰 다시 적재하고, 빌드가 와이드 칸을 와이드 판단에서 다시 만들게 바꿨다(1-3 7번). 다른 다섯 칸(무게 · 드롭 · 스택 · 미드솔 · 발볼)은 관리 화면에서 출처를 직접 고르는 일이 많아 그대로 뒀다(4절). [code:catalog/build.mjs:335-340] [code:catalog/live-fields.mjs:19] [c:d495321]
-- **운영 적재 명령이 권한 판단기에 한 번 막혔다(11-01).** 24번 중 1번, 성공한 명령과 글자 그대로 같은 형태였다 — Claude Code 자동 모드 판단기가 맥락으로 판단해 그때그때 다르다. Secret 에서 비밀번호를 읽어 운영에 쓰는 일이 명령줄에 그대로 드러나는 형태였다. 비밀번호를 스크립트 안으로 넣은 `scripts/load-prod.sh` 와 그 스크립트만 허용하는 규칙으로 바꿨다(11-02, 규칙은 사용자가 넣었다). 첫 실행에서 판단기 없이 통과했다. [code:scripts/load-prod.sh:29-36] [c:a6bf21e] <!-- 확인 못 함: 권한 판단기가 막은 기록과 허용 규칙은 저장소 밖 -->
+- **다른 칸을 저장하자 옛 와이드 출처가 묶음째 굳었다(11-02).** 와이드 재조사를 적재하고 보니 9켤레의 와이드 출처가 재조사 전 것(리뷰 주소, DB)으로 남았고, 보스턴 12는 값을 비웠는데 출처가 남았다. 관리 화면에서 발볼, 가격을 저장할 때 출처 묶음 전체가 사람 판단으로 옮겨졌고, 빌드가 그 묶음을 통째로 썼기 때문이다. 9켤레의 와이드 칸만 맞춰 다시 적재하고, 빌드가 와이드 칸을 와이드 판단에서 다시 만들게 바꿨다(1-3 7번). 다른 다섯 칸(무게, 드롭, 스택, 미드솔, 발볼)은 관리 화면에서 출처를 직접 고르는 일이 많아 그대로 뒀다(4절). [code:catalog/build.mjs:335-340] [code:catalog/live-fields.mjs:19] [c:d495321]
+- **운영 적재 명령이 권한 판단기에 한 번 막혔다(11-01).** 24번 중 1번, 성공한 명령과 글자 그대로 같은 형태였다. Claude Code 자동 모드 판단기가 맥락으로 판단해 그때그때 다르다. Secret 에서 비밀번호를 읽어 운영에 쓰는 일이 명령줄에 그대로 드러나는 형태였다. 비밀번호를 스크립트 안으로 넣은 `scripts/load-prod.sh` 와 그 스크립트만 허용하는 규칙으로 바꿨다(11-02, 규칙은 사용자가 넣었다). 첫 실행에서 판단기 없이 통과했다. [code:scripts/load-prod.sh:29-36] [c:a6bf21e] <!-- 확인 못 함: 권한 판단기가 막은 기록과 허용 규칙은 저장소 밖 -->
 
 #### 4. 남은 한계
 
-- **사람이 돌린다.** 정기 적재 · 정기 가져오기(CronJob)는 없다. 안 하는 까닭: 운영 DB에 쓰는 일은 사람이 돌린다. [code:catalog/load.mjs:10]
-- 관리 화면에서 **새로 넣은 신발**은 카탈로그로 자동으로 옮기지 않는다(구조 변경 — 사람이 후보 목록에 넣는다). 안 하는 까닭: 후보 목록에 넣을지 사람이 정한다(1-3 4번). [code:catalog/load.mjs:194-201]
+- **사람이 돌린다.** 정기 적재와 정기 가져오기(CronJob)는 없다. 안 하는 까닭: 운영 DB에 쓰는 일은 사람이 돌린다. [code:catalog/load.mjs:10]
+- 관리 화면에서 **새로 넣은 신발**은 카탈로그로 자동으로 옮기지 않는다(구조 변경, 사람이 후보 목록에 넣는다). 안 하는 까닭: 후보 목록에 넣을지 사람이 정한다(1-3 4번). [code:catalog/load.mjs:194-201]
 - 카탈로그 밖 시드 1켤레(엔돌핀 스피드 4)는 적재기가 사실 값을 덮지 않아 판단 일부만 따른다. 안 하는 까닭: 적재기가 사실 값을 덮지 않는다. [code:catalog/load.mjs:140-166]
-- 출처 묶음의 **와이드 밖 다섯 칸**은 여전히 묶음째 굳는다 — 관리 화면에서 다른 칸을 저장한 신발은 그 뒤 판단을 바꿔도 출처가 옛것으로 남을 수 있다(따로 본다, 2026-11-02 사용자). 안 하는 까닭: 관리 화면에서 출처를 직접 고르는 일이 많아 그대로 뒀다(3절). [code:catalog/build.mjs:335-340] [code:catalog/live-fields.mjs:19]
+- 출처 묶음의 **와이드 밖 다섯 칸**은 여전히 묶음째 굳는다. 관리 화면에서 다른 칸을 저장한 신발은 그 뒤 판단을 바꿔도 출처가 옛것으로 남을 수 있다(따로 본다, 2026-11-02 사용자). 안 하는 까닭: 관리 화면에서 출처를 직접 고르는 일이 많아 그대로 뒀다(3절). [code:catalog/build.mjs:335-340] [code:catalog/live-fields.mjs:19]
 
 #### 5. 검증 항목
 
 - **적용 뒤 건조 실행 0건**(`load-prod.sh` 가 저절로 보인다). [code:scripts/load-prod.sh:43-44]
 - 가져오기를 같은 스냅숏으로 다시 돌려도 같은 판단을 두 번 쓰지 않는다. [code:catalog/pull-admin.mjs:70] [code:catalog/pull-admin.mjs:100-102]
-- 와이드 칸(11-02): 9켤레를 맞추기 전 판단으로 빌드하면 와이드 칸이 판단에서 다시 만들어진다(보스턴 12는 칸 없음, 알파플라이 3의 관리 화면 MAN 은 그대로). 가짜 스냅숏으로 `pull-admin` — 와이드 출처만 다르면 와이드 판단(범위 포함)이 생기고, 발볼 출처만 다르면 와이드 판단은 그대로. 바꾼 뒤 빌드 결과 차이 0 · 건조 실행 PATCH 0. [code:catalog/build.mjs:335-340] [code:catalog/pull-admin.mjs:183-192] [c:d495321]
-- 로컬 시험(10-29 · 10-30): 관리 API 로 칸을 고친 뒤 `--apply` → 끌어온 칸 수 · PATCH 0 · 다시 돌리면 0건. 숨김 · 되살리기 · 세대 변경 · 새 신발(exit 3 → `--structure-ok`). [code:catalog/load.mjs:187-206] [c:a6bf21e]
-- 운영 값 대조: 적재 기록의 `patched` · `created` 와 운영 API, 수정 이력(`updatedAt`)이 찍히지 않았는지. [code:catalog/load.mjs:208] [code:contract/scenarios.mjs:427-428] <!-- 확인 못 함: 운영 API 대조는 운영 쪽 -->
-- 계약 시험(`contract/run-spring-local.sh`) — 적재기가 쓰는 API 의 응답 모양. [code:contract/run-spring-local.sh] [code:contract/scenarios.mjs:427-428]
+- 와이드 칸(11-02): 9켤레를 맞추기 전 판단으로 빌드하면 와이드 칸이 판단에서 다시 만들어진다(보스턴 12는 칸 없음, 알파플라이 3의 관리 화면 MAN 은 그대로). 가짜 스냅숏으로 `pull-admin`: 와이드 출처만 다르면 와이드 판단(범위 포함)이 생기고, 발볼 출처만 다르면 와이드 판단은 그대로. 바꾼 뒤 빌드 결과 차이 0, 건조 실행 PATCH 0. [code:catalog/build.mjs:335-340] [code:catalog/pull-admin.mjs:183-192] [c:d495321]
+- 로컬 시험(10-29, 10-30): 관리 API 로 칸을 고친 뒤 `--apply` → 끌어온 칸 수, PATCH 0, 다시 돌리면 0건. 숨김, 되살리기, 세대 변경, 새 신발(exit 3 → `--structure-ok`). [code:catalog/load.mjs:187-206] [c:a6bf21e]
+- 운영 값 대조: 적재 기록의 `patched`, `created` 와 운영 API, 수정 이력(`updatedAt`)이 찍히지 않았는지. [code:catalog/load.mjs:208] [code:contract/scenarios.mjs:427-428] <!-- 확인 못 함: 운영 API 대조는 운영 쪽 -->
+- 계약 시험(`contract/run-spring-local.sh`): 적재기가 쓰는 API 의 응답 모양. [code:contract/run-spring-local.sh] [code:contract/scenarios.mjs:427-428]

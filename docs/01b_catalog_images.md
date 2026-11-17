@@ -12,62 +12,62 @@
 
 #### 1-1. 소스와 표기
 
-- **StockX** — KicksDB(`api.kicks.dev v3/stockx`) 검색 결과의 이미지 주소. 흰 바탕 · 측면 · 앞코 오른쪽 · 같은 크롭(신발이 가로의 97~99.7%)이라 300켤레가 한 줄에 놓여도 통일된다. [code:catalog/stockx.mjs:12] (2026-11-02 기준) [c:a6bf21e]
-- **GOAT** — StockX 에 없는 세대만(2026-11-01 사용자). 남성 · 공용 기본 색상만. 주소는 원본(`image.goat.com/1000/…png`, 1000×1000 정사각)이 아니라 **`image.goat.com/transform/v1/…png?action=crop&width=700`** — 바깥 투명 여백을 잘라 신발이 가로의 98%(StockX 99%와 같다)를 채운 700px 폭 PNG다(2026-11-05 사용자 "사진 크기를 StockX 에 맞춰라"). 바탕은 투명하다. [code:catalog/stockx.mjs:97-105] [code:catalog/decisions.json:22023-22028] [c:fa31029]
-- **저장하지 않는다.** DB 의 `image` · `images` 에는 주소만 들어간다. 크기는 imgix 인자(`w` · `h` · `dpr`)로 적재 때 주소에 박고, 화면은 주소를 그대로 쓴다. 기준 주소: `fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color`. [code:backend/src/main/resources/db/migration/V1__schema.sql:25-26] [code:catalog/stockx.mjs:114] [code:src/components/ShoeImage.tsx:24] [code:catalog/decisions.json:21965]
-- **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX" · "Image: GOAT"(`ShoeGallery creditOf` — 주소의 호스트로 판단, 칸이 따로 없다). 화면에서는 가려 둔다(2026-11-03 사용자, 지우지 않는다) — PC 는 사진 칸을 30px 올려 칸 위로 나가고, 휴대폰은 사진 뒤에 놓인다. [code:src/components/ShoeGallery.tsx:12-20] [code:src/components/ShoeGallery.tsx:76] [code:src/components/ShoeModal.css:83-89] [code:src/components/ShoeGallery.css:25-38]
-- 국내 공식몰 사진 · 여성용 · 변형 색상은 쓰지 않는다(신발 모양이 다를 수 있다). [code:catalog/stockx.mjs:16-20] [code:catalog/stockx.mjs:140] [code:catalog/colors-plan.mjs:42]
+- **StockX**: KicksDB(`api.kicks.dev v3/stockx`) 검색 결과의 이미지 주소. 흰 바탕, 측면, 앞코 오른쪽, 같은 크롭(신발이 가로의 97~99.7%)이라 300켤레가 한 줄에 놓여도 통일된다. [code:catalog/stockx.mjs:12] (2026-11-02 기준) [c:a6bf21e]
+- **GOAT**: StockX 에 없는 세대만(2026-11-01 사용자). 남성, 공용 기본 색상만. 주소는 원본(`image.goat.com/1000/…png`, 1000×1000 정사각)이 아니라 **`image.goat.com/transform/v1/…png?action=crop&width=700`**. 바깥 투명 여백을 잘라 신발이 가로의 98%(StockX 99%와 같다)를 채운 700px 폭 PNG다(2026-11-05 사용자 "사진 크기를 StockX 에 맞춰라"). 바탕은 투명하다. [code:catalog/stockx.mjs:97-105] [code:catalog/decisions.json:22023-22028] [c:fa31029]
+- **저장하지 않는다.** DB 의 `image`, `images` 에는 주소만 들어간다. 크기는 imgix 인자(`w`, `h`, `dpr`)로 적재 때 주소에 박고, 화면은 주소를 그대로 쓴다. 기준 주소: `fit=fill&bg=FFFFFF&w=700&h=500&fm=webp&auto=compress&q=90&dpr=2&trim=color`. [code:backend/src/main/resources/db/migration/V1__schema.sql:25-26] [code:catalog/stockx.mjs:114] [code:src/components/ShoeImage.tsx:24] [code:catalog/decisions.json:21965]
+- **출처 표기는 호스트별**: 상세 모달 사진 칸에 "Image: StockX", "Image: GOAT"(`ShoeGallery creditOf`, 주소의 호스트로 판단, 칸이 따로 없다). 화면에서는 가려 둔다(2026-11-03 사용자, 지우지 않는다). PC 는 사진 칸을 30px 올려 칸 위로 나가고, 휴대폰은 사진 뒤에 놓인다. [code:src/components/ShoeGallery.tsx:12-20] [code:src/components/ShoeGallery.tsx:76] [code:src/components/ShoeModal.css:83-89] [code:src/components/ShoeGallery.css:25-38]
+- 국내 공식몰 사진, 여성용, 변형 색상은 쓰지 않는다(신발 모양이 다를 수 있다). [code:catalog/stockx.mjs:16-20] [code:catalog/stockx.mjs:140] [code:catalog/colors-plan.mjs:42]
 
 #### 1-2. 대표 이미지 고르기(`stockx.mjs`)
 
-1. 검색어는 라인별 StockX 표기 틀에 세대 번호를 넣는다(세대마다 표기가 바뀌는 라인은 따로 — 베이퍼플라이 `Next% {n}`, 880 `880v{n}` …). [code:catalog/candidates.csv:1] [code:catalog/candidates.csv:69] [code:catalog/candidates.csv:192] [code:catalog/stockx.mjs:163]
-2. **같은 신발 판정**(`judge`): 브랜드가 제목 첫머리, 라인 핵심 낱말이 제목에, 세대 숫자가 낱말 하나로(`4%` · `4.5` 는 다른 신발), 같은 라인의 다른 세대 숫자가 섞이면 제외. [code:catalog/stockx.mjs:41-65]
-3. 남성(`gender = men`), 제목에 GTX · 방수 · 아동 · 콜라보 · 특별판 · 와이드 표시가 없을 것. StockX 자리표시 이미지는 이미지가 아니다. [code:catalog/stockx.mjs:16-20] [code:catalog/stockx.mjs:131-132] [code:catalog/stockx.mjs:135] [code:catalog/stockx.mjs:140]
+1. 검색어는 라인별 StockX 표기 틀에 세대 번호를 넣는다(세대마다 표기가 바뀌는 라인은 따로, 베이퍼플라이 `Next% {n}`, 880 `880v{n}` …). [code:catalog/candidates.csv:1] [code:catalog/candidates.csv:69] [code:catalog/candidates.csv:192] [code:catalog/stockx.mjs:163]
+2. **같은 신발 판정**(`judge`): 브랜드가 제목 첫머리, 라인 핵심 낱말이 제목에, 세대 숫자가 낱말 하나로(`4%`, `4.5` 는 다른 신발), 같은 라인의 다른 세대 숫자가 섞이면 제외. [code:catalog/stockx.mjs:41-65]
+3. 남성(`gender = men`), 제목에 GTX, 방수, 아동, 콜라보, 특별판, 와이드 표시가 없을 것. StockX 자리표시 이미지는 이미지가 아니다. [code:catalog/stockx.mjs:16-20] [code:catalog/stockx.mjs:131-132] [code:catalog/stockx.mjs:135] [code:catalog/stockx.mjs:140]
 4. 품번 앞부분이 같은 성별 안의 다수와 같을 것(아디다스는 색상마다 번호가 따로라 보지 않는다). [code:catalog/stockx.mjs:123-130] [code:catalog/stockx.mjs:136] [code:catalog/stockx.mjs:141]
 5. 그중 StockX `rank` 가 가장 앞선 것. 애매하면 `review`. [code:catalog/stockx.mjs:137-143]
 
 #### 1-3. 품번
 
-- 기본은 **모델 번호**다 — 색상 코드를 뗀다. 형식이 분명한 8개 브랜드만(아식스 `1011C284-400` → `1011C284` · 나이키 · 호카 · 브룩스 · 사우코니 · 푸마 · 알트라 · 언더아머, `build.mjs modelSku`). 아디다스 · 뉴발란스 · 온 · 미즈노 · 살로몬 · 머렐은 색상이 번호 안에 붙어 있어 그대로 둔다 — 잘라 내면 근거 없는 값을 만든다. [code:catalog/build.mjs:22-39] [code:catalog/build.mjs:304]
+- 기본은 **모델 번호**다. 색상 코드를 뗀다. 형식이 분명한 8개 브랜드만(아식스 `1011C284-400` → `1011C284`, 나이키, 호카, 브룩스, 사우코니, 푸마, 알트라, 언더아머, `build.mjs modelSku`). 아디다스, 뉴발란스, 온, 미즈노, 살로몬, 머렐은 색상이 번호 안에 붙어 있어 그대로 둔다. 잘라 내면 근거 없는 값을 만든다. [code:catalog/build.mjs:22-39] [code:catalog/build.mjs:304]
 - **대표 이미지 상품의 품번 계열이 일반판과 다르면 대표 이미지의 품번을 쓴다**(2026-11-02 사용자). 관리 화면에서 대표를 바꾸면 그 판단에는 품번이 없어, 대표 이미지 주소로 KicksDB 캐시의 상품을 찾아 그 품번을 쓴다. 관리 화면에서 직접 넣은 품번이 가장 먼저다. [code:catalog/build.mjs:47-62] [code:catalog/build.mjs:341-343]
 
 #### 1-4. 같은 모델 다른 색상(대표 포함 6장까지)
 
-- **1단계 — 후보**(`colors-plan.mjs`, KicksDB 캐시만): 같은 세대(`judge`) · 남성 · 자리표시 아님 · 품번 모델 부분이 같을 것(형식이 있는 브랜드 + 온 앞 7자 · 미즈노 앞 8자. 아디다스 · 뉴발란스 · 살로몬 · 머렐은 제목으로만 — 사용자). [code:catalog/colors-plan.mjs:17-18] [code:catalog/colors-plan.mjs:33-48]
-- **낱말 제외**(모델 이름 · 대표 제목에 이미 있는 낱말은 예외): 변형판(GRVL · Hike · Mid · Max · GTS · ATR · Low · Lightspray · LS · Evo · Ultra · Elite · Plus · Trail · Lite · Speed · Pro · SL · X · SC · 모델 이름에 없는 `+`), 특별판(Edition · Limited · SE · Collection · Premium · QS · Olympic · Lunar · Year of the · L'Art · Ekiden · Edo · Vaporous · 도시 이름), 콜라보(Satisfy · Bape · White Mountaineering …). **애매하면 버린다** — 색 이름(Speed Blue · Black Lunar)도 빠진다. [code:catalog/colors-plan.mjs:10-16] [code:catalog/colors-plan.mjs:45-47]
-- **2단계 — 실루엣 대조**(`silhouette.py`, 이미지 CDN 만 · 메모리에서만 다루고 버린다): 흰 바탕과 다른 픽셀로 윤곽을 뽑아(흰 신발의 빈 속은 열마다 메운다) 128×64 로 맞추고 대표와 IoU. **0.80 이상 · 박스 모양 아님**(윤곽이 외곽 사각형을 90% 넘게 채우면 박스 사진)이면 통과. 가로세로 비율 · 밝기는 보지 않는다. [code:catalog/silhouette.py:1-6] [code:catalog/silhouette.py:14] [code:catalog/silhouette.py:22-36] [code:catalog/silhouette.py:52]
-- 통과한 것을 StockX 순위대로 5장까지. 관리 화면에서 고친 신발(`via: admin` · 사람이 정한 `images`)에는 붙이지 않는다. [code:catalog/silhouette.py:58-65] [code:catalog/colors-plan.mjs:29] [code:catalog/build.mjs:353-359]
-- 결과: 238켤레 955장. 적재 대상 309켤레의 이미지 수(2026-11-10) — 6장 145 · 5장 32 · 4장 27 · 3장 20 · 2장 28 · 1장 57. [code:catalog/extra-images.json] [code:catalog/shoes.jsonl] [code:catalog/build.mjs:359] [c:6bef573]
+- **1단계: 후보**(`colors-plan.mjs`, KicksDB 캐시만): 같은 세대(`judge`), 남성, 자리표시 아님, 품번 모델 부분이 같을 것(형식이 있는 브랜드 + 온 앞 7자, 미즈노 앞 8자. 아디다스, 뉴발란스, 살로몬, 머렐은 제목으로만, 사용자). [code:catalog/colors-plan.mjs:17-18] [code:catalog/colors-plan.mjs:33-48]
+- **낱말 제외**(모델 이름 또는 대표 제목에 이미 있는 낱말은 예외): 변형판(GRVL, Hike, Mid, Max, GTS, ATR, Low, Lightspray, LS, Evo, Ultra, Elite, Plus, Trail, Lite, Speed, Pro, SL, X, SC, 모델 이름에 없는 `+`), 특별판(Edition, Limited, SE, Collection, Premium, QS, Olympic, Lunar, Year of the, L'Art, Ekiden, Edo, Vaporous, 도시 이름), 콜라보(Satisfy, Bape, White Mountaineering …). **애매하면 버린다**. 색 이름(Speed Blue, Black Lunar)도 빠진다. [code:catalog/colors-plan.mjs:10-16] [code:catalog/colors-plan.mjs:45-47]
+- **2단계: 실루엣 대조**(`silhouette.py`, 이미지 CDN 만, 메모리에서만 다루고 버린다): 흰 바탕과 다른 픽셀로 윤곽을 뽑아(흰 신발의 빈 속은 열마다 메운다) 128×64 로 맞추고 대표와 IoU. **0.80 이상, 박스 모양 아님**(윤곽이 외곽 사각형을 90% 넘게 채우면 박스 사진)이면 통과. 가로세로 비율과 밝기는 보지 않는다. [code:catalog/silhouette.py:1-6] [code:catalog/silhouette.py:14] [code:catalog/silhouette.py:22-36] [code:catalog/silhouette.py:52]
+- 통과한 것을 StockX 순위대로 5장까지. 관리 화면에서 고친 신발(`via: admin`, 사람이 정한 `images`)에는 붙이지 않는다. [code:catalog/silhouette.py:58-65] [code:catalog/colors-plan.mjs:29] [code:catalog/build.mjs:353-359]
+- 결과: 238켤레 955장. 적재 대상 309켤레의 이미지 수(2026-11-10): 6장 145, 5장 32, 4장 27, 3장 20, 2장 28, 1장 57. [code:catalog/extra-images.json] [code:catalog/shoes.jsonl] [code:catalog/build.mjs:359] [c:6bef573]
 
 #### 1-5. 사람이 정한 이미지(`decisions.json image_overrides`, 54켤레) [code:catalog/decisions.json:21974] (2026-11-10 기준) [c:6bef573]
 
 | 종류 | 수 | 뜻 |
 |---|---|---|
-| 관리 화면 | 25 | 관리자가 화면에서 고른 대표 · 목록(적재기가 끌어온 것) [code:catalog/build.mjs:355] (2026-11-10 기준) [c:6bef573] |
-| 교체 | 12 | 대표가 변형판 · 특별판 · 다른 세대 · 404 · 자리표시라 같은 세대 남성 일반판으로 바꾼 것. 이전 값을 `was` 에 남긴다 [code:catalog/decisions.json:22002-22008] (2026-11-10 기준) [c:6bef573] |
+| 관리 화면 | 25 | 관리자가 화면에서 고른 대표와 목록(적재기가 끌어온 것) [code:catalog/build.mjs:355] (2026-11-10 기준) [c:6bef573] |
+| 교체 | 12 | 대표가 변형판, 특별판, 다른 세대, 404, 자리표시라 같은 세대 남성 일반판으로 바꾼 것. 이전 값을 `was` 에 남긴다 [code:catalog/decisions.json:22002-22008] (2026-11-10 기준) [c:6bef573] |
 | 이미지 없음 | 5 | 깨끗한 사진이 없다고 사람이 정한 것 [code:catalog/build.mjs:57] [code:catalog/decisions.json:22016-22021] (2026-11-05 기준) [c:fa31029] |
-| GOAT | 12 | StockX 에 없거나 여성용 · 박스 사진뿐인 세대 [code:catalog/decisions.json:22022-22028] (2026-11-10 기준) [c:6bef573] |
+| GOAT | 12 | StockX 에 없거나 여성용, 박스 사진뿐인 세대 [code:catalog/decisions.json:22022-22028] (2026-11-10 기준) [c:6bef573] |
 
 #### 1-6. KicksDB 사용량
 
-- 응답은 `catalog/local/cache/kicksdb*/`(StockX) · `local/cache/goat/`(GOAT) 에 두고 다시 묻지 않는다. 요청마다 `local/work/kicksdb-usage.log` 에 시각 · 엔드포인트 · 검색어 · `X-Quota-Current` 를 남긴다(키 값은 남기지 않는다). [code:catalog/stockx.mjs:10] [code:catalog/stockx.mjs:73-79] [code:catalog/stockx.mjs:98] [code:catalog/colors-plan.mjs:34]
-- 무료 플랜(월 1,000회 안내). 헤더에 리셋 날짜가 없고, 11-01(UTC)이 지나도 848 에서 줄지 않았다 — 달력 월 리셋이 아니다. 남은 몫은 비상용과 새 현행 세대 대표에 먼저 쓴다(사용자). [code:catalog/stockx.mjs:73] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: 무료 플랜 한도와 리셋은 KicksDB 쪽 사실 -->
+- 응답은 `catalog/local/cache/kicksdb*/`(StockX), `local/cache/goat/`(GOAT) 에 두고 다시 묻지 않는다. 요청마다 `local/work/kicksdb-usage.log` 에 시각, 엔드포인트, 검색어, `X-Quota-Current` 를 남긴다(키 값은 남기지 않는다). [code:catalog/stockx.mjs:10] [code:catalog/stockx.mjs:73-79] [code:catalog/stockx.mjs:98] [code:catalog/colors-plan.mjs:34]
+- 무료 플랜(월 1,000회 안내). 헤더에 리셋 날짜가 없고, 11-01(UTC)이 지나도 848 에서 줄지 않았다. 달력 월 리셋이 아니다. 남은 몫은 비상용과 새 현행 세대 대표에 먼저 쓴다(사용자). [code:catalog/stockx.mjs:73] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: 무료 플랜 한도와 리셋은 KicksDB 쪽 사실 -->
 
 #### 2. 왜 이렇게 했나
 
-#### 2-1. 핫링크 — 사진을 우리 것으로 만들지 않는다
+#### 2-1. 핫링크: 사진을 우리 것으로 만들지 않는다
 
-시드 20켤레는 상품 사진을 받아 배경을 지운 파일(13MB)이 컨테이너 이미지 안에 있었다. 300켤레를 그렇게 하면 이미지가 커지고, 무엇보다 **남의 사진을 우리 저장소에 복제**하게 된다. 주소만 두면 권리자가 내리라 할 때 주소 하나를 지우면 된다. KicksDB 약관은 API 데이터의 캐시 · 재배포를 허용하지만 제3자 데이터의 소유권은 부인한다 — 이미지 권리는 StockX · 브랜드에 있고, 이 방식은 허락이 아니라 참조다. 출처 표기와 내리는 방침을 그래서 둔다. [code:public/images/] [code:backend/src/main/resources/db/migration/V2__seed_data.sql:5] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: KicksDB 약관은 저장소 밖 -->
+시드 20켤레는 상품 사진을 받아 배경을 지운 파일(13MB)이 컨테이너 이미지 안에 있었다. 300켤레를 그렇게 하면 이미지가 커지고, 무엇보다 **남의 사진을 우리 저장소에 복제**하게 된다. 주소만 두면 권리자가 내리라 할 때 주소 하나를 지우면 된다. KicksDB 약관은 API 데이터의 캐시와 재배포를 허용하지만 제3자 데이터의 소유권은 부인한다. 이미지 권리는 StockX 와 브랜드에 있고, 이 방식은 허락이 아니라 참조다. 출처 표기와 내리는 방침을 그래서 둔다. [code:public/images/] [code:backend/src/main/resources/db/migration/V2__seed_data.sql:5] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: KicksDB 약관은 저장소 밖 -->
 
 #### 2-2. StockX 를 먼저, GOAT 는 없을 때만
 
-배경 · 각도 · 크롭이 통일된 소스가 StockX 다. GOAT 원본은 정사각에 신발이 가로 약 85% 라 나란히 놓으면 작게 보인다. 그래서 StockX 에 없는 세대만 GOAT 를 쓴다. [code:catalog/stockx.mjs:97] (2026-11-05 기준) [c:fa31029]
+배경, 각도, 크롭이 통일된 소스가 StockX 다. GOAT 원본은 정사각에 신발이 가로 약 85% 라 나란히 놓으면 작게 보인다. 그래서 StockX 에 없는 세대만 GOAT 를 쓴다. [code:catalog/stockx.mjs:97] (2026-11-05 기준) [c:fa31029]
 
-크기는 GOAT 이미지 서버의 `transform/v1 … action=crop` 으로 맞춘다. 이 인자는 투명 여백을 신발 윤곽까지 자르고 폭에 맞춰 줄인다(`height` 를 줘도 700×500 판이 되지 않고 신발 비율 그대로 — 700×319~376). 화면의 사진 칸(카드 1:1 · 상세 400×622 · 휴대폰 7:5)은 모두 가로가 먼저 차는 비율이라, 신발이 칸 폭에 맞춰지는 크기가 StockX 700×500 과 같아진다. CSS 를 호스트별로 나누지 않아도 된다. [code:catalog/decisions.json:22023] [code:src/components/ShoeCard.css:17] [code:src/components/ShoeModal.css:46-62] [code:src/components/ShoeModal.css:84-89] [code:src/components/ShoeModal.css:282-285] (2026-11-05 기준) [c:fa31029]
+크기는 GOAT 이미지 서버의 `transform/v1 … action=crop` 으로 맞춘다. 이 인자는 투명 여백을 신발 윤곽까지 자르고 폭에 맞춰 줄인다(`height` 를 줘도 700×500 판이 되지 않고 신발 비율 그대로, 700×319~376). 화면의 사진 칸(카드 1:1, 상세 400×622, 휴대폰 7:5)은 모두 가로가 먼저 차는 비율이라, 신발이 칸 폭에 맞춰지는 크기가 StockX 700×500 과 같아진다. CSS 를 호스트별로 나누지 않아도 된다. [code:catalog/decisions.json:22023] [code:src/components/ShoeCard.css:17] [code:src/components/ShoeModal.css:46-62] [code:src/components/ShoeModal.css:84-89] [code:src/components/ShoeModal.css:282-285] (2026-11-05 기준) [c:fa31029]
 
 #### 2-3. 색상 검증을 자동으로
 
-후보가 1,400장을 넘어 눈으로 다 보는 것은 무리였다(사용자). 틀린 사진이 들어가는 것이 사진이 1장 적은 것보다 나쁘다는 기준으로, **애매하면 버리는** 쪽에 문턱을 두고 표본을 사람이 보며 문턱을 맞췄다. 낱말 필터와 실루엣은 역할이 다르다 — 윤곽이 같은 특별판(L'Art · 도시판)은 실루엣이 못 잡아 낱말이 거르고, 제목에 표시가 없는 다른 판 · 박스 사진은 낱말이 못 잡아 실루엣이 거른다. [code:catalog/colors-plan.mjs:10-13] [code:catalog/silhouette.py:5] (2026-11-02 기준) [c:a6bf21e]
+후보가 1,400장을 넘어 눈으로 다 보는 것은 무리였다(사용자). 틀린 사진이 들어가는 것이 사진이 1장 적은 것보다 나쁘다는 기준으로, **애매하면 버리는** 쪽에 문턱을 두고 표본을 사람이 보며 문턱을 맞췄다. 낱말 필터와 실루엣은 역할이 다르다. 윤곽이 같은 특별판(L'Art, 도시판)은 실루엣이 못 잡아 낱말이 거르고, 제목에 표시가 없는 다른 판, 박스 사진은 낱말이 못 잡아 실루엣이 거른다. [code:catalog/colors-plan.mjs:10-13] [code:catalog/silhouette.py:5] (2026-11-02 기준) [c:a6bf21e]
 
 #### 2-4. 품번은 이미지를 따른다
 
@@ -75,49 +75,49 @@
 
 #### 3. 시도했던 것들
 
-- **이미지 소스를 고르기까지(2026-10-21).** 크림은 CDN 이 외부 Referer 에 403(핫링크 차단)이고 약관이 이미지 권리를 회사에 둔다. 브랜드 프레스룸은 신제품에만 사진이 있고 히어로 · 라이프스타일 컷이 섞인다. Sneaks-API 는 StockX · GOAT 를 긁는 스크레이퍼다. KicksDB 20켤레 시험에서 20장 모두 네 귀퉁이 `#FFFFFF` · 측면 · 같은 크롭 · 외부 Referer 200 이라 정했다. [c:a6bf21e] <!-- 확인 못 함: 크림, 프레스룸, Sneaks-API 조사와 20켤레 시험 결과는 저장소 밖 -->
-- **224행 전수 대조(10-24).** 다른 모델 0 · 다른 세대 0 이었지만 변형판 3건이 빠져나가 있었다(방수판 "Waterproof", District Vision 콜라보 2). 제외 낱말에 `waterproof` · `wp` · `district vision` 을 더했다. [code:catalog/stockx.mjs:19-20] [c:a6bf21e]
-- **화면에서 사람이 찾은 문제(10-28 · 10-29).** 자리표시 이미지가 X 로 보이던 것, 박스 사진, 대표 이미지 404(글리세린 맥스 2) — 같은 세대 다른 색상으로 바꾸고 `image_overrides` 에 남겼다. 깨끗한 사진이 없는 6켤레는 "이미지 없음"으로 뒀다. [code:catalog/stockx.mjs:131-132] [code:catalog/build.mjs:55-57] [code:catalog/decisions.json:22002-22021] [c:a6bf21e]
-- **대표 이미지 점검으로 9켤레를 바꿨다(11-02).** 대표 제목에 변형 · 특별판 낱말이 있거나 품번 계열이 같은 세대 대부분과 다른 것을 캐시로 찾았다: ACG 제가마 1(하이킹판 `IO7854` → 러닝용 `HV8113`) · 슈퍼블라스트 2(에키덴 팩) · 마파테 4(Speed 4 Lite) · 엔돌핀 아주라(Sydney) · 아드레날린 GTS 25(25주년판) · 클라우드붐 스트라이크 2(LS) · 웨이브 라이더 29(Amsterdam) · 에어로 글라이드 3(GRVL). 아그라빅 스피드 1 은 대표가 **2018년의 옛 Agravic Speed** 였다 — 이름이 같은 다른 신발. 스펙 출처(BITR 2024-06 리뷰, Lightstrike · Continental)로 우리 1세대가 2024년 새 모델임을 확인하고 바꿨다. [code:catalog/decisions.json:22425-22428] [c:a6bf21e]
-- **실루엣 문턱을 0.90 에서 0.80 으로 내렸다(11-02).** 처음엔 IoU 0.90 · 가로세로 비율 10% 이내 · 박스 아님이었다. 표본을 보니 0.85 · 0.80 아래로 빠진 것도 거의 같은 모델이었고(구도 · 크롭 차이), 비율로만 빠진 16장도 모두 같은 모델이었다 → 비율 기준을 없애고 0.80 으로(사용자). 테크톤 X 3 의 하이탑처럼 보이는 사진은 확인해 보니 모델 자체가 게이터형 칼라였다. [code:catalog/silhouette.py:5] [code:catalog/silhouette.py:14] [c:a6bf21e]
-- **낱말 필터의 구멍(11-02).** 보스턴 13 "Hong Kong" 이 빠져나갔다 — 도시 정규식이 제목 앞의 "Boston"(모델 이름이라 예외)만 보고 멈췄다. 홍콩을 별도 낱말로 떼어 냈다. "Agravic Speed+ White Mountaineering" 은 콜라보와 `+` 판인데 실루엣을 통과했다 → 둘 다 낱말에 더했다. [code:catalog/colors-plan.mjs:12-13] [code:catalog/colors-plan.mjs:45-46] [c:a6bf21e]
-- **"어두운 신발은 윤곽이 덜 잡힌다"는 가설은 틀렸다 — 듀라모 SL 1 (11-02).**
-  - 처음 본 것: 듀라모 SL 1 의 색상 후보가 IoU 0.79~0.86 으로 고르게 낮았다. 대표가 검은 신발이라 윤곽 추출 탓으로 보였다(사용자 · 나). (2026-11-02 기준) [c:a6bf21e]
+- **이미지 소스를 고르기까지(2026-10-21).** 크림은 CDN 이 외부 Referer 에 403(핫링크 차단)이고 약관이 이미지 권리를 회사에 둔다. 브랜드 프레스룸은 신제품에만 사진이 있고 히어로, 라이프스타일 컷이 섞인다. Sneaks-API 는 StockX 와 GOAT 를 긁는 스크레이퍼다. KicksDB 20켤레 시험에서 20장 모두 네 귀퉁이 `#FFFFFF`, 측면, 같은 크롭, 외부 Referer 200 이라 정했다. [c:a6bf21e] <!-- 확인 못 함: 크림, 프레스룸, Sneaks-API 조사와 20켤레 시험 결과는 저장소 밖 -->
+- **224행 전수 대조(10-24).** 다른 모델 0, 다른 세대 0 이었지만 변형판 3건이 빠져나가 있었다(방수판 "Waterproof", District Vision 콜라보 2). 제외 낱말에 `waterproof`, `wp`, `district vision` 을 더했다. [code:catalog/stockx.mjs:19-20] [c:a6bf21e]
+- **화면에서 사람이 찾은 문제(10-28, 10-29).** 자리표시 이미지가 X 로 보이던 것, 박스 사진, 대표 이미지 404(글리세린 맥스 2). 같은 세대 다른 색상으로 바꾸고 `image_overrides` 에 남겼다. 깨끗한 사진이 없는 6켤레는 "이미지 없음"으로 뒀다. [code:catalog/stockx.mjs:131-132] [code:catalog/build.mjs:55-57] [code:catalog/decisions.json:22002-22021] [c:a6bf21e]
+- **대표 이미지 점검으로 9켤레를 바꿨다(11-02).** 대표 제목에 변형, 특별판 낱말이 있거나 품번 계열이 같은 세대 대부분과 다른 것을 캐시로 찾았다: ACG 제가마 1(하이킹판 `IO7854` → 러닝용 `HV8113`), 슈퍼블라스트 2(에키덴 팩), 마파테 4(Speed 4 Lite), 엔돌핀 아주라(Sydney), 아드레날린 GTS 25(25주년판), 클라우드붐 스트라이크 2(LS), 웨이브 라이더 29(Amsterdam), 에어로 글라이드 3(GRVL). 아그라빅 스피드 1 은 대표가 **2018년의 옛 Agravic Speed** 였다. 이름이 같은 다른 신발. 스펙 출처(BITR 2024-06 리뷰, Lightstrike, Continental)로 우리 1세대가 2024년 새 모델임을 확인하고 바꿨다. [code:catalog/decisions.json:22425-22428] [c:a6bf21e]
+- **실루엣 문턱을 0.90 에서 0.80 으로 내렸다(11-02).** 처음엔 IoU 0.90, 가로세로 비율 10% 이내, 박스 아님이었다. 표본을 보니 0.85, 0.80 아래로 빠진 것도 거의 같은 모델이었고(구도, 크롭 차이), 비율로만 빠진 16장도 모두 같은 모델이었다 → 비율 기준을 없애고 0.80 으로(사용자). 테크톤 X 3 의 하이탑처럼 보이는 사진은 확인해 보니 모델 자체가 게이터형 칼라였다. [code:catalog/silhouette.py:5] [code:catalog/silhouette.py:14] [c:a6bf21e]
+- **낱말 필터의 구멍(11-02).** 보스턴 13 "Hong Kong" 이 빠져나갔다. 도시 정규식이 제목 앞의 "Boston"(모델 이름이라 예외)만 보고 멈췄다. 홍콩을 별도 낱말로 떼어 냈다. "Agravic Speed+ White Mountaineering" 은 콜라보와 `+` 판인데 실루엣을 통과했다 → 둘 다 낱말에 더했다. [code:catalog/colors-plan.mjs:12-13] [code:catalog/colors-plan.mjs:45-46] [c:a6bf21e]
+- **"어두운 신발은 윤곽이 덜 잡힌다"는 가설은 틀렸다. 듀라모 SL 1 (11-02).**
+  - 처음 본 것: 듀라모 SL 1 의 색상 후보가 IoU 0.79~0.86 으로 고르게 낮았다. 대표가 검은 신발이라 윤곽 추출 탓으로 보였다(사용자와 나). (2026-11-02 기준) [c:a6bf21e]
   - 밝기를 재 봤다: 표본 298쌍에서 둘 중 어두운 쪽 밝기와 IoU 의 상관은 0.14, 대표가 어두운 쌍은 오히려 IoU 중앙값 0.927. 듀라모 SL 은 **후보가 흰색이든 검은색이든** 낮았다. 밝기가 원인이 아니었다. [code:catalog/silhouette.py:6] (2026-11-02 기준) [c:a6bf21e]
-  - 실제 원인: StockX 가 2020년판("FV · FY · G58 · GV" 품번)과 2023년 재출시판("ID · IE · IF")을 **같은 이름 "Duramo SL"** 로 올려 둔다. 우리 스펙은 2023년판(`IF9483`)인데 대표는 2020년판(`FV8786`)이었고, 붙인 색상 5장에는 2020년판 · 2023년판 · **듀라모 SL 2(`IH8214`)** 가 섞여 있었다. 낮은 IoU 는 **세대가 달라서**였다. [code:catalog/decisions.json:22569-22574]
-  - 2023년판으로 바로잡다가 또 걸렸다: 2023년판 순위 1위 `IF9396` 을 대표로 골랐는데, 사진 뒤꿈치에 **"DURAMO SL2"** 가 적혀 있었다 — StockX 가 SL 2 상품을 "Duramo SL" 로 올린 것. 그런데 이 SL 2 도 다른 2023년판과 **IoU 0.90 을 넘었다.** 13장의 뒤꿈치 표기를 사진으로 하나씩 보고 SL 2 한 장을 뺐다. 새 대표 `IE9689`, 색상 5장은 모두 0.944~0.975. [code:catalog/decisions.json:22571-22573] (2026-11-02 기준) [c:a6bf21e]
-  - 배운 것: **실루엣은 "같은 모양"을 보지, "같은 모델"을 보지 않는다.** 윤곽이 비슷한 다음 세대(SL ↔ SL 2)는 실루엣으로 가를 수 없고, 상품명도 믿을 수 없을 때가 있다. 대표 이미지가 맞는지가 먼저다 — 대표가 틀리면 그 뒤의 대조가 전부 틀린 기준으로 돈다.
+  - 실제 원인: StockX 가 2020년판("FV · FY · G58 · GV" 품번)과 2023년 재출시판("ID · IE · IF")을 **같은 이름 "Duramo SL"** 로 올려 둔다. 우리 스펙은 2023년판(`IF9483`)인데 대표는 2020년판(`FV8786`)이었고, 붙인 색상 5장에는 2020년판, 2023년판, **듀라모 SL 2(`IH8214`)** 가 섞여 있었다. 낮은 IoU 는 **세대가 달라서**였다. [code:catalog/decisions.json:22569-22574]
+  - 2023년판으로 바로잡다가 또 걸렸다: 2023년판 순위 1위 `IF9396` 을 대표로 골랐는데, 사진 뒤꿈치에 **"DURAMO SL2"** 가 적혀 있었다. StockX 가 SL 2 상품을 "Duramo SL" 로 올린 것. 그런데 이 SL 2 도 다른 2023년판과 **IoU 0.90 을 넘었다.** 13장의 뒤꿈치 표기를 사진으로 하나씩 보고 SL 2 한 장을 뺐다. 새 대표 `IE9689`, 색상 5장은 모두 0.944~0.975. [code:catalog/decisions.json:22571-22573] (2026-11-02 기준) [c:a6bf21e]
+  - 배운 것: **실루엣은 "같은 모양"을 보지, "같은 모델"을 보지 않는다.** 윤곽이 비슷한 다음 세대(SL ↔ SL 2)는 실루엣으로 가를 수 없고, 상품명도 믿을 수 없을 때가 있다. 대표 이미지가 맞는지가 먼저다. 대표가 틀리면 그 뒤의 대조가 전부 틀린 기준으로 돈다.
 - **한 번에 다 하려다 KicksDB 몫을 거의 썼다(11-02).** 5장 미만인 131켤레를 limit 100 으로 다시 물었는데 새로 나온 색상은 23장뿐이었고, 사용량이 848 이 됐다. 이후 요청을 로그에 남기고 쓰임새를 정했다(1-6). [code:catalog/colors-plan.mjs:34] [code:catalog/stockx.mjs:73-79] [c:a6bf21e]
 
 #### 4. 남은 한계
 
-- **실루엣은 닮은 다른 모델 · 다음 세대를 가르지 못한다**(듀라모 SL ↔ SL 2). 안 하는 까닭: 상품명이 세대를 섞는 라인은 사람이 사진을 봐야 한다. [code:catalog/silhouette.py:36] [code:catalog/silhouette.py:52]
+- **실루엣은 닮은 다른 모델 또는 다음 세대를 가르지 못한다**(듀라모 SL ↔ SL 2). 안 하는 까닭: 상품명이 세대를 섞는 라인은 사람이 사진을 봐야 한다. [code:catalog/silhouette.py:36] [code:catalog/silhouette.py:52]
 
 **조건: 우리가 고르지 않은 것**
-- **이미지가 1장뿐인 57켤레** — StockX 에 같은 세대 남성 색상이 더 없거나 모두 걸렀다. [code:catalog/shoes.jsonl] (2026-11-10 기준) [c:6bef573]
+- **이미지가 1장뿐인 57켤레**: StockX 에 같은 세대 남성 색상이 더 없거나 모두 걸렀다. [code:catalog/shoes.jsonl] (2026-11-10 기준) [c:6bef573]
 - KicksDB 무료 몫이 얼마 남았는지 정확히 모른다(리셋 날짜는 대시보드에서 확인 필요). <!-- 확인 못 함: KicksDB 대시보드는 저장소 밖 -->
-- **사진이 없어 적재되지 않은 14켤레** — 관리 화면에서 사용자가 직접 넣는다(2026-11-05 — StockX · GOAT 둘 다 남성 일반판이 없다, 사용자가 넣는다). 스펙은 있어 사진만 들어가면 적재된다. [code:catalog/shoes.jsonl] [code:catalog/build.mjs:368] [code:catalog/build.mjs:374] (2026-11-10 기준) [c:37e665c]
+- **사진이 없어 적재되지 않은 14켤레**: 관리 화면에서 사용자가 직접 넣는다(2026-11-05, StockX 와 GOAT 둘 다 남성 일반판이 없다, 사용자가 넣는다). 스펙은 있어 사진만 들어가면 적재된다. [code:catalog/shoes.jsonl] [code:catalog/build.mjs:368] [code:catalog/build.mjs:374] (2026-11-10 기준) [c:37e665c]
 
   | 행 | GOAT 에 나온 것 |
   |---|---|
-  | 아식스 다이나블라스트 6 | 2 · 3세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 아식스 다이나블라스트 6 | 2, 3세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 아식스 젤 콘텐드 10 | 아동용(GS)뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 호카 텍톤 X 4 | 다른 모델뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 호카 지날 3 | 다른 모델뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 사우코니 허리케인 26 | 22 · 24세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 사우코니 허리케인 26 | 22, 24세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 브룩스 하이페리온 맥스 4 | 여성용 한 색상뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 브룩스 레벨 9 | 4 · 6세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 브룩스 캐스캐디아 20 | 16 · 17세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 온 클라우드서퍼 3 | 트레일 · 맥스 등 다른 모델뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 살로몬 제네시스 2 | 1세대 · GTX뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 브룩스 레벨 9 | 4, 6세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 브룩스 캐스캐디아 20 | 16, 17세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 온 클라우드서퍼 3 | 트레일, 맥스 등 다른 모델뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 살로몬 제네시스 2 | 1세대, GTX뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 푸마 패스트 FWD 니트로 엘리트 2 | 1세대뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 알트라 배니시 카본 3 | 알트라 상품 없음(브랜드를 뺀 검색어로 한 번 더 — 없음) <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 알트라 배니시 카본 3 | 알트라 상품 없음(브랜드를 뺀 검색어로 한 번 더, 없음) <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
   | 알트라 익스피리언스 와일드 3 | 위와 같음 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
-  | 머렐 애질리티 피크 6 | 5세대 · GTX뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
+  | 머렐 애질리티 피크 6 | 5세대, GTX뿐 <!-- 확인 못 함: GOAT 검색 결과는 git 밖 캐시 --> |
 
 #### 5. 검증 항목
 
-- **표본 페이지**: 통과 20 · 제외 20(이유와 IoU), 0.80 제외 전부 — 문턱을 정할 때 사람이 본다. [code:catalog/silhouette.py:14] <!-- 확인 못 함: 표본 페이지는 git 밖 catalog/local/ -->
-- **켤레별 썸네일 페이지**: 적용 뒤 238켤레를 한 줄씩(대표 + IoU) — 사람이 훑어본다. [code:catalog/extra-images.json] (2026-11-10 기준) [c:37e665c] <!-- 확인 못 함: 썸네일 페이지는 git 밖 catalog/local/ -->
+- **표본 페이지**: 통과 20, 제외 20(이유와 IoU), 0.80 제외 전부. 문턱을 정할 때 사람이 본다. [code:catalog/silhouette.py:14] <!-- 확인 못 함: 표본 페이지는 git 밖 catalog/local/ -->
+- **켤레별 썸네일 페이지**: 적용 뒤 238켤레를 한 줄씩(대표 + IoU). 사람이 훑어본다. [code:catalog/extra-images.json] (2026-11-10 기준) [c:37e665c] <!-- 확인 못 함: 썸네일 페이지는 git 밖 catalog/local/ -->
 - **운영 대조**: 운영 API 의 이미지 목록이 `extra-images.json` 과 같은지, 수정 이력이 찍히지 않았는지(적재기 수정은 이력에서 뺀다). [code:catalog/load.mjs:90-91] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:36] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:281] <!-- 확인 못 함: 운영 API 대조는 운영 쪽 -->
-- **대표 점검**: 대표 제목의 변형 · 특별판 낱말, 품번 계열이 같은 세대 다수와 다른 것. [code:catalog/stockx.mjs:123-141] <!-- 확인 못 함: 대표 점검 스크립트는 저장소에 없다 -->
+- **대표 점검**: 대표 제목의 변형, 특별판 낱말, 품번 계열이 같은 세대 다수와 다른 것. [code:catalog/stockx.mjs:123-141] <!-- 확인 못 함: 대표 점검 스크립트는 저장소에 없다 -->

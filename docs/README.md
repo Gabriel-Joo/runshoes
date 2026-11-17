@@ -6,49 +6,49 @@
 
 > 상태: 2026-11-17 코드와 맞춰 봄. 새 구조로 옮김(2026-11-02). 상위 문서(requirements, overview, HISTORY, TODO)와 영역 문서 01a ~ 10 작성(08 비교는 2026-11-09 운영 반영). 옛 문서 12개는 `archive/`: CATALOG_PIPELINE, API_CONTRACT, DEPLOY, INFRA, SPRING_MIGRATION_PLAN, AUTH_DESIGN, AUTH_RATELIMIT_DESIGN, ADMIN_DEMO_DESIGN, design-prompt, design-handoff, COMPARE_DESIGN, HISTORY(옛 이야기판). 09 의 구현 기록은 `archive/09_chatbot_rag_log.md` 로 뗐다(2026-11-17). 와이드 재조사 결과는 01a 1-7 에 채웠다. [docs:requirements.md] [docs:overview.md] [docs:HISTORY.md] [docs:TODO.md] [docs:archive/HISTORY.md] [docs:01a_catalog_sources.md] [docs:09_chatbot_rag.md] [docs:10_recommend.md]
 
-이 폴더는 RUNSHOES 의 설계 문서다. **진실의 원천은 코드다** — 문서는 코드 · 마이그레이션 · 카탈로그 데이터를 읽고 거꾸로 쓴다(역문서화). 코드와 문서가 다르면 코드가 맞고, 문서를 고친다.
+이 폴더는 RUNSHOES 의 설계 문서다. **진실의 원천은 코드다**. 문서는 코드, 마이그레이션, 카탈로그 데이터를 읽고 거꾸로 쓴다(역문서화). 코드와 문서가 다르면 코드가 맞고, 문서를 고친다.
 
-독자는 둘이다 — 이 프로젝트를 다시 만지는 사람(나)과 처음 보는 사람(면접관). 그래서 "지금 어떻게 돼 있나"와 "왜 그렇게 했나"를 같은 문서에 둔다.
+독자는 둘이다. 이 프로젝트를 다시 만지는 사람(나)과 처음 보는 사람(면접관). 그래서 "지금 어떻게 돼 있나"와 "왜 그렇게 했나"를 같은 문서에 둔다.
 
 #### 1. 파일 이름 규칙
 
 - **숫자가 있으면 영역 문서**다. 런슈즈는 파이프라인이 아니라 서비스라, 단계가 아니라 영역으로 나눈다.
   - 번호는 한 번 정하면 바꾸지 않는다. 새 영역은 뒤에 붙인다.
-  - 한 영역이 커서 나눌 때는 같은 번호에 `a` · `b` · `c` 를 붙인다(`01a` · `01b` · `01c`).
+  - 한 영역이 커서 나눌 때는 같은 번호에 `a`, `b`, `c` 를 붙인다(`01a`, `01b`, `01c`).
   - **아직 없는 기능은 파일을 만들지 않는다.** 빈 문서는 미완성으로 읽힌다. 할 일은 `TODO.md` 에 두고, 일을 시작할 때 번호를 붙인다. [docs:TODO.md]
-- **숫자가 없으면 상위 문서**다: `requirements.md`(무엇을 만드는가) · `overview.md`(전체 구조) · `HISTORY.md`(날짜 타임라인) · `TODO.md`(남은 일). [docs:requirements.md] [docs:overview.md] [docs:HISTORY.md] [docs:TODO.md]
-- `archive/` — 옛 계획서 · 옛 환경 문서 · 그때의 중간 산출물. **지우지 않고 남긴다**(2026-11-02 사용자) — "처음 설계가 이렇게 바뀌었다"가 자료다. 새 문서가 필요한 곳에서 여기를 링크한다.
+- **숫자가 없으면 상위 문서**다: `requirements.md`(무엇을 만드는가), `overview.md`(전체 구조), `HISTORY.md`(날짜 타임라인), `TODO.md`(남은 일). [docs:requirements.md] [docs:overview.md] [docs:HISTORY.md] [docs:TODO.md]
+- `archive/`: 옛 계획서, 옛 환경 문서, 그때의 중간 산출물. **지우지 않고 남긴다**(2026-11-02 사용자). "처음 설계가 이렇게 바뀌었다"가 자료다. 새 문서가 필요한 곳에서 여기를 링크한다.
   - 옮길 때 맨 위에 한 줄을 넣는다: `> 보관: 이 문서는 더 이상 유효하지 않다. 지금 규칙은 [링크]`
-  - **archive 는 노션 · 발표 자료에 옮기지 않는다.** 저장소에만 둔다.
-  - 이미 운영에 적용된 마이그레이션(`V*.sql`)의 주석이 옛 문서를 가리켜도 고치지 않는다 — 적용된 마이그레이션은 한 글자만 바뀌어도 Flyway 체크섬이 달라져 앱이 뜨지 않는다. 옛 경로는 `archive/` 에서 찾는다. [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/db/migration/V3__auth.sql:2] [docs:archive/AUTH_DESIGN.md]
+  - **archive 는 노션과 발표 자료에 옮기지 않는다.** 저장소에만 둔다.
+  - 이미 운영에 적용된 마이그레이션(`V*.sql`)의 주석이 옛 문서를 가리켜도 고치지 않는다. 적용된 마이그레이션은 한 글자만 바뀌어도 Flyway 체크섬이 달라져 앱이 뜨지 않는다. 옛 경로는 `archive/` 에서 찾는다. [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/db/migration/V3__auth.sql:2] [docs:archive/AUTH_DESIGN.md]
 
 | 파일 | 다루는 것 |
 |---|---|
-| `requirements.md` | 무엇을 만드는가 — 문제 · 사용자 · 요건(학교 요건 ①~⑧ 포함) [docs:requirements.md] |
-| `overview.md` | 전체 구조 — 서비스 지도 · 데이터 흐름 · 기술 선택 [docs:overview.md] |
-| `HISTORY.md` | 날짜 타임라인 — 한 줄씩, 자세한 이야기는 각 문서 3절로 링크 [docs:HISTORY.md] |
-| `TODO.md` | 남은 일 — 한 줄에 하나, 상세는 그 주제의 문서(2026-11-10 사용자 — 문서마다 적던 "다음에 할 일"을 모았다) [docs:TODO.md] |
-| `01a_catalog_sources.md` | 신발 데이터 — 수집처 · 약관 · 현행 세대 · 스펙 · 가격 · 발볼 · 와이드 판단 규칙 [docs:01a_catalog_sources.md] |
-| `01b_catalog_images.md` | 신발 이미지 — StockX · GOAT, 대표 색상 · 품번, 색상 보강(실루엣 대조) [docs:01b_catalog_images.md] |
-| `01c_catalog_loader.md` | 적재기 — 사람 판단(`decisions.json`), 관리 화면 수정 보호, 운영 적재 스크립트 [docs:01c_catalog_loader.md] |
-| `01d_catalog_copy.md` | 문구 — 카드 요약 · 상세 설명 작성 규칙(`copy.json`), 검사기 [docs:01d_catalog_copy.md] |
-| `01e_seed_reviews.md` | 시드 리뷰 — 가상 사용자 200명 · 리뷰 1,800 · 찜 · 도움이 돼요, 별점 · 문장 규칙, 적재 [docs:01e_seed_reviews.md] |
-| `02_screens.md` | 화면 — 목록 · 상세 모달 · 추천받기 · 비교하기 · 러너들의 선택 · 반응형 [docs:02_screens.md] |
-| `02b_design_system.md` | 디자인 — 표본 전시실 컨셉 · 색 · 글꼴 · 카드 · 모달 [docs:02b_design_system.md] |
-| `03_admin.md` | 관리 화면 — 등록 · 수정 · 보완 필요 탭 · 숨김 · 영구 삭제 · 수정 이력 · 출처 [docs:03_admin.md] |
-| `04_auth.md` | 로그인 · 계정 · 데모 계정 · 시도 제한 · 활동 로그 [docs:04_auth.md] |
+| `requirements.md` | 무엇을 만드는가. 문제, 사용자, 요건(학교 요건 ①~⑧ 포함) [docs:requirements.md] |
+| `overview.md` | 전체 구조. 서비스 지도, 데이터 흐름, 기술 선택 [docs:overview.md] |
+| `HISTORY.md` | 날짜 타임라인. 한 줄씩, 자세한 이야기는 각 문서 3절로 링크 [docs:HISTORY.md] |
+| `TODO.md` | 남은 일. 한 줄에 하나, 상세는 그 주제의 문서(2026-11-10 사용자, 문서마다 적던 "다음에 할 일"을 모았다) [docs:TODO.md] |
+| `01a_catalog_sources.md` | 신발 데이터. 수집처, 약관, 현행 세대, 스펙, 가격, 발볼, 와이드 판단 규칙 [docs:01a_catalog_sources.md] |
+| `01b_catalog_images.md` | 신발 이미지. StockX와 GOAT, 대표 색상과 품번, 색상 보강(실루엣 대조) [docs:01b_catalog_images.md] |
+| `01c_catalog_loader.md` | 적재기. 사람 판단(`decisions.json`), 관리 화면 수정 보호, 운영 적재 스크립트 [docs:01c_catalog_loader.md] |
+| `01d_catalog_copy.md` | 문구. 카드 요약과 상세 설명 작성 규칙(`copy.json`), 검사기 [docs:01d_catalog_copy.md] |
+| `01e_seed_reviews.md` | 시드 리뷰. 가상 사용자 200명, 리뷰 1,800, 찜, 도움이 돼요, 별점과 문장 규칙, 적재 [docs:01e_seed_reviews.md] |
+| `02_screens.md` | 화면. 목록, 상세 모달, 추천받기, 비교하기, 러너들의 선택, 반응형 [docs:02_screens.md] |
+| `02b_design_system.md` | 디자인. 표본 전시실 컨셉, 색, 글꼴, 카드, 모달 [docs:02b_design_system.md] |
+| `03_admin.md` | 관리 화면. 등록, 수정, 보완 필요 탭, 숨김, 영구 삭제, 수정 이력, 출처 [docs:03_admin.md] |
+| `04_auth.md` | 로그인, 계정, 데모 계정, 시도 제한, 활동 로그 [docs:04_auth.md] |
 | `05_api_contract.md` | API 계약과 계약 시험 [docs:05_api_contract.md] [code:contract/] |
-| `06_deployment.md` | CI/CD · GitOps · 클러스터 · 스키마 변경 절차 [docs:06_deployment.md] |
+| `06_deployment.md` | CI/CD, GitOps, 클러스터, 스키마 변경 절차 [docs:06_deployment.md] |
 | `07_database.md` | 스키마와 마이그레이션 V1~V24 [docs:07_database.md] [code:backend/src/main/resources/db/migration/] |
-| `08_compare.md` | 비교하기 — 점수 없는 비교표 · 자동 채우기 · 분포 그래프 · 내 찜 [docs:08_compare.md] |
-| `09_chatbot_rag.md` | 챗봇 RAG 설계 — 여섯 갈래 · 메모리 색인 + BM25 · 무게 환산 · 요약 배치 · 말투 · 평가, 단계별 상태(3-1절) [docs:09_chatbot_rag.md] |
-| `10_recommend.md` | 추천받기 — 배점 · 경계 · 데이터가 없을 때(중립 · 동점 규칙 · 하한선) · 발볼 칸의 성격 · 세대를 점수에 넣지 않는 이유 [docs:10_recommend.md] |
+| `08_compare.md` | 비교하기. 점수 없는 비교표, 자동 채우기, 분포 그래프, 내 찜 [docs:08_compare.md] |
+| `09_chatbot_rag.md` | 챗봇 RAG 설계. 여섯 갈래, 메모리 색인 + BM25, 무게 환산, 요약 배치, 말투, 평가, 단계별 상태(3-1절) [docs:09_chatbot_rag.md] |
+| `10_recommend.md` | 추천받기. 배점, 경계, 데이터가 없을 때(중립, 동점 규칙, 하한선), 발볼 칸의 성격, 세대를 점수에 넣지 않는 이유 [docs:10_recommend.md] |
 
 #### 2. 문서 형식
 
 펫퍼민트(`petmint-rag-chatbot/docs/`)와 같은 형식이다. <!-- 확인 못 함: 펫퍼민트는 다른 저장소 -->
 
-- 맨 위에 `> 상태: …` 한 줄 — 지금 어디까지 됐나(운영 · 로컬 · 설계).
+- 맨 위에 `> 상태: …` 한 줄. 지금 어디까지 됐나(운영, 로컬, 설계).
 - 절 제목은 `####` 로, 번호를 붙인다.
 - 영역 문서의 공통 뼈대:
 
@@ -61,16 +61,16 @@
   5. 검증 항목          ← 무엇을 돌려서 확인하나
   ```
 
-- **남은 일은 `TODO.md` 한 곳에**(2026-11-10 사용자). 영역 문서에는 "다음에 할 일" 절을 두지 않는다 — 무엇이 문제인지는 4절(남은 한계)에, "남았다"는 표시는 TODO 에. [docs:TODO.md]
+- **남은 일은 `TODO.md` 한 곳에**(2026-11-10 사용자). 영역 문서에는 "다음에 할 일" 절을 두지 않는다. 무엇이 문제인지는 4절(남은 한계)에, "남았다"는 표시는 TODO 에. [docs:TODO.md]
 
-- **현재형과 과거형을 나눈다.** 1 · 4 · 5절은 지금 상태만 쓴다. 날짜가 붙은 결정 · 바꾼 이유 · 실패는 2 · 3절로 보낸다. 같은 규칙이 바뀌었으면 1절에는 지금 규칙만, 3절에 "전에는 … 였다 → 왜 바꿨나"를 쓴다.
+- **현재형과 과거형을 나눈다.** 1, 4, 5절은 지금 상태만 쓴다. 날짜가 붙은 결정, 바꾼 이유, 실패는 2, 3절로 보낸다. 같은 규칙이 바뀌었으면 1절에는 지금 규칙만, 3절에 "전에는 … 였다 → 왜 바꿨나"를 쓴다.
 - 사용자가 정한 것은 `(2026-11-02 사용자)` 처럼 날짜와 함께 적는다. 근거가 사용자의 판단이라는 것이 기록이다.
-- 숫자는 코드 · 데이터에서 다시 세어 적는다(예: 후보 408행 · 운영 302켤레). 세는 법을 같이 적는다.
-- 명령 · 경로 · 코드 이름은 원문 그대로 둔다.
+- 숫자는 코드와 데이터에서 다시 세어 적는다(예: 후보 408행, 운영 302켤레). 세는 법을 같이 적는다.
+- 명령, 경로, 코드 이름은 원문 그대로 둔다.
 
 #### 3. 다른 곳과의 관계
 
-- **운영 절차(런북)는 infra 리포**(`ronanlab-infra/apps/runshoes/runbooks/`)에 있다 — 스키마 변경 · 적재 같은 운영 쓰기의 순서와 실행 기록. 이 폴더는 그 뼈대와 링크만 둔다(`06_deployment.md`). [docs:06_deployment.md] <!-- 확인 못 함: 런북은 인프라 저장소 -->
-- **노션 · 발표 자료는 사본**이다. 고치는 것은 이 폴더에서 하고, 고친 뒤 무엇을 고쳤는지(파일 · 절)를 알려 사본에 옮긴다. 노션에서 다시 내보내 이 파일을 덮어쓰지 않는다.
-- 카탈로그 작업 파일(`catalog/*.csv` · `catalog/local/`)은 데이터다. 문서가 아니라 문서가 가리키는 원천이다. [code:catalog/] [code:.gitignore:39]
-- 측정 기록 · 덤프 · 적재 기록은 저장소 밖(`~/k8s-cluster/backup/…`, 권한 600)에 둔다. 비밀번호 해시 · 활동 로그가 들어 있다. <!-- 확인 못 함: 저장소 밖 경로 -->
+- **운영 절차(런북)는 infra 리포**(`ronanlab-infra/apps/runshoes/runbooks/`)에 있다. 스키마 변경이나 적재 같은 운영 쓰기의 순서와 실행 기록. 이 폴더는 그 뼈대와 링크만 둔다(`06_deployment.md`). [docs:06_deployment.md] <!-- 확인 못 함: 런북은 인프라 저장소 -->
+- **노션과 발표 자료는 사본**이다. 고치는 것은 이 폴더에서 하고, 고친 뒤 무엇을 고쳤는지(파일, 절)를 알려 사본에 옮긴다. 노션에서 다시 내보내 이 파일을 덮어쓰지 않는다.
+- 카탈로그 작업 파일(`catalog/*.csv`, `catalog/local/`)은 데이터다. 문서가 아니라 문서가 가리키는 원천이다. [code:catalog/] [code:.gitignore:39]
+- 측정 기록, 덤프, 적재 기록은 저장소 밖(`~/k8s-cluster/backup/…`, 권한 600)에 둔다. 비밀번호 해시와 활동 로그가 들어 있다. <!-- 확인 못 함: 저장소 밖 경로 -->
