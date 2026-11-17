@@ -12,5 +12,5 @@
     "rootDir": "..",
     "outDir": "../node_modules/.tmp/tests"
   },
-  "include": ["*.ts", "../src/utils/compare.ts", "../src/utils/pageGroup.ts","../src/types/index.ts"]
+  "include": ["*.ts", "../src/utils/compare.ts", "../src/utils/pageGroup.ts","../src/types/index.ts", "../src/auth/refreshPolicy.ts"]
 }

@@ -18,6 +18,7 @@
 - **CSRF** — API 는 Bearer 헤더로만 인증해 대상이 아니다. 쿠키가 붙는 `/api/auth` 만 — SameSite=Strict, POST 는 Origin 이 Host 와 같아야 하고, CORS 헤더를 주지 않는다.
 - **XSS** — 토큰을 localStorage 에 두지 않는다. `dangerouslySetInnerHTML` 없음.
 - 프런트는 401 이면 refresh 한 번 뒤 다시 보낸다(요청이 여럿이어도 refresh 는 한 번). 새로 고침하면 refresh 쿠키로 다시 access 를 받는다.
+- refresh 가 실패하면 **서버가 401 · 403 으로 거절했을 때만** 로그아웃시킨다. 네트워크 오류 · 5xx(롤링 배포 중의 502 · 503 등)는 세션을 그대로 두고 1초, 3초 뒤 다시 보낸다(2026-11-17, `src/auth/refreshPolicy.ts`). 기다림 합 4초는 위 10초 창 안이다 — 서버에서는 처리됐는데 응답만 사라졌을 때 다시 보내는 것이 곧 재사용이라, 10초를 넘기면 그 family 가 폐기된다. 세 번 다 닿지 못하면 로그인 상태는 두고 그 요청은 503(「서버에 연결하지 못했어요」)으로 돌려준다 — 401 이 아니라 화면이 로그인으로 보내지 않는다.
 - Spring Security 는 세션 · 폼 로그인 · CSRF 토큰 없음. Security 의 Cache-Control 은 끈다 — 계약 헤더는 `ApiHeadersFilter` 가 먼저 만든다.
 - 비밀은 Secret `runshoes-auth`(사람이 만든다): `JWT_SECRET` · `SEED_USER_PASSWORD`(시드 사용자 30명 공통) · `ADMIN_PASSWORD`. 계정의 비밀번호 칸이 NULL 이면 기동할 때 이 값으로 채운다(`auth/SeedPasswords`) — git 에는 평문도 해시도 없다.
 

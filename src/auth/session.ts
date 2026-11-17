@@ -1,4 +1,5 @@
 import { API } from "../api";
+import { retryRefresh, type RefreshResult } from "./refreshPolicy";
 
 /**
  * 로그인 상태 — access token 은 이 모듈의 변수(메모리)에만 둔다. localStorage 에 두지 않는다(docs/04_auth.md).
@@ -139,17 +140,16 @@ export async function logout() {
 /**
  * refresh — 동시에 여러 번 불려도(첫 화면의 요청 여럿이 함께 401) 한 번만 보낸다.
  * 탭 둘이 동시에 보내는 것은 서버가 10초 안의 재사용으로 받아 준다(AuthService).
+ * 서버가 401 · 403 으로 거절했을 때만 로그아웃시킨다. 네트워크 오류 · 5xx 등은 세션을 그대로 두고
+ * 1초, 3초 뒤 다시 보낸다(까닭은 refreshPolicy.ts) — 롤링 배포 중의 502 · 503 으로 로그인이 풀리지 않게
  */
-let refreshing: Promise<boolean> | null = null;
-export function refresh(): Promise<boolean> {
-  refreshing ??= authCall("/auth/refresh", { method: "POST" })
-    .then(async (res) => {
-      set(await res.json());
-      return true;
-    })
-    .catch(() => {
-      set(null);
-      return false;
+let refreshing: Promise<RefreshResult> | null = null;
+export function refreshSession(): Promise<RefreshResult> {
+  refreshing ??= retryRefresh(async () => (await authCall("/auth/refresh", { method: "POST" })).json() as Promise<SessionBody>)
+    .then((r) => {
+      if (r.result === "ok") set(r.value);
+      else if (r.result === "loggedOut") set(null);
+      return r.result;
     })
     .finally(() => {
       refreshing = null;
@@ -157,9 +157,20 @@ export function refresh(): Promise<boolean> {
   return refreshing;
 }
 
+/** refresh 로 새 access token 을 받았는가 — 받지 못한 까닭이 필요하면 refreshSession() */
+export const refresh = async () => (await refreshSession()) === "ok";
+
+/** refresh 가 서버에 닿지 못했을 때 apiFetch 가 돌려주는 응답 — 401 이 아니므로 화면이 로그인으로 보내지 않고 오류 문장을 보인다 */
+const unavailable = () =>
+  new Response(JSON.stringify({ error: { code: "UNAVAILABLE", message: "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요." } }), {
+    status: 503,
+    headers: { "Content-Type": "application/json" },
+  });
+
 /**
  * /api 호출 — 로그인했으면 Authorization 을 붙인다. 401 이면(access token 15분 만료) refresh 하고 한 번만 다시 보낸다.
- * 다시 보내도 401 이거나 refresh 가 실패하면 로그인 안 한 상태로 두고 401 응답을 그대로 돌려준다 — 화면이 로그인으로 보낸다.
+ * refresh 를 서버가 거절했으면 로그인 안 한 상태로 두고 401 응답을 그대로 돌려준다 — 화면이 로그인으로 보낸다.
+ * refresh 가 서버에 닿지 못했으면(재시도까지 실패) 세션을 그대로 두고 503 을 돌려준다
  */
 export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const send = () => {
@@ -170,7 +181,9 @@ export async function apiFetch(path: string, init: RequestInit = {}): Promise<Re
   const hadToken = Boolean(token);
   const res = await send();
   if (res.status !== 401 || !hadToken) return res;
-  return (await refresh()) ? send() : res;
+  const r = await refreshSession();
+  if (r === "ok") return send();
+  return r === "loggedOut" ? res : unavailable();
 }
 
 /** 로그인 화면으로 — 돌아올 경로를 returnTo 로 */
