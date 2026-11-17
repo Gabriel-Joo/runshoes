@@ -200,8 +200,8 @@
 |---|---|---|---|---|
 | 있음(국내) | 국내에서 와이드를 살 수 있다. 공식몰, 판매처, 크림, 병행수입 포함 | true | `domestic` | 찾은 곳 [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:2] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:346] |
 | 국외에만 있음 | 해외에만 있고 국내에서는 살 수 없다 | true | `overseas` | 찾은 곳 [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:2] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:346] |
-| 없음 | 어디에도 없다. 다섯 단계를 다 찾아도 안 나온다 | false | — | `NOTFOUND`(검색 결과 없음). 데이터에만, 화면에는 출처를 보이지 않는다 [code:catalog/live-fields.mjs:33] [code:src/pages/ShoeForm.tsx:247-248] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:4] |
-| 정보 없음 | 아직 안 찾아봤거나 조사가 막혔다 | null | — | — [code:catalog/build.mjs:346] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:4] |
+| 없음 | 어디에도 없다. 다섯 단계를 다 찾아도 안 나온다 | false | 없음 | `NOTFOUND`(검색 결과 없음). 데이터에만, 화면에는 출처를 보이지 않는다 [code:catalog/live-fields.mjs:33] [code:src/pages/ShoeForm.tsx:247-248] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:4] |
+| 정보 없음 | 아직 안 찾아봤거나 조사가 막혔다 | null | 없음 | 없음 [code:catalog/build.mjs:346] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:4] |
 
 - **찾는 순서**: ① KicksDB 캐시(StockX, GOAT 상품명) ② 브랜드 국내 공식몰(Playwright) ③ ABC마트, GRAND STAGE ④ BITR, RSG 리뷰 본문 ⑤ 웹 검색. 국내 근거(②③, 국내 판매처의 웹 검색 결과)가 해외 근거보다 먼저다.
 - **국내에서 살 수 있는 곳**(2026-11-06 사용자, "국내 정식 판매"에서 바꿈, 까닭은 2-8): 브랜드 국내 공식몰, ABC마트, GRAND STAGE, 무신사, 코오롱몰, SSG, 롯데온, 29CM, GS샵, 브랜드 한국 사이트(검색 결과로만), **크림, 병행수입 판매자**(국내 재고를 국내에서 보내는 곳). **해외직구, 구매대행(해외에서 보내는 것), 중고는 국내로 보지 않는다**. 직구로는 거의 모든 신발을 살 수 있어 "국외에만 있음"과 가를 수 없다.

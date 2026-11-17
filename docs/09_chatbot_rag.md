@@ -435,12 +435,12 @@ VRAM 16.3GB 중 13GB 를 쓰고 있다. 7B 를 더 올리면 펫퍼민트 학습
 
 | 단계 | 화면(`ChatBot.tsx`) | 챗봇(`server.py`) |
 |---|---|---|
-| 버튼 | 누구에게나 보인다. 로그인 전이면 연결을 열지 않고 패널 안에 "챗봇은 로그인한 뒤에 쓸 수 있어요. 체험 계정으로 바로 둘러볼 수 있어요." + [로그인](`loginPath`, 보던 화면으로 돌아온다) | — [code:src/components/ChatBot.tsx:38] [code:src/components/ChatBot.tsx:276-280] [code:src/components/ChatBot.tsx:285-287] [code:src/components/ChatBot.tsx:247-253] [code:src/auth/session.ts:193-195] |
+| 버튼 | 누구에게나 보인다. 로그인 전이면 연결을 열지 않고 패널 안에 "챗봇은 로그인한 뒤에 쓸 수 있어요. 체험 계정으로 바로 둘러볼 수 있어요." + [로그인](`loginPath`, 보던 화면으로 돌아온다) | 없음 [code:src/components/ChatBot.tsx:38] [code:src/components/ChatBot.tsx:276-280] [code:src/components/ChatBot.tsx:285-287] [code:src/components/ChatBot.tsx:247-253] [code:src/auth/session.ts:193-195] |
 | 연결 직후 | 첫 메시지 `{"type":"auth","token":…}`(토큰은 `session.chatToken()`, 챗봇만 쓴다) | `GET /api/me` 로 확인. 200 이면 인사(system)를 보내고 질문을 받는다 [code:src/components/ChatBot.tsx:84] [code:src/auth/session.ts:58] [code:chatbot/server.py:68-72] [code:chatbot/server.py:90] |
 | 실패 | `auth_failed` → `refresh` 한 번 뒤 다시 연결. 서버가 refresh 를 거절하면(401, 403) 로그아웃 상태가 되어 로그인 안내, refresh 가 서버에 닿지 못하면(재시도까지 실패, 로그인은 그대로) "서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요." + [다시 연결], 다시 붙어도 실패하면 "로그인 정보를 확인하지 못했어요…" + [로그인](로그아웃 뒤 로그인 화면) | 401, 인증이 아닌 첫 메시지, 빈 토큰, 헤더에 실을 수 없는 토큰(공백, 제어 문자, 4,096자 넘음) → `{"type":"auth_failed"}` 뒤 닫는다(코드 4401). 확인 전에 온 질문은 받지 않는다 [code:src/components/ChatBot.tsx:88-101] [code:src/auth/session.ts:150-155] [code:src/auth/refreshPolicy.ts:18] [code:src/auth/session.ts:77] [code:src/components/ChatBot.tsx:202-207] [code:src/components/ChatBot.tsx:39] [code:src/components/ChatBot.tsx:201] [code:chatbot/server.py:61-67] [code:chatbot/server.py:73-74] [code:chatbot/server.py:34] |
-| 기다림 | — | 10초(`AUTH_TIMEOUT`) 안에 첫 메시지가 없으면 `auth_failed`(reason `timeout`) 뒤 닫는다 [code:chatbot/server.py:31] [code:chatbot/server.py:53-56] |
+| 기다림 | 없음 | 10초(`AUTH_TIMEOUT`) 안에 첫 메시지가 없으면 `auth_failed`(reason `timeout`) 뒤 닫는다 [code:chatbot/server.py:31] [code:chatbot/server.py:53-56] |
 | 백엔드가 아직 안 뜸 | 서버 문구를 그대로 보여 주고 [다시 연결]. 저절로 다시 붙지는 않는다 | 연결 실패 또는 401 이 아닌 응답 → `{"type":"auth_unavailable","message":"지금은 챗봇에 연결하지 못했어요. 잠시 뒤 다시 연결을 눌러 주세요."}` 뒤 닫는다(코드 4503) [code:src/components/ChatBot.tsx:104-108] [code:src/components/ChatBot.tsx:202-207] [code:chatbot/server.py:32] [code:chatbot/server.py:75-76] [code:chatbot/server.py:34] |
-| 로그아웃 | 소켓을 닫고 대화를 지운다(로그인한 사람마다 대화 칸을 새로 띄운다, 다른 계정으로 바뀌어도 같다) | — [code:src/components/ChatBot.tsx:281] [code:src/components/ChatBot.tsx:144-153] |
+| 로그아웃 | 소켓을 닫고 대화를 지운다(로그인한 사람마다 대화 칸을 새로 띄운다, 다른 계정으로 바뀌어도 같다) | 없음 [code:src/components/ChatBot.tsx:281] [code:src/components/ChatBot.tsx:144-153] |
 
 - **메시지마다 확인하지 않는다.** access token 이 15분이라 패널을 오래 열어 둔 사람이 질문 중간에 막힌다. 연결이 곧 확인한 사람이다. 대신 화면이 로그아웃하면 소켓을 닫는다. 다른 탭의 로그아웃과 탈퇴는 그 연결이 끝날 때까지 이어진다(`04_auth.md` 1-1). [code:chatbot/server.py:5] [code:backend/src/main/resources/application.yml:31] [code:src/components/ChatBot.tsx:281] [code:src/components/ChatBot.tsx:144-153] [docs:04_auth.md]
 - **토큰을 주소에 넣지 않는다.** 브라우저 웹소켓은 인증 헤더를 못 붙이고, 주소의 토큰은 ingress, Cloudflare 로그에 남는다. refresh 쿠키는 Path=`/api/auth` 라 `/ws/chat` 에 가지 않는다. 챗봇 로그에도 토큰을 찍지 않는다(실패 까닭만). [code:chatbot/server.py:8] [code:src/auth/session.ts:54-58] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:125] [code:chatbot/server.py:48]
@@ -570,7 +570,7 @@ Pod 가 둘일 때, 정한 것(사용자 2026-11-14)
 | 무게 | M9만 비교, 나머지 제외 | 환산해서 비교 [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:8-16] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:40-48] |
 | 요약 | 배치 안 함 | 배치 전환 (화면 성능 목적) [code:backend/src/main/java/com/kopo17/runshoes/summary/SummaryBatch.java:15-16] |
 | 리뷰 집계 | "리뷰 N건이 언급" | 전체 분모 함께 표기 [code:chatbot/branches/experience.py:196-203] |
-| 통증 판별 | — | 라우터 LLM 플래그 (키워드 아님) [code:chatbot/router.py:46] [code:chatbot/router.py:181] |
+| 통증 판별 | 없음 | 라우터 LLM 플래그 (키워드 아님) [code:chatbot/router.py:46] [code:chatbot/router.py:181] |
 
 같은 것: 벡터 DB 불필요, 리뷰 원문 사용(요약 대체 아님), BM25 하이브리드, 수치는 코드가 넣기, 이름 찾기는 코드, 통증에 진단 금지. [code:chatbot/search/index.py:1-3] [code:chatbot/facts.py:1] [code:chatbot/catalog.py:3]
 

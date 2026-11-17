@@ -13,7 +13,7 @@
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
 - [ ] 5-1 남은 한계 셋. 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 4-1절
-- [ ] 5-2 경험·후기 25문항. 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `archive/09_chatbot_rag_log.md` 옛 16절 [code:chatbot/eval/] [docs:09_chatbot_rag.md]
+- [ ] 5-2 경험과 후기 25문항. 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `archive/09_chatbot_rag_log.md` 옛 16절 [code:chatbot/eval/] [docs:09_chatbot_rag.md]
 - [ ] 5-2 남은 한계. 운영에 올린 뒤 실제 질문을 보고 다시 정한다(항목마다 무엇을 볼지 적어 둠) → `09_chatbot_rag.md` 4-2절 「5-2 남은 한계」
 - [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기. 지금은 5-1 처럼 거절과 기록 → `09_chatbot_rag.md` 1-9절, `archive/09_chatbot_rag_log.md` 옛 16절 [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:3] [docs:09_chatbot_rag.md]
 - [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112`, 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
@@ -46,7 +46,7 @@
 - [ ] www.asics.co.kr(대기열), www.brooksrunning.co.kr(443 접속 거절)은 기록상 `fetch` 인데 지금 열리지 않는다. 판정을 둘지 사람이 정한다 → `01a_catalog_sources.md` 1-2b 「기록과 지금이 다른 곳」
 - [ ] 수집기의 캡차 판정(본문 앞 5000자에 `captcha`)이 위키백과 머리 스크립트의 설정값(`"wgConfirmEditCaptchaNeededForGenericEdit":"hcaptcha"`)에 걸려 위키백과 호스트를 멈춘다. 위키백과를 실제로 읽기 전에 고친다 → `01a_catalog_sources.md` 1-2b <!-- 확인 못 함: 수집기는 git 밖 catalog/local/ -->
 
-- [ ] 와이드 정보 없음 4켤레(사용자가 MAN 으로), 울트라부스트 5X 의 와이드, 정가, 카본 → `01a_catalog_sources.md` 4절
+- [ ] 와이드 정보 없음 6켤레(2026-11-17 운영 공개 API, 사용자가 MAN 으로), 울트라부스트 5X 의 와이드, 정가, 카본 → `01a_catalog_sources.md` 4절
 - [ ] GTX 판을 별도 행으로 → `01a_catalog_sources.md` 3절
 - [ ] 정가 빈 칸을 채울 방법(국내 공식몰 아카이브 또는 MAN) → `01a_catalog_sources.md` 4절
 - [ ] 정기 확인 작업(월 1회 보고서. 새 세대, 정가 변경, 이미지 링크) → `01a_catalog_sources.md`
