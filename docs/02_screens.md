@@ -106,11 +106,6 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 
 #### 4. 남은 한계
 
-- **홈 목록은 페이지가 없다.** 302켤레를 한 번에 받는다. 서버는 `_start` · `_limit` · `X-Total-Count` 를 지원한다. 관리 화면의 목록은 서버가 쪽을 나눈다(`03_admin.md`). [code:src/pages/ShoeList.tsx:41] [code:backend/src/main/java/com/kopo17/runshoes/api/ListQuery.java:94-101] [code:backend/src/main/java/com/kopo17/runshoes/api/JsonServerController.java:49-50] [docs:03_admin.md] (2026-11-15 기준) [c:85b9677]
-- **세대 사이를 오가지 못한다.** 같은 라인의 이전 · 다음 세대를 묶는 `lineKey` 가 데이터와 API 에 있지만(`?lineKey=`) 상세 모달은 쓰지 않는다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:310] [code:backend/src/main/java/com/kopo17/runshoes/api/ListQuery.java:60-76] [code:src/types/index.ts:36] [code:src/components/ShoeModal.tsx:117-208]
-- **실측값을 보여 주지 않는다.** 공시값만 보이고, `measured*` 칸은 화면에 없다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:316-318] [code:src/components/ShoeModal.tsx:117-208]
-- **화면 시험이 자동이 아니다.** 계약 시험은 API 만 본다 — 화면은 사람이 브라우저에서 확인한다. [code:contract/]
-
 #### 5. 검증 항목
 
 - 데스크톱 · 768px · 휴대폰 폭에서: 홈 → 카드 → 모달 → 리뷰 쓰기 → 닫기, 헤더가 넘치지 않는지.

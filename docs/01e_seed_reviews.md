@@ -14,8 +14,10 @@
 
 - **시드 30명**(`runner01~30@runshoes.test`) — 체험 카드로 보이는 계정. 닉네임이 곧 페르소나(산길10년차 · 서브3향해 · 발볼4E · 과내전주의 …). 가입일은 첫 리뷰 앞으로 옮겼다(V3 가 넣은 날은 10-21 이라 8월 리뷰보다 늦었다). [code:backend/src/main/resources/db/migration/V3__auth.sql:135-165] [code:backend/src/main/resources/db/migration/V3__auth.sql:172-186] <!-- 확인 못 함: 운영에 V3 가 들어간 날과 옮긴 가입일은 운영 DB -->
 - **리뷰용 170명**(`reviewer001~170@runshoes.test`) — `password_hash = '!seed-reviewer'` 라 로그인할 수 없고, 기동 때 시드 비밀번호로 채워지지 않으며(`SeedPasswords` 는 NULL 만 채운다), 체험 카드에도 안 나온다(카드는 `runner` + 두 자리만). [code:backend/src/main/java/com/kopo17/runshoes/auth/SeedPasswords.java:16-17] [code:backend/src/main/java/com/kopo17/runshoes/auth/SeedPasswords.java:39] [code:backend/src/main/java/com/kopo17/runshoes/domain/UserRepository.java:19-21] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:278] <!-- 확인 못 함: reviewer 계정과 password_hash 값은 운영 DB 에만 있다 -->
+- 시드 30명의 리뷰 · 찜은 체험 카드로 방문자가 바꾼다 → `04_auth.md` 1-3
 - 관리자 · 데모 관리자 계정은 리뷰 · 찜 · 도움이 돼요가 없다(2026-11-09 사용자). <!-- 확인 못 함: 운영 DB 의 데이터 -->
 - 페르소나 칸: 성격 묶음(입문 · 기록 · 트레일 · 넓은 발 · 좁은 발 · 과내전 · 일상 · 장거리 · 브랜드 팬) · 발 · 경력 · 말투(해요 · 습니다 · 메모체) · 길이 성향 · 좋아하는 브랜드. 경력 · 주간 거리 · 편한 페이스는 사람마다 고정해 여러 리뷰에서 숫자가 어긋나지 않게 한다. <!-- 확인 못 함: 페르소나 칸은 git 밖 생성 스크립트 -->
+- **가상 사용자가 실제 제품에 쓴 리뷰다.** 사이트에 예시 표시는 하지 않는다(2026-11-09 사용자). AI 리뷰 요약과 챗봇은 이 리뷰를 근거로 쓴다 — 챗봇은 "실제 사용자 후기"로 단정하지 않고 "등록된 리뷰"로 말한다. [code:chatbot/branches/experience.py:12] [code:chatbot/branches/experience.py:220]
 
 #### 1-2. 누가 무엇을 몇 건
 
@@ -104,11 +106,9 @@
 
 #### 4. 남은 한계
 
-- **가상 사용자가 실제 제품에 쓴 리뷰다.** 사이트에 예시 표시는 하지 않는다(2026-11-09 사용자). AI 리뷰 요약과 챗봇은 이 리뷰를 근거로 쓴다 — 챗봇은 "실제 사용자 후기"로 단정하지 않고 "등록된 리뷰"로 말한다. [code:chatbot/branches/experience.py:12] [code:chatbot/branches/experience.py:220]
-- 생성 스크립트 · 글은 git 밖에만 있다. 같은 결과를 다시 만들려면 그 폴더가 있어야 한다(운영 덤프 · 런북은 있다). <!-- 확인 못 함: git 밖 작업 폴더와 운영 덤프, 인프라 저장소 런북 -->
+**조건: 우리가 고르지 않은 것**
 - 같은 라인 이어 신기는 21% — 기존 리뷰어가 적은 라인(현행이 카탈로그에 없는 35켤레)은 이어짐이 없다. (2026-11-09 기준) [c:89117ec] <!-- 확인 못 함: 계획 결과는 git 밖 -->
 - 리뷰 수가 적은 신발(1~3건)은 실제 평균이 μ 와 크게 다를 수 있다.
-- 시드 30명의 리뷰 · 찜은 체험 카드로 방문자가 바꾼다(`04_auth.md` 4절). [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:243-247] [docs:04_auth.md]
 - **새 신발에는 리뷰가 없다.** 이 규칙으로 따로 더해야 한다(넣기만 하는 2차와 같은 방식). 챗봇은 리뷰를 "등록된 리뷰"로 말한다 — 관점을 물으면 집계 · 인용과 리뷰 이야기, 후기 전반을 물으면 집계 · 인용과 리뷰 요약 블록(`09_chatbot_rag.md` 16절 운영 뒤 수정 4). [code:chatbot/branches/experience.py:12] [code:chatbot/branches/experience.py:220] [code:chatbot/branches/experience.py:388] [docs:09_chatbot_rag.md]
 
 #### 5. 검증 항목

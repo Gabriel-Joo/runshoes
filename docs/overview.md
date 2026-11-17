@@ -74,12 +74,11 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 
 #### 4. 남은 한계
 
-- **리뷰가 시드 20켤레에만 있다.** 310켤레 중 290켤레가 리뷰 0 이라 랭킹 · 추천 동점 처리 · 비교의 평점 축이 사실상 그 20켤레의 일이다. (2026-11-02 기준) [c:298845e] <!-- 확인 못 함: 켤레별 리뷰 수는 운영 DB 값 -->
+- **옛 칸이 남아 있다.** → `07_database.md` 4절 [docs:07_database.md]
+
+**조건: 우리가 고르지 않은 것**
+- **리뷰는 가상 사용자 200명이 쓴 시드 1,800건이다.** 310켤레 모두 리뷰가 있지만 3건 이하인 신발이 123켤레라, 랭킹과 추천 동점 처리와 비교의 평점은 시드가 만든 값이다(`01e_seed_reviews.md`, `08_compare.md` 4절). (2026-11-09 기준) [c:89117ec] [docs:01e_seed_reviews.md] [docs:08_compare.md] [code:backend/src/main/java/com/kopo17/runshoes/summary/StaleRule.java:7] <!-- 확인 못 함: 1,800건과 켤레별 리뷰 수는 운영 DB 값, 생성 스크립트와 글은 git 밖 -->
 - **빈 칸이 많다.** 발볼 191 · 가격 154켤레가 정보 없음. 와이드는 재조사를 마쳐 4켤레만 비었다(`01a_catalog_sources.md` 1-7). (2026-11-05 기준) [c:fa31029] [docs:01a_catalog_sources.md] <!-- 확인 못 함: 빈 칸 수는 운영 DB 값 -->
-- **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만(`06_deployment.md` 4절). [docs:06_deployment.md] <!-- 확인 못 함: 백업 유무는 클러스터 쪽 -->
-- **옛 칸이 남아 있다.** `weight` · `drop_mm` · `stack_height` · `width` · `liked`(`07_database.md` 4절). [docs:07_database.md] [code:backend/src/main/resources/db/migration/V1__schema.sql:18-21] [code:backend/src/main/resources/db/migration/V1__schema.sql:32] [code:backend/src/main/resources/db/migration/V1__schema.sql:44]
-- **화면 시험이 자동이 아니다.** 계약 시험은 API 만 본다. [code:contract/] [code:package.json:12]
-- **홈 목록은 페이지가 없다.** 공개 신발 목록을 한 번에 받는다(서버는 이미 지원). 관리 화면의 목록(리뷰 · 회원 · 챗봇 문의 · 대화 · 신발 관리)은 서버가 쪽을 나눈다(`03_admin.md` 1-1 · 1-6). [docs:03_admin.md] [code:src/pages/ShoeList.tsx:57] [code:backend/src/main/java/com/kopo17/runshoes/api/ListQuery.java:17] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:43-47] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminReviewController.java:38] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:45] [code:backend/src/main/java/com/kopo17/runshoes/api/ChatbotMissController.java:83] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java:52]
 
 #### 다음에 할 일
 

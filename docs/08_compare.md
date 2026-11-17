@@ -153,9 +153,9 @@
 
 #### 4. 남은 한계
 
+**조건: 우리가 고르지 않은 것**
 - 무게 위치 말은 기준 모름 29켤레에 붙지 않는다. 다른 사이즈 70켤레의 자리는 반 사이즈당 2.6%(모델별 1.66~3.60%)로 맞춘 값이라, 경계 근처에서는 배지가 한 칸 다를 수 있다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:40-54] (2026-11-10 기준) [c:2e05859]
 - 비슷한 신발은 스펙 칸만 본다 — 실제 주행감이 비슷한지는 모른다. 무게 · 스택이 빈 켤레는 거리 계산이 거칠다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:99-116]
-- 분포 · 자동 채우기는 서버가 계산한다(`GET /api/compare`). 화면은 카드와 원값을 그리려고 목록 전체(지금 약 1MB)를 여전히 받는다. [code:src/pages/Compare.tsx:22] [code:src/pages/Compare.tsx:32-39] [code:src/utils/compareApi.ts:1-3] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:14] (2026-11-09 기준) [c:1c0342f]
 - 평점 · 리뷰는 시드 리뷰(`01e`)에서 온다. 3건 이하인 신발이 123켤레라 평점은 늘 리뷰 수와 함께 보인다. [code:src/components/compare/CompareTable.tsx:165-176] [docs:01e_seed_reviews.md] (2026-11-09 기준) [c:1c0342f]
 
 #### 5. 검증 항목

@@ -119,7 +119,7 @@ REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그�
 contract/scenarios.mjs     시나리오 — 세트마다 요청 · 기대 상태코드 · 다음 단계로 넘길 값({{newShoe}})
 contract/record.mjs        시나리오를 차례로 보내 <out>/<id>.json(요청 · 상태 · 헤더 · 본문)을 쓴다
 contract/diff.mjs          두 녹화를 비교 — PASS/FAIL, FAIL 이 있으면 exit 1
-contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 지우고 새 jar 로 띄워 녹화 · 비교(v14-summary 는 녹화 전에 배치를 한 번 돌린다)
+contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   계약 전용 임시 DB 를 새로 띄우고 새 jar 로 띄워 녹화 · 비교(v14-summary 는 녹화 전에 배치를 한 번 돌린다)
 ```
 
 | 기준선 | 건수 | 무엇 |
@@ -132,6 +132,7 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 | `baseline/spring-v4` | 21 | 세대 구조의 새 기능만 [code:contract/baseline/spring-v4/] |
 | `baseline/spring-v6` | 201 | 출처 · 데모 관리자 · 숨김 · 탈퇴 · 품번 · 수정 이력 · 영구 삭제 · 270mm 환산 무게(V15) · 비교 · 추천 API · 리뷰 숨기기(V22) · 회원 목록 · 잠금 풀기, 신발 관리 목록 의 새 기능만 [code:contract/baseline/spring-v6/] [code:contract/scenarios.mjs:587-597] |
 
+- **계약 시험은 매번 임시 DB 를 새로 띄운다.** 적재한 로컬 카탈로그와 다른 DB(계약 전용 임시 MySQL `runshoes-mysql-contract`, 127.0.0.1:3309, tmpfs)를 쓰고 로컬 개발 DB(`runshoes-mysql-dev`, :3307)에는 닿지 않는다 — 돌린 뒤 적재를 다시 하지 않아도 된다. [code:contract/run-spring-local.sh:13-16] [code:contract/run-spring-local.sh:65] [code:contract/README.md:114]
 - **옛 기준선은 다시 녹화하지 않는다.** diff 가 `--allow-added` 로 "응답에 키가 더해졌을 뿐"인지만 본다(`run-spring-local.sh` 의 `V4_KEYS` · `V5_KEYS` · `V6_KEYS` · `V11_KEYS` · `V12_KEYS` · `V13_KEYS` · `V15_KEYS`). 의도한 차이는 `contract/README.md` "결과"에 건수와 이유를 적는다. [code:contract/run-spring-local.sh:147-160] [code:contract/diff.mjs:15-18] [code:contract/README.md:72]
 - diff 정규화: `createdAt` · `generatedAt` 은 `Date.parse` 가 같으면 같다 · 숫자는 1e-9 · 객체 키 순서는 보지 않는다 · **배열은 순서까지 본다**(정렬 동점의 id 순도 계약) · `volatile` 값(`updatedAt` · `retryAfter`)은 형식만. [code:contract/diff.mjs:7] [code:contract/diff.mjs:35-60]
 - 기록에 비밀번호 · JWT · refresh 쿠키를 남기지 않는다(`<가림>` · `<jwt>`). [code:contract/record.mjs:11] [code:contract/record.mjs:76-82]
@@ -159,9 +160,7 @@ contract/run-spring-local.sh v3|v3-search|v14-summary|v4|v6   로컬 dev DB 를 
 
 #### 4. 남은 한계
 
-- **공개 목록은 메모리에서 거른다.** json-server 꼴 목록(`/api/shoes` 등)은 302켤레 전체를 읽어 거르고 정렬한다. 데이터가 커지면 SQL 로 옮길 자리다. 관리자 목록(`/api/admin/*`)은 SQL 이 거르고 자른다. (2026-11-15 기준) [c:85b9677] [code:backend/src/main/java/com/kopo17/runshoes/api/JsonServerController.java:46] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:72-74] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminPage.java:14]
-- **공개 목록은 페이지가 없다.** json-server 꼴 목록(`/api/shoes` 등)은 한 번에 전부 온다. 서버는 `_start` · `_limit` · `X-Total-Count` 를 이미 지원한다. 관리자 목록(`/api/admin/*`)은 서버가 나눈다(`{items, total, page, size}`). [code:backend/src/main/java/com/kopo17/runshoes/api/ListQuery.java:94-102] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminPage.java:15] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminPage.java:34-41]
-- **계약 시험은 매번 임시 DB 를 새로 띄운다.** 적재한 로컬 카탈로그와 다른 DB(계약 전용 임시 MySQL `runshoes-mysql-contract`, 127.0.0.1:3309, tmpfs)를 쓰고 로컬 개발 DB(`runshoes-mysql-dev`, :3307)에는 닿지 않는다 — 돌린 뒤 적재를 다시 하지 않아도 된다. [code:contract/run-spring-local.sh:13-16] [code:contract/run-spring-local.sh:65] [code:contract/README.md:114]
+- **공개 목록은 메모리에서 거른다.** json-server 꼴 목록(`/api/shoes` 등)은 302켤레 전체를 읽어 거르고 정렬한다. 데이터가 커지면 SQL 로 옮길 자리다. 관리자 목록(`/api/admin/*`)은 SQL 이 거르고 자른다. 안 하는 까닭: JS 문자열 비교, lodash 정렬을 SQL 로 흉내 내는 것보다 정확하다. (2026-11-15 기준) [c:85b9677] [code:backend/src/main/java/com/kopo17/runshoes/api/JsonServerController.java:46] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:72-74] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminPage.java:14]
 
 #### 5. 검증 항목
 

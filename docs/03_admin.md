@@ -170,12 +170,11 @@
 
 #### 4. 남은 한계
 
+- **와이드 "없음"의 출처는 관리 폼만 요구한다.** API 로 직접 쓰면 출처 없는 `false` 가 들어갈 수 있다. 안 하는 까닭: 서버도 요구하려면 옛 계약(W30 · W36)을 의도한 변경으로 받아들여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] [code:src/pages/ShoeForm.tsx:225]
+
+**조건: 우리가 고르지 않은 것**
 - **보완 필요가 많다.** 302켤레 중 261켤레에 빈 칸이 있다. 대부분 발볼 · 와이드 · 가격이다 — 와이드는 재조사가 채운다(`01a_catalog_sources.md` 1-7). [docs:01a_catalog_sources.md] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: 302, 261 은 운영에서 센 수 -->
-- **수정 이력은 마지막 한 번만 행에 있다.** 그 전 이력은 활동 로그(`shoe.update`, 180일)에만 있고, 바뀐 칸 이름만 남는다 — 이전 값은 어디에도 없다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:34-35] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:270] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityCleanup.java:39] [code:backend/src/main/resources/application.yml:48]
-- **서버는 와이드 "없음"의 출처를 보지 않는다.** API 로 직접 쓰면 출처 없는 `false` 가 들어갈 수 있다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31]
 - **동시 수정을 막지 않는다.** 두 관리자가 같은 신발을 고치면 나중 저장이 이긴다(관리자는 사실상 한 명). [code:src/pages/ShoeForm.tsx:302-306]
-- **숨긴 첫 리뷰가 있으면 같은 사람이 그 신발에 새 첫 리뷰를 쓰지 못한다(409).** 숨긴 행에도 `uk_reviews_user_first_shoe` 가 걸린다 — 작성자에게는 리뷰가 안 보이는데 「이미 썼다」가 뜬다. [code:backend/src/main/resources/db/migration/V3__auth.sql:61] [code:src/components/reviewRules.ts:26]
-- **와이드 "없음"의 출처는 관리 폼만 요구한다.** 서버도 요구하려면 옛 계약(W30 · W36)을 의도한 변경으로 받아들여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:30] [code:src/pages/ShoeForm.tsx:225]
 
 #### 5. 검증 항목
 

@@ -17,6 +17,7 @@
 | access | JWT HS256 **15분**. `sub`(user id) · `role` · `sid`(refresh family) · `jti` | 프런트 **메모리**만 [code:backend/src/main/java/com/kopo17/runshoes/auth/TokenService.java:42-51] [code:backend/src/main/resources/application.yml:31] [code:src/auth/session.ts:5] |
 | refresh | 불투명 256bit, **14일**, 쓸 때마다 새로 | 쿠키 `runshoes_refresh` — HttpOnly · Secure · SameSite=Strict · Path=`/api/auth`. DB 에는 SHA-256 만 [code:backend/src/main/java/com/kopo17/runshoes/auth/TokenService.java:60-65] [code:backend/src/main/resources/application.yml:32-33] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:29] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:123-125] |
 
+- **access token 은 만료 뒤 최대 1분 더 통한다**(시계 오차 허용 60초). [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:121] [code:backend/src/main/resources/application.yml:31]
 - **교체 · 재사용 감지** — refresh 할 때마다 새 토큰을 주고 쓴 것은 폐기(`replaced_by`). 이미 바뀐 토큰이 다시 오면 그 family(로그인 한 번)를 전부 폐기한다. 바뀐 지 10초 안이면 탭 둘의 동시 refresh 로 보고 하나 더 준다. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:37] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:123-143]
 - 로그아웃은 family 폐기 + 쿠키 삭제. 비밀번호를 바꾸면 지금 기기(`sid`)를 뺀 모든 family 를 폐기한다. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:148-153] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:71-76] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:215] [code:backend/src/main/java/com/kopo17/runshoes/auth/MeController.java:59]
 - **CSRF** — API 는 Bearer 헤더로만 인증해 대상이 아니다. 쿠키가 붙는 `/api/auth` 만 — SameSite=Strict, POST 는 Origin 이 Host 와 같아야 하고, CORS 헤더를 주지 않는다. [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:47-48] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:135-147] [code:backend/src/main/java/com/kopo17/runshoes/config/ApiHeadersFilter.java:37-39]
@@ -25,6 +26,7 @@
 - refresh 가 실패하면 **서버가 401 · 403 으로 거절했을 때만** 로그아웃시킨다. 네트워크 오류 · 5xx(롤링 배포 중의 502 · 503 등)는 세션을 그대로 두고 1초, 3초 뒤 다시 보낸다(2026-11-17, `src/auth/refreshPolicy.ts`). 기다림 합 4초는 위 10초 창 안이다 — 서버에서는 처리됐는데 응답만 사라졌을 때 다시 보내는 것이 곧 재사용이라, 10초를 넘기면 그 family 가 폐기된다. 세 번 다 닿지 못하면 로그인 상태는 두고 그 요청은 503(「서버에 연결하지 못했어요」)으로 돌려준다 — 401 이 아니라 화면이 로그인으로 보내지 않는다. [code:src/auth/refreshPolicy.ts:13-39] [code:src/auth/session.ts:77] [code:src/auth/session.ts:166-171] [code:src/auth/session.ts:186-189] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:37]
 - Spring Security 는 세션 · 폼 로그인 · CSRF 토큰 없음. Security 의 Cache-Control 은 끈다 — 계약 헤더는 `ApiHeadersFilter` 가 먼저 만든다. [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:35-36] [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:47-54]
 - 비밀은 Secret `runshoes-auth`(사람이 만든다): `JWT_SECRET` · `SEED_USER_PASSWORD`(시드 사용자 30명 공통) · `ADMIN_PASSWORD`. 계정의 비밀번호 칸이 NULL 이면 기동할 때 이 값으로 채운다(`auth/SeedPasswords`) — git 에는 평문도 해시도 없다. [code:backend/src/main/resources/application.yml:28-35] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthProperties.java:7] [code:backend/src/main/java/com/kopo17/runshoes/auth/SeedPasswords.java:38-52]
+- 챗봇은 연결할 때 한 번만 확인한다 → `09_chatbot_rag.md` 17절
 
 #### 1-2. 계정과 역할
 
@@ -62,6 +64,7 @@
 - 시드 계정 · 관리자는 닉네임 변경 · 탈퇴가 403 — 체험 카드로 들어온 누구나 시드 이름을 바꾸거나 지울 수 있게 되므로. 비밀번호 변경은 지금 비밀번호를 알아야 해 그대로. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:294-297] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:171] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:228] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:195-205]
 - env `DEMO_LOGIN_ENABLED`(기본 꺼짐)로 켠다 — 끄면 카드도 API(404)도 없다. 같은 IP 15분 30번이면 429. [code:backend/src/main/resources/application.yml:37] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:290-292] [code:src/auth/session.ts:112-116] [code:backend/src/main/resources/application.yml:42] [code:backend/src/main/resources/application.yml:45] [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:80-87]
 - 체험 안내: "누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰 · 찜은 다른 사람이 바꾸거나 지울 수 있어요". [code:src/pages/Login.tsx:95]
+- **체험 계정은 방문자가 바꾼 대로 둔다. 되돌리지 않는다**(2026-11-17 사용자). 시드 30명의 리뷰 · 찜은 방문자 손으로 바뀐다.
 - **데모 관리자는 읽기를 다 한다(2026-11-15 사용자).** 관리자 페이지의 회원 이메일 · 챗봇 대화 원문까지 admin 과 같게 본다. 쓰기(숨기기 · 영구 삭제 · 되살리기 · 잠금 풀기 · 인증 · 용어 추가 · 문의 처리 등)는 그대로 서버가 403 `demo_admin` 으로 막는다. [code:backend/src/main/java/com/kopo17/runshoes/api/Viewer.java:50-60] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:47] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:77] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java:105] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java:122-123] [code:backend/src/main/java/com/kopo17/runshoes/api/ApiException.java:25-26]
   - 까닭: 데모 관리자는 시현용이다. 읽지 못하면 화면이 비어 시현이 안 된다. 처음(11-14)에는 카드를 누구나 쓰므로 이메일 · 원문을 서버에서 뺐는데, 이 까닭으로 풀었다.
   - **실제 서비스로 가면 데모 관리자 계정을 지운다.** 그 전까지 데모 관리자 카드를 누른 누구나 가입자 이메일과 대화 원문을 읽을 수 있다. 운영에 실제 가입자가 있는지는 이 문서를 쓸 때 확인하지 않았다(운영 DB 를 직접 보지 않는다). <!-- 확인 못 함: 운영 DB 의 실제 가입자 여부, 저장소 밖 -->
@@ -81,7 +84,9 @@
 - 비밀번호를 검사하기 **전에** 센다 — 잠겨 있으면 BCrypt 를 돌리지 않는다. 성공하면 그 계정의 실패는 리셋. 막힌 시도는 실패로 세지 않는다(잠금이 길어지지 않게). [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:101-108] [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:15-17] [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:40-47]
 - **관리자가 계정 잠금을 풀 수 있다**(2026-11-14, 관리자 페이지 회원 목록). 잠김 칸을 두지 않고 `admin.login.unlock` 기록을 남겨, 계정 기준 셈이 마지막 성공 · 잠금 풀기 뒤의 실패만 본다(`RateLimiter`). 실패 기록은 지우지 않는다. IP 기준 잠금은 계정 단위로 풀 수 없다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:33-47] [code:backend/src/main/java/com/kopo17/runshoes/auth/LoginLocks.java:38] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:96-106]
 - 세는 곳은 `activity_logs` 다(Redis 없이). 실패 기록은 `REQUIRES_NEW` 로 따로 커밋한다 — 같은 트랜잭션이면 401 과 함께 사라진다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:14] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityLogger.java:24] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityLogger.java:37-38] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityLogger.java:56-58]
+- **로그인마다 `activity_logs` 를 센다.** 세는 곳이 DB 라 Pod 가 둘이어도 맞다. 지금 규모(인덱스 `idx_activity_logs_ip` · `_event`)에서는 문제가 없다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:14] [code:backend/src/main/resources/db/migration/V3__auth.sql:126-127]
 - IP 는 `CF-Connecting-IP` → `X-Forwarded-For` 첫 값 → 접속 주소 순(`RequestInfo` — 터널 뒤라 접속 주소는 cloudflared 다). [code:backend/src/main/java/com/kopo17/runshoes/auth/RequestInfo.java:7] [code:backend/src/main/java/com/kopo17/runshoes/auth/RequestInfo.java:12-17]
+- **IP 헤더는 꾸밀 수 있다.** 클러스터 안에서 VIP 로 바로 붙으면 `CF-Connecting-IP` 를 마음대로 보낼 수 있다 — IP 기준 제한은 우회되지만 계정 기준(5번)은 남는다. 시도 제한 용도로는 받아들였다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RequestInfo.java:8] [code:backend/src/main/resources/application.yml:40]
 
 #### 1-5. 활동 로그
 
@@ -119,15 +124,8 @@
 
 #### 4. 남은 한계
 
-- **비밀번호 찾기가 없다.** 메일 발송이 없다 — 잊으면 새로 가입해야 한다. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:45-98]
-- **체험 계정의 기록은 누구나 바꾼다.** 시드 30명의 리뷰 · 찜은 방문자 손으로 바뀌고 되돌리지 않는다.
-- **CSP 가 없다.** 화면 검증 뒤 올리기로 하고 아직이다.
-- **access token 은 만료 뒤 최대 1분 더 통한다**(시계 오차 허용 60초). [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:121] [code:backend/src/main/resources/application.yml:31]
-- **활동 로그를 읽는 화면 · API 가 없다.** 챗봇이 읽는 것도 아직이다. [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityController.java:49]
-- **챗봇은 연결할 때 한 번만 확인한다**(2026-11-13 사용자). 연결 직후 첫 프레임 `{type:"auth", token}` 을 챗봇이 같은 Pod 의 `GET 127.0.0.1:3000/api/me` 로 확인한다(URL 에 토큰을 넣지 않는다 — `09_chatbot_rag.md` 17절). 메시지마다 보지 않으므로 연결 중에 토큰이 만료되거나 다른 탭에서 로그아웃 · 탈퇴해도 그 연결은 창을 닫을 때까지 이어진다. 같은 탭의 로그아웃은 화면이 소켓을 닫는다. [code:chatbot/server.py:3-4] [code:chatbot/server.py:61] [code:chatbot/http.py:13] [code:chatbot/http.py:57] [code:src/components/ChatBot.tsx:61] [code:src/components/ChatBot.tsx:144-153] [code:src/components/ChatBot.tsx:281] [docs:09_chatbot_rag.md]
-- **실사용 후기(FOLLOWUP) 화면이 없다.** 칸과 규칙은 V3 에 있다 — 시드 밖 신발에 리뷰가 쌓이는 길. [code:backend/src/main/resources/db/migration/V3__auth.sql:44-54]
-- **IP 헤더는 꾸밀 수 있다.** 클러스터 안에서 VIP 로 바로 붙으면 `CF-Connecting-IP` 를 마음대로 보낼 수 있다 — IP 기준 제한은 우회되지만 계정 기준(5번)은 남는다. 시도 제한 용도로는 받아들였다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RequestInfo.java:8] [code:backend/src/main/resources/application.yml:40]
-- **로그인마다 `activity_logs` 를 센다.** 세는 곳이 DB 라 Pod 가 둘이어도 맞다. 지금 규모(인덱스 `idx_activity_logs_ip` · `_event`)에서는 문제가 없다. [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:14] [code:backend/src/main/resources/db/migration/V3__auth.sql:126-127]
+- **비밀번호 찾기가 없다.** 메일 발송이 없다 — 잊으면 새로 가입해야 한다. 안 하는 까닭: 메일 발송 수단이 없다. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:45-98]
+- **CSP 가 없다.** 화면 검증 뒤 올리기로 하고 아직이다. 안 하는 까닭: 화면 검증 뒤 올리기로 미뤘다.
 
 #### 5. 검증 항목
 

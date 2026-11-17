@@ -65,6 +65,7 @@
 #### 1-7. 하지 않는 것
 
 - 장식용 그라데이션(히어로 이미지 위 가독성용 어두운 오버레이 · 옅은 상자 바탕은 허용) · 카드 드롭섀도 · 이모지(좋아요와 챗봇 말풍선에 쓰는 것은 둔다) · 딥 틸 · 코랄 밖의 유채색(챗봇 청록은 둔다) · 모든 요소를 같은 회색 카드에 담기 · 균일한 여백 · 커머스 요소 · 각도 · 방향 · 배율이 서로 다른 신발 이미지. [code:src/components/ShoeCard.css:1-8] [code:src/components/ReviewItem.tsx:58] [code:src/components/ChatBot.tsx:286] [code:src/pages/Account.tsx:352] [code:src/pages/adminmy/Reviews.tsx:155]
+- **다크 모드를 두지 않는다.** 러닝화를 고르는 화면이라 밝은 바탕 하나로 간다. [code:src/index.css:1-29]
 
 #### 2. 왜 이렇게 했나
 
@@ -79,12 +80,11 @@
 - **보조 강조색 코랄을 더했다(2026-11-01 사용자).** 처음 원칙은 "강조색은 딥 틸 하나"였다. 그런데 AI 리뷰 요약 상자가 베스트 리뷰(옅은 틸)와 구분되지 않았고(그 전에는 앰버였다), 관리 화면의 "보완 필요" 탭은 할 일이라 다른 탭과 구분돼야 했다. 둘을 구분하는 보조 강조색으로 코랄을 정했다. [code:src/index.css:14-18] [code:src/components/ReviewSummary.css:3-5] [code:src/pages/Admin.css:327-336]
 - **코랄을 바탕용과 글자용으로 나눴다(2026-11-01).** 원색 `#FF7A59` 는 흰 바탕 대비 2.57:1 이라 글자 · 선으로 쓰면 읽기 어렵다. 옅은 바탕 · 테두리는 원색에서(`--coral-soft` · `--coral-border`), 글자 · 선 · 고른 탭은 진한 코랄 `#C2462A`(`--coral-strong`, 흰 바탕 5.0:1)로 나눴다. [code:src/index.css:14-18]
 - **화면 다듬기(2026-10-30 사용자).** 마이페이지 · 관리 폼의 제목 크기를 홈 정렬과 같은 토큰으로, 체험 카드 · 갤러리 화살표를 SVG 로(지금 체험 카드에는 화살표가 없다), 찜 카드를 행택 모양(끈 구멍 · 바코드)으로. 자세한 것은 `02_screens.md` 3절. [code:src/tokens.css:71-81] [code:src/components/DemoCards.tsx:4-6] [code:src/components/Chevron.tsx:1-2] [code:src/components/Barcode.tsx:1-5] [code:src/pages/Account.css:632] [docs:02_screens.md]
+- 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/Header.tsx:17]
 
 #### 4. 남은 한계
 
-- **토큰 밖의 무채색이 있다.** 무채색으로는 챗봇 회색 셋과 헤더 관리 링크 왼쪽 선 `#000000`(`Header.css`)이 토큰 밖이다. 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] [code:src/components/Header.tsx:17]
-- **리뷰 요약 상자의 옅은 그라데이션.** 장식용 그라데이션을 쓰지 않는다는 원칙의 경계에 있다(코랄 옅은 배경 → 더 옅은 배경). [code:src/components/ReviewSummary.css:3]
-- **다크 모드가 없다.** [code:src/index.css:1-29]
+**조건: 우리가 고르지 않은 것**
 - **이미지 각도 통일은 데이터에 달렸다.** 카탈로그 302켤레의 대표 이미지는 같은 방향 정측면을 고르지만, 출처 사진에 따라 배율 · 여백이 조금씩 다르다. [docs:01b_catalog_images.md] (2026-11-02 기준) [c:a6bf21e]
 
 #### 5. 검증 항목
