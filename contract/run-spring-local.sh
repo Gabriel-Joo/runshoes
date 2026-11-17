@@ -36,6 +36,29 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# 증거(2026-11-17) — 관리자 로그인 X00 이 265번 중 1번 401 이었는데 앱 로그가 없어 까닭을 못 찾았다(docs/TODO.md).
+#   :3200 을 이미 누가 쓰면 멈추고, 90초 안에 준비되지 않으면 녹화하지 않고, X00 이 200 이 아니면 앱 로그 · 관리자 행을 남긴다
+EVIDENCE="$OUT-evidence"
+rm -rf "$EVIDENCE"
+save_evidence() {   # $1 = 까닭. 컨테이너가 내려가기 전에 부른다
+  mkdir -p "$EVIDENCE"
+  echo "$1 ($(date -u +%FT%T.%3NZ))" > "$EVIDENCE/why.txt"
+  docker logs runshoes-spring-dev > "$EVIDENCE/app.log" 2>&1 || true
+  # 해시는 앞 7자(알고리즘 · cost)만 — 비밀번호를 되짚을 수 있는 값은 남기지 않는다
+  docker exec "$CONTRACT_DB" mysql -urunshoes -prunshoes runshoes -e "
+    SELECT id, email, role, LEFT(password_hash, 7) AS hash_head, password_hash IS NULL AS hash_null,
+           created_at, updated_at, last_login_at, deleted_at FROM users WHERE role IN ('ADMIN', 'DEMO_ADMIN') ORDER BY id;
+    SELECT id, occurred_at, user_id, event, target_type FROM activity_logs WHERE event LIKE 'auth.%' ORDER BY id LIMIT 10;" \
+    > "$EVIDENCE/db.txt" 2>&1 || true
+  [ -f "$OUT/X00.json" ] && cp "$OUT/X00.json" "$EVIDENCE/" || true
+  echo "증거 — $EVIDENCE/ (앱 로그 · 관리자 행 · 인증 기록)"
+}
+if (exec 3<>/dev/tcp/127.0.0.1/3200) 2>/dev/null; then
+  echo ":3200 을 이미 무언가가 쓰고 있다 — 그 앱을 녹화하게 되므로 멈춘다(평가 · 적재기의 로컬 Spring, 지난 runshoes-spring-dev 등)"
+  docker ps --format '  {{.Names}}  {{.Ports}}' | grep -E '3200|spring' || true
+  exit 1
+fi
+
 # 지난 실행이 남긴 임시 DB 가 있으면 내린다(이름이 runshoes-mysql-contract 인 것만 — 개발 DB 가 아니다)
 docker stop "$CONTRACT_DB" >/dev/null 2>&1 || true
 # 설정은 docker-compose.yml 의 개발 DB 와 같다(버전 · utf8mb4 · UTC · performance_schema 끔). 볼륨 없이 tmpfs
@@ -49,6 +72,8 @@ DB_URL="jdbc:mysql://127.0.0.1:$CONTRACT_DB_PORT/runshoes?useSSL=false&allowPubl
 OLLAMA=http://127.0.0.1:9            # 본 시나리오는 Ollama 를 부르지 않는다 — 부르면 바로 실패하게 닫힌 포트
 # 로그인(V3~) — 녹화마다 새로 만든 임시 값. Secret runshoes-auth 와 상관없다. 비밀번호는 record.mjs 도 env 로 받는다(기록에는 <가림>)
 JWT_SECRET=${JWT_SECRET:-$(openssl rand -base64 48)}
+# 밖(셸 환경)에서 물려받았는지만 한 줄 — 값은 내지 않는다. 물려받은 값이 앱 · record.mjs 에 같이 가는지 볼 때 쓴다
+echo "비밀번호 — ADMIN_PASSWORD $([ -n "${ADMIN_PASSWORD:-}" ] && echo '밖에서 물려받음' || echo '이번에 새로 만듦'), SEED_USER_PASSWORD $([ -n "${SEED_USER_PASSWORD:-}" ] && echo '밖에서 물려받음' || echo '이번에 새로 만듦')"
 export SEED_USER_PASSWORD=${SEED_USER_PASSWORD:-seed$(openssl rand -hex 8)1} ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin$(openssl rand -hex 8)2}
 AUTH_ENV=(-e JWT_SECRET="$JWT_SECRET" -e SEED_USER_PASSWORD -e ADMIN_PASSWORD -e DEMO_LOGIN_ENABLED=true)   # 체험 로그인(V7) — v6 세트가 쓴다. 다른 세트에는 영향 없다
 if [ "$SET" = summary ] || [ "$SET" = v3-summary ] || [ "$SET" = v14-summary ]; then
@@ -66,12 +91,16 @@ else
     -v "$PWD/backend/target":/app:ro -v "$PWD/dist":/static:ro \
     maven:3.9-eclipse-temurin-21 nice -n 19 java -XX:MaxRAMPercentage=65 -jar /app/runshoes-0.1.0.jar >/dev/null
 fi
+READY=""
 for i in $(seq 1 90); do
   # /readyz — 앱 포트의 readiness(06 1-9). 그 전 이미지(IMAGE=…)는 /readyz 가 없어 옛 경로도 본다
-  { curl -sf -o /dev/null http://127.0.0.1:3200/readyz || curl -sf -o /dev/null http://127.0.0.1:3200/actuator/health/readiness; } && break
+  { curl -sf -o /dev/null http://127.0.0.1:3200/readyz || curl -sf -o /dev/null http://127.0.0.1:3200/actuator/health/readiness; } && { READY=$(date -u +%T.%3N); break; }
   docker ps -q -f name=runshoes-spring-dev | grep -q . || { echo "Spring 이 죽었다"; exit 1; }
   sleep 1
 done
+# 준비 전에 녹화하면 시드 비밀번호를 채우기 전(SeedPasswords)의 앱에 로그인할 수 있다 — 녹화하지 않고 실패로 끝낸다
+[ -n "$READY" ] || { echo "90초 안에 준비되지 않았다 — 녹화하지 않는다"; save_evidence "준비 안 됨(90초)"; exit 1; }
+echo "준비 — $READY UTC"
 
 # V14 요약 — 녹화 전에 배치를 한 번(웹과 같은 jar · 이미지, --spring.profiles.active=batch). 실패 · 겹침이 아니면 exit 0
 if [ "$SET" = v14-summary ]; then
@@ -101,6 +130,11 @@ case "$SET" in
 esac
 rm -rf "$OUT"
 node contract/record.mjs --base http://127.0.0.1:3200 --host runshoes.ronanlab.dev --set "$REC" --mock http://127.0.0.1:3109 --out "$OUT" | grep -E "≠ 기대|기대와 다른" || true
+# X00(관리자 로그인)이 있는 세트에서 200 이 아니면 컨테이너가 내려가기 전에 증거를 남긴다
+if [ -f "$OUT/X00.json" ]; then
+  X00_STATUS=$(node -e "console.log(require('./$OUT/X00.json').response?.status ?? '?')")
+  [ "$X00_STATUS" = 200 ] || save_evidence "X00 관리자 로그인 $X00_STATUS"
+fi
 if [ "$SET" = v14-summary ]; then
   # 녹화 중(조회 · 리뷰 쓰기)에는 Ollama 를 한 번도 부르지 않는다 · 배치는 하나씩 보낸다
   AFTER=$(curl -s "$OLLAMA/__calls"); MAXA=$(curl -s "$OLLAMA/__maxActive")
