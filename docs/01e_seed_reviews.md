@@ -109,7 +109,7 @@
 **조건: 우리가 고르지 않은 것**
 - 같은 라인 이어 신기는 21% — 기존 리뷰어가 적은 라인(현행이 카탈로그에 없는 35켤레)은 이어짐이 없다. (2026-11-09 기준) [c:89117ec] <!-- 확인 못 함: 계획 결과는 git 밖 -->
 - 리뷰 수가 적은 신발(1~3건)은 실제 평균이 μ 와 크게 다를 수 있다.
-- **새 신발에는 리뷰가 없다.** 이 규칙으로 따로 더해야 한다(넣기만 하는 2차와 같은 방식). 챗봇은 리뷰를 "등록된 리뷰"로 말한다 — 관점을 물으면 집계 · 인용과 리뷰 이야기, 후기 전반을 물으면 집계 · 인용과 리뷰 요약 블록(`09_chatbot_rag.md` 16절 운영 뒤 수정 4). [code:chatbot/branches/experience.py:12] [code:chatbot/branches/experience.py:220] [code:chatbot/branches/experience.py:388] [docs:09_chatbot_rag.md]
+- **새 신발에는 리뷰가 없다.** 이 규칙으로 따로 더해야 한다(넣기만 하는 2차와 같은 방식). 챗봇은 리뷰를 "등록된 리뷰"로 말한다 — 관점을 물으면 집계 · 인용과 리뷰 이야기, 후기 전반을 물으면 집계 · 인용과 리뷰 요약 블록(`archive/09_chatbot_rag_log.md` 운영 뒤 수정 4). [code:chatbot/branches/experience.py:12] [code:chatbot/branches/experience.py:220] [code:chatbot/branches/experience.py:388] [docs:09_chatbot_rag.md]
 
 #### 5. 검증 항목
 

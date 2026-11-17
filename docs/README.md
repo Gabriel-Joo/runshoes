@@ -41,7 +41,7 @@
 | `06_deployment.md` | CI/CD · GitOps · 클러스터 · 스키마 변경 절차 [docs:06_deployment.md] |
 | `07_database.md` | 스키마와 마이그레이션 V1~V24 [docs:07_database.md] [code:backend/src/main/resources/db/migration/] |
 | `08_compare.md` | 비교하기 — 점수 없는 비교표 · 자동 채우기 · 분포 그래프 · 내 찜 [docs:08_compare.md] |
-| `09_chatbot_rag.md` | 챗봇 RAG 설계 — 여섯 갈래 · 메모리 색인 + BM25 · 무게 환산 · 요약 배치 · 말투 · 평가, 단계별 상태(13절) [docs:09_chatbot_rag.md] |
+| `09_chatbot_rag.md` | 챗봇 RAG 설계 — 여섯 갈래 · 메모리 색인 + BM25 · 무게 환산 · 요약 배치 · 말투 · 평가, 단계별 상태(3-1절) [docs:09_chatbot_rag.md] |
 | `10_recommend.md` | 추천받기 — 배점 · 경계 · 데이터가 없을 때(중립 · 동점 규칙 · 하한선) · 발볼 칸의 성격 · 세대를 점수에 넣지 않는 이유 [docs:10_recommend.md] |
 
 #### 2. 문서 형식

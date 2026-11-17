@@ -6,31 +6,32 @@
 
 > 한 줄에 하나. 무엇이 남았는지만 적는다 — 무엇이 문제고 왜 그런지 · 어떻게 고칠지는 → 가리키는 문서에 있다. 끝나면 이 줄을 지우고, 한 일은 그 문서(3절)와 `HISTORY.md` 에 남긴다. 남은 일을 다른 문서에 따로 적지 않는다(2026-11-10 사용자 — 두 군데에 적으면 한쪽만 지우게 된다).
 
-#### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
-- [ ] **안전, 먼저 할 것**: 통증 질문의 의료 안내에 키워드 보조 그물이 없다. 라우터 LLM 이 `health_context` 를 false 로 잘못 주면 안내가 나가지 않는다. 부르기에 실패할 때만 true 로 두는 지금 방식으로는 모자라다(2026-11-17 사용자) [code:chatbot/router.py:174-181] → `09_chatbot_rag.md` 7절
+#### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 3-1절
+- [ ] **안전, 먼저 할 것**: 통증 질문의 의료 안내에 키워드 보조 그물이 없다. 라우터 LLM 이 `health_context` 를 false 로 잘못 주면 안내가 나가지 않는다. 부르기에 실패할 때만 true 로 두는 지금 방식으로는 모자라다(2026-11-17 사용자) [code:chatbot/router.py:174-181] → `09_chatbot_rag.md` 1-8절
+- [ ] 09편을 가리키는 코드 주석 42곳을 새 절 번호로 고치고, 09편 맨 아래 짝 표를 지운다. 표는 주석이 옛 번호를 가리키는 동안만 쓰는 임시 다리다. 런슈즈 문서 일이 끝난 뒤 코드 커밋으로 따로 한다(2026-11-17 사용자) → `09_chatbot_rag.md` 맨 아래 「절 번호 짝」
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
-- [ ] 5-1 남은 한계 셋 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절 · 16절
-- [ ] 5-2 경험·후기 25문항 — 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `09_chatbot_rag.md` 16절 [code:chatbot/eval/] [docs:09_chatbot_rag.md]
-- [ ] 5-2 남은 한계 — 운영에 올린 뒤 실제 질문을 보고 다시 정한다(항목마다 무엇을 볼지 적어 둠) → `09_chatbot_rag.md` 16절 「5-2 남은 한계」
-- [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기 — 지금은 5-1 처럼 거절 · 기록 → `09_chatbot_rag.md` 8절 · 16절 [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:3] [docs:09_chatbot_rag.md]
+- [ ] 5-1 남은 한계 셋 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 4-1절
+- [ ] 5-2 경험·후기 25문항 — 사용자가 초안(`chatbot/eval/golden-experience.jsonl`)을 본다 → `archive/09_chatbot_rag_log.md` 옛 16절 [code:chatbot/eval/] [docs:09_chatbot_rag.md]
+- [ ] 5-2 남은 한계 — 운영에 올린 뒤 실제 질문을 보고 다시 정한다(항목마다 무엇을 볼지 적어 둠) → `09_chatbot_rag.md` 4-2절 「5-2 남은 한계」
+- [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기 — 지금은 5-1 처럼 거절 · 기록 → `09_chatbot_rag.md` 1-9절 · `archive/09_chatbot_rag_log.md` 옛 16절 [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:3] [docs:09_chatbot_rag.md]
 - [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
-- [ ] 챗봇 로그인(연결 뒤 첫 프레임 auth — 로컬 구현 끝, 백엔드 · 인프라 변경 없음) push 뒤 운영 확인 — 로그인 전 버튼 → 안내, 체험 카드로 로그인 → 인사 · 답, 로그아웃 → 연결 닫힘, 배포 직후 챗봇 로그의 "인증 실패 — me None" 수 → `09_chatbot_rag.md` 17절 [code:chatbot/server.py:3-7] [code:chatbot/server.py:48] [code:chatbot/server.py:76] [docs:09_chatbot_rag.md]
-- [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 8절
-- [ ] 용어 사전에 통증 항목 보강(병명 → 신발 다리 · 출처 필요 · 전문의 안내를 답 앞으로 뺄지 검토) — 그때 통증 질문의 신발 이름 · 버튼을 다시 본다 → `09_chatbot_rag.md` 8절 · 16절
-- [ ] 발 유형(과내전 · 평발 · 발볼)과 증상(아프다 · 시큰하다)을 나눠 전문의 안내를 붙일지 정한다 — 지금은 모두 붙인다(임시, 사전 보강 때 기준을 세운다) → `09_chatbot_rag.md` 7절 [code:chatbot/reply.py:303-305] [docs:09_chatbot_rag.md]
-- [ ] 리랭커 판단 — 보류. 76문항 통과, Hit@5 3/3이라 검색이 못 찾는 문제가 없다. 리뷰가 늘어 검색이 흐려지거나 Hit@5가 떨어지면 그때 켠다 → `09_chatbot_rag.md` 2절 [code:chatbot/search/index.py:52] [docs:09_chatbot_rag.md] (2026-11-13 기준) [c:6d8d364]
-- [ ] 챗봇 인용 블록이 리뷰 원문을 그대로 보여 준다 — 실유저 리뷰가 들어오면 욕 · 비방도 그대로 인용된다. 리뷰 신고 기능이나 필터를 볼 때 함께 본다 → `09_chatbot_rag.md` 6절 [code:chatbot/branches/experience.py:68] [code:chatbot/branches/experience.py:206] [docs:09_chatbot_rag.md]
-- [ ] 리뷰가 약 4,600건(두 Pod 동시 임베딩 30초)에 가까워지면 색인 파일 캐시용 저장공간(호스트 NFS RWX) → `09_chatbot_rag.md` 16절 「저장공간」 [docs:09_chatbot_rag.md] (2026-11-12 기준) [c:b11e139]
-- [ ] 추천수 리랭킹 0.8/0.2 를 비율을 바꿔 돌린 평가로 다시 정한다. 지금은 비율에 따라 갈리는 문항이 Hit@5 셋뿐이다 [code:chatbot/search/index.py:20] → `09_chatbot_rag.md` 16절
-- [ ] 0건이 가장 흔한 무릎, 사이즈, 통기성(310켤레 중 241, 247, 247)을 용어 사전 보강이나 설명문에서 메운다 [code:chatbot/branches/experience.py:187] → `09_chatbot_rag.md` 16절
+- [ ] 챗봇 로그인(연결 뒤 첫 프레임 auth — 로컬 구현 끝, 백엔드 · 인프라 변경 없음) push 뒤 운영 확인 — 로그인 전 버튼 → 안내, 체험 카드로 로그인 → 인사 · 답, 로그아웃 → 연결 닫힘, 배포 직후 챗봇 로그의 "인증 실패 — me None" 수 → `09_chatbot_rag.md` 1-13절 [code:chatbot/server.py:3-7] [code:chatbot/server.py:48] [code:chatbot/server.py:76] [docs:09_chatbot_rag.md]
+- [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 1-9절
+- [ ] 용어 사전에 통증 항목 보강(병명 → 신발 다리 · 출처 필요 · 전문의 안내를 답 앞으로 뺄지 검토) — 그때 통증 질문의 신발 이름 · 버튼을 다시 본다 → `09_chatbot_rag.md` 1-9절 · `archive/09_chatbot_rag_log.md` 옛 16절
+- [ ] 발 유형(과내전 · 평발 · 발볼)과 증상(아프다 · 시큰하다)을 나눠 전문의 안내를 붙일지 정한다 — 지금은 모두 붙인다(임시, 사전 보강 때 기준을 세운다) → `09_chatbot_rag.md` 1-8절 [code:chatbot/reply.py:303-305] [docs:09_chatbot_rag.md]
+- [ ] 리랭커 판단 — 보류. 76문항 통과, Hit@5 3/3이라 검색이 못 찾는 문제가 없다. 리뷰가 늘어 검색이 흐려지거나 Hit@5가 떨어지면 그때 켠다 → `09_chatbot_rag.md` 1-3절 [code:chatbot/search/index.py:52] [docs:09_chatbot_rag.md] (2026-11-13 기준) [c:6d8d364]
+- [ ] 챗봇 인용 블록이 리뷰 원문을 그대로 보여 준다 — 실유저 리뷰가 들어오면 욕 · 비방도 그대로 인용된다. 리뷰 신고 기능이나 필터를 볼 때 함께 본다 → `09_chatbot_rag.md` 1-7절 [code:chatbot/branches/experience.py:68] [code:chatbot/branches/experience.py:206] [docs:09_chatbot_rag.md]
+- [ ] 리뷰가 약 4,600건(두 Pod 동시 임베딩 30초)에 가까워지면 색인 파일 캐시용 저장공간(호스트 NFS RWX) → `archive/09_chatbot_rag_log.md` 옛 16절 「저장공간」 [docs:09_chatbot_rag.md] (2026-11-12 기준) [c:b11e139]
+- [ ] 추천수 리랭킹 0.8/0.2 를 비율을 바꿔 돌린 평가로 다시 정한다. 지금은 비율에 따라 갈리는 문항이 Hit@5 셋뿐이다 [code:chatbot/search/index.py:20] → `archive/09_chatbot_rag_log.md` 옛 16절
+- [ ] 0건이 가장 흔한 무릎, 사이즈, 통기성(310켤레 중 241, 247, 247)을 용어 사전 보강이나 설명문에서 메운다 [code:chatbot/branches/experience.py:187] → `09_chatbot_rag.md` 4-2절
 
 #### 챗봇 — 나중에 재면 좋을 것(지금은 계측하지 않는다 — 모니터링은 챗봇 작업 뒤, 2026-11-12 사용자)
 
-- [ ] 검사에 걸려 코드 답을 낸 비율과 까닭(사실에 없는 숫자 · 금칙어 · 잘림 · 신발이 몸에 도움) → `09` 15절
+- [ ] 검사에 걸려 코드 답을 낸 비율과 까닭(사실에 없는 숫자 · 금칙어 · 잘림 · 신발이 몸에 도움) → `archive/09_chatbot_rag_log.md` 옛 15절
 - [ ] 거절 · 기록 건수 — 없는 신발 · 없는 용어 · 답하지 못한 특성(`chatbot_misses` kind 별) · 범위 밖 → `07_database.md` 1-1 [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:17] [docs:07_database.md]
 - [ ] "보러 가기" 버튼을 누른 비율(1켤레 · 비교하기) → `02_screens.md` 1-7
-- [ ] 동시 연결 수 · 연결당 대화 턴 수 · 용도 되묻기 뒤 이어서 답한 비율 → `09` 15절
+- [ ] 동시 연결 수 · 연결당 대화 턴 수 · 용도 되묻기 뒤 이어서 답한 비율 → `archive/09_chatbot_rag_log.md` 옛 15절
 
 #### 카탈로그
 

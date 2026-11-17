@@ -115,7 +115,7 @@
 
 #### 1-3a. 환산 규칙 — 무게를 270mm(M9)로 맞춘다(2026-11-10 사용자)
 
-공시 무게의 기준 사이즈가 신발마다 달라(1-3 — M8.5 · M9 · M9.5 · M10 · M10.5) 그대로는 줄을 세울 수 없다. 270mm(US M9)로 맞춘 값을 DB 가 계산해 둔다 — `shoes.weight_norm_270`(V15 생성 컬럼, API `weightNorm270`). 비교하기의 등수 · 그래프 · 비슷한 신발과 챗봇이 이 값 하나를 쓴다(`08_compare.md` 1-7, `09_chatbot_rag.md` 4절). [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:8-16] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:336] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:43] [code:chatbot/facts.py:88-89] [docs:08_compare.md] [docs:09_chatbot_rag.md]
+공시 무게의 기준 사이즈가 신발마다 달라(1-3 — M8.5 · M9 · M9.5 · M10 · M10.5) 그대로는 줄을 세울 수 없다. 270mm(US M9)로 맞춘 값을 DB 가 계산해 둔다 — `shoes.weight_norm_270`(V15 생성 컬럼, API `weightNorm270`). 비교하기의 등수 · 그래프 · 비슷한 신발과 챗봇이 이 값 하나를 쓴다(`08_compare.md` 1-7, `09_chatbot_rag.md` 1-5절). [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:8-16] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:336] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:43] [code:chatbot/facts.py:88-89] [docs:08_compare.md] [docs:09_chatbot_rag.md]
 
 | 기준 | 270mm 로 |
 |---|---|
@@ -129,7 +129,7 @@
 - **공시값에서만 환산한다.** 실측(`measured_weight_g`, 19켤레)은 넣지 않는다 — 사이트의 무게는 공시값이고(1-3), 실측은 일부 켤레에만 사람이 적은 값이라 섞으면 한 줄에 두 종류의 값이 놓인다. [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:3] [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:9-16] (2026-11-10 기준) [c:2e05859]
 - **기준 사이즈가 없거나 위 다섯 값 밖이면 null(= "기준 모름").** 추측으로 채우지 않는다. 서버는 기준 사이즈 글자를 검사하지 않아(관리 폼이 다섯 값만 고르게 한다) 다른 값이 들어가도 환산값이 null 이 될 뿐이다 — 비교에서 빠지는 쪽이 안전한 기본이다. [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:10-16] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:427] [code:src/pages/ShoeForm.tsx:16]
 - **반올림하지 않은 값을 둔다.** 화면 · 답변이 정수로 반올림하고 "약"을 붙인다. 원값을 먼저, 환산값은 보조로 쓴다("285g(280mm 기준) · 270mm로 약 271g"). [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:4] [code:src/components/compare/CompareTable.tsx:140] [code:chatbot/facts.py:6]
-- **8g 규칙 — 챗봇에서 적용한다.** 환산 뒤 차이가 8g 미만이면 우열을 말하지 않고 "거의 같은 수준"이라 한다. 계수 2.6% 는 중앙값이고 모델별로 1.66~3.60% 라, 8g 은 그 편차에서 나올 수 있는 오차 범위다. 비교하기 화면은 우열을 단언하는 곳이 없어(표는 숫자 · 배지는 전체에서의 위치 · 그래프는 순위) 넣지 않았다 — 문장으로 결론을 내는 챗봇(`09_chatbot_rag.md` 4절)이 쓴다. [code:chatbot/facts.py:19] [code:chatbot/facts.py:247] [docs:09_chatbot_rag.md]
+- **8g 규칙 — 챗봇에서 적용한다.** 환산 뒤 차이가 8g 미만이면 우열을 말하지 않고 "거의 같은 수준"이라 한다. 계수 2.6% 는 중앙값이고 모델별로 1.66~3.60% 라, 8g 은 그 편차에서 나올 수 있는 오차 범위다. 비교하기 화면은 우열을 단언하는 곳이 없어(표는 숫자 · 배지는 전체에서의 위치 · 그래프는 순위) 넣지 않았다 — 문장으로 결론을 내는 챗봇(`09_chatbot_rag.md` 1-5절)이 쓴다. [code:chatbot/facts.py:19] [code:chatbot/facts.py:247] [docs:09_chatbot_rag.md]
 - 생성 컬럼인 까닭: 무게가 바뀌는 길이 셋(관리 화면 · 적재기 · SQL)이라 따로 저장하면 한 길만 빠뜨려도 어긋난다. [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:5]
 
 #### 1-4. 드롭 · 스택 · 미드솔 · 카본
