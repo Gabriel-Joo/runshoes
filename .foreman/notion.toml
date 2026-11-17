@@ -1,0 +1,9 @@
+# Notion 게시 설정(저장소 몫). FOREMAN 게시기가 origin/main 에 push 된 판만 읽는다(FOREMAN bridge/notioncfg.py).
+# 이 파일이 있으면 저장소 몫 칸은 모두 이 파일 것을 쓰고 FOREMAN config/notion.toml [runshoes] 의 같은 칸은 보지 않는다.
+# root, docs_page, portfolio_page, ref, github 은 FOREMAN 쪽에만 둔다.
+# 2026-11-17 FOREMAN [runshoes] 의 docs, quiet_min 을 값을 바꾸지 않고 옮기고, 노션 페이지 제목을 문서의 첫 # 줄로 바꿨다(사용자).
+#   게시 원고 폴더를 notion/ 으로 바꾸는 일은 원고를 다 쓴 뒤 src 칸으로 한다.
+
+docs = "auto"
+quiet_min = 30
+title = "h1"        # 페이지 제목 = 문서의 첫 # 줄(예: 「01a 신발 데이터」)
