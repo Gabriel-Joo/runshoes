@@ -2,7 +2,7 @@
 다루는 곳: backend/src/main/resources/db/migration/, backend/src/main/java/com/kopo17/runshoes/domain/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, docker-compose.yml
 읽은 커밋: 606b730
 -->
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 MySQL 은 V13 까지 적용됐다(11-03), V14(요약) · V15(270mm 무게) · V16(무게 용어 설명)은 2026-11-10 적용 — 신발 310켤레 · 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기 — `01e_seed_reviews.md`, 공개 API `GET /api/shoes` · `/api/reviews` 로 센 수). 원천: `backend/src/main/resources/db/migration/V1~V16` · `domain/*.java` · 로컬 dev DB(V1~V16)의 `information_schema` [code:backend/src/main/resources/db/migration/V14__shoe_summaries.sql:12-23] [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:8-16] [code:backend/src/main/resources/db/migration/V16__weight_term.sql:23-25] [docs:01e_seed_reviews.md] [c:3ceae32] <!-- 확인 못 함: 운영 적용 여부와 신발, 리뷰 수는 운영 DB와 공개 API에서 센 값 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 마이그레이션은 V1~V24(마지막 `V24__chatbot_miss_note.sql`). 운영에서 쓰는 중, 운영 MySQL 은 V24 까지 적용됐다(2026-11-15, infra 런북 `v24-chatbot-miss-note.md` 실행 기록, 버전마다 적용 날짜는 1-4 표). 신발 310켤레, 리뷰 1,800건(2026-11-09 시드 리뷰 다시 만들기, `01e_seed_reviews.md`, 2026-11-17 공개 API `GET /api/shoes`, `/api/reviews` 로 다시 셈). 원천: `backend/src/main/resources/db/migration/V1~V24`, `domain/*.java`, 로컬 dev DB(V1~V16)의 `information_schema` [code:backend/src/main/resources/db/migration/V14__shoe_summaries.sql:12-23] [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:8-16] [code:backend/src/main/resources/db/migration/V16__weight_term.sql:23-25] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [docs:01e_seed_reviews.md] [c:3ceae32] <!-- 확인 못 함: 운영 적용 여부와 신발, 리뷰 수는 운영 DB와 공개 API에서 센 값 -->
 
 #### 0. 한 줄 요약
 

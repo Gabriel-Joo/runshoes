@@ -2,7 +2,7 @@
 다루는 곳: src/pages/Admin.tsx, src/pages/ShoeForm.tsx, src/pages/AdminMy.tsx, src/pages/adminmy/, src/components/, src/utils/pageGroup.ts, tests/pageGroup.test.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/resources/db/migration/, catalog/, contract/
 읽은 커밋: 606b730
 -->
-> 상태: 운영에서 쓰는 중(2026-11-02). 운영 302켤레 중 보완 필요 261 · 관리 화면에서 고친 적 있는 신발 31(공개 API `updatedAt` 로 센 수). 원천: `src/pages/Admin.tsx` · `ShoeForm.tsx` · `components/HideShoeConfirm.tsx` · `api/ShoeCollection.java` · `AdminController.java` [code:src/pages/Admin.tsx] [code:src/pages/ShoeForm.tsx] [code:src/components/HideShoeConfirm.tsx] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java] [c:a6bf21e] <!-- 확인 못 함: 302, 261, 31 은 운영 공개 API 로 센 수 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 운영 310켤레 중 보완 필요 120(2026-11-17, 공개 API `GET /api/shoes` 를 `AdminShoes` 의 빈 칸 규칙 열 가지로 센 수). 관리 화면에서 고친 적 있는 신발 31은 2026-11-02 에 공개 API `updatedAt` 로 센 수. 원천: `src/pages/Admin.tsx`, `ShoeForm.tsx`, `components/HideShoeConfirm.tsx`, `api/ShoeCollection.java`, `AdminController.java` [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:44-53] [code:src/pages/Admin.tsx] [code:src/pages/ShoeForm.tsx] [code:src/components/HideShoeConfirm.tsx] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java] [c:a6bf21e] <!-- 확인 못 함: 310, 120, 31 은 운영 공개 API 로 센 수 -->
 
 #### 0. 한 줄 요약
 

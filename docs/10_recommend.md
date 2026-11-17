@@ -2,7 +2,7 @@
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/compare/, src/pages/Recommend.tsx, src/utils/compareApi.ts, scripts/parity/
 읽은 커밋: 606b730
 -->
-> 상태: 운영(2026-11-11, 작업 3-4 — 예산 배점 20 → 10, 이미지 `4f57bc0e1537`. 운영 대조 불일치 0 · 3-3 대비 27 · 1 · 23). 계산은 서버 한 곳(`GET /api/recommend` · `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java` · `scripts/parity/reference/recommend.mjs`(기준 사본) · `src/pages/Recommend.tsx`(질문 · 그리기) [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:59-81] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:10-17] [code:scripts/parity/reference/recommend.mjs] [code:src/pages/Recommend.tsx:208] [c:4f57bc0e1537] [c:d0342aa] <!-- 확인 못 함: 운영 이미지와 운영 대조, 공개 API 수는 저장소 밖 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영 반영(2026-11-11, 작업 3-4, 예산 배점 20 → 10, 이미지 `4f57bc0e1537`. 운영 대조 불일치 0, 3-3 대비 27, 1, 23). 계산은 서버 한 곳(`GET /api/recommend`, `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java`, `scripts/parity/reference/recommend.mjs`(기준 사본), `src/pages/Recommend.tsx`(질문, 그리기) [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:59-81] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:10-17] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:39-40] [code:scripts/parity/reference/recommend.mjs] [code:src/pages/Recommend.tsx:208] [c:4f57bc0e1537] [c:d0342aa] <!-- 확인 못 함: 운영 이미지와 운영 대조, 공개 API 수는 저장소 밖 -->
 
 #### 0. 한 줄 요약
 

@@ -2,7 +2,7 @@
 다루는 곳: catalog/, src/components/CardRowSync.tsx, src/components/ShoeCard*, src/components/ShoeModal*, chatbot/search/corpus.py, chatbot/branches/
 읽은 커밋: 606b730
 -->
-> 상태: 운영 반영(2026-11-09). 운영 310켤레의 요약 · 설명이 이 규칙으로 쓰였다(`catalog/copy.json` 의 `copy_rev: rewrite-20261109-v3`). 규칙 원본과 검사기는 git 밖 작업 폴더 `catalog/local/work/copy-rewrite-20261108/`(`RULES.md` · `check.py`)에 있다. [code:catalog/copy.json:2-6] [c:c527ea9] <!-- 확인 못 함: 운영 반영과 규칙 원본, 검사기는 운영 쪽과 git 밖 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영 반영(2026-11-09). 운영 310켤레의 요약, 설명이 이 규칙으로 쓰였다(`catalog/copy.json` 에서 310켤레가 `copy_rev: rewrite-20261109-v3`, 2026-11-17 다시 셈). 규칙 원본과 검사기는 git 밖 작업 폴더 `catalog/local/work/copy-rewrite-20261108/`(`RULES.md`, `check.py`)에 있다. [code:catalog/copy.json:2-6] [c:c527ea9] <!-- 확인 못 함: 운영 반영과 규칙 원본, 검사기는 운영 쪽과 git 밖 -->
 
 #### 0. 한 줄 요약
 

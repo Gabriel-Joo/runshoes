@@ -2,7 +2,7 @@
 다루는 곳: catalog/, db.json, scripts/load-prod.sh, backend/src/main/resources/db/migration/V4__shoe_generations.sql, backend/src/main/resources/db/migration/V5__price_reference.sql, backend/src/main/resources/db/migration/V12__wide_scope.sql, backend/src/main/resources/db/migration/V15__weight_norm_270.sql
 읽은 커밋: 606b730
 -->
-> 상태: 운영 310켤레(2026-11-05 — 카탈로그 적재 309 + 시드 1, 현행 167). 스펙 · 가격 · 발볼 규칙 확정. 와이드는 값 넷(V12)으로 전체 재조사를 마쳐 운영에 넣었다(11-02, 1-7). [c:fa31029] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-8]
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영 310켤레(카탈로그 적재 309 + 시드 1, 2026-11-17 공개 API 로 310 다시 셈), 적재 대상 309 중 현행 167(`catalog/shoes.jsonl` 의 ok, partial). 스펙, 가격, 발볼 규칙 확정. 와이드는 값 넷(V12)으로 전체 재조사를 마쳐 운영에 넣었다(2026-11-02, 1-7). [c:fa31029] [code:catalog/shoes.jsonl] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-8]
 
 #### 0. 한 줄 요약
 

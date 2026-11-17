@@ -2,7 +2,7 @@
 다루는 곳: backend/src/main/resources/db/migration/, backend/, src/, chatbot/, catalog/, contract/, Jenkinsfile
 읽은 커밋: 606b730
 -->
-> 상태: 2026-11-09 까지. 날짜는 KST, 한 줄씩. 자세한 이야기는 각 문서의 3절("시도했던 것들")로 링크한다. 원천: `git log` · infra 런북 실행 기록 · 옛 기록(`archive/HISTORY.md`) [docs:archive/HISTORY.md] <!-- 확인 못 함: infra 런북 실행 기록은 인프라 저장소 -->
+> 상태: 2026-11-17 코드와 맞춰 봄, 2026-11-17 까지 적었다. 날짜는 KST, 한 줄씩. 자세한 이야기는 각 문서의 3절("시도했던 것들")로 링크한다. 원천: `git log`, infra 런북 실행 기록, 옛 기록(`archive/HISTORY.md`) [docs:archive/HISTORY.md] <!-- 확인 못 함: infra 런북 실행 기록은 인프라 저장소 -->
 
 #### 0. 한 줄 요약
 

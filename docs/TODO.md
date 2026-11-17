@@ -85,6 +85,7 @@
 - [ ] 추천 상위 3 아래에 "조건이 맞는 신발 N켤레 더"를 작은 카드 목록으로 보인다(순위는 그대로) → `10_recommend.md`
 - [ ] 서버도 와이드 "없음"의 출처를 요구할지 → `03_admin.md` 4절
 - [ ] 목록 페이지 나누기(홈 목록과 공개 목록 API) → `02_screens.md`, `05_api_contract.md`
+- [ ] 비교하기 CSS 주석의 내 찜 이름 자리 폭이 틀렸다. 주석은 190px, 150px 인데 2026-11-17 운영에서 잰 값은 스크롤바 17px 기준 205px, 165px 이다(문서 값이 맞다) [code:src/pages/Compare.css:24] [code:src/pages/Compare.css:817] → `08_compare.md` 1-4
 - [ ] 코드 주석 둘이 체험 계정을 아직 「시드 3」이라고 적는다(실제는 시드 30과 데모 관리자 1). 동작은 맞고 주석만 낡았다(2026-11-17 문서 근거 달기에서 찾음) [code:backend/src/main/resources/application.yml:36] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:80]
 - [ ] 실사용 인증을 다시 켤지 — 실사용 후기 · 기록 앱 스크린샷 같은 근거가 생긴 뒤. 칸(V3 `verified`)은 남아 있다 → `03_admin.md` 1-6 [code:backend/src/main/resources/db/migration/V3__auth.sql:57-59] [docs:03_admin.md]
 - [ ] 사전에 더한 용어를 고치거나 지울 화면 → `07_database.md`

@@ -2,7 +2,7 @@
 다루는 곳: src/, backend/, chatbot/, catalog/, contract/, scripts/, Dockerfile, Dockerfile.chatbot, Jenkinsfile, CLAUDE.md, README.md
 읽은 커밋: 606b730
 -->
-> 상태: 운영에서 쓰는 중(2026-11-05) — https://runshoes.ronanlab.dev . 신발 310켤레 · 리뷰 1,800건(2026-11-09, 시드 — `01e`) · 마이그레이션 V13. 원천: 영역 문서 01a ~ 08 · README(옛 2 · 5 · 6 · 9절) [c:89117ec] [docs:01e_seed_reviews.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] <!-- 안 맞음: 문서는 「마이그레이션 V13」, 코드는 「db/migration 에 V1 ~ V24 가 있다(마지막 V24__chatbot_miss_note.sql)」 --> <!-- 확인 못 함: 신발 310켤레, 리뷰 1,800건, 운영 중인지는 운영 DB와 운영 사이트의 값 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중, https://runshoes.ronanlab.dev . 신발 310켤레, 리뷰 1,800건(2026-11-09 시드, `01e`, 2026-11-17 공개 API 로 다시 셈), 마이그레이션 V1~V24(마지막 `V24__chatbot_miss_note.sql`). 원천: 영역 문서 01a ~ 10, README(옛 2, 5, 6, 9절) [c:89117ec] [docs:01e_seed_reviews.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [docs:09_chatbot_rag.md] [docs:10_recommend.md] <!-- 확인 못 함: 신발 310켤레, 리뷰 1,800건, 운영 중인지는 운영 DB와 운영 사이트의 값 -->
 
 #### 0. 한 줄 요약
 
@@ -77,7 +77,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 - **옛 칸이 남아 있다.** → `07_database.md` 4절 [docs:07_database.md]
 
 **조건: 우리가 고르지 않은 것**
-- **리뷰는 가상 사용자 200명이 쓴 시드 1,800건이다.** 310켤레 모두 리뷰가 있지만 3건 이하인 신발이 123켤레라, 랭킹과 추천 동점 처리와 비교의 평점은 시드가 만든 값이다(`01e_seed_reviews.md`, `08_compare.md` 4절). (2026-11-09 기준) [c:89117ec] [docs:01e_seed_reviews.md] [docs:08_compare.md] [code:backend/src/main/java/com/kopo17/runshoes/summary/StaleRule.java:7] <!-- 확인 못 함: 1,800건과 켤레별 리뷰 수는 운영 DB 값, 생성 스크립트와 글은 git 밖 -->
+- **리뷰는 가상 사용자 200명이 쓴 시드 1,800건이다.** 310켤레 모두 리뷰가 있지만 3건 이하인 신발이 123켤레라, 랭킹과 추천 동점 처리와 비교의 평점은 시드가 만든 값이다(`01e_seed_reviews.md`, `08_compare.md` 4절). (2026-11-17 운영 공개 API 로 다시 셈: 310켤레의 reviewCount 합 1,800, 3건 이하 123켤레) [c:89117ec] [docs:01e_seed_reviews.md] [docs:08_compare.md] [code:backend/src/main/java/com/kopo17/runshoes/summary/StaleRule.java:7] <!-- 확인 못 함: 생성 스크립트와 글은 git 밖 -->
 - **빈 칸이 많다.** 발볼 191 · 가격 154켤레가 정보 없음. 와이드는 재조사를 마쳐 4켤레만 비었다(`01a_catalog_sources.md` 1-7). (2026-11-05 기준) [c:fa31029] [docs:01a_catalog_sources.md] <!-- 확인 못 함: 빈 칸 수는 운영 DB 값 -->
 
 #### 다음에 할 일
