@@ -617,7 +617,7 @@ Claude 가 정한 것(지시에 없던 자리)
 - **4단계 끝(2026-11-11)**, model-service(처음 이름은 embedding-service) 운영. 17:34 등록, 펫퍼민트 search-service 17:38 원격 모드로 전환(재시작 한 번). 전후 대조 391건 다름 0, 검색 회귀 지표 같음. GPU 는 모델 한 벌(전환 뒤 3.5GB, 부하 뒤 6.4GB). 재부팅 순서는 다음 재부팅 때 확인(model-service 런북 8절). [c:b1d4e2a] <!-- 확인 못 함: model-service 운영과 GPU 값은 서버 PC -->
 - **5단계(챗봇 RAG)**, 지시서를 작업 단위로 나눠 받는다.
   - 5-1(검색 없는 갈래, 용어, 스펙, 비교, 추천): 로컬 구현과 평가 끝, 운영 반영(2026-11-12, 이미지 `e6a8642a3ed9`, V17, V18. 같은 날 문서 머지로 `13a9d3851eaf` 다시 배포, 이것이 지금 운영). `archive/09_chatbot_rag_log.md` 옛 15절. [code:backend/src/main/resources/db/migration/V17__terms_outsole_id.sql:1] [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:1] <!-- 확인 못 함: 운영 이미지 태그는 인프라 저장소 -->
-  - 5-2(검색, 경험과 후기, 특성 설명의 설명문 근거): 로컬 구현과 평가(2026-11-12, 새 마이그레이션 없음). `archive/09_chatbot_rag_log.md` 옛 16절. [code:chatbot/search/] [code:chatbot/branches/experience.py:1]
+  - 5-2(검색, 경험과 후기, 특성 설명의 설명문 근거): 운영 반영(2026-11-13, main `6bb9b1f`, 새 마이그레이션 없음) [c:6bb9b1f]. `archive/09_chatbot_rag_log.md` 옛 16절. [code:chatbot/search/] [code:chatbot/branches/experience.py:1]
   - 메서드는 1-4절의 POST 가 아니라 GET 이다. 읽기만 하는 계산이고, 보안 설정이 "GET 은 누구나, 그 밖은 로그인"이라 POST 면 두 경로만 예외로 열어야 했다(2026-11-10 사용자). [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:59] [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:63] [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:45] [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:64]
 
 #### 3-2. 구현 기록

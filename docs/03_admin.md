@@ -2,7 +2,7 @@
 다루는 곳: src/pages/Admin.tsx, src/pages/ShoeForm.tsx, src/pages/AdminMy.tsx, src/pages/adminmy/, src/components/, src/utils/pageGroup.ts, tests/pageGroup.test.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/resources/db/migration/, catalog/, contract/
 읽은 커밋: 606b730
 -->
-> 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 운영 310켤레 중 보완 필요 120(2026-11-17, 공개 API `GET /api/shoes` 를 `AdminShoes` 의 빈 칸 규칙 열 가지로 센 수). 관리 화면에서 고친 적 있는 신발 31은 2026-11-02 에 공개 API `updatedAt` 로 센 수. 원천: `src/pages/Admin.tsx`, `ShoeForm.tsx`, `components/HideShoeConfirm.tsx`, `api/ShoeCollection.java`, `AdminController.java` [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:44-53] [code:src/pages/Admin.tsx] [code:src/pages/ShoeForm.tsx] [code:src/components/HideShoeConfirm.tsx] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java] [c:a6bf21e] <!-- 확인 못 함: 310, 120, 31 은 운영 공개 API 로 센 수 -->
+> 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 운영 310켤레 중 보완 필요 120(2026-11-17, 공개 API `GET /api/shoes` 를 `AdminShoes` 의 빈 칸 규칙 열 가지로 센 수). 관리 화면에서 고친 적 있는 신발 31(2026-11-02, 그날 공개 API 에서 `updatedAt` 이 있는 신발을 센 수). 원천: `src/pages/Admin.tsx`, `ShoeForm.tsx`, `components/HideShoeConfirm.tsx`, `api/ShoeCollection.java`, `AdminController.java` [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:44-53] [code:src/pages/Admin.tsx] [code:src/pages/ShoeForm.tsx] [code:src/components/HideShoeConfirm.tsx] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java] [c:a6bf21e] <!-- 확인 못 함: 310, 120, 31 은 운영 공개 API 로 센 수 -->
 
 #### 0. 한 줄 요약
 
@@ -173,7 +173,7 @@
 - **와이드 "없음"의 출처는 관리 폼만 요구한다.** API 로 직접 쓰면 출처 없는 `false` 가 들어갈 수 있다. 안 하는 까닭: 서버도 요구하려면 옛 계약(W30, W36)을 의도한 변경으로 받아들여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] [code:src/pages/ShoeForm.tsx:225]
 
 **조건: 우리가 고르지 않은 것**
-- **보완 필요가 많다.** 302켤레 중 261켤레에 빈 칸이 있다. 대부분 발볼, 와이드, 가격이다. 와이드는 재조사가 채운다(`01a_catalog_sources.md` 1-7). [docs:01a_catalog_sources.md] (2026-11-02 기준) [c:a6bf21e] <!-- 확인 못 함: 302, 261 은 운영에서 센 수 -->
+- **보완 필요가 많다.** 몇 켤레인지는 이 편 맨 위 상태 줄에 둔다. 대부분 발볼, 와이드, 가격이다. 와이드는 재조사가 채운다(`01a_catalog_sources.md` 1-7). [docs:01a_catalog_sources.md]
 - **동시 수정을 막지 않는다.** 두 관리자가 같은 신발을 고치면 나중 저장이 이긴다(관리자는 사실상 한 명). [code:src/pages/ShoeForm.tsx:302-306]
 
 #### 5. 검증 항목
