@@ -8,6 +8,7 @@
 
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 3-1절
 - [ ] **안전, 먼저 할 것**: 통증 질문의 의료 안내에 키워드 보조 그물이 없다. 라우터 LLM 이 `health_context` 를 false 로 잘못 주면 안내가 나가지 않는다. 부르기에 실패할 때만 true 로 두는 지금 방식으로는 모자라다(2026-11-17 사용자) [code:chatbot/router.py:174-181] → `09_chatbot_rag.md` 1-8절
+- [ ] **결정을 어긴 코드, 다음 코드 일에서 먼저 볼 것**: `catalog/fill.mjs` 가 사이즈 표기 없는 공식몰 무게를 맨 뒤 묶음에 둔다. 11-06과 11-09 결정은 M9 로 보고 맨 앞 묶음에 두는 것이다. 운영에서 7켤레가 공식몰 값 대신 BITR 값으로 나가고, 그 가운데 148과 163은 `resolve_official` 사람 판단까지 무시된다(`HUMAN` 목록에 없다)(2026-11-17 사용자) [code:catalog/fill.mjs:36] [code:catalog/fill.mjs:48] [code:catalog/fill.mjs:74-76] → `01a_catalog_sources.md` 1-3
 - [ ] 09편을 가리키는 코드 주석 42곳을 새 절 번호로 고치고, 09편 맨 아래 짝 표를 지운다. 표는 주석이 옛 번호를 가리키는 동안만 쓰는 임시 다리다. 런슈즈 문서 일이 끝난 뒤 코드 커밋으로 따로 한다(2026-11-17 사용자) → `09_chatbot_rag.md` 맨 아래 「절 번호 짝」
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
@@ -17,6 +18,9 @@
 - [ ] 사전에 없는 용어("갑피가 뭐예요")를 설명문 검색으로 답하기 — 지금은 5-1 처럼 거절 · 기록 → `09_chatbot_rag.md` 1-9절 · `archive/09_chatbot_rag_log.md` 옛 16절 [code:backend/src/main/resources/db/migration/V18__chatbot_misses.sql:3] [docs:09_chatbot_rag.md]
 - [ ] 5-1 운영 반영 뒤 멀쩡한 것을 보고 태그 `archive/main-before-reword-20261112` · 백업 참조를 지울지 정하기 → `HISTORY.md` 11-12
 - [ ] 챗봇 로그인(연결 뒤 첫 프레임 auth — 로컬 구현 끝, 백엔드 · 인프라 변경 없음) push 뒤 운영 확인 — 로그인 전 버튼 → 안내, 체험 카드로 로그인 → 인사 · 답, 로그아웃 → 연결 닫힘, 배포 직후 챗봇 로그의 "인증 실패 — me None" 수 → `09_chatbot_rag.md` 1-13절 [code:chatbot/server.py:3-7] [code:chatbot/server.py:48] [code:chatbot/server.py:76] [docs:09_chatbot_rag.md]
+- [ ] 생성 검사가 숫자만 본다. 위치 말(가벼운 편 등)이나 비교 결론을 예시에서 옮겨 와도 못 잡고, 지금은 평가로만 본다 [code:chatbot/reply.py:200-204] → `09_chatbot_rag.md` 1-10절
+- [ ] 설명문을 옮기면 사전 용어가 섞인다("미드솔" 등). 스택하이트, 드롭, 미드솔 셋 밖의 쉬운 말 규칙(와이드 모델 등)은 프롬프트로만 지킨다 [code:chatbot/reply.py:193-196] [code:chatbot/prompt.py:52] → `09_chatbot_rag.md` 1-10절
+- [ ] 기록과 코드가 어긋남, 어느 쪽이 맞는지 확인: 구현 기록(`archive/09_chatbot_rag_log.md` 운영 뒤 수정 4)은 `split_sides` 를 부르는 곳만 없다고 적는데 `chatbot/branches/experience.py:425` 가 아직 부른다. 코드는 고치지 않는다(2026-11-17 사용자) [code:chatbot/branches/experience.py:425] → `09_chatbot_rag.md`
 - [ ] 용어 사전 보강 21개 → `09_chatbot_rag.md` 1-9절
 - [ ] 용어 사전에 통증 항목 보강(병명 → 신발 다리 · 출처 필요 · 전문의 안내를 답 앞으로 뺄지 검토) — 그때 통증 질문의 신발 이름 · 버튼을 다시 본다 → `09_chatbot_rag.md` 1-9절 · `archive/09_chatbot_rag_log.md` 옛 16절
 - [ ] 발 유형(과내전 · 평발 · 발볼)과 증상(아프다 · 시큰하다)을 나눠 전문의 안내를 붙일지 정한다 — 지금은 모두 붙인다(임시, 사전 보강 때 기준을 세운다) → `09_chatbot_rag.md` 1-8절 [code:chatbot/reply.py:303-305] [docs:09_chatbot_rag.md]
@@ -51,7 +55,6 @@
 - [ ] 이미지 링크 정기 확인 → `01b_catalog_images.md`
 - [ ] 이미지 1장뿐인 57켤레 — GOAT 색상 → `01b_catalog_images.md` 4절 [docs:01b_catalog_images.md] (2026-11-10 기준) [c:37e665c]
 - [ ] 사진이 없어 적재되지 않은 14켤레 — 사용자가 관리 화면에서 → `01b_catalog_images.md` 4절 [docs:01b_catalog_images.md] (2026-11-10 기준) [c:37e665c]
-- [ ] 정기 가져오기 · 정기 확인(CronJob — 보고서만) → `01c_catalog_loader.md` 4절
 - [ ] 관리 화면에서 새로 넣은 신발을 후보 목록 행으로 바꾸는 도구 → `01c_catalog_loader.md` 4절
 - [ ] 문구 규칙 · 검사기를 저장소로 옮겨 새 켤레에도 → `01d_catalog_copy.md`
 - [ ] 문구 검사기의 운영 값 사본(`live-fresh.json`)을 다시 받는다. 3차 뒤 스펙 칸 정정으로 바뀐 값 4개를 "칸에 없는 숫자"로 잡는다 [c:713022f] [c:5e476d5] → `01d_catalog_copy.md`

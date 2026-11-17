@@ -91,8 +91,7 @@
 
 #### 4. 남은 한계
 
-- **실루엣은 닮은 다른 모델 · 다음 세대를 가르지 못한다**(듀라모 SL ↔ SL 2). 상품명이 세대를 섞는 라인은 사람이 사진을 봐야 한다. [code:catalog/silhouette.py:36] [code:catalog/silhouette.py:52]
-- **StockX 가 이름으로 세대를 섞는 라인**이 더 있을 수 있다(같은 이름의 재출시 · 옛 모델). 대표 점검은 제목 낱말 · 품번 계열로만 했다. [code:catalog/stockx.mjs:123-141]
+- **실루엣은 닮은 다른 모델 · 다음 세대를 가르지 못한다**(듀라모 SL ↔ SL 2). 안 하는 까닭: 상품명이 세대를 섞는 라인은 사람이 사진을 봐야 한다. [code:catalog/silhouette.py:36] [code:catalog/silhouette.py:52]
 
 **조건: 우리가 고르지 않은 것**
 - **이미지가 1장뿐인 57켤레** — StockX 에 같은 세대 남성 색상이 더 없거나 모두 걸렀다. [code:catalog/shoes.jsonl] (2026-11-10 기준) [c:6bef573]
