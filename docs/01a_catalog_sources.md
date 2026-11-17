@@ -1,5 +1,5 @@
 <!--
-다루는 곳: catalog/, scripts/load-prod.sh, backend/src/main/resources/db/migration/V4__shoe_generations.sql, backend/src/main/resources/db/migration/V5__price_reference.sql, backend/src/main/resources/db/migration/V12__wide_scope.sql, backend/src/main/resources/db/migration/V15__weight_norm_270.sql
+다루는 곳: catalog/, db.json, scripts/load-prod.sh, backend/src/main/resources/db/migration/V4__shoe_generations.sql, backend/src/main/resources/db/migration/V5__price_reference.sql, backend/src/main/resources/db/migration/V12__wide_scope.sql, backend/src/main/resources/db/migration/V15__weight_norm_270.sql
 읽은 커밋: 606b730
 -->
 > 상태: 운영 310켤레(2026-11-05 — 카탈로그 적재 309 + 시드 1, 현행 167). 스펙 · 가격 · 발볼 규칙 확정. 와이드는 값 넷(V12)으로 전체 재조사를 마쳐 운영에 넣었다(11-02, 1-7). [c:fa31029] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-8]
@@ -151,6 +151,7 @@
 - **가격 출처는 발매가를 확인할 수 있는 곳이다** — 공식몰 · ABC마트 · 크림, 그리고 관리자가 직접 확인한 MAN. 크림은 리셀 플랫폼이지만 상품 페이지에 발매가가 표시된다 — 거래가가 아니라 그 발매가를 쓴다(브랜드가 정한 값이라 판매처 가격과 같다). 리뷰 · 영상 · 기사에 나온 가격은 쓰지 않는다(2026-11-02 사용자). [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:342-344]
 - 메타 셋을 같이 둔다(V5): `price_source` · `price_checked_at`(읽은 날) · `price_kind`(늘 `발매가`). [code:backend/src/main/resources/db/migration/V5__price_reference.sql:10-13] [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:347] [code:catalog/build.mjs:105-106]
 - 시드 20켤레 중 ABC · 공식몰에 없는 것은 사용자가 다나와에서 넣은 값을 `다나와` 로 표시해 둔다(6켤레). [code:catalog/build.mjs:322-325] (2026-11-02 기준) [c:a6bf21e]
+- 시드 20켤레의 값은 저장소 맨 위 `db.json`에서 온다. 카탈로그 빌드는 이 켤레들을 다시 수집하지 않고 그 값을 읽는다. [code:catalog/build.mjs:150] [code:catalog/build.mjs:155]
 - 운영: 공식몰 76 · 크림 51 · ABC마트 25 · 다나와 5 · MAN 1 · **빈 칸 145**(2026-11-03, API 에서 세어서). 울트라부스트 5 의 다나와 239,000 은 비웠다(11-03 — 다나와의 GTX 출시가와 같았고, 아디다스 국내몰은 약관을 못 읽어 열지 않는다). [c:55e8910] [code:catalog/sources.yaml:41-42]
 
 #### 1-6. 발볼(토박스 너비)

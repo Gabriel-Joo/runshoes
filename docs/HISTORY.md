@@ -90,6 +90,7 @@ React + json-server 과제로 시작해(2026-07), 학교 클러스터 → 자체
 | 11-15 | **등록·관리 탭 이름을 「신발 관리」로 바꿈**(주소 `/admin` 그대로) — 챗봇 문의를 마이페이지로 옮겨 신발 전용 탭이 됐다. 이 줄 전의 기록에 나오는 「등록·관리」는 이 탭이다 | `03` 1-1 [docs:03_admin.md] [code:src/App.tsx:37] |
 | 11-15 | **관리자 화면 수정 운영 반영**(V24) — 위 다섯 줄을 한 squash 커밋으로. main `85b9677` · 이미지 `85b9677ca8d6`, 인프라 태그 `2684851`, 런북 `v24-chatbot-miss-note.md`. 원본 · 복제본에 `decided_note`, Sync 전후 공개 리뷰 1,800 · 신발 310 지문 같음, 데모 관리자로 신발 관리 탭(310개 · 20개씩) · 문의 탭 확인. 자동 Sync 끔은 사람이 붙인 출력으로 확인한 뒤 push | `03` 1-6 · `07` 1-4 [docs:03_admin.md] [docs:07_database.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [c:c0d9fc2] [c:85b9677] [c:85b9677ca8d6] <!-- 확인 못 함: 인프라 커밋 해시는 이 저장소에 없다, 운영 DB 지문은 운영 쪽 --> |
 | 11-15 | **관리자의 마이페이지 이름을 「관리자 페이지」로 바꿈**(주소 `/account` 그대로) — 관리자 · 데모 관리자의 머리 메뉴 · 서랍 · 왼쪽 목차 제목. 일반 회원은 「마이페이지」 그대로. 이 줄 전의 기록에 나오는 「관리자 마이페이지」는 이 화면이다. 확인 창은 낱말 중간에서 줄을 바꾸지 않게 함(글 · 창 폭 그대로) | `02` 1-6 · `03` 1-6 [docs:02_screens.md] [docs:03_admin.md] [code:src/App.tsx:35] |
+| 11-17 | **옛 json-server 실행 파일을 지움**: `server.cjs`, `start_server.sh`, `package.json`의 `server` 스크립트. 10-18에 이미지가 Spring으로 바뀐 뒤 부르는 곳이 없었다. `db.json`은 카탈로그 빌드가 시드 20켤레의 값을 읽어 남김 | `01a` [docs:01a_catalog_sources.md] [code:Dockerfile:8] [code:catalog/build.mjs:155] |
 
 #### 2. 운영 스키마 적용
 

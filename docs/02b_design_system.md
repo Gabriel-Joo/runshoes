@@ -29,7 +29,7 @@
 | `--border` · `--border-light` | `oklch(0.8 0 0)` · `oklch(0.85 0 0)` | 격자선 · 프레임 안쪽 선 [code:src/index.css:23-24] |
 | `--danger` · `--danger-soft` | `oklch(0.5 0.18 25)` · `oklch(0.7 0.12 25)` | 오류 문구 · 지우기 [code:src/index.css:20-21] |
 
-- **강조색은 딥 틸, 보조 강조색은 코랄.** 딥 틸은 "고른 것 · 내 것 · 점수"에, 코랄은 그와 구분해야 하는 것(AI 요약 · 할 일 · 비교 화면의 주의 줄 · 다른 신발 표시)에만 쓴다. 그 밖의 유채색은 쓰지 않는다. [code:src/index.css:3] [code:src/index.css:14-18] [code:src/components/ChatBot.css:12] <!-- 안 맞음: 문서는 「그 밖의 유채색은 쓰지 않는다」, 코드는 ChatBot.css:12 「background: #14807a;」 등 토큰 밖 청록이 있다(4절이 한계로 적음) -->
+- **강조색은 딥 틸, 보조 강조색은 코랄.** 딥 틸은 "고른 것 · 내 것 · 점수"에, 코랄은 그와 구분해야 하는 것(AI 요약 · 할 일 · 비교 화면의 주의 줄 · 다른 신발 표시)에만 쓴다. 챗봇 단추와 말풍선은 청록 `#14807a`를 쓴다(아직 `index.css` 토큰이 아니다). 그 밖의 유채색은 쓰지 않는다. [code:src/index.css:3] [code:src/index.css:14-18] [code:src/components/ChatBot.css:12]
 - 무채색은 oklch 로 명도만 바꾼다. [code:src/index.css:4-12] [code:src/index.css:23-24]
 
 #### 1-3. 글꼴
@@ -51,7 +51,7 @@
 - **칩 · 토글** — 완전 둥근 모서리(`border-radius: 100px`). [code:src/components/FilterBar.css:24] [code:src/components/SortBar.css:36]
 - **여백 리듬** — 섹션 사이는 크게(24~40px), 카드 안은 촘촘하게(6~18px).
 - **히어로** — 어두운 바탕에 용어 해부도 사진 3장(드롭 · 아웃솔 · 스택하이트)이 4초마다 넘어가는 슬라이드. 라이브러리 없이 `setInterval` + 정리. [code:src/components/Hero.tsx:6-22] [code:src/components/Hero.tsx:28-31]
-- **드롭다운** — `appearance: none` + 배경 화살표(오른쪽 12px, 안쪽 여백 36px), 모든 `<select>` 공통. [code:src/pages/ShoeForm.css:166-174] [code:src/pages/AdminMy.css:64-72] <!-- 안 맞음: 문서는 「오른쪽 12px, 안쪽 여백 36px, 모든 select 공통」, 코드는 관리 폼 `.form select` 만 「padding-right: 36px; background-position: right 12px center」이고 관리자 페이지 고르기 칸 `.adminmy__choice` 는 「padding: 4px 30px 4px 10px; background-position: right 10px center」 -->
+- **드롭다운** — `appearance: none` + 배경 화살표. 관리 폼은 오른쪽 12px, 안쪽 여백 36px이고 관리자 페이지 고르기 칸은 오른쪽 10px, 안쪽 여백 30px로 아직 같지 않다(`TODO.md`). [code:src/pages/ShoeForm.css:166-174] [code:src/pages/AdminMy.css:64-72]
 - **화살표** — 글자 ‹ › 대신 SVG `Chevron`(글꼴 기준선 때문에 가운데가 맞지 않았다). [code:src/components/Chevron.tsx:1-2]
 
 #### 1-6. 반응형
@@ -64,7 +64,7 @@
 
 #### 1-7. 하지 않는 것
 
-- 장식용 그라데이션(히어로 이미지 위 가독성용 어두운 오버레이 · 옅은 상자 바탕은 허용) · 카드 드롭섀도 · 이모지 · 딥 틸 · 코랄 밖의 유채색 · 모든 요소를 같은 회색 카드에 담기 · 균일한 여백 · 커머스 요소 · 각도 · 방향 · 배율이 서로 다른 신발 이미지. [code:src/components/ShoeCard.css:1-8] [code:src/components/ReviewItem.tsx:58] [code:src/components/ChatBot.tsx:286] <!-- 안 맞음: 문서는 「하지 않는 것: 이모지」, 코드는 ReviewItem.tsx:58 「const likeLabel = `👍 도움이 돼요 ${review.likeCount ?? 0}`;」, ChatBot.tsx:286 「{isOpen ? "✕" : "💬"}」, Account.tsx:352 와 adminmy/Reviews.tsx:155 의 👍 -->
+- 장식용 그라데이션(히어로 이미지 위 가독성용 어두운 오버레이 · 옅은 상자 바탕은 허용) · 카드 드롭섀도 · 이모지(좋아요와 챗봇 말풍선에 쓰는 것은 둔다) · 딥 틸 · 코랄 밖의 유채색(챗봇 청록은 둔다) · 모든 요소를 같은 회색 카드에 담기 · 균일한 여백 · 커머스 요소 · 각도 · 방향 · 배율이 서로 다른 신발 이미지. [code:src/components/ShoeCard.css:1-8] [code:src/components/ReviewItem.tsx:58] [code:src/components/ChatBot.tsx:286] [code:src/pages/Account.tsx:352] [code:src/pages/adminmy/Reviews.tsx:155]
 
 #### 2. 왜 이렇게 했나
 
@@ -78,11 +78,11 @@
 - **히어로 해부도 3분할 → 사진 슬라이드.** 시안은 신발 한 짝이 패널 셋에 걸쳐 이어지고 라벨이 부위에 선으로 붙는 정지 화면이었다. 지금은 용어별 사진 3장이 넘어가는 슬라이드다. [code:src/components/Hero.tsx:6-22]
 - **보조 강조색 코랄을 더했다(2026-11-01 사용자).** 처음 원칙은 "강조색은 딥 틸 하나"였다. 그런데 AI 리뷰 요약 상자가 베스트 리뷰(옅은 틸)와 구분되지 않았고(그 전에는 앰버였다), 관리 화면의 "보완 필요" 탭은 할 일이라 다른 탭과 구분돼야 했다. 둘을 구분하는 보조 강조색으로 코랄을 정했다. [code:src/index.css:14-18] [code:src/components/ReviewSummary.css:3-5] [code:src/pages/Admin.css:327-336]
 - **코랄을 바탕용과 글자용으로 나눴다(2026-11-01).** 원색 `#FF7A59` 는 흰 바탕 대비 2.57:1 이라 글자 · 선으로 쓰면 읽기 어렵다. 옅은 바탕 · 테두리는 원색에서(`--coral-soft` · `--coral-border`), 글자 · 선 · 고른 탭은 진한 코랄 `#C2462A`(`--coral-strong`, 흰 바탕 5.0:1)로 나눴다. [code:src/index.css:14-18]
-- **화면 다듬기(2026-10-30 사용자).** 마이페이지 · 관리 폼의 제목 크기를 홈 정렬과 같은 토큰으로, 체험 카드 · 갤러리 화살표를 SVG 로, 찜 카드를 행택 모양(끈 구멍 · 바코드)으로. 자세한 것은 `02_screens.md` 3절. [code:src/tokens.css:71-81] [code:src/components/DemoCards.tsx:4-6] [code:src/components/Chevron.tsx:1-2] [code:src/components/Barcode.tsx:1-5] [code:src/pages/Account.css:632] [docs:02_screens.md] <!-- 안 맞음: 문서는 「체험 카드 화살표를 SVG 로」, 코드는 DemoCards.tsx:6 「놓으면 관성으로 미끄러지다 멈춘 뒤 다시 흐른다(화살표는 없다).」로 지금 체험 카드에는 화살표가 없다(지난 일의 기록일 수 있음) -->
+- **화면 다듬기(2026-10-30 사용자).** 마이페이지 · 관리 폼의 제목 크기를 홈 정렬과 같은 토큰으로, 체험 카드 · 갤러리 화살표를 SVG 로(지금 체험 카드에는 화살표가 없다), 찜 카드를 행택 모양(끈 구멍 · 바코드)으로. 자세한 것은 `02_screens.md` 3절. [code:src/tokens.css:71-81] [code:src/components/DemoCards.tsx:4-6] [code:src/components/Chevron.tsx:1-2] [code:src/components/Barcode.tsx:1-5] [code:src/pages/Account.css:632] [docs:02_screens.md]
 
 #### 4. 남은 한계
 
-- **토큰 밖의 유채색이 하나 있다.** 챗봇 단추 · 말풍선 `#14807a`(`ChatBot.css`, 딥 틸과 비슷하지만 다른 값). 원칙("딥 틸 외의 유채색 없음")과 다르고 토큰도 아니다. 무채색으로는 챗봇 회색 셋과 헤더 관리 링크 왼쪽 선 `#000000`(`Header.css`)이 토큰 밖이다. 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/ChatBot.css:12] [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] [code:src/components/Header.tsx:17]
+- **토큰 밖의 무채색이 있다.** 무채색으로는 챗봇 회색 셋과 헤더 관리 링크 왼쪽 선 `#000000`(`Header.css`)이 토큰 밖이다. 헤더 "맞춤 추천" 링크의 파랑 `#2a6f97` 은 메뉴를 같은 색 · 지금 화면만 강조색으로 바꾸며 없앴다(2026-11-09). [code:src/components/ChatBot.css:79] [code:src/components/ChatBot.css:94] [code:src/components/ChatBot.css:183] [code:src/components/Header.css:63] [code:src/components/Header.tsx:17]
 - **리뷰 요약 상자의 옅은 그라데이션.** 장식용 그라데이션을 쓰지 않는다는 원칙의 경계에 있다(코랄 옅은 배경 → 더 옅은 배경). [code:src/components/ReviewSummary.css:3]
 - **다크 모드가 없다.** [code:src/index.css:1-29]
 - **이미지 각도 통일은 데이터에 달렸다.** 카탈로그 302켤레의 대표 이미지는 같은 방향 정측면을 고르지만, 출처 사진에 따라 배율 · 여백이 조금씩 다르다. [docs:01b_catalog_images.md] (2026-11-02 기준) [c:a6bf21e]

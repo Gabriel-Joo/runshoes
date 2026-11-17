@@ -1,5 +1,5 @@
 <!--
-다루는 곳: src/, backend/, chatbot/, catalog/, contract/, scripts/, Dockerfile, Dockerfile.chatbot, Jenkinsfile
+다루는 곳: src/, backend/, chatbot/, catalog/, contract/, scripts/, Dockerfile, Dockerfile.chatbot, Jenkinsfile, CLAUDE.md, README.md
 읽은 커밋: 606b730
 -->
 > 상태: 운영에서 쓰는 중(2026-11-05) — https://runshoes.ronanlab.dev . 신발 310켤레 · 리뷰 1,800건(2026-11-09, 시드 — `01e`) · 마이그레이션 V13. 원천: 영역 문서 01a ~ 08 · README(옛 2 · 5 · 6 · 9절) [c:89117ec] [docs:01e_seed_reviews.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] <!-- 안 맞음: 문서는 「마이그레이션 V13」, 코드는 「db/migration 에 V1 ~ V24 가 있다(마지막 V24__chatbot_miss_note.sql)」 --> <!-- 확인 못 함: 신발 310켤레, 리뷰 1,800건, 운영 중인지는 운영 DB와 운영 사이트의 값 -->

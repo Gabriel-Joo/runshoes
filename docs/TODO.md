@@ -7,6 +7,7 @@
 > 한 줄에 하나. 무엇이 남았는지만 적는다 — 무엇이 문제고 왜 그런지 · 어떻게 고칠지는 → 가리키는 문서에 있다. 끝나면 이 줄을 지우고, 한 일은 그 문서(3절)와 `HISTORY.md` 에 남긴다. 남은 일을 다른 문서에 따로 적지 않는다(2026-11-10 사용자 — 두 군데에 적으면 한쪽만 지우게 된다).
 
 #### 챗봇 RAG — 단계는 `09_chatbot_rag.md` 13절
+- [ ] **안전, 먼저 할 것**: 통증 질문의 의료 안내에 키워드 보조 그물이 없다. 라우터 LLM 이 `health_context` 를 false 로 잘못 주면 안내가 나가지 않는다. 부르기에 실패할 때만 true 로 두는 지금 방식으로는 모자라다(2026-11-17 사용자) [code:chatbot/router.py:174-181] → `09_chatbot_rag.md` 7절
 
 - [ ] model-service 재부팅 순서 확인(다음 재부팅 때) → `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
 - [ ] 5-1 남은 한계 넷 — 5-2 뒤 다시 보고, 남아 있으면 고친다 → `09_chatbot_rag.md` 15절 · 16절
@@ -57,6 +58,8 @@
 - [ ] 설명문 310켤레 다시 쓰기는 보류했다 — 운영 글은 그대로(사용자 2026-11-17). BITR 을 뺀 새 판은 스펙 칸 되풀이만 남아 지금 글보다 못했고, 사실과 평가가 한 문장에 엉켜 평가만 빼는 것도 되지 않는다. 다시 볼 때 시작점 → 로컬 브랜치 `keep/copy-310-rewrite-20261115` · git 밖 `catalog/local/work/copy-310-20261115/README.md`
 
 #### 화면 · 계정 · API
+- [ ] 드롭다운 여백을 12/36 으로 통일한다. 관리자 페이지 고르기 칸만 오른쪽 10px, 안쪽 여백 30px 이다(2026-11-17 사용자) [code:src/pages/AdminMy.css:64-72] [code:src/pages/ShoeForm.css:166-174] → `02b_design_system.md` 1-5
+- [ ] 챗봇 청록 `#14807a` 를 `index.css` 토큰으로 올린다. 쓰기로 한 색인데 아직 토큰이 아니다(2026-11-17 사용자) [code:src/components/ChatBot.css:12] → `02b_design_system.md` 1-2
 
 - [ ] 실사용 후기(FOLLOWUP) 화면 → `04_auth.md` 4절
 - [ ] 토큰 밖 색 둘을 토큰으로 옮길지 → `02b_design_system.md` 4절
