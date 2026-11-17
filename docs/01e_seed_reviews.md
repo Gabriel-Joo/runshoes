@@ -2,6 +2,7 @@
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/domain/UserRepository.java, backend/src/main/java/com/kopo17/runshoes/api/Ratings.java, backend/src/main/java/com/kopo17/runshoes/api/ReviewCollection.java, backend/src/main/resources/db/migration/V3__auth.sql, chatbot/branches/experience.py
 읽은 커밋: 606b730
 -->
+# 01e 시드 리뷰
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영 반영(2026-11-09). 리뷰 1,800건, 찜 2,090, 도움이 돼요 3,893, 신발 310켤레 모두 리뷰가 있다(2026-11-17 공개 API `GET /api/shoes`, `/api/reviews` 로 다시 셈). 생성 스크립트, 글, 적재 SQL 은 git 밖 작업 폴더 `catalog/local/work/reviews-20261109/`(결과는 운영에만 있으면 된다, 2026-11-09 사용자), 적재 절차와 실행 기록은 infra `apps/runshoes/runbooks/reviews-1500.md`. [c:89117ec] <!-- 확인 못 함: 운영 DB 의 수, git 밖 작업 폴더, 인프라 저장소 런북 -->
 
 #### 0. 한 줄 요약

@@ -2,6 +2,7 @@
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx, tests/refreshPolicy.test.ts
 읽은 커밋: 606b730
 -->
+# 04 로그인과 계정
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 체험 로그인 켜짐, `GET /api/auth/demo-accounts` 가 31장(시드 30 + 데모 관리자)을 준다(2026-11-17 공개 API 로 다시 확인). 원천: `backend/…/auth/*`, `activity/*`, `application.yml`, `V3`, `V7`, `V9`, `src/auth/*`, `pages/Login.tsx`, `Signup.tsx`, `Account.tsx` [c:a6bf21e] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:245-248] [code:backend/src/main/resources/db/migration/V3__auth.sql:136-165] [code:backend/src/main/resources/application.yml:37] <!-- 확인 못 함: 운영에서 체험 로그인이 켜졌는지와 31장은 운영 env 와 공개 API 의 값, 저장소 기본값은 꺼짐 -->
 
 #### 0. 한 줄 요약

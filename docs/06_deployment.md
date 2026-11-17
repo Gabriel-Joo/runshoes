@@ -2,6 +2,7 @@
 다루는 곳: Jenkinsfile, Dockerfile, Dockerfile.chatbot, .dockerignore, backend/src/main/resources/application.yml, scripts/load-prod.sh
 읽은 커밋: 606b730
 -->
+# 06 배포
 > 상태: 2026-11-17 코드와 인프라 저장소 매니페스트로 맞춰 봄(읽기만, 클러스터는 보지 않음). infra 매니페스트(`081d6e4`, 2026-11-17)의 이미지 태그 `606b73052c41`(앱 커밋 `606b730`), 자동 Sync 켜짐(`prune: false, selfHeal: false`), Deployment replicas 2(컨테이너 2, 노드 분산, PDB, 2026-11-10부터, 1-5절), MySQL 8.0.46 local-path 2Gi(원본, 복제본). 운영 중, ArgoCD `runshoes` Synced/Healthy 는 2026-11-02 확인(infra `4a54ca7`). 원천: infra `apps/runshoes/`, `platform/`, `Jenkinsfile`, `Dockerfile`, 런북 [c:97ec8e0] [c:606b730] [code:Jenkinsfile:71] <!-- 확인 못 함: 클러스터에서 실제로 도는 이미지, ArgoCD 상태, 자동 Sync 의 실제 설정은 클러스터 값(위 값은 인프라 저장소 매니페스트) -->
 
 #### 0. 한 줄 요약

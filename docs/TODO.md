@@ -2,7 +2,7 @@
 다루는 곳: chatbot/, catalog/, contract/, backend/src/main/resources/db/migration/, Jenkinsfile, config/portfolio.toml
 읽은 커밋: 606b730
 -->
-# TODO(남은 일)
+# 남은 일
 
 > 한 줄에 하나. 무엇이 남았는지만 적는다. 무엇이 문제고 왜 그런지, 어떻게 고칠지는 → 가리키는 문서에 있다. 끝나면 이 줄을 지우고, 한 일은 그 문서(3절)와 `HISTORY.md` 에 남긴다. 남은 일을 다른 문서에 따로 적지 않는다(2026-11-10 사용자, 두 군데에 적으면 한쪽만 지우게 된다).
 

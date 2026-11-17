@@ -2,6 +2,7 @@
 다루는 곳: src/index.css, src/tokens.css, src/components/, src/pages/, index.html
 읽은 커밋: 606b730
 -->
+# 02b 디자인
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 원천: `src/index.css`(색, 글꼴 토큰), `src/tokens.css`(크기, 배율), 컴포넌트 CSS. 처음 시안과 인계 문서는 `archive/design-prompt.md`, `archive/design-handoff.md` [code:src/index.css:1-29] [code:src/tokens.css:1-10] [docs:archive/design-prompt.md] [docs:archive/design-handoff.md]
 
 #### 0. 한 줄 요약

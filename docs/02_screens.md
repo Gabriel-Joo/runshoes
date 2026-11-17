@@ -2,6 +2,7 @@
 다루는 곳: src/App.tsx, src/pages/, src/components/, src/utils/, src/auth/, src/api.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/activity/
 읽은 커밋: 606b730
 -->
+# 02 화면
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인, 비교하기는 2026-11-09 운영 반영). 화면 11개(라우트 10 + 상세 모달). 원천: `src/App.tsx`, `src/pages/*`, `src/components/*`, `src/utils/display.ts`. 관리 화면은 `03_admin.md`, 로그인, 계정 규칙은 `04_auth.md`, 색, 글꼴은 `02b_design_system.md` [code:src/App.tsx:29-40] [code:src/components/ShoeModal.tsx:84-239] [docs:03_admin.md] [docs:04_auth.md] [docs:02b_design_system.md]
 
 #### 0. 한 줄 요약

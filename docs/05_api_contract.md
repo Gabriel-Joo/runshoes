@@ -2,6 +2,7 @@
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/config/, backend/src/main/java/com/kopo17/runshoes/compare/, backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/java/com/kopo17/runshoes/activity/, contract/
 읽은 커밋: 606b730
 -->
+# 05 API 계약과 계약 시험
 > 상태: 2026-11-17 코드와 맞춰 봄(마이그레이션 V24 까지, 계약 시나리오 X242 까지). 운영에서 쓰는 중(2026-11-02 확인, 그때 V12). 계약 시험(2026-11-10 로컬, 작업 3): v6 PASS 116, FAIL 0, v3 PASS 100, FAIL 12(의도한 변경, 3절), v3-search 24, v4 21, v14-summary 20(v3-summary 는 V14 전 계약, 이력). 2026-11-14 로컬(관리자 페이지 1~5, V22, V23): v6 PASS 184, FAIL 0, v3 101/11, v3-search 24, v4 21, v14-summary 20. 2026-11-15 로컬(관리자 화면 수정, V24, 실사용 인증 API 를 빼고 가입 연도, 처리 사유를 더함): v6 PASS 191, FAIL 0, v14-summary 21. 같은 날 신발 관리 목록 API(X233 ~ X242): v6 PASS 201, FAIL 0. 원천: `backend/…/api`, `auth`, `config`, `contract/` [c:b23648a] [code:contract/] [code:contract/scenarios.mjs:588-597] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1]
 
 #### 0. 한 줄 요약

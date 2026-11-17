@@ -2,6 +2,7 @@
 다루는 곳: catalog/, scripts/load-prod.sh, backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java
 읽은 커밋: 606b730
 -->
+# 01c 적재기
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 운영 적재는 `scripts/load-prod.sh [--apply]` 로만 한다. 사람 판단 359행, 1,491칸(2026-11-10)이 `catalog/decisions.json` 에 있다. 행 수 359는 2026-11-17 에도 같다. 지금 같은 방법으로 키를 다 더하면 1,510이고, `measured_weight_g` 19칸을 빼면 1,491이다. [code:scripts/load-prod.sh:1-6] [code:catalog/decisions.json:3] [c:6bef573] <!-- 확인 못 함: 운영에서 쓰는 중인지는 운영 쪽 사실 -->
 
 #### 0. 한 줄 요약

@@ -2,6 +2,7 @@
 다루는 곳: src/, backend/, chatbot/, catalog/, contract/, scripts/, Dockerfile, Dockerfile.chatbot, Jenkinsfile, CLAUDE.md, README.md
 읽은 커밋: 606b730
 -->
+# 전체 구조
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중, https://runshoes.ronanlab.dev . 신발 310켤레, 리뷰 1,800건(2026-11-09 시드, `01e`, 2026-11-17 공개 API 로 다시 셈), 마이그레이션 V1~V24(마지막 `V24__chatbot_miss_note.sql`). 원천: 영역 문서 01a ~ 10, README(옛 2, 5, 6, 9절) [c:89117ec] [docs:01e_seed_reviews.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [docs:09_chatbot_rag.md] [docs:10_recommend.md] <!-- 확인 못 함: 신발 310켤레, 리뷰 1,800건, 운영 중인지는 운영 DB와 운영 사이트의 값 -->
 
 #### 0. 한 줄 요약

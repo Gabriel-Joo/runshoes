@@ -2,7 +2,7 @@
 다루는 곳: docs/
 읽은 커밋: 606b730
 -->
-# docs/
+# 문서 안내
 
 > 상태: 2026-11-17 코드와 맞춰 봄. 새 구조로 옮김(2026-11-02). 상위 문서(requirements, overview, HISTORY, TODO)와 영역 문서 01a ~ 10 작성(08 비교는 2026-11-09 운영 반영). 옛 문서 12개는 `archive/`: CATALOG_PIPELINE, API_CONTRACT, DEPLOY, INFRA, SPRING_MIGRATION_PLAN, AUTH_DESIGN, AUTH_RATELIMIT_DESIGN, ADMIN_DEMO_DESIGN, design-prompt, design-handoff, COMPARE_DESIGN, HISTORY(옛 이야기판). 09 의 구현 기록은 `archive/09_chatbot_rag_log.md` 로 뗐다(2026-11-17). 와이드 재조사 결과는 01a 1-7 에 채웠다. [docs:requirements.md] [docs:overview.md] [docs:HISTORY.md] [docs:TODO.md] [docs:archive/HISTORY.md] [docs:01a_catalog_sources.md] [docs:09_chatbot_rag.md] [docs:10_recommend.md]
 
