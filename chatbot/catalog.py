@@ -139,12 +139,13 @@ class Catalog:
     def find(self, message: str) -> list[Mention]:
         """문장 속 신발 — 앞에서부터, 겹치면 긴 이름이 이긴다"""
         m, where = _norm_with_index(message)
+        nfc = unicodedata.normalize("NFC", message or "")   # where 는 NFC 글자 자리다
         hits: list[tuple[int, int, str]] = []
         for name in self._index:
             start = 0
             while (i := m.find(name, start)) >= 0:
                 j = i + len(name)
-                if self._bounded(m, i, j, name) and not self._foreign_prefix(m, i, name):
+                if self._bounded(m, i, j, name, nfc, where) and not self._foreign_prefix(m, i, name):
                     hits.append((i, j, name))
                 start = i + 1
         hits.sort(key=lambda h: (-(h[1] - h[0]), h[0]))
@@ -189,15 +190,22 @@ class Catalog:
         return False
 
     @staticmethod
-    def _bounded(m: str, i: int, j: int, name: str) -> bool:
-        """숫자 · 영문 이름은 앞뒤가 같은 종류 글자에 붙어 있으면 안 된다(188000원 속 880, cloud 속 on)"""
+    def _bounded(m: str, i: int, j: int, name: str, text: str, where: list[int]) -> bool:
+        """숫자 · 영문 이름은 앞뒤가 같은 종류 글자에 붙어 있으면 안 된다(188000원 속 880, cloud 속 on).
+
+        붙어 있는지는 원문으로 본다 — 공백을 지운 m 에서는 "GT-1000 14"의 1000 과 14, "XA Pro 3D V9"의 3D 와 V9 가 붙어 보여
+        이름을 버렸다(2026-11-17). 원문에서 두 글자 사이가 공백 · 하이픈 · 밑줄뿐이면 떨어진 것으로 친다.
+        쉼표 · 점은 떨어진 것이 아니다 — "1,880원" 속 880, "9.5" 를 막는다"""
         def kind(ch: str) -> str:
             return "d" if ch.isdigit() else "l" if "a" <= ch <= "z" else "o"
-        if i > 0 and kind(name[0]) != "o" and kind(m[i - 1]) == kind(name[0]):
+
+        def apart(k: int) -> bool:   # m[k-1] 과 m[k] 가 원문에서 공백 · 하이픈 · 밑줄로 떨어져 있었나
+            gap = text[where[k - 1] + 1:where[k]]
+            return bool(gap) and all(ch.isspace() or ch in "-_" for ch in gap)
+
+        if i > 0 and kind(name[0]) != "o" and kind(m[i - 1]) == kind(name[0]) and not apart(i):
             return False
-        if j < len(m) and kind(name[-1]) == "l" and kind(m[j]) == "l":
-            return False
-        if j < len(m) and kind(name[-1]) == "d" and kind(m[j]) == "d":
+        if j < len(m) and kind(name[-1]) in ("l", "d") and kind(m[j]) == kind(name[-1]) and not apart(j):
             return False
         return True
 

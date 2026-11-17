@@ -18,13 +18,18 @@ def shoe(id, brand, model, gen, line, cur, **kw):
 
 SHOES = [
     shoe(1, "아식스", "젤 카야노 32", 32, "asics:gel-kayano", False, modelAlias="겔 카야노 32", weight=298, weightSize="M9", weightNorm270=298),
-    shoe(2, "아식스", "젤 카야노 33", 33, "asics:gel-kayano", True),
+    shoe(2, "아식스", "젤 카야노 33", 33, "asics:gel-kayano", True, modelEn="Gel-Kayano 33"),
     shoe(3, "호카", "마하 6", 6, "hoka:mach", False),
     shoe(4, "뉴발란스", "880 v15", 15, "newbalance:880", True, modelEn="Fresh Foam X 880 v15"),
     shoe(5, "브룩스", "레벨 8", 8, "brooks:revel", True),
     shoe(6, "뉴발란스", "레벨 v5", 5, "newbalance:rebel", True),
     shoe(7, "미즈노", "웨이브 스카이 9", 9, "mizuno:wave-sky", True),
     shoe(8, "아식스", "메타스피드 스카이 도쿄", None, "asics:metaspeed-sky-tokyo", True),
+    shoe(9, "아식스", "GT-1000 14", 14, "asics:gt-1000", False, modelEn="GT-1000 14"),
+    shoe(10, "아식스", "GT-2000 15", 15, "asics:gt-2000", True, modelEn="GT-2000 15"),
+    shoe(11, "뉴발란스", "1080 v14", 14, "newbalance:1080", False, modelAlias="Fresh Foam 1080 v14, 프레시폼 1080 v14"),
+    shoe(12, "살로몬", "XA 프로 3D V9", 9, "salomon:xa-pro-3d", True, modelEn="XA Pro 3D V9"),
+    shoe(13, "온", "클라우드 5", 5, "on:cloud", True, modelEn="Cloud 5"),
 ]
 TERMS = [{"id": 1, "key": "drop", "name": "드롭", "short": "뒤꿈치와 앞꿈치의 높이 차이", "description": "드롭 설명입니다."},
          {"id": 4, "key": "neutral", "name": "중립화", "short": "", "description": "중립화 설명"},
@@ -61,6 +66,24 @@ class CatalogTest(unittest.TestCase):
         # 공백을 지운 뒤에 읽으면 "카야노 32 270" 이 32270, "880 v15 3켤레" 가 붙었다(리뷰 2026-11-12)
         self.assertEqual([(m.shoe or {}).get("id") for m in self.c.find("젤 카야노 32 270 사이즈")], [1])
         self.assertEqual([m.gen for m in self.c.find("마하 7 8 비교")], [7])
+
+    def test_boundary_is_read_from_original_text(self):
+        # 숫자 · 영문으로 끝나는 이름 뒤에 띄어 쓴 세대가 오면 공백을 지운 문자열에서 붙어 보여 버렸다(2026-11-17)
+        self.assertEqual(self.ids("GT-1000 14 어때요"), [9])
+        self.assertEqual(self.ids("GT 1000 14"), [9])
+        self.assertEqual(self.ids("GT-2000 15"), [10])
+        self.assertEqual(self.ids("1080 14"), [11])
+        self.assertEqual(self.ids("프레시폼 1080 14"), [11])
+        self.assertEqual(self.ids("XA Pro 3D V9"), [12])
+        self.assertEqual(self.ids("Gel-Kayano v33"), [2])
+        self.assertEqual(self.ids("젤 카야노 v33"), [2])
+
+    def test_boundary_still_blocks_glued_text(self):
+        # 원문에서 붙어 있거나 쉼표 · 점으로 이어진 숫자 · 글자는 이름이 아니다
+        self.assertEqual(self.ids("가격은 188000원"), [])
+        self.assertEqual(self.ids("가격은 1,880원"), [])
+        self.assertEqual(self.ids("cloudtec 쿠션"), [])
+        self.assertEqual(self.ids("cloud 5"), [13])
 
     def test_ambiguous(self):
         m = self.c.find("레벨 드롭")[0]
