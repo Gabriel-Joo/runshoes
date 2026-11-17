@@ -49,6 +49,23 @@ def _strip_generation(name: str, gen: int | None) -> str:
     return re.sub(rf"[\s\-]*v?\s*{gen}\s*$", "", name.strip(), flags=re.IGNORECASE).strip()
 
 
+def _generation_token(gen: int) -> str:
+    """이름 속 세대 낱말 — "2" · "v2" · "2.0" · "9+" (앞뒤가 공백 · 하이픈 · 이름 끝)"""
+    return rf"v?{gen}(?:\.0)?\+?"
+
+
+def _line_name(name: str, gen: int | None) -> tuple[str, int] | None:
+    """끝에서 세대를 떼지 못한 이름(시엘로 X1 2.0 · 론 피크 9+ · 아디제로 프라임 X 2 스트렁)의 라인 이름 = 세대 낱말 앞까지,
+    그리고 세대 낱말이 몇째 낱말인지. 이름에 세대 숫자가 없으면(슈퍼노바 이즈 = 1세대) None"""
+    if gen is None:
+        return None
+    tokens = [t for t in re.split(r"[\s\-]+", name.strip()) if t]
+    for k, t in enumerate(tokens):
+        if k > 0 and re.fullmatch(_generation_token(gen), t, flags=re.IGNORECASE):
+            return " ".join(tokens[:k]), k
+    return None
+
+
 @dataclass
 class Line:
     key: str
@@ -109,10 +126,17 @@ class Catalog:
         return [n.strip() for n in names if n and n.strip()]
 
     def _build_index(self) -> dict[str, tuple[bool, set[str]]]:
-        """정규화한 이름 → (라인 전체 이름인가, 라인 키들). 전체 이름이 있으면 앞 낱말을 뗀 별칭보다 앞선다"""
+        """정규화한 이름 → (라인 전체 이름인가, 라인 키들). 전체 이름이 있으면 앞 낱말을 뗀 별칭보다 앞선다.
+
+        끝에서 세대를 떼지 못한 이름(세대가 가운데 · 2.0 꼴 · 끝에 + — 2026-11-17)은 둘을 더 한다.
+        - 그 이름(과 세대 낱말이 든 뒷부분)은 그 켤레로 바로 맞춘다(self._exact). 라인으로 맞추면 세대를 못 읽어 현행으로 답했다
+        - 세대 낱말 앞까지를 라인 이름으로 넣는다("시엘로 X1 2" · "시엘로 X1"을 받기 위해). 다른 라인의 이름 · 별칭과 겹치면
+          넣지 않는다(클라우드몬스터 3 하이퍼 → 클라우드몬스터). 넣지 않은 것은 self.skipped_line_names 에 남긴다"""
         full: dict[str, set[str]] = {}
         part: dict[str, set[str]] = {}
         self._tokens: dict[str, set[str]] = {}   # 라인마다 이름 낱말 — 떼어 낸 별칭 앞에 다른 라인의 낱말이 붙었는지 본다
+        self._exact: dict[str, set[int]] = {}    # 세대가 든 이름 → 켤레 id(하나일 때만 쓴다)
+        line_names: dict[str, set[str]] = {}     # 세대 앞까지 → 라인 키들(겹침을 본 뒤 full 에 넣는다)
         for key, line in self.lines.items():
             for s in line.shoes:
                 for name in self._names(s):
@@ -123,12 +147,27 @@ class Catalog:
                     full.setdefault(n, set()).add(key)
                     tokens = [t for t in re.split(r"[\s\-]+", base) if t]
                     self._tokens.setdefault(key, set()).update(norm(t) for t in tokens if len(norm(t)) >= 2)
+                    held = _line_name(name, s.get("generation")) if base == name.strip() else None
+                    if held:
+                        self._exact.setdefault(n, set()).add(s["id"])
+                        if norm(held[0]):
+                            line_names.setdefault(norm(held[0]), set()).add(key)
                     for i in range(1, len(tokens)):
                         tail = tokens[i:]
                         v = norm("".join(tail))
                         if len(v) < 3 or (len(tail) == 1 and tail[0].lower() in _STOP):
                             continue
                         part.setdefault(v, set()).add(key)
+                        if held and i <= held[1]:      # 세대 낱말이 든 뒷부분("X 2 스트렁")도 그 켤레
+                            self._exact.setdefault(v, set()).add(s["id"])
+        self.skipped_line_names: dict[str, set[str]] = {}
+        for n, keys in line_names.items():
+            # 다른 라인의 이름 · 별칭과 겹치거나, 두 라인이 같은 라인 이름을 낳으면 넣지 않는다
+            others = (full.get(n, set()) | part.get(n, set())) - keys if len(keys) == 1 else keys
+            if others:
+                self.skipped_line_names[n] = others | keys
+                continue
+            full.setdefault(n, set()).update(keys)
         index = {n: (True, keys) for n, keys in full.items()}
         for n, keys in part.items():
             if n not in index:
@@ -157,6 +196,14 @@ class Catalog:
         out: list[Mention] = []
         seen: set[tuple[str, int | None]] = set()
         for i, j, name in taken:
+            exact = self._exact.get(name, set())
+            if len(exact) == 1:   # 세대가 든 이름(시엘로 X1 2.0) — 세대를 읽지 않고 그 켤레
+                shoe = self.by_id[next(iter(exact))]
+                line = self.lines[shoe.get("lineKey") or f"id:{shoe['id']}"]
+                if (line.key, shoe.get("generation")) not in seen:
+                    seen.add((line.key, shoe.get("generation")))
+                    out.append(Mention(m[i:j], line, shoe.get("generation"), shoe))
+                continue
             # 세대는 원문에서 읽는다 — 공백을 지운 뒤에 읽으면 "클리프톤 9 10"이 910, "고스트 17 GTX"가 17g 로 붙는다
             end = where[j - 1] + 1
             gen, used = self._generation_after(message, end)

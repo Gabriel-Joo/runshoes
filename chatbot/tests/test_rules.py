@@ -30,6 +30,13 @@ SHOES = [
     shoe(11, "뉴발란스", "1080 v14", 14, "newbalance:1080", False, modelAlias="Fresh Foam 1080 v14, 프레시폼 1080 v14"),
     shoe(12, "살로몬", "XA 프로 3D V9", 9, "salomon:xa-pro-3d", True, modelEn="XA Pro 3D V9"),
     shoe(13, "온", "클라우드 5", 5, "on:cloud", True, modelEn="Cloud 5"),
+    shoe(14, "호카", "시엘로 X1 3.0", 3, "hoka:cielo-x1", True, modelEn="Cielo X1 3.0"),
+    shoe(15, "호카", "시엘로 X1 2.0", 2, "hoka:cielo-x1", False, modelEn="Cielo X1 2.0"),
+    shoe(16, "아디다스", "아디제로 프라임 X 3 스트렁", 3, "adidas:adizero-prime-x-strung", True, modelEn="Adizero Prime X 3 Strung"),
+    shoe(17, "아디다스", "아디제로 프라임 X 2 스트렁", 2, "adidas:adizero-prime-x-strung", False, modelEn="Adizero Prime X 2 Strung"),
+    shoe(18, "알트라", "론 피크 9+", 9, "altra:lone-peak", True, modelEn="Lone Peak 9+"),
+    shoe(19, "온", "클라우드몬스터 3", 3, "on:cloudmonster", True, modelEn="Cloudmonster 3"),
+    shoe(20, "온", "클라우드몬스터 3 하이퍼", 3, "on:cloudmonster-hyper", True, modelEn="Cloudmonster 3 Hyper"),
 ]
 TERMS = [{"id": 1, "key": "drop", "name": "드롭", "short": "뒤꿈치와 앞꿈치의 높이 차이", "description": "드롭 설명입니다."},
          {"id": 4, "key": "neutral", "name": "중립화", "short": "", "description": "중립화 설명"},
@@ -84,6 +91,40 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(self.ids("가격은 1,880원"), [])
         self.assertEqual(self.ids("cloudtec 쿠션"), [])
         self.assertEqual(self.ids("cloud 5"), [13])
+
+    def test_generation_inside_name(self):
+        # 끝에서 세대를 떼지 못하는 이름(2.0 꼴 · 가운데 · 끝에 +)은 그 켤레로 바로 맞춘다 — 전에는 현행으로 답했다(2026-11-17)
+        self.assertEqual(self.ids("시엘로 X1 2.0"), [15])
+        self.assertEqual(self.ids("Cielo X1 2.0 어때요"), [15])
+        self.assertEqual(self.ids("아디제로 프라임 X 2 스트렁"), [17])
+        self.assertEqual(self.ids("아디제로 프라임 X 3 스트렁"), [16])
+        self.assertEqual(self.ids("론 피크 9+"), [18])
+        self.assertEqual(self.ids("클라우드몬스터 3 하이퍼"), [20])
+        m = self.c.find("시엘로 X1 3.0")[0]
+        self.assertEqual((m.shoe["id"], m.generation_note), (14, False))    # 세대를 말했으니 "N세대 기준이에요"를 붙이지 않는다
+
+    def test_line_name_before_generation(self):
+        # 세대 낱말 앞까지를 라인 이름으로 — 짧게 친 꼴 · 라인만 친 꼴
+        self.assertEqual(self.ids("시엘로 X1 2세대"), [15])
+        self.assertEqual(self.ids("시엘로 X1 2"), [15])
+        m = self.c.find("시엘로 X1")[0]
+        self.assertEqual((m.shoe["id"], m.generation_note), (14, True))     # 현행 3.0 · "3세대 기준이에요"
+        self.assertEqual(self.ids("아디제로 프라임 X 2세대"), [17])
+        self.assertEqual(self.ids("아디제로 프라임 X 2"), [17])
+        self.assertEqual(self.ids("아디제로 프라임 X"), [16])
+        self.assertEqual(self.ids("론 피크"), [18])
+        m = self.c.find("론 피크 8")[0]                                       # 등록되지 않은 세대 — 없는 신발이 아니다
+        self.assertEqual((m.shoe, m.line.key), (None, "altra:lone-peak"))
+
+    def test_line_name_size_is_not_generation(self):
+        m = self.c.find("시엘로 X1 9.5 사이즈")[0]
+        self.assertEqual((m.shoe["id"], m.gen), (14, None))                  # 9.5 는 세대가 아니다 — 세대 읽기 정규식은 그대로
+
+    def test_line_name_not_added_when_it_hits_another_line(self):
+        # 클라우드몬스터 3 하이퍼의 세대 앞까지(클라우드몬스터)는 다른 라인 이름이라 넣지 않는다
+        self.assertEqual(self.ids("클라우드몬스터 3"), [19])
+        self.assertEqual(self.ids("클라우드몬스터"), [19])
+        self.assertIn("클라우드몬스터", self.c.skipped_line_names)
 
     def test_ambiguous(self):
         m = self.c.find("레벨 드롭")[0]
