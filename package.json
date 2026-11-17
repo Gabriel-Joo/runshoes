@@ -11,8 +11,6 @@
     "test": "tsc -p tests && node --test node_modules/.tmp/tests/tests/"
   },
   "dependencies": {
-    "express": "4",
-    "json-server": "0.17.4",
     "markdown-to-jsx": "9.10.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
