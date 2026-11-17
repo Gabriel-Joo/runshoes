@@ -1,8 +1,12 @@
-> 상태: 운영 중(2026-11-02 확인 — 읽기만). 이미지 `8a4d4a42508b`(앱 커밋 `8a4d4a4`) · ArgoCD `runshoes` Synced/Healthy(infra `4a54ca7`) · 자동 Sync 켜짐(`prune: false, selfHeal: false`) · Deployment replicas 1(컨테이너 2 — 2026-11-10 replicas 2 · 노드 분산 · PDB, 1-5절) · MySQL 8.0.46 local-path 2Gi. 원천: infra `apps/runshoes/` · `platform/` · `Jenkinsfile` · `Dockerfile` · 런북
+<!--
+다루는 곳: Jenkinsfile, Dockerfile, Dockerfile.chatbot, .dockerignore, backend/src/main/resources/application.yml, scripts/load-prod.sh
+읽은 커밋: 606b730
+-->
+> 상태: 운영 중(2026-11-02 확인 — 읽기만). 이미지 `8a4d4a42508b`(앱 커밋 `8a4d4a4`) · ArgoCD `runshoes` Synced/Healthy(infra `4a54ca7`) · 자동 Sync 켜짐(`prune: false, selfHeal: false`) · Deployment replicas 1(컨테이너 2 — 2026-11-10 replicas 2 · 노드 분산 · PDB, 1-5절) · MySQL 8.0.46 local-path 2Gi. 원천: infra `apps/runshoes/` · `platform/` · `Jenkinsfile` · `Dockerfile` · 런북 [c:97ec8e0] [c:8a4d4a4] [code:Jenkinsfile:71] <!-- 확인 못 함: 운영 이미지, ArgoCD 상태, 자동 Sync, replicas, MySQL 설정은 클러스터와 인프라 저장소의 값 -->
 
 #### 0. 한 줄 요약
 
-push 한 번이면 배포된다 — Jenkins 가 이미지를 빌드해 Harbor 에 올리고 **인프라 리포의 태그 한 줄을 커밋**하면, ArgoCD 가 그 커밋을 읽어 클러스터를 맞춘다. Jenkins 와 ArgoCD 는 서로를 부르지 않고 Git 만 본다. **스키마를 바꾸는 배포만** 자동 Sync 를 끄고 런북대로 사람이 Sync 한다.
+push 한 번이면 배포된다 — Jenkins 가 이미지를 빌드해 Harbor 에 올리고 **인프라 리포의 태그 한 줄을 커밋**하면, ArgoCD 가 그 커밋을 읽어 클러스터를 맞춘다. Jenkins 와 ArgoCD 는 서로를 부르지 않고 Git 만 본다. **스키마를 바꾸는 배포만** 자동 Sync 를 끄고 런북대로 사람이 Sync 한다. [code:Jenkinsfile:1] [code:Jenkinsfile:97-163] <!-- 확인 못 함: ArgoCD 가 커밋을 읽어 맞추는 것과 자동 Sync 운용은 클러스터, 인프라 저장소 -->
 
 #### 1. 최종 설계
 
@@ -23,20 +27,20 @@ runshoes 네임스페이스 ─ Deployment runshoes(Spring :3000 + chatbot :8766
 방문자 ─ Cloudflare ─ 공용 터널(cloudflared ns) ─ ingress-nginx(VIP 192.168.122.240)
 ```
 
-push 에서 새 Pod 까지 약 5분 — 2026-11-09 `5d11d2e` 측정: push 10:53:00 → 빌드 시작 20초 안(웹훅) → 태그 커밋 10:57:27 → 롤아웃 끝 10:58:02 전.
+push 에서 새 Pod 까지 약 5분 — 2026-11-09 `5d11d2e` 측정: push 10:53:00 → 빌드 시작 20초 안(웹훅) → 태그 커밋 10:57:27 → 롤아웃 끝 10:58:02 전. [c:081638e] [c:5d11d2e] <!-- 확인 못 함: 걸린 시간은 Jenkins 와 클러스터에서 잰 값 -->
 
 #### 1-2. 구성 요소
 
 | 요소 | 위치 | 역할 |
 |---|---|---|
-| 앱 리포 | GitHub `Gabriel-Joo/runshoes`(public) | 프런트 `src/` · 백엔드 `backend/` · `Dockerfile` · `Dockerfile.chatbot` · `Jenkinsfile` · `contract/` · `catalog/` |
-| 인프라 리포 | GitHub `Gabriel-Joo/ronanlab-infra`(private) | `apps/runshoes/`(매니페스트 · 이미지 태그 · 런북 · 스크립트), `platform/`(클러스터 공용) |
-| 클러스터 | kubeadm v1.35 — `m-k8s` + `w1~w3-k8s` | GPU 호스트 위 VM 4대(사설망 192.168.122.0/24), 노드당 메모리 약 3.9GiB |
-| Jenkins | `jenkins` ns, Job `runshoes-app` | Job · 자격 증명은 JCasC(`platform/jenkins/values.yaml`)가 만든다 — UI 에서 고치지 않는다 |
-| Harbor | `harbor.ronanlab.dev/runshoes`(private) | robot 계정 push(`robot$runshoes+jenkins`) · pull(`robot$runshoes+pull`) 분리 |
-| ArgoCD | Application `runshoes` | 읽기 전용 deploy key 로 인프라 리포를 읽는다 |
-| 외부 노출 | Cloudflare Tunnel(`apps/cloudflared`) | 클러스터 공용 터널. 운영 도구(Jenkins · Harbor · ArgoCD)는 Cloudflare Access 뒤, runshoes 공개 주소는 Access 없음 |
-| Ollama | GPU 호스트 `192.168.122.1:11434` | 리뷰 요약 · 챗봇. Pod 가 사설망으로 바로 부른다 |
+| 앱 리포 | GitHub `Gabriel-Joo/runshoes`(public) | 프런트 `src/` · 백엔드 `backend/` · `Dockerfile` · `Dockerfile.chatbot` · `Jenkinsfile` · `contract/` · `catalog/` [code:Jenkinsfile:119] [code:src/] [code:backend/] [code:contract/] [code:catalog/] <!-- 확인 못 함: GitHub 저장소의 공개 여부 --> |
+| 인프라 리포 | GitHub `Gabriel-Joo/ronanlab-infra`(private) | `apps/runshoes/`(매니페스트 · 이미지 태그 · 런북 · 스크립트), `platform/`(클러스터 공용) [code:Jenkinsfile:62-63] <!-- 확인 못 함: 인프라 저장소 내용과 공개 여부는 저장소 밖 --> |
+| 클러스터 | kubeadm v1.35 — `m-k8s` + `w1~w3-k8s` | GPU 호스트 위 VM 4대(사설망 192.168.122.0/24), 노드당 메모리 약 3.9GiB <!-- 확인 못 함: 클러스터 구성, 저장소 밖 --> |
+| Jenkins | `jenkins` ns, Job `runshoes-app` | Job · 자격 증명은 JCasC(`platform/jenkins/values.yaml`)가 만든다 — UI 에서 고치지 않는다 [code:Jenkinsfile:4] <!-- 확인 못 함: JCasC 내용은 인프라 저장소 --> |
+| Harbor | `harbor.ronanlab.dev/runshoes`(private) | robot 계정 push(`robot$runshoes+jenkins`) · pull(`robot$runshoes+pull`) 분리 [code:Jenkinsfile:59-61] [code:Jenkinsfile:102-103] <!-- 확인 못 함: robot 계정 이름과 권한은 Harbor 와 인프라 저장소 --> |
+| ArgoCD | Application `runshoes` | 읽기 전용 deploy key 로 인프라 리포를 읽는다 <!-- 확인 못 함: ArgoCD 설정은 클러스터와 인프라 저장소 --> |
+| 외부 노출 | Cloudflare Tunnel(`apps/cloudflared`) | 클러스터 공용 터널. 운영 도구(Jenkins · Harbor · ArgoCD)는 Cloudflare Access 뒤, runshoes 공개 주소는 Access 없음 <!-- 확인 못 함: Cloudflare 설정은 저장소 밖 --> |
+| Ollama | GPU 호스트 `192.168.122.1:11434` | 리뷰 요약 · 챗봇. Pod 가 사설망으로 바로 부른다 [code:backend/src/main/resources/application.yml:53-56] <!-- 확인 못 함: 운영 OLLAMA_URL 값은 Deployment env, 저장소 기본값은 localhost:11434 --> |
 
 #### 1-3. 이미지
 
@@ -47,20 +51,20 @@ jre     eclipse-temurin:21-jdk-alpine   jlink — 필요한 모듈만          �
 실행    alpine                  /jre + app.jar + static/(dist), 사용자 10001, :3000
 ```
 
-- 태그는 **커밋 해시 12자리**, 두 이미지가 같은 태그. `latest` 는 쓰지 않는다 — 태그만 보고 어느 커밋이 도는지 안다.
-- jlink 로 JRE 를 줄여 252MB(temurin jre 그대로면 421MB). 모듈이 빠지면 실행 중 `NoClassDefFoundError` 로 드러나므로 의존성을 더하면 계약 시험을 다시 돈다.
-- 에이전트 Pod 의 `buildkit` 컨테이너 하나가 두 이미지를 차례로 빌드한다. 특권 컨테이너 대신 seccomp · AppArmor 만 푼다.
+- 태그는 **커밋 해시 12자리**, 두 이미지가 같은 태그. `latest` 는 쓰지 않는다 — 태그만 보고 어느 커밋이 도는지 안다. [code:Jenkinsfile:9] [code:Jenkinsfile:71] [code:Jenkinsfile:120] [code:Jenkinsfile:122-123] [code:Dockerfile.chatbot:1-11]
+- jlink 로 JRE 를 줄여 252MB(temurin jre 그대로면 421MB). 모듈이 빠지면 실행 중 `NoClassDefFoundError` 로 드러나므로 의존성을 더하면 계약 시험을 다시 돈다. (2026-11-02 기준) [c:a6bf21e] [code:Dockerfile:32-36] <!-- 확인 못 함: 이미지 크기 252MB, 421MB 는 잰 값, Dockerfile 주석은 temurin 21-jre-alpine 287MB 와 400MB 를 넘는다고 적는다 -->
+- 에이전트 Pod 의 `buildkit` 컨테이너 하나가 두 이미지를 차례로 빌드한다. 특권 컨테이너 대신 seccomp · AppArmor 만 푼다. [code:Jenkinsfile:27-39] [code:Jenkinsfile:106] [code:Jenkinsfile:114-123]
 
 #### 1-4. Jenkinsfile
 
-세 스테이지 — 태그(`GIT_COMMIT` 앞 12자리) → 빌드 · push → 매니페스트 태그 커밋.
+세 스테이지 — 태그(`GIT_COMMIT` 앞 12자리) → 빌드 · push → 매니페스트 태그 커밋. [code:Jenkinsfile:67-71] [code:Jenkinsfile:97] [code:Jenkinsfile:130]
 
-- **문서만 바뀐 빌드는 뒤의 두 스테이지를 건너뛴다**(2026-11-09 사용자). 직전 성공 빌드의 커밋 → 이번 커밋에서 바뀐 파일이 모두 `docs/` · `portfolio/` · `config/portfolio.toml` · `*.md` 이면 `when` 으로 건너뛰고 SUCCESS, 빌드 설명 "건너뜀 — 문서만", FOREMAN 끝 알림에 `"skipped": true`. 손으로 누른 빌드 · 직전 성공 커밋이 없거나 못 찾을 때 · 바뀐 파일을 못 셀 때는 늘 빌드한다(모르면 빌드 쪽).
+- **문서만 바뀐 빌드는 뒤의 두 스테이지를 건너뛴다**(2026-11-09 사용자). 직전 성공 빌드의 커밋 → 이번 커밋에서 바뀐 파일이 모두 `docs/` · `portfolio/` · `config/portfolio.toml` · `*.md` 이면 `when` 으로 건너뛰고 SUCCESS, 빌드 설명 "건너뜀 — 문서만", FOREMAN 끝 알림에 `"skipped": true`. 손으로 누른 빌드 · 직전 성공 커밋이 없거나 못 찾을 때 · 바뀐 파일을 못 셀 때는 늘 빌드한다(모르면 빌드 쪽). [code:Jenkinsfile:12-16] [code:Jenkinsfile:73-91] [code:Jenkinsfile:98] [code:Jenkinsfile:132] [code:Jenkinsfile:189-193]
 
-- `newTag` 두 줄을 sed 한 번에 바꾸고 **바뀐 줄이 정확히 2개인지 센다** — 한쪽만 바뀌는 배포를 막는다. MySQL 이미지는 `images:` 에 넣지 않는다(StatefulSet 에 고정 태그).
-- 인프라 리포는 Jenkins git 단계가 아니라 `sh 'git clone'` 으로 받는다 — git 단계로 받으면 폴링이 그 리포까지 감시해 태그 push 가 빌드를 다시 부르는 루프가 된다.
-- 인프라 리포 쓰기는 deploy key(만료로 배포가 조용히 멈추지 않게). 다른 프로젝트 Jenkins 도 같은 리포에 push 하므로 push 실패 시 최신 main 위에서 3번까지 다시 한다.
-- 자격 증명은 `sh '''`(작은따옴표)로 셸 환경변수로만 다루고, Harbor 로그인 줄 앞에 `set +x`.
+- `newTag` 두 줄을 sed 한 번에 바꾸고 **바뀐 줄이 정확히 2개인지 센다** — 한쪽만 바뀌는 배포를 막는다. MySQL 이미지는 `images:` 에 넣지 않는다(StatefulSet 에 고정 태그). [code:Jenkinsfile:148-152] <!-- 확인 못 함: kustomization 의 images 와 StatefulSet 태그는 인프라 저장소 -->
+- 인프라 리포는 Jenkins git 단계가 아니라 `sh 'git clone'` 으로 받는다 — git 단계로 받으면 폴링이 그 리포까지 감시해 태그 push 가 빌드를 다시 부르는 루프가 된다. [code:Jenkinsfile:10-11] [code:Jenkinsfile:144]
+- 인프라 리포 쓰기는 deploy key(만료로 배포가 조용히 멈추지 않게). 다른 프로젝트 Jenkins 도 같은 리포에 push 하므로 push 실패 시 최신 main 위에서 3번까지 다시 한다. [code:Jenkinsfile:131] [code:Jenkinsfile:135] [code:Jenkinsfile:148-159]
+- 자격 증명은 `sh '''`(작은따옴표)로 셸 환경변수로만 다루고, Harbor 로그인 줄 앞에 `set +x`. [code:Jenkinsfile:104-113]
 
 #### 1-5. 매니페스트 — infra `apps/runshoes/`
 
@@ -77,38 +81,38 @@ scripts/check-image-migrations.sh   Harbor 이미지 안의 Flyway 파일 sha256
 runbooks/                   스키마 변경 · 적재 런북과 실행 기록
 ```
 
-- **노드 분산(2026-11-10, 인프라 가용성 묶음 1)** — replicas 2 를 required anti-affinity(`kubernetes.io/hostname`)로 서로 다른 노드에 두고 PDB minAvailable 1. 노드 하나가 죽어도 다른 Pod 가 받는다. 롤링 중 2+1개라 스케줄 가능한 워커 3대가 필요하다 — 워커가 4대라 한 대를 정비하는 동안에도 된다(그날 w1 을 cordon 한 채 새 태그가 w2 · w3 로 롤링됐다). 시도 제한(RateLimiter)은 DB 에 있어 Pod 가 둘이어도 갈리지 않는다. 상세 원본은 infra `docs/02_availability.md`.
-- **배치 고정 · Replica(2026-11-10 저녁, 인프라 가용성 묶음 2)** — 앱은 app 노드(w1 · w2)에만(nodeSelector). 노드가 둘이라 위의 2+1 롤링은 세 번째 Pod 가 갈 곳이 없어 **옛 Pod 하나를 먼저 내리고 새 Pod**(maxSurge 0 · maxUnavailable 1)로 바꿨다 — 롤링 동안 잠깐 Pod 하나, `rollout restart` 82초 · 1초 탐침 실패 0. MySQL Replica `runshoes-mysql-replica-0`(w2)가 binlog 로 따라간다(자동 전환 없음 — infra `docs/runbooks/mysql-replica.md`, 승격 시험은 이 Replica 로 했다: SQL 0.2초 · Service 전환 0.1초 · 다시 만들기 10초).
+- **노드 분산(2026-11-10, 인프라 가용성 묶음 1)** — replicas 2 를 required anti-affinity(`kubernetes.io/hostname`)로 서로 다른 노드에 두고 PDB minAvailable 1. 노드 하나가 죽어도 다른 Pod 가 받는다. 롤링 중 2+1개라 스케줄 가능한 워커 3대가 필요하다 — 워커가 4대라 한 대를 정비하는 동안에도 된다(그날 w1 을 cordon 한 채 새 태그가 w2 · w3 로 롤링됐다). 시도 제한(RateLimiter)은 DB 에 있어 Pod 가 둘이어도 갈리지 않는다. 상세 원본은 infra `docs/02_availability.md`. [c:97ec8e0] [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:14] <!-- 확인 못 함: replicas, anti-affinity, PDB, 워커 수와 롤링 관찰은 클러스터와 인프라 저장소 -->
+- **배치 고정 · Replica(2026-11-10 저녁, 인프라 가용성 묶음 2)** — 앱은 app 노드(w1 · w2)에만(nodeSelector). 노드가 둘이라 위의 2+1 롤링은 세 번째 Pod 가 갈 곳이 없어 **옛 Pod 하나를 먼저 내리고 새 Pod**(maxSurge 0 · maxUnavailable 1)로 바꿨다 — 롤링 동안 잠깐 Pod 하나, `rollout restart` 82초 · 1초 탐침 실패 0. MySQL Replica `runshoes-mysql-replica-0`(w2)가 binlog 로 따라간다(자동 전환 없음 — infra `docs/runbooks/mysql-replica.md`, 승격 시험은 이 Replica 로 했다: SQL 0.2초 · Service 전환 0.1초 · 다시 만들기 10초). [c:7c78e82] <!-- 확인 못 함: nodeSelector, 롤링 설정, MySQL Replica 와 승격 시험 값은 클러스터와 인프라 저장소 -->
 - **데이터 정리(activity_logs · chatbot_turns 질문 · 답)를 꺼 두었다(2026-11-10 사용자 결정)** — `ActivityCleanup`(`@Scheduled`)이 Pod 마다 돌아 두 Pod 가 같은 시각 같은 행을 지우려 했다. Deployment env `ACTIVITY_CLEANUP_CRON: "-"`(Spring 의 끄기 값). 2026-11-17 앱에 MySQL `GET_LOCK` 잠금을 넣었다(요약 배치와 같은 방식 — 먼저 잡은 Pod 만 정리하고 뒤에 온 Pod 는 넘어간다. ShedLock 은 테이블이 필요해 쓰지 않았다). 그 이미지가 운영에 오른 뒤 인프라 관리자가 그 env 를 빼면 켜진다(4절).
-- **앱** — RollingUpdate `maxSurge 0, maxUnavailable 1`(infra `apps/runshoes/app/deployment.yaml`, 2026-11-10부터): 옛 Pod 하나를 먼저 내리고 그 자리에 새 Pod 를 띄운다 — 노드 자리가 모자라 세 번째 Pod 를 띄울 수 없어서다. 그동안 남은 Pod 하나가 받는다. Ready 는 DB 까지(`/readyz` — 앱 포트 3000, readinessState + db), liveness 는 `/livez`, startup 은 최대 2분(Flyway 첫 기동). actuator 는 관리 포트 9000 에만 있다(1-9). 종료는 preStop 5초 → graceful shutdown 최대 20초.
-- **비밀** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`), DB 비밀번호는 `runshoes-mysql`. optional 이 아니다 — Secret 이 없으면 새 Pod 가 멈추고 옛 Pod 가 계속 돈다.
-- **Namespace · Secret 은 사람이 만든다.** ArgoCD 가 Namespace 를 소유하면 Application 삭제 · prune 한 번에 Secret 까지 사라질 수 있다(`CreateNamespace=false`).
-- **DB** — utf8mb4 · `utf8mb4_unicode_ci` · `default-time-zone=+00:00`. 데이터베이스와 계정은 이미지가 첫 기동에 만들고, 스키마는 앱의 Flyway 가 만든다(`07_database.md`). PVC 는 Retain.
-- 리소스(요청/상한): runshoes 200m · 512Mi/1Gi, chatbot 10m · 48Mi/256Mi, MySQL 200m · 512Mi/1Gi. namespace quota 는 없고 노드 메모리가 상한이다.
+- **앱** — RollingUpdate `maxSurge 0, maxUnavailable 1`(infra `apps/runshoes/app/deployment.yaml`, 2026-11-10부터): 옛 Pod 하나를 먼저 내리고 그 자리에 새 Pod 를 띄운다 — 노드 자리가 모자라 세 번째 Pod 를 띄울 수 없어서다. 그동안 남은 Pod 하나가 받는다. Ready 는 DB 까지(`/readyz` — 앱 포트 3000, readinessState + db), liveness 는 `/livez`, startup 은 최대 2분(Flyway 첫 기동). actuator 는 관리 포트 9000 에만 있다(1-9). 종료는 preStop 5초 → graceful shutdown 최대 20초. [code:backend/src/main/resources/application.yml:6] [code:backend/src/main/resources/application.yml:9] [code:backend/src/main/resources/application.yml:58-71] <!-- 확인 못 함: RollingUpdate 값, 프로브 설정, startup 2분, preStop 5초는 인프라 deployment.yaml -->
+- **비밀** — `envFrom: secretRef runshoes-auth`(`JWT_SECRET` · `SEED_USER_PASSWORD` · `ADMIN_PASSWORD`), DB 비밀번호는 `runshoes-mysql`. optional 이 아니다 — Secret 이 없으면 새 Pod 가 멈추고 옛 Pod 가 계속 돈다. [code:backend/src/main/resources/application.yml:28-35] [code:backend/src/main/resources/application.yml:13] [code:backend/src/main/java/com/kopo17/runshoes/auth/SecurityConfig.java:104-111] <!-- 확인 못 함: envFrom 과 Secret 연결은 인프라 deployment.yaml -->
+- **Namespace · Secret 은 사람이 만든다.** ArgoCD 가 Namespace 를 소유하면 Application 삭제 · prune 한 번에 Secret 까지 사라질 수 있다(`CreateNamespace=false`). <!-- 확인 못 함: ArgoCD Application 설정, 인프라 저장소 -->
+- **DB** — utf8mb4 · `utf8mb4_unicode_ci` · `default-time-zone=+00:00`. 데이터베이스와 계정은 이미지가 첫 기동에 만들고, 스키마는 앱의 Flyway 가 만든다(`07_database.md`). PVC 는 Retain. [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/application.yml:11] [docs:07_database.md] <!-- 확인 못 함: MySQL 서버 설정과 PVC 정책은 인프라 statefulset -->
+- 리소스(요청/상한): runshoes 200m · 512Mi/1Gi, chatbot 10m · 48Mi/256Mi, MySQL 200m · 512Mi/1Gi. namespace quota 는 없고 노드 메모리가 상한이다. <!-- 확인 못 함: 리소스 요청과 상한은 인프라 매니페스트 -->
 
 #### 1-6. ArgoCD Application — infra `apps/runshoes/app.yaml`
 
-- **자동 Sync**(`automated: {prune: false, selfHeal: false}`). selfHeal 을 끈 것은 복구 중 손으로 바꾼 것(예: replicas 0)을 되돌리지 않게.
-- **prune 없음** — git 에서 지운 리소스는 남는다(PVC 를 실수로 지우지 않게). **finalizer 없음** — Application 을 지워도 앱 · DB · PVC 는 남는다.
-- Application 객체는 루트 Application(`bootstrap/root-app.yaml`, App of Apps)이 git 의 `apps/*/app.yaml` 을 읽어 만든다 — 손으로 apply 하지 않는다. 사람이 한 번 넣는 것은 루트뿐이다.
-- 루트는 자식의 `spec.syncPolicy` 를 덮지 않는다(ignoreDifferences + `RespectIgnoreDifferences`). 그래서 자동 Sync 를 끄고 켜는 스위치는 클러스터의 `kubectl patch` 이고 사람이 한다 — `app.yaml` 의 syncPolicy 는 기록이다.
+- **자동 Sync**(`automated: {prune: false, selfHeal: false}`). selfHeal 을 끈 것은 복구 중 손으로 바꾼 것(예: replicas 0)을 되돌리지 않게. <!-- 확인 못 함: 인프라 app.yaml -->
+- **prune 없음** — git 에서 지운 리소스는 남는다(PVC 를 실수로 지우지 않게). **finalizer 없음** — Application 을 지워도 앱 · DB · PVC 는 남는다. <!-- 확인 못 함: 인프라 app.yaml -->
+- Application 객체는 루트 Application(`bootstrap/root-app.yaml`, App of Apps)이 git 의 `apps/*/app.yaml` 을 읽어 만든다 — 손으로 apply 하지 않는다. 사람이 한 번 넣는 것은 루트뿐이다. <!-- 확인 못 함: 인프라 저장소의 루트 Application -->
+- 루트는 자식의 `spec.syncPolicy` 를 덮지 않는다(ignoreDifferences + `RespectIgnoreDifferences`). 그래서 자동 Sync 를 끄고 켜는 스위치는 클러스터의 `kubectl patch` 이고 사람이 한다 — `app.yaml` 의 syncPolicy 는 기록이다. <!-- 확인 못 함: 루트 Application 설정과 클러스터 조작 -->
 
 #### 1-7. 스키마를 바꾸는 배포
 
-새 마이그레이션이 든 이미지는 **Sync 가 곧 마이그레이션 적용**이다. 그래서 자동 Sync 를 끄고 그 사이에 덤프를 뜬다.
+새 마이그레이션이 든 이미지는 **Sync 가 곧 마이그레이션 적용**이다. 그래서 자동 Sync 를 끄고 그 사이에 덤프를 뜬다. [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/db/migration/]
 
 | # | 일 | 누가 |
 |---|---|---|
-| 1 | 자동 Sync 끄기(`automated` 없음을 확인) | 사람 |
-| 2 | 앱 커밋 · push → Jenkins → newTag 커밋(운영은 아직 옛 이미지) | Claude |
-| 3 | `mysqldump --single-transaction` → 로컬 MySQL 에 다른 이름으로 복원해 행 수 · 지문 대조(덤프는 `~/k8s-cluster/backup/<날짜>-runshoes-…/`, 권한 600, git 밖) | Claude |
-| 4 | Sync = 마이그레이션 적용. Pod 로그 `Migrating … → Successfully applied` · 공개 200 · 행 수 | 사람 |
-| 5 | 자동 Sync 다시 켜기 | 사람 |
-| 6 | 필요하면 운영 적재(`scripts/load-prod.sh --apply`, `01c_catalog_loader.md`) | Claude, 사용자 승인 뒤 |
+| 1 | 자동 Sync 끄기(`automated` 없음을 확인) | 사람 <!-- 확인 못 함: 클러스터 조작 절차, 저장소 밖 --> |
+| 2 | 앱 커밋 · push → Jenkins → newTag 커밋(운영은 아직 옛 이미지) | Claude [code:Jenkinsfile:130-163] |
+| 3 | `mysqldump --single-transaction` → 로컬 MySQL 에 다른 이름으로 복원해 행 수 · 지문 대조(덤프는 `~/k8s-cluster/backup/<날짜>-runshoes-…/`, 권한 600, git 밖) | Claude <!-- 확인 못 함: 운영 덤프 절차와 호스트 경로, 저장소 밖 --> |
+| 4 | Sync = 마이그레이션 적용. Pod 로그 `Migrating … → Successfully applied` · 공개 200 · 행 수 | 사람 [code:backend/src/main/resources/application.yml:17-19] <!-- 확인 못 함: Sync 와 Pod 로그는 클러스터 --> |
+| 5 | 자동 Sync 다시 켜기 | 사람 <!-- 확인 못 함: 클러스터 조작 절차, 저장소 밖 --> |
+| 6 | 필요하면 운영 적재(`scripts/load-prod.sh --apply`, `01c_catalog_loader.md`) | Claude, 사용자 승인 뒤 [code:scripts/load-prod.sh:2-4] [docs:01c_catalog_loader.md] |
 
-- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`(V16 함께) · `v17-v18-chatbot.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다.
-- 운영 MySQL `exec` 와 Secret 읽기가 필요한 단계는 사람이 친다(2026-10-29 사용자). 운영 적재만은 `scripts/load-prod.sh` 안에서 Secret 을 읽는다(비밀번호는 스크립트 밖으로 나오지 않는다).
-- **되돌리기** — 인프라 리포의 태그 커밋을 `git revert` → push → Sync. 스키마는 되돌아가지 않는다 — 마이그레이션은 추가만 하므로 옛 이미지가 새 스키마에서 뜬다(`07_database.md` 1-5). 데이터가 잘못되면 덤프 복원(런북 "실패했을 때").
+- 런북은 마이그레이션마다 하나씩 infra `apps/runshoes/runbooks/` 에 있다: `auth-v3.md` · `catalog-v4-v5.md` · `admin-demo-v6-v9.md` · `v10-auto-increment.md` · `v11-admin-history.md` · `v12-wide-scope.md` · `v13-model-en.md` · `v14-shoe-summaries.md` · `v15-weight-norm.md`(V16 함께) · `v17-v18-chatbot.md`. 각 런북 끝에 실행 기록(시각 UTC)을 남긴다. [code:backend/src/main/resources/db/migration/] <!-- 확인 못 함: 런북은 인프라 저장소 -->
+- 운영 MySQL `exec` 와 Secret 읽기가 필요한 단계는 사람이 친다(2026-10-29 사용자). 운영 적재만은 `scripts/load-prod.sh` 안에서 Secret 을 읽는다(비밀번호는 스크립트 밖으로 나오지 않는다). [code:scripts/load-prod.sh:4] [code:scripts/load-prod.sh:30-35]
+- **되돌리기** — 인프라 리포의 태그 커밋을 `git revert` → push → Sync. 스키마는 되돌아가지 않는다 — 마이그레이션은 추가만 하므로 옛 이미지가 새 스키마에서 뜬다(`07_database.md` 1-5). 데이터가 잘못되면 덤프 복원(런북 "실패했을 때"). [code:Jenkinsfile:154] [docs:07_database.md] <!-- 확인 못 함: 태그 커밋 되돌리기와 런북은 인프라 저장소 -->
 
 #### 1-8. 로컬
 
@@ -118,69 +122,69 @@ docker compose up -d                       # MySQL 127.0.0.1:3307(3306 은 다�
 contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :3200 에 띄워 녹화 · 비교
 ```
 
-- 운영 Pod 에 직접 붙을 때는 MetalLB VIP 로 간다: `http://192.168.122.240` + `Host: runshoes.ronanlab.dev`. Cloudflare 를 거치면 헤더가 바뀐다.
+- 운영 Pod 에 직접 붙을 때는 MetalLB VIP 로 간다: `http://192.168.122.240` + `Host: runshoes.ronanlab.dev`. Cloudflare 를 거치면 헤더가 바뀐다. [code:contract/record.mjs:4] [code:contract/record.mjs:13] [code:scripts/load-prod.sh:2] <!-- 확인 못 함: VIP 주소는 클러스터 설정 -->
 
 #### 1-9. actuator 를 클러스터 안으로(관측 작업 A-2, 2026-11-14 사용자)
 
-3단계 전에는 공개 주소의 `/actuator` · `/actuator/health` 가 인터넷에 열려 있었다. Prometheus 노출(`/actuator/prometheus`)을 더하면 그것도 열린다. 그래서 actuator 를 관리 포트(9000)로 옮기고 Service · Ingress 에 싣지 않는다. 그러면 3000 의 `/actuator/**` 가 사라져 지금 프로브가 깨진다 — 순서를 틀리면 새 Pod 가 Ready 가 안 돼 롤링이 멈춘다. 그래서 세 단계로, 한 단계씩 확인하고 넘어간다.
+3단계 전에는 공개 주소의 `/actuator` · `/actuator/health` 가 인터넷에 열려 있었다. Prometheus 노출(`/actuator/prometheus`)을 더하면 그것도 열린다. 그래서 actuator 를 관리 포트(9000)로 옮기고 Service · Ingress 에 싣지 않는다. 그러면 3000 의 `/actuator/**` 가 사라져 지금 프로브가 깨진다 — 순서를 틀리면 새 Pod 가 Ready 가 안 돼 롤링이 멈춘다. 그래서 세 단계로, 한 단계씩 확인하고 넘어간다. [code:backend/src/main/resources/application.yml:58-62] [code:backend/src/main/resources/application.yml:67-70]
 
 | # | 일 | 누가 | 상태 |
 |---|---|---|---|
-| 1 | 앱: 3000 에 `/livez` · `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인 · 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 운영(35537160ce73) |
-| 2 | 인프라: 프로브를 `/livez` · `/readyz` 로(startup · readiness · liveness 셋) | 인프라 관리자 | 끝(infra 2bfbf40) |
-| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push · 인프라 | 앱 로컬 끝, 주석은 인프라 |
+| 1 | 앱: 3000 에 `/livez` · `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인 · 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 운영(35537160ce73) [code:backend/src/main/resources/application.yml:67-70] [code:chatbot/search/service.py:28-30] [code:contract/run-spring-local.sh:96-97] [c:3553716] <!-- 확인 못 함: 운영 이미지 태그는 클러스터 --> |
+| 2 | 인프라: 프로브를 `/livez` · `/readyz` 로(startup · readiness · liveness 셋) | 인프라 관리자 | 끝(infra 2bfbf40) [code:chatbot/search/service.py:29] <!-- 확인 못 함: 프로브 설정은 인프라 저장소, 2bfbf40 은 이 저장소에 없는 커밋 --> |
+| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push · 인프라 | 앱 로컬 끝, 주석은 인프라 [code:backend/src/main/resources/application.yml:59-62] <!-- 확인 못 함: Pod 주석과 운영 반영 여부는 인프라와 클러스터 --> |
 
-- `/livez` = liveness 그룹(livenessState), `/readyz` = readiness 그룹(readinessState + db). 내용은 `/actuator/health/liveness` · `readiness` 와 같다. DB 가 멈추면 `/readyz` 만 503(Hikari 연결 대기 30초 뒤 — 지금 readiness 와 같은 동작), `/livez` 는 200(2026-11-14 로컬).
-- SPA 대체 경로(`config/SpaConfig` 의 `/**`)와 겹치지 않는다 — `/livez` · `/readyz` 는 actuator JSON, 다른 주소는 그대로 `index.html`(로컬 확인).
+- `/livez` = liveness 그룹(livenessState), `/readyz` = readiness 그룹(readinessState + db). 내용은 `/actuator/health/liveness` · `readiness` 와 같다. DB 가 멈추면 `/readyz` 만 503(Hikari 연결 대기 30초 뒤 — 지금 readiness 와 같은 동작), `/livez` 는 200(2026-11-14 로컬). [c:3553716] [code:backend/src/main/resources/application.yml:66-71]
+- SPA 대체 경로(`config/SpaConfig` 의 `/**`)와 겹치지 않는다 — `/livez` · `/readyz` 는 actuator JSON, 다른 주소는 그대로 `index.html`(로컬 확인). [code:backend/src/main/java/com/kopo17/runshoes/config/SpaConfig.java:13-14] [code:backend/src/main/resources/application.yml:68-70]
 
 3단계(앱, 2026-11-14 로컬)
 
-- `management.server.port: 9000`, 노출은 `health` · `prometheus`. Service(80 → 3000, 8766) · Ingress 에 9000 이 없다(infra `apps/runshoes/app/service.yaml` · `ingress.yaml` 읽어 확인). Prometheus 는 Service 가 아니라 Pod IP:9000 에 바로 붙는다 — infra Prometheus 설정의 `kubernetes-pods` 잡이 Pod 주석 `prometheus.io/scrape: "true"` · `prometheus.io/port: "9000"` · `prometheus.io/path: /actuator/prometheus` 를 본다.
-- 3000 에서 `/actuator` · `/actuator/health` · `/actuator/prometheus` 는 SPA 대체(200 `text/html`, `index.html`)가 된다 — actuator JSON 이 아니다. `/livez` · `/readyz` 는 그대로 3000 에 있다.
-- 응답 시간(`http_server_requests`)은 버킷 넷만 — 50ms · 100ms · 300ms · 1s(+Inf). percentiles-histogram 은 켜지 않았다(시계열이 크게 는다, 사용자 · 인프라 조건). 그래서 p50 · p95 는 이 넷 사이의 어림값이다.
-- 9000 에서도 `/livez` · `/api/…` 같은 주소가 `index.html` 을 돌려준다 — SPA 설정이 관리 포트에도 붙는다(컨트롤러는 붙지 않는다). 9000 은 바깥에 없어 그대로 둔다.
-- 앱 push 와 Pod 주석은 어느 쪽이 먼저여도 된다. 주석이 먼저면 옛 이미지는 9000 이 닫혀 있어 그 대상이 `up 0` 일 뿐 프로브 · 트래픽과 상관없다. 앱이 먼저면 9000 이 열려 있고 아무도 긁지 않는다.
-- 배포 뒤 확인: 공개 주소의 `/actuator` · `/actuator/health` · `/actuator/prometheus` 가 `text/html`(index.html)인지 본다. JSON 이나 `# HELP` 로 시작하는 글이 나오면 열린 것이다.
+- `management.server.port: 9000`, 노출은 `health` · `prometheus`. Service(80 → 3000, 8766) · Ingress 에 9000 이 없다(infra `apps/runshoes/app/service.yaml` · `ingress.yaml` 읽어 확인). Prometheus 는 Service 가 아니라 Pod IP:9000 에 바로 붙는다 — infra Prometheus 설정의 `kubernetes-pods` 잡이 Pod 주석 `prometheus.io/scrape: "true"` · `prometheus.io/port: "9000"` · `prometheus.io/path: /actuator/prometheus` 를 본다. [code:backend/src/main/resources/application.yml:59-62] <!-- 확인 못 함: Service, Ingress, Prometheus 설정은 인프라 저장소 -->
+- 3000 에서 `/actuator` · `/actuator/health` · `/actuator/prometheus` 는 SPA 대체(200 `text/html`, `index.html`)가 된다 — actuator JSON 이 아니다. `/livez` · `/readyz` 는 그대로 3000 에 있다. [code:backend/src/main/resources/application.yml:59] [code:backend/src/main/resources/application.yml:68-70] [code:backend/src/main/java/com/kopo17/runshoes/config/SpaConfig.java:13-14]
+- 응답 시간(`http_server_requests`)은 버킷 넷만 — 50ms · 100ms · 300ms · 1s(+Inf). percentiles-histogram 은 켜지 않았다(시계열이 크게 는다, 사용자 · 인프라 조건). 그래서 p50 · p95 는 이 넷 사이의 어림값이다. [code:backend/src/main/resources/application.yml:63-65]
+- 9000 에서도 `/livez` · `/api/…` 같은 주소가 `index.html` 을 돌려준다 — SPA 설정이 관리 포트에도 붙는다(컨트롤러는 붙지 않는다). 9000 은 바깥에 없어 그대로 둔다. [code:backend/src/main/java/com/kopo17/runshoes/config/SpaConfig.java:13-14] [code:backend/src/main/resources/application.yml:61]
+- 앱 push 와 Pod 주석은 어느 쪽이 먼저여도 된다. 주석이 먼저면 옛 이미지는 9000 이 닫혀 있어 그 대상이 `up 0` 일 뿐 프로브 · 트래픽과 상관없다. 앱이 먼저면 9000 이 열려 있고 아무도 긁지 않는다. [code:backend/src/main/resources/application.yml:60-61]
+- 배포 뒤 확인: 공개 주소의 `/actuator` · `/actuator/health` · `/actuator/prometheus` 가 `text/html`(index.html)인지 본다. JSON 이나 `# HELP` 로 시작하는 글이 나오면 열린 것이다. [code:backend/src/main/resources/application.yml:59]
 
 #### 2. 왜 이렇게 했나
 
-- **Pull 형(GitOps).** Jenkins 가 `kubectl set image` 로 밀어 넣으면 Jenkins 가 클러스터 권한을 들고 있어야 하고(뚫리면 클러스터도), "지금 무엇이 배포됐나"를 알려면 kubectl 을 쳐야 한다. Jenkins 는 Git 에 커밋만 하고 ArgoCD 가 Git 을 읽게 하면 — 자격 증명이 줄고, 배포된 것의 답이 늘 Git 에 있고, 롤백이 `git revert` 다.
-- **ArgoCD 는 레지스트리를 보지 않는다.** 새 이미지가 Harbor 에 올라와도 Git 에 태그가 적히기 전에는 배포되지 않는다 — 태그 커밋 한 줄이 Harbor 와 ArgoCD 를 잇는 유일한 다리다.
-- **앱 리포와 인프라 리포를 나눴다.** 같은 매니페스트가 두 곳에 있으면 "어느 쪽이 진짜냐"가 생긴다. 인프라 리포 하나로 클러스터 전체가 보이고, 태그 커밋이 앱 리포의 빌드를 다시 부르지 않는다.
-- **웹훅이 주력, 폴링은 안전망.** 운영 도구는 Cloudflare Access 뒤에 두고, GitHub 이 들어올 `/github-webhook/`(Jenkins) · `/api/webhook`(ArgoCD)만 Access 를 비켜 둔다 — 요청은 서명(공유 비밀)으로 확인한다. 웹훅을 놓쳐도 Jenkins 15분 · ArgoCD 3분 폴링이 잡는다.
-- **문서만 바뀐 커밋은 이미지를 굽지 않는다.** `docs/` · `*.md` 는 `.dockerignore` 로 이미지에 들어가지 않아, 구워도 내용이 같은 이미지에 새 태그만 붙고 Pod 가 한 번 더 바뀐다. 빌드 트리거에서 경로를 빼지 않고 빌드 안에서 건너뛰는 것은, push 마다 빌드가 하나씩 있어야 FOREMAN 이 "push 했는데 빌드 없음"(조용한 고장)을 알아볼 수 있어서다.
-- **스키마 변경 때만 사람이 Sync 한다.** 자동 Sync 는 태그 커밋을 3분 안에 배포해 "덤프 → Sync" 순서를 깬다. 평소 배포는 자동이 낫고, 되돌릴 수 없는 순간(MySQL DDL 은 트랜잭션이 아니다)에만 사람이 문을 연다.
-- **DB 는 runshoes 네임스페이스의 자기 StatefulSet(2026-10-21).** 같은 클러스터의 펫퍼민트 MySQL 에 데이터베이스만 더하면 메모리는 거의 들지 않지만, 펫퍼민트의 초기화 Job · Secret 을 고쳐야 하고 롤백 · 실험을 같이 산다. 메모리 512Mi 를 더 쓰고 격리를 골랐다 — StatefulSet 을 직접 운영해 보는 것도 학습 목표였다. 설정 값은 펫퍼민트 MySQL 과 맞췄다.
+- **Pull 형(GitOps).** Jenkins 가 `kubectl set image` 로 밀어 넣으면 Jenkins 가 클러스터 권한을 들고 있어야 하고(뚫리면 클러스터도), "지금 무엇이 배포됐나"를 알려면 kubectl 을 쳐야 한다. Jenkins 는 Git 에 커밋만 하고 ArgoCD 가 Git 을 읽게 하면 — 자격 증명이 줄고, 배포된 것의 답이 늘 Git 에 있고, 롤백이 `git revert` 다. [code:Jenkinsfile:1] [code:Jenkinsfile:130-163]
+- **ArgoCD 는 레지스트리를 보지 않는다.** 새 이미지가 Harbor 에 올라와도 Git 에 태그가 적히기 전에는 배포되지 않는다 — 태그 커밋 한 줄이 Harbor 와 ArgoCD 를 잇는 유일한 다리다. [code:Jenkinsfile:148-155] <!-- 확인 못 함: ArgoCD 가 레지스트리를 보지 않는 것은 클러스터 설정 -->
+- **앱 리포와 인프라 리포를 나눴다.** 같은 매니페스트가 두 곳에 있으면 "어느 쪽이 진짜냐"가 생긴다. 인프라 리포 하나로 클러스터 전체가 보이고, 태그 커밋이 앱 리포의 빌드를 다시 부르지 않는다. [code:Jenkinsfile:10-11]
+- **웹훅이 주력, 폴링은 안전망.** 운영 도구는 Cloudflare Access 뒤에 두고, GitHub 이 들어올 `/github-webhook/`(Jenkins) · `/api/webhook`(ArgoCD)만 Access 를 비켜 둔다 — 요청은 서명(공유 비밀)으로 확인한다. 웹훅을 놓쳐도 Jenkins 15분 · ArgoCD 3분 폴링이 잡는다. [code:Jenkinsfile:4] <!-- 확인 못 함: Cloudflare Access 예외, 웹훅 서명, ArgoCD 폴링 주기는 저장소 밖 -->
+- **문서만 바뀐 커밋은 이미지를 굽지 않는다.** `docs/` · `*.md` 는 `.dockerignore` 로 이미지에 들어가지 않아, 구워도 내용이 같은 이미지에 새 태그만 붙고 Pod 가 한 번 더 바뀐다. 빌드 트리거에서 경로를 빼지 않고 빌드 안에서 건너뛰는 것은, push 마다 빌드가 하나씩 있어야 FOREMAN 이 "push 했는데 빌드 없음"(조용한 고장)을 알아볼 수 있어서다. [code:.dockerignore:9-10] [code:Jenkinsfile:12-16]
+- **스키마 변경 때만 사람이 Sync 한다.** 자동 Sync 는 태그 커밋을 3분 안에 배포해 "덤프 → Sync" 순서를 깬다. 평소 배포는 자동이 낫고, 되돌릴 수 없는 순간(MySQL DDL 은 트랜잭션이 아니다)에만 사람이 문을 연다. [code:backend/src/main/resources/application.yml:17-19] <!-- 확인 못 함: ArgoCD 감지 주기는 클러스터 -->
+- **DB 는 runshoes 네임스페이스의 자기 StatefulSet(2026-10-21).** 같은 클러스터의 펫퍼민트 MySQL 에 데이터베이스만 더하면 메모리는 거의 들지 않지만, 펫퍼민트의 초기화 Job · Secret 을 고쳐야 하고 롤백 · 실험을 같이 산다. 메모리 512Mi 를 더 쓰고 격리를 골랐다 — StatefulSet 을 직접 운영해 보는 것도 학습 목표였다. 설정 값은 펫퍼민트 MySQL 과 맞췄다. <!-- 확인 못 함: StatefulSet 과 설정 값은 인프라 저장소 -->
 
 #### 3. 시도했던 것들
 
-- **웹 터미널 수동 배포(2026-07~09).** React + json-server 를 학교 웹 터미널에 손으로 올렸다. 옛 절차는 `archive/DEPLOY.md`.
-- **학교 vcluster GitOps(2026-09 → 10-18).** 학교 RKE2 위 vcluster 에 GitLab · Jenkins/kaniko · std-harbor · ArgoCD(auto + prune + selfHeal)로 처음 GitOps 를 했다. 교내망에서만 닿아 집에서 손댈 수 없었다. 2026-10-18 자체 kubeadm 클러스터로 옮기며 GitHub 하나 · BuildKit rootless · 자체 Harbor · 커밋 해시 태그(전에는 `BUILD_NUMBER` + `latest`) · prune · selfHeal 끔으로 바꿨다 — 같은 클러스터에 먼저 올라간 펫퍼민트의 패턴이다.
-- **Pod 에서 Ollama 로 가는 길(2026-09 → 10-18).** 학교 vcluster 의 Pod 는 오버레이 네트워크 안이라 같은 사설 IP 대역의 GPU 서버로 경로가 없었다(요청이 늘 타임아웃 — 방화벽이 아니라 구조의 제약). 클러스터 안에 Ollama 를 띄우는 것은 컨테이너 상한 2Gi 에서 8B 모델이 돌지 않아 기각했다. GPU 서버의 Ollama 를 Cloudflare 터널 + Access(Service Token 헤더, Secret 으로 주입)로 공개 HTTPS 에 내고 Pod 의 egress 로 불렀다 — Gemini API 로 바꾸는 안은 보류했다. 자체 클러스터로 옮긴 뒤로는 노드가 GPU 호스트 위 VM 이라 같은 사설망에 있어 `http://192.168.122.1:11434` 로 바로 부른다(터널 · Service Token 불필요).
-- **공용 터널 무중단 이전(2026-10-18).** 클러스터 공용 터널이 다른 프로젝트 네임스페이스에 손으로 apply 돼 있었고 git 에 없었다. 끊기면 ArgoCD · Jenkins 도 끊기는 변경이라 되돌리기 4단을 먼저 만들고, 같은 터널에 커넥터를 더 띄워(2 → 4) 확인한 뒤 옛것을 지웠다. 공개 주소 4개를 1초마다 1,360회 — 실패 0.
-- **Spring 전환(2026-10-21 01:39 KST).** MySQL 을 먼저 선택 Sync 로 띄우고, 앱 이미지와 Deployment 변경은 Sync 한 번에 내보냈다 — 새 이미지가 DB 설정 없이 뜨는 창이 없게. 공개 `/api/terms` 를 1초마다 90회 — 실패 0, 롤링 겹침 2초 동안 Node 와 Spring 이 번갈아 응답했다. 되돌리기 길(Node 이미지 + PVC 의 db.json)은 V3 적용 뒤 데이터와 맞지 않아 같은 날 닫았다.
+- **웹 터미널 수동 배포(2026-07~09).** React + json-server 를 학교 웹 터미널에 손으로 올렸다. 옛 절차는 `archive/DEPLOY.md`. [docs:archive/DEPLOY.md]
+- **학교 vcluster GitOps(2026-09 → 10-18).** 학교 RKE2 위 vcluster 에 GitLab · Jenkins/kaniko · std-harbor · ArgoCD(auto + prune + selfHeal)로 처음 GitOps 를 했다. 교내망에서만 닿아 집에서 손댈 수 없었다. 2026-10-18 자체 kubeadm 클러스터로 옮기며 GitHub 하나 · BuildKit rootless · 자체 Harbor · 커밋 해시 태그(전에는 `BUILD_NUMBER` + `latest`) · prune · selfHeal 끔으로 바꿨다 — 같은 클러스터에 먼저 올라간 펫퍼민트의 패턴이다. [code:Jenkinsfile:2] [code:Jenkinsfile:18]
+- **Pod 에서 Ollama 로 가는 길(2026-09 → 10-18).** 학교 vcluster 의 Pod 는 오버레이 네트워크 안이라 같은 사설 IP 대역의 GPU 서버로 경로가 없었다(요청이 늘 타임아웃 — 방화벽이 아니라 구조의 제약). 클러스터 안에 Ollama 를 띄우는 것은 컨테이너 상한 2Gi 에서 8B 모델이 돌지 않아 기각했다. GPU 서버의 Ollama 를 Cloudflare 터널 + Access(Service Token 헤더, Secret 으로 주입)로 공개 HTTPS 에 내고 Pod 의 egress 로 불렀다 — Gemini API 로 바꾸는 안은 보류했다. 자체 클러스터로 옮긴 뒤로는 노드가 GPU 호스트 위 VM 이라 같은 사설망에 있어 `http://192.168.122.1:11434` 로 바로 부른다(터널 · Service Token 불필요). [code:backend/src/main/resources/application.yml:53-54] <!-- 확인 못 함: 운영 OLLAMA_URL 값은 인프라 Deployment env -->
+- **공용 터널 무중단 이전(2026-10-18).** 클러스터 공용 터널이 다른 프로젝트 네임스페이스에 손으로 apply 돼 있었고 git 에 없었다. 끊기면 ArgoCD · Jenkins 도 끊기는 변경이라 되돌리기 4단을 먼저 만들고, 같은 터널에 커넥터를 더 띄워(2 → 4) 확인한 뒤 옛것을 지웠다. 공개 주소 4개를 1초마다 1,360회 — 실패 0. [c:a6bf21e] <!-- 확인 못 함: 터널 이전과 잰 값은 클러스터 쪽 -->
+- **Spring 전환(2026-10-21 01:39 KST).** MySQL 을 먼저 선택 Sync 로 띄우고, 앱 이미지와 Deployment 변경은 Sync 한 번에 내보냈다 — 새 이미지가 DB 설정 없이 뜨는 창이 없게. 공개 `/api/terms` 를 1초마다 90회 — 실패 0, 롤링 겹침 2초 동안 Node 와 Spring 이 번갈아 응답했다. 되돌리기 길(Node 이미지 + PVC 의 db.json)은 V3 적용 뒤 데이터와 맞지 않아 같은 날 닫았다. [c:a6bf21e] [code:Dockerfile:8] <!-- 확인 못 함: 전환 때 잰 값은 운영 쪽 -->
 - **자동 Sync 를 켰다(2026-10-21) → 스키마 변경 때마다 끈다.** 처음에는 수동 Sync 였다. 자동으로 바꾼 뒤 V3 런북에 "자동 Sync 는 이 순서를 깬다"를 적었고, V4 · V5(10-29) · V6~V9(10-30) · V10 · V11(11-01) · V12(11-02) 모두 끄고 켰다. V6~V9 는 자동 Sync 를 두 번 끄고 켜지 않으려고 한 번에 배포했다(2026-10-30 사용자).
-- **롤링 겹침이 PK 충돌을 냈다(2026-11-01).** `maxSurge 1` 이라 배포 중 Pod 가 둘인 순간이 있다. 앱이 JVM 안의 잠금으로 매기던 `max + 1` id 가 두 Pod 에서 같아져 충돌했다 — V10 에서 AUTO_INCREMENT 로 고쳤다(`07_database.md` 3절). "Pod 는 하나"라는 가정이 롤링 배포에서는 성립하지 않는다.
-- **2분 폴링 → 웹훅(2026-11-03).** Jenkins 가 Access 뒤라 GitHub 웹훅이 닿지 않아 2분마다 폴링했다. 웹훅 경로만 Access 를 비켜 두고 폴링은 15분 안전망으로 줄였다.
-- **문서만 바꿔도 재배포됐다 → 건너뛴다(2026-11-09).** 문서 · 카탈로그 커밋도 push 마다 이미지 빌드 → 태그 커밋 → 자동 Sync 로 Pod 를 갈았다(10-18 이후 커밋 122개 중 문서만 바꾼 것 11개). 문서만 바뀐 빌드는 건너뛰게 했다. 카탈로그(`catalog/`)도 이미지에 들어가지 않지만 이번에는 빼지 않았다 — 건너뛸 목록이 넓을수록 이미지에 들어가는 파일을 새로 더했을 때 배포가 조용히 빠질 위험이 커진다.
-- **replicas 2 · 워커 증설(2026-11-10).** 노드를 하나씩 내리며 워커를 4대 · 8GB 로 늘리기 전에 replicas 를 2 로(같은 커밋에 정리 작업 끄기). 적용 뒤 두 Pod env `-`, `@Scheduled` 스레드 0개(정리 미등록), 응답 200. 증설 중 1초마다 잰 `/api/shoes`: w2 · w3 정비 실패 0, w1(MySQL PV) 정비 때 19:35:15~19:36:59 약 1분 40초 500/503(사용자가 받아들인 중단) — 그 전 19:27:20~31 약 12초는 ingress-nginx 등 재시작 때 모든 호스트가 응답하지 않았다(원인 미확인, infra `docs/02_availability.md` 4절). 그날 Jenkins #109 빌드 · 롤아웃이 끝난 뒤 w1 을 내렸다.
+- **롤링 겹침이 PK 충돌을 냈다(2026-11-01).** `maxSurge 1` 이라 배포 중 Pod 가 둘인 순간이 있다. 앱이 JVM 안의 잠금으로 매기던 `max + 1` id 가 두 Pod 에서 같아져 충돌했다 — V10 에서 AUTO_INCREMENT 로 고쳤다(`07_database.md` 3절). "Pod 는 하나"라는 가정이 롤링 배포에서는 성립하지 않는다. [code:backend/src/main/resources/db/migration/V10__auto_increment_ids.sql:1] [code:backend/src/main/java/com/kopo17/runshoes/api/JsonServerController.java:36] [docs:07_database.md]
+- **2분 폴링 → 웹훅(2026-11-03).** Jenkins 가 Access 뒤라 GitHub 웹훅이 닿지 않아 2분마다 폴링했다. 웹훅 경로만 Access 를 비켜 두고 폴링은 15분 안전망으로 줄였다. [code:Jenkinsfile:4]
+- **문서만 바꿔도 재배포됐다 → 건너뛴다(2026-11-09).** 문서 · 카탈로그 커밋도 push 마다 이미지 빌드 → 태그 커밋 → 자동 Sync 로 Pod 를 갈았다(10-18 이후 커밋 122개 중 문서만 바꾼 것 11개). 문서만 바뀐 빌드는 건너뛰게 했다. 카탈로그(`catalog/`)도 이미지에 들어가지 않지만 이번에는 빼지 않았다 — 건너뛸 목록이 넓을수록 이미지에 들어가는 파일을 새로 더했을 때 배포가 조용히 빠질 위험이 커진다. [c:081638e] [code:Jenkinsfile:12-16] [code:Jenkinsfile:83] [code:Dockerfile:13-18] [code:Dockerfile:25-27]
+- **replicas 2 · 워커 증설(2026-11-10).** 노드를 하나씩 내리며 워커를 4대 · 8GB 로 늘리기 전에 replicas 를 2 로(같은 커밋에 정리 작업 끄기). 적용 뒤 두 Pod env `-`, `@Scheduled` 스레드 0개(정리 미등록), 응답 200. 증설 중 1초마다 잰 `/api/shoes`: w2 · w3 정비 실패 0, w1(MySQL PV) 정비 때 19:35:15~19:36:59 약 1분 40초 500/503(사용자가 받아들인 중단) — 그 전 19:27:20~31 약 12초는 ingress-nginx 등 재시작 때 모든 호스트가 응답하지 않았다(원인 미확인, infra `docs/02_availability.md` 4절). 그날 Jenkins #109 빌드 · 롤아웃이 끝난 뒤 w1 을 내렸다. [c:97ec8e0] [code:backend/src/main/resources/application.yml:50] <!-- 확인 못 함: 증설 중 잰 값과 운영 env 는 클러스터 -->
 - **상태를 추정으로 보고했다가 고쳤다.** 자동 Sync · 배포 상태를 확인하지 않고 말한 적이 있어, 이후 매번 `syncPolicy` · 이미지 태그 · Pod 로그를 읽고 보고한다(사용자 — "확인 안 하고 꺼져 있다고 하지 마라").
 
 #### 4. 남은 한계
 
-- **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만 뜬다. 그 사이의 리뷰 · 관리 화면 수정은 백업이 없다.
-- **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다(앱 Pod 가 둘이어도 503). 다른 프로젝트의 MySQL 도 w1 에 있다.
-- **MySQL 자동 장애 전환이 없다.** Operator 가 필요한데 자원 제약으로 Replica(w2, 2026-11-10) + 수동 승격을 택했다 — w1 이 죽으면 사람이 런북대로 승격한다(기계 쪽 약 2분). 앱 트래픽까지 옮기는 전환은 아직 해 보지 않았다. 승격하면 Service `runshoes-mysql` 의 selector 를 git 에도 반영해야 한다 — 자동 Sync 라 Jenkins 태그 커밋 하나에 되돌아간다.
-- **app 노드가 둘이다.** 롤링 동안 잠깐 Pod 하나, app 노드 하나가 죽으면 Pod 하나로 버티고 그동안 롤링(Jenkins 태그 커밋의 자동 Sync)은 멈춘다.
+- **정기 백업이 없다.** 덤프는 스키마 변경 · 적재 전에만 뜬다. 그 사이의 리뷰 · 관리 화면 수정은 백업이 없다. <!-- 확인 못 함: 백업 운용은 저장소 밖 -->
+- **DB 가 노드 하나에 묶인다.** local-path PV 라 w1 에 묶이고, w1 이 멈추면 DB 와 앱 Ready 가 함께 빠진다(앱 Pod 가 둘이어도 503). 다른 프로젝트의 MySQL 도 w1 에 있다. [code:backend/src/main/resources/application.yml:71] <!-- 확인 못 함: PV 와 노드 배치는 클러스터 -->
+- **MySQL 자동 장애 전환이 없다.** Operator 가 필요한데 자원 제약으로 Replica(w2, 2026-11-10) + 수동 승격을 택했다 — w1 이 죽으면 사람이 런북대로 승격한다(기계 쪽 약 2분). 앱 트래픽까지 옮기는 전환은 아직 해 보지 않았다. 승격하면 Service `runshoes-mysql` 의 selector 를 git 에도 반영해야 한다 — 자동 Sync 라 Jenkins 태그 커밋 하나에 되돌아간다. [c:7c78e82] <!-- 확인 못 함: Replica, 승격 런북, 걸린 시간은 클러스터와 인프라 저장소 -->
+- **app 노드가 둘이다.** 롤링 동안 잠깐 Pod 하나, app 노드 하나가 죽으면 Pod 하나로 버티고 그동안 롤링(Jenkins 태그 커밋의 자동 Sync)은 멈춘다. <!-- 확인 못 함: 노드 구성은 클러스터 -->
 - **데이터 정리가 꺼져 있다(2026-11-10부터).** replicas 2 에서 두 Pod 가 같은 정리를 하지 않게 env 로 껐다(1-5). 잠금(`GET_LOCK`, 2026-11-17)이 든 이미지가 오르고 env 를 뺄 때까지 activity_logs 가 지워지지 않고 chatbot_turns 의 질문 · 답도 남으며, 정리 때 남기던 행 수 경고 로그도 나오지 않는다.
-- **백업 · VM 이 같은 물리 서버다.** 덤프(호스트 `~/k8s-cluster/backup/`)와 MySQL PV(VM 디스크)가 같은 NVMe 이고, VM 이 모두 같은 서버라 서버가 죽으면 전부 멈춘다.
-- **배포는 빌드 시간만큼 걸린다.** push 에서 반영까지 약 5분, 대부분 이미지 빌드(Vite + Maven)다. 웹훅을 놓치면 폴링(Jenkins 15분 · ArgoCD 3분)만큼 늦어진다.
-- **스키마 변경 배포는 사람이 세 번 손댄다**(자동 Sync 끄기 · Sync · 켜기). 빼먹으면 Jenkins 태그 커밋이 덤프 전에 배포된다 — 런북의 1단계 확인(`automated` 없음)이 유일한 장치다.
-- **노드 메모리를 다른 프로젝트와 나눈다.** 빌드 Pod 는 상한 3Gi 라 다른 빌드와 겹치면 기다린다.
+- **백업 · VM 이 같은 물리 서버다.** 덤프(호스트 `~/k8s-cluster/backup/`)와 MySQL PV(VM 디스크)가 같은 NVMe 이고, VM 이 모두 같은 서버라 서버가 죽으면 전부 멈춘다. <!-- 확인 못 함: 호스트 구성은 저장소 밖 -->
+- **배포는 빌드 시간만큼 걸린다.** push 에서 반영까지 약 5분, 대부분 이미지 빌드(Vite + Maven)다. 웹훅을 놓치면 폴링(Jenkins 15분 · ArgoCD 3분)만큼 늦어진다. (2026-11-09 기준) [c:081638e] [code:Jenkinsfile:4] [code:Dockerfile:10-30] <!-- 확인 못 함: ArgoCD 폴링 주기는 클러스터 -->
+- **스키마 변경 배포는 사람이 세 번 손댄다**(자동 Sync 끄기 · Sync · 켜기). 빼먹으면 Jenkins 태그 커밋이 덤프 전에 배포된다 — 런북의 1단계 확인(`automated` 없음)이 유일한 장치다. [code:Jenkinsfile:130-163] <!-- 확인 못 함: 런북과 자동 Sync 운용은 인프라 저장소와 클러스터 -->
+- **노드 메모리를 다른 프로젝트와 나눈다.** 빌드 Pod 는 상한 3Gi 라 다른 빌드와 겹치면 기다린다. [code:Jenkinsfile:40-43]
 
 #### 5. 검증 항목
 
-- 배포 뒤: `kubectl -n runshoes get deploy runshoes -o wide`(이미지 태그 = 커밋 12자리) · ArgoCD `sync.status` · `health.status` · `sync.revision`(= infra 태그 커밋).
-- 스키마 변경 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 · 리뷰 — 직전과 같은지), 자동 Sync 다시 켜짐(`syncPolicy.automated`).
-- 배포 전: `scripts/check-image-migrations.sh` — Harbor 이미지 안의 마이그레이션 파일이 git 과 같은지(sha256).
+- 배포 뒤: `kubectl -n runshoes get deploy runshoes -o wide`(이미지 태그 = 커밋 12자리) · ArgoCD `sync.status` · `health.status` · `sync.revision`(= infra 태그 커밋). [code:Jenkinsfile:71] <!-- 확인 못 함: 클러스터와 ArgoCD 에서 읽는 확인 -->
+- 스키마 변경 뒤: Pod 로그 `Migrating … → Successfully applied 1 migration … vN`, 공개 API 200, 행 수(신발 · 리뷰 — 직전과 같은지), 자동 Sync 다시 켜짐(`syncPolicy.automated`). [code:backend/src/main/resources/application.yml:17-19] <!-- 확인 못 함: Pod 로그와 자동 Sync 는 클러스터 -->
+- 배포 전: `scripts/check-image-migrations.sh` — Harbor 이미지 안의 마이그레이션 파일이 git 과 같은지(sha256). [code:backend/src/main/resources/db/migration/] <!-- 확인 못 함: 스크립트는 인프라 저장소 apps/runshoes/scripts -->
 - 보고 전에는 위를 **읽어서 확인**한다 — 추정으로 말하지 않는다.

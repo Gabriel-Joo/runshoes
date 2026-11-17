@@ -1,156 +1,160 @@
-> 상태: 운영(2026-11-11, 작업 3-4 — 예산 배점 20 → 10, 이미지 `4f57bc0e1537`. 운영 대조 불일치 0 · 3-3 대비 27 · 1 · 23). 계산은 서버 한 곳(`GET /api/recommend` · `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java` · `scripts/parity/reference/recommend.mjs`(기준 사본) · `src/pages/Recommend.tsx`(질문 · 그리기)
+<!--
+다루는 곳: backend/src/main/java/com/kopo17/runshoes/compare/, src/pages/Recommend.tsx, src/utils/compareApi.ts, scripts/parity/
+읽은 커밋: 606b730
+-->
+> 상태: 운영(2026-11-11, 작업 3-4 — 예산 배점 20 → 10, 이미지 `4f57bc0e1537`. 운영 대조 불일치 0 · 3-3 대비 27 · 1 · 23). 계산은 서버 한 곳(`GET /api/recommend` · `compare/RecommendPolicy`, 작업 3에서 브라우저에서 옮김). 숫자는 운영 공개 API `GET /api/shoes`(2026-11-10, 310켤레)로 센 것. 원천: `backend/…/compare/RecommendPolicy.java` · `scripts/parity/reference/recommend.mjs`(기준 사본) · `src/pages/Recommend.tsx`(질문 · 그리기) [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:59-81] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:10-17] [code:scripts/parity/reference/recommend.mjs] [code:src/pages/Recommend.tsx:208] [c:4f57bc0e1537] [c:d0342aa] <!-- 확인 못 함: 운영 이미지와 운영 대조, 공개 API 수는 저장소 밖 -->
 
 #### 0. 한 줄 요약
 
-**추천받기**(`/recommend`)는 다섯 문항(용도 · 발볼 · 안정성 · 쿠션 · 예산)에 답하면 310켤레를 점수로 줄 세워 상위 3을 보인다. 점수는 "물어본 조건이 얼마나 맞나"만 잰다 — **데이터가 없어 판단할 수 없는 조건은 세지 않고**(만점에서도 뺀다), 그 사실을 문장으로 밝힌다. 세대 · 인기 같은 상태는 점수에 넣지 않는다.
+**추천받기**(`/recommend`)는 다섯 문항(용도 · 발볼 · 안정성 · 쿠션 · 예산)에 답하면 310켤레를 점수로 줄 세워 상위 3을 보인다. 점수는 "물어본 조건이 얼마나 맞나"만 잰다 — **데이터가 없어 판단할 수 없는 조건은 세지 않고**(만점에서도 뺀다), 그 사실을 문장으로 밝힌다. 세대 · 인기 같은 상태는 점수에 넣지 않는다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:22-28] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:251] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:225-231] (2026-11-10 기준) [c:37e665c]
 
 #### 1. 최종 설계
 
-이 절의 계산 규칙(배점 · 쿠션 경계 40 · 35mm · 동점 규칙 등)은 사용자 지시로만 바꾼다. 작업 중 더 나은 값이 보여도 고치지 말고 보고한다 — 바뀐 것은 근거와 함께 3절에 남긴다(2026-11-10 사용자).
+이 절의 계산 규칙(배점 · 쿠션 경계 40 · 35mm · 동점 규칙 등)은 사용자 지시로만 바꾼다. 작업 중 더 나은 값이 보여도 고치지 말고 보고한다 — 바뀐 것은 근거와 함께 3절에 남긴다(2026-11-10 사용자). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:16] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:151]
 
 #### 1-1. 문항과 배점
 
 | 문항(화면) | 받는 값 | 배점 | 맞는 경우 |
 |---|---|---|---|
-| 어떤 달리기를 주로 하시나요? | 조깅·회복주 · 템포·인터벌 · LSD·장거리 · 레이스 · 트레일 | 40 | 용도가 같다 |
-| 발볼이 넓은 편인가요? | 넓음 · 보통 · unknown | 30 / 20 | **넓음**만 조건 — 발볼 "넓음"이면 30, 아니어도 와이드 모델이 있으면 20. **보통 · 모르겠어요는 발볼을 보지 않는다**(2-3) |
-| 신던 운동화 밑창이 어떻게 닳았나요? | 안정화 · 중립화 · 중립화-outer(새끼발가락 쪽) · unknown | 30 | 안정화면 안정화, 나머지 둘은 중립화 |
-| 쿠션은 어느 정도가 좋으세요? | high · mid · low · unknown | 20 | high 스택 40mm 이상 · mid 35 이상 40 미만 · low 35 미만 |
-| 예산은 어느 정도세요? | low(20만원까지) · mid(30만원까지) · unknown(가격은 상관없어요) | **10** | **상한** — 그 금액까지면 맞는다(이하, 가격은 발매가 — `01a` 1-5). 상한 안의 신발은 5만원이든 19만원이든 같게 본다. "가격은 상관없어요"는 조건이 아니다. 옛 값 `high`(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고 서버는 `unknown` 과 같게 받는다 |
+| 어떤 달리기를 주로 하시나요? | 조깅·회복주 · 템포·인터벌 · LSD·장거리 · 레이스 · 트레일 | 40 | 용도가 같다 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:24] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:86-97] [code:src/pages/Recommend.tsx:29] |
+| 발볼이 넓은 편인가요? | 넓음 · 보통 · unknown | 30 / 20 | **넓음**만 조건 — 발볼 "넓음"이면 30, 아니어도 와이드 모델이 있으면 20. **보통 · 모르겠어요는 발볼을 보지 않는다**(2-3) [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:25] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:99-129] [code:src/pages/Recommend.tsx:60] |
+| 신던 운동화 밑창이 어떻게 닳았나요? | 안정화 · 중립화 · 중립화-outer(새끼발가락 쪽) · unknown | 30 | 안정화면 안정화, 나머지 둘은 중립화 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:26] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:131-149] [code:src/pages/Recommend.tsx:77] |
+| 쿠션은 어느 정도가 좋으세요? | high · mid · low · unknown | 20 | high 스택 40mm 이상 · mid 35 이상 40 미만 · low 35 미만 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:27] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:151-159] [code:src/pages/Recommend.tsx:103] |
+| 예산은 어느 정도세요? | low(20만원까지) · mid(30만원까지) · unknown(가격은 상관없어요) | **10** | **상한** — 그 금액까지면 맞는다(이하, 가격은 발매가 — `01a` 1-5). 상한 안의 신발은 5만원이든 19만원이든 같게 본다. "가격은 상관없어요"는 조건이 아니다. 옛 값 `high`(전 "30만원 이상도 괜찮아요")는 화면에서 뺐고 서버는 `unknown` 과 같게 받는다 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:28] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:39-40] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:174-188] [code:src/pages/Recommend.tsx:125] [code:src/pages/Recommend.tsx:132-142] |
 
-- 다 물어보면 만점 130(예산이 20점이던 작업 3-3 까지는 140 — 2절 · 3절의 140 은 그때 숫자).
-- **예산 금액(`budget`, 원) — 챗봇용(작업 5-1, 2026-11-12 사용자).** `price` 대신 `budget=150000` 을 보내면 그 금액이 상한이다. 배점(10) · 문장 · 못 본 조건은 칸과 같고 경계만 그 금액이다 — `budget=200000` 은 `price=low`, `300000` 은 `price=mid` 와 응답까지 같다. 둘 중 하나만(둘 다 · 숫자가 아님 · 1 ~ 1억 밖은 400). 화면은 드롭다운이라 칸 셋 그대로 보내고, 자유 문장인 챗봇만 말한 금액을 보낸다. 금액 없이 "저렴한 걸로" · "비싸도 괜찮아요"라고 하면 챗봇이 칸(20만원까지 · 상관없어요)으로 맞추고 그렇게 밝힌다.
-- 예산을 넘으면 "발매가가 예산보다 높아요 (329,000원) — 지금 파는 값은 더 낮을 수 있어요"(안 맞음). 상한 안이면 늘 "예산에 맞아요 (발매가 199,000원)" — 전의 "생각하신 것보다 저렴해요"는 없앴다(작업 3-2). 질문 아래에 "발매가(정가) 기준이에요 — 할인가는 보지 않아요"(작업 3-3).
-- **"잘 모르겠어요"(unknown)는 그 조건을 묻지 않은 것이다** — 모든 신발에 같게(점수 · 만점 둘 다 없음), 정보 줄(·)만 붙는다.
+- 다 물어보면 만점 130(예산이 20점이던 작업 3-3 까지는 140 — 2절 · 3절의 140 은 그때 숫자). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:86] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:103] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:134] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:156] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:184]
+- **예산 금액(`budget`, 원) — 챗봇용(작업 5-1, 2026-11-12 사용자).** `price` 대신 `budget=150000` 을 보내면 그 금액이 상한이다. 배점(10) · 문장 · 못 본 조건은 칸과 같고 경계만 그 금액이다 — `budget=200000` 은 `price=low`, `300000` 은 `price=mid` 와 응답까지 같다. 둘 중 하나만(둘 다 · 숫자가 아님 · 1 ~ 1억 밖은 400). 화면은 드롭다운이라 칸 셋 그대로 보내고, 자유 문장인 챗봇만 말한 금액을 보낸다. 금액 없이 "저렴한 걸로" · "비싸도 괜찮아요"라고 하면 챗봇이 칸(20만원까지 · 상관없어요)으로 맞추고 그렇게 밝힌다. [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:59-73] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:32-37] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:177-180] [code:chatbot/branches/recommend.py:5-6] [code:src/pages/Recommend.tsx:208]
+- 예산을 넘으면 "발매가가 예산보다 높아요 (329,000원) — 지금 파는 값은 더 낮을 수 있어요"(안 맞음). 상한 안이면 늘 "예산에 맞아요 (발매가 199,000원)" — 전의 "생각하신 것보다 저렴해요"는 없앴다(작업 3-2). 질문 아래에 "발매가(정가) 기준이에요 — 할인가는 보지 않아요"(작업 3-3). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:191] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:194] [code:src/pages/Recommend.tsx:126-127]
+- **"잘 모르겠어요"(unknown)는 그 조건을 묻지 않은 것이다** — 모든 신발에 같게(점수 · 만점 둘 다 없음), 정보 줄(·)만 붙는다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:123-129] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:147-149] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:170-172] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:196-198]
 
 #### 1-2. 데이터가 없으면 — 그 조건을 세지 않는다(2026-11-10 사용자)
 
 | 물어봤는데 신발 쪽이 비었을 때 | 처리 |
 |---|---|
-| 스택 없음(19켤레) — 쿠션 | 점수 · 만점에서 함께 뺀다 |
-| 가격 없음(54켤레) — 예산 | 점수 · 만점에서 함께 뺀다 |
-| 발볼 없음(69켤레) · "넓음"을 골랐을 때 | 와이드 모델이 있으면 20(지금처럼), 없거나 모르면 점수 · 만점에서 뺀다. "좁다는 평이 없음"을 약한 근거로 쓰지 않는다 — 빈 칸에는 넓다 · 좁다 근거가 엇갈려 비운 신발이 섞여 있다(2-3) |
-| 용도 · 안정성 | 빈 칸 0 — 늘 판단한다 |
+| 스택 없음(19켤레) — 쿠션 | 점수 · 만점에서 함께 뺀다 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:153-154] (2026-11-10 기준) [c:37e665c] |
+| 가격 없음(54켤레) — 예산 | 점수 · 만점에서 함께 뺀다 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:181-182] (2026-11-10 기준) [c:37e665c] |
+| 발볼 없음(69켤레) · "넓음"을 골랐을 때 | 와이드 모델이 있으면 20(지금처럼), 없거나 모르면 점수 · 만점에서 뺀다. "좁다는 평이 없음"을 약한 근거로 쓰지 않는다 — 빈 칸에는 넓다 · 좁다 근거가 엇갈려 비운 신발이 섞여 있다(2-3) [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:108-121] (2026-11-10 기준) [c:37e665c] |
+| 용도 · 안정성 | 빈 칸 0 — 늘 판단한다 [code:backend/src/main/resources/db/migration/V1__schema.sql:15-16] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:85-97] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:131-149] (2026-11-10 기준) [c:37e665c] |
 
-- 빈 칸을 기본값으로 채우지 않는다(`01a` 2-1).
+- 빈 칸을 기본값으로 채우지 않는다(`01a` 2-1). [docs:01a_catalog_sources.md]
 
 #### 1-3. 줄 세우기
 
-1. **하한선** — 물어본 조건 중 데이터가 없어 못 본 것이 **둘 이상**이면 후보에서 뺀다. 조합마다 작동한다(쿠션 · 예산을 "모르겠어요"로 답하면 그 칸이 빈 신발도 통과한다).
-2. **비율** — 판단한 조건에서 얻은 점수 ÷ 판단한 조건의 만점(`score / max`)이 높은 순.
-3. **비율이 같으면 판단한 조건이 많은 쪽**(`max` 큰 쪽)이 앞 — "똑같이 다 맞으면 확인한 것이 많은 쪽".
-4. 그래도 같으면 종합 점수 `평점 × 20 × (리뷰 수 / (리뷰 수 + 3)) + 찜 × 0.5` 가 높은 쪽(러너들의 선택과 같은 식, `02_screens.md` 1-5).
-5. 그래도 같으면 id 순(안정 정렬).
+1. **하한선** — 물어본 조건 중 데이터가 없어 못 본 것이 **둘 이상**이면 후보에서 뺀다. 조합마다 작동한다(쿠션 · 예산을 "모르겠어요"로 답하면 그 칸이 빈 신발도 통과한다). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:240-243]
+2. **비율** — 판단한 조건에서 얻은 점수 ÷ 판단한 조건의 만점(`score / max`)이 높은 순. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:47] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:245-246]
+3. **비율이 같으면 판단한 조건이 많은 쪽**(`max` 큰 쪽)이 앞 — "똑같이 다 맞으면 확인한 것이 많은 쪽". [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:247]
+4. 그래도 같으면 종합 점수 `평점 × 20 × (리뷰 수 / (리뷰 수 + 3)) + 찜 × 0.5` 가 높은 쪽(러너들의 선택과 같은 식, `02_screens.md` 1-5). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:226-231] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:248-249] [code:src/pages/Best.tsx:47-48] [docs:02_screens.md]
+5. 그래도 같으면 id 순(안정 정렬). [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:41] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:244]
 
 #### 1-4. 응답과 문장
 
-`GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…`(또는 `price` 대신 `budget=<원>`) → `{results: [{id, score, max, checked, reasons, notes}]}`(상위 3, `05_api_contract.md`).
+`GET /api/recommend?purpose=…&width=…&stability=…&cushion=…&price=…`(또는 `price` 대신 `budget=<원>`) → `{results: [{id, score, max, checked, reasons, notes}]}`(상위 3, `05_api_contract.md`). [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:59-80] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:254-267] [docs:05_api_contract.md]
 
-- `score` 판단한 조건에서 얻은 점수 · `max` 판단한 조건의 만점 · `checked` 판단한 조건 수 — 챗봇이 "확인한 조건 넷 중 넷이 맞아요"처럼 분모를 말한다.
-- `reasons` — 판단한 조건마다 한 줄(`hit` 맞았나) + 묻지 않은 조건의 정보 줄.
-- `notes` — **판단하지 못한 조건을 한 줄로**: "가격 정보가 없어 예산은 보지 않았어요", "스택 정보가 없어 쿠션은 보지 않았어요", "발볼 · 와이드 정보가 없어 발볼은 보지 않았어요"(와이드 없음을 알면 "발볼 정보가 없어 발볼은 보지 않았어요 — 와이드 모델은 없어요"). 조건이 아니라 상태라 `reasons` 와 나눈다 — 화면은 2~3위에 ✓ 셋만 보이는데, 못 본 사실은 순위와 상관없이 보여야 한다.
-- 가격 문구는 한국 표기(`199,000원`) — 이관 전에는 브라우저 언어를 따랐다(작업 3).
-- `notes` 둘째 줄 — **옛 세대**: "지금은 다음 세대(클리프톤 11)가 나와 있어요"(2-4). 못 본 조건 줄과 겹치면 두 줄이다.
+- `score` 판단한 조건에서 얻은 점수 · `max` 판단한 조건의 만점 · `checked` 판단한 조건 수 — 챗봇이 "확인한 조건 넷 중 넷이 맞아요"처럼 분모를 말한다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:45-47] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:259-261]
+- `reasons` — 판단한 조건마다 한 줄(`hit` 맞았나) + 묻지 않은 조건의 정보 줄. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:30] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:262]
+- `notes` — **판단하지 못한 조건을 한 줄로**: "가격 정보가 없어 예산은 보지 않았어요", "스택 정보가 없어 쿠션은 보지 않았어요", "발볼 · 와이드 정보가 없어 발볼은 보지 않았어요"(와이드 없음을 알면 "발볼 정보가 없어 발볼은 보지 않았어요 — 와이드 모델은 없어요"). 조건이 아니라 상태라 `reasons` 와 나눈다 — 화면은 2~3위에 ✓ 셋만 보이는데, 못 본 사실은 순위와 상관없이 보여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:50-63] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:218] [code:src/pages/Recommend.tsx:318-328]
+- 가격 문구는 한국 표기(`199,000원`) — 이관 전에는 브라우저 언어를 따랐다(작업 3). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:191] [code:backend/src/main/java/com/kopo17/runshoes/compare/JsText.java:24-27]
+- `notes` 둘째 줄 — **옛 세대**: "지금은 다음 세대(클리프톤 11)가 나와 있어요"(2-4). 못 본 조건 줄과 겹치면 두 줄이다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:219-221] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:217-218]
 
 **문장 규칙(작업 3-3, 2026-11-11 사용자)** — 점수 · 순위는 바꾸지 않고 문장만:
 
 | 자리 | 문장 |
 |---|---|
-| 가격 | 늘 "발매가"로 부른다 — 가격 칸은 발매가(정가)만 담는다(`01a` 1-5). 상세 모달(`priceKind` 가 비면 "발매가") · 비교하기("발매가" 줄)와 같은 이름. 출처 · 종류가 빈 7켤레도 같다. 예산을 묻지 않으면 정보 줄 "발매가 201,000원이에요" |
-| 예산을 넘음 | "— 지금 파는 값은 더 낮을 수 있어요"를 붙인다. 옛 세대는 실제 파는 값이 발매가보다 낮은 경우가 많다 — 발매가로 걸렀다는 사실만 알리면 사용자가 그 신발을 포기한다 |
-| 쿠션이 안 맞음 | 원한 범위와 견줘 방향을 정한다 — low 를 원했으면 늘 "두꺼워요", high 면 늘 "얇아요", mid 면 40 이상 "두꺼워요" · 35 미만 "얇아요" |
-| 용도 · 안정성이 안 맞음 | **안 맞은 첫 줄에만** 실제로 맞은 조건의 이름을 댄다: "트레일용이지만 발볼 · 쿠션이 맞아요". 다른 조건이 둘 이상이고 다 맞으면 "트레일용이지만 다른 조건은 모두 맞아요". 맞은 것이 없거나 둘째 줄이면 사실만: "트레일용 신발이에요" · "안정화 신발이에요". **판단한 조건만 센다** — 묻지 않은 조건 · 데이터가 없어 못 본 조건(1-2)은 맞음에도 "모두"의 분모에도 들지 않는다. 예산을 넘은 줄은 이 꼬리 대신 위의 발매가 꼬리를 쓴다(한 줄이 너무 길어진다) |
-| 값 뒤 조사 | 끝 글자의 받침으로 고른다(`compare/Josa` — 화면 `utils/compare.ts` 의 `hasJong` 과 같은 규칙): "발볼은 보통으로 나왔어요"(ㄹ 받침은 "로"), "넓음이고", "안정화지만", "용도 · 쿠션이". 숫자는 읽는 소리로 — 2 · 4 · 5 · 9(이 · 사 · 오 · 구)는 받침 없음 |
+| 가격 | 늘 "발매가"로 부른다 — 가격 칸은 발매가(정가)만 담는다(`01a` 1-5). 상세 모달(`priceKind` 가 비면 "발매가") · 비교하기("발매가" 줄)와 같은 이름. 출처 · 종류가 빈 7켤레도 같다. 예산을 묻지 않으면 정보 줄 "발매가 201,000원이에요" [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:187-197] [code:src/components/ShoeModal.tsx:220] [code:src/components/compare/CompareTable.tsx:38] (2026-11-11 기준) [c:4ba39bc] |
+| 예산을 넘음 | "— 지금 파는 값은 더 낮을 수 있어요"를 붙인다. 옛 세대는 실제 파는 값이 발매가보다 낮은 경우가 많다 — 발매가로 걸렀다는 사실만 알리면 사용자가 그 신발을 포기한다 [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:194] |
+| 쿠션이 안 맞음 | 원한 범위와 견줘 방향을 정한다 — low 를 원했으면 늘 "두꺼워요", high 면 늘 "얇아요", mid 면 40 이상 "두꺼워요" · 35 미만 "얇아요" [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:164-168] |
+| 용도 · 안정성이 안 맞음 | **안 맞은 첫 줄에만** 실제로 맞은 조건의 이름을 댄다: "트레일용이지만 발볼 · 쿠션이 맞아요". 다른 조건이 둘 이상이고 다 맞으면 "트레일용이지만 다른 조건은 모두 맞아요". 맞은 것이 없거나 둘째 줄이면 사실만: "트레일용 신발이에요" · "안정화 신발이에요". **판단한 조건만 센다** — 묻지 않은 조건 · 데이터가 없어 못 본 조건(1-2)은 맞음에도 "모두"의 분모에도 들지 않는다. 예산을 넘은 줄은 이 꼬리 대신 위의 발매가 꼬리를 쓴다(한 줄이 너무 길어진다) [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:200-215] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:81] |
+| 값 뒤 조사 | 끝 글자의 받침으로 고른다(`compare/Josa` — 화면 `utils/compare.ts` 의 `hasJong` 과 같은 규칙): "발볼은 보통으로 나왔어요"(ㄹ 받침은 "로"), "넓음이고", "안정화지만", "용도 · 쿠션이". 숫자는 읽는 소리로 — 2 · 4 · 5 · 9(이 · 사 · 오 · 구)는 받침 없음 [code:backend/src/main/java/com/kopo17/runshoes/compare/Josa.java:4-5] [code:backend/src/main/java/com/kopo17/runshoes/compare/Josa.java:20] [code:src/utils/compare.ts:71-80] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:119] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:128] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:208-209] |
 
 #### 2. 왜 이렇게 했나
 
 #### 2-1. 데이터 없음을 0점으로 두면 추천이 "데이터가 있는 신발 목록"이 된다
 
-이관 직후(2026-11-10) 조사 — 빈 칸을 "안 맞음"과 같은 0점으로 두었더니:
+이관 직후(2026-11-10) 조사 — 빈 칸을 "안 맞음"과 같은 0점으로 두었더니: [c:37e665c]
 
 | 칸 | 전체 빈 비율 | 그 칸을 물었을 때 상위 3 | 1위 |
 |---|---|---|---|
-| 발볼 | 22.3% | 1.7% | 0.3% |
-| 스택 | 6.1% | 0.2% | 0% |
-| 가격 | 17.4% | 2.9% | 2.8% |
+| 발볼 | 22.3% | 1.7% | 0.3% (2026-11-10 기준) [c:37e665c] |
+| 스택 | 6.1% | 0.2% | 0% (2026-11-10 기준) [c:37e665c] |
+| 가격 | 17.4% | 2.9% | 2.8% (2026-11-10 기준) [c:37e665c] |
 
-빈 칸이 있는 109켤레 중 960 조합의 상위 3에 한 번이라도 든 것은 29켤레뿐이었다. 사용자의 "모르겠어요"는 중립인데 신발 쪽의 "모름"은 감점으로 작동했다 — 같은 모름인데 처리가 달랐다. "판단할 수 없는 조건은 세지 않는다"로 맞췄다. 평균 점수를 주는 방식 · 절반을 주는 방식은 쓰지 않았다 — 설명하기 어렵거나 근거 없는 숫자가 된다.
+빈 칸이 있는 109켤레 중 960 조합의 상위 3에 한 번이라도 든 것은 29켤레뿐이었다. 사용자의 "모르겠어요"는 중립인데 신발 쪽의 "모름"은 감점으로 작동했다 — 같은 모름인데 처리가 달랐다. "판단할 수 없는 조건은 세지 않는다"로 맞췄다. 평균 점수를 주는 방식 · 절반을 주는 방식은 쓰지 않았다 — 설명하기 어렵거나 근거 없는 숫자가 된다. (2026-11-10 기준) [c:37e665c]
 
 #### 2-2. 비율만으로는 반대로 기운다 — 동점 규칙과 하한선
 
 비율 환산만 넣으면 조건이 적은 신발이 "전부 맞음(100%)"을 받기 쉬워 상위가 그쪽으로 쏠렸다(3절 표). 70/70(용도 · 안정성만 본 신발)이 140/140(다섯 다 맞음)을 평점으로 이겼다.
 
-- **동점 규칙** — 같은 비율이면 확인한 조건이 많은 쪽이 앞. 설명할 수 있는 규칙이고 70/70 > 140/140 을 막는다.
-- **하한선** — "물어본 조건 중 못 본 것이 하나까지". 다섯 중 몇 개 같은 고정 개수보다 사용자의 답에 맞춰 움직인다. 960 조합 모두에서 빠지는 신발은 0, 상위 3에서 완전히 사라지는 것은 7켤레(모두 가격이 비고 대부분 발볼이나 스택도 빈 신발 — 데이터를 채우면 돌아온다).
+- **동점 규칙** — 같은 비율이면 확인한 조건이 많은 쪽이 앞. 설명할 수 있는 규칙이고 70/70 > 140/140 을 막는다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:247]
+- **하한선** — "물어본 조건 중 못 본 것이 하나까지". 다섯 중 몇 개 같은 고정 개수보다 사용자의 답에 맞춰 움직인다. 960 조합 모두에서 빠지는 신발은 0, 상위 3에서 완전히 사라지는 것은 7켤레(모두 가격이 비고 대부분 발볼이나 스택도 빈 신발 — 데이터를 채우면 돌아온다). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:242] (2026-11-10 기준) [c:37e665c]
 
 #### 2-3. 발볼 칸은 "넓다 · 좁다는 평이 있었나"를 담는다 — 그래서 "보통"으로는 가리지 않는다
 
-이 칸은 발볼 자체가 아니라 **리뷰어가 신어 보고 토박스 너비를 따로 말했는지**를 담는다(`01a` 1-6 — 리뷰 문장 · 사람 판단이 근거, mm 실측 판정은 근거에서 뺀다). 리뷰어는 끼거나 헐렁할 때 말하고 평범하면 말하지 않으니, 같은 문턱이 "보통"에만 훨씬 높게 작용한다.
+이 칸은 발볼 자체가 아니라 **리뷰어가 신어 보고 토박스 너비를 따로 말했는지**를 담는다(`01a` 1-6 — 리뷰 문장 · 사람 판단이 근거, mm 실측 판정은 근거에서 뺀다). 리뷰어는 끼거나 헐렁할 때 말하고 평범하면 말하지 않으니, 같은 문턱이 "보통"에만 훨씬 높게 작용한다. [docs:01a_catalog_sources.md]
 
-- 운영 분포(11-10): 넓음 91 · 좁음 89 · **보통 61** · 빈 칸 69. 보통 61 은 시장 분포가 아니라 "누군가 보통이라고 말했거나 사용자가 정한 수"다 — 61 중 35 가 사람이 직접 정한 값(MAN), 리뷰 문장에서 나온 것은 22 뿐. 190 조사의 제안값도 넓음 45 · 좁음 38 · 보통 23 이었다.
-- 빈 칸 69 에는 "특별한 평이 없음"(비움 · 근거 없음)과 "근거가 엇갈림"(엇갈림 6 · 실측과 반대 4)이 섞여 있다.
-- 그래서 **"보통"을 고르면 발볼을 보지 않는다**(2026-11-10 사용자) — 전에는 "보통" 신발 61켤레만 +20 을 받고, 상당수가 평범한 신발인 빈 칸 69켤레는 0점이었다. 보통을 고른 사람에게는 걸러야 할 대상이 사실상 없다. 넓은 발볼을 찾는 사람에게는 걸러야 할 것이 있어 "넓음"은 조건으로 남긴다.
-- 빈 칸을 "보통"으로 채우지 않는다 — 엇갈린 신발까지 보통이 된다(`01a` 2-1).
+- 운영 분포(11-10): 넓음 91 · 좁음 89 · **보통 61** · 빈 칸 69. 보통 61 은 시장 분포가 아니라 "누군가 보통이라고 말했거나 사용자가 정한 수"다 — 61 중 35 가 사람이 직접 정한 값(MAN), 리뷰 문장에서 나온 것은 22 뿐. 190 조사의 제안값도 넓음 45 · 좁음 38 · 보통 23 이었다. [c:37e665c] <!-- 확인 못 함: 운영 분포는 운영 DB와 공개 API -->
+- 빈 칸 69 에는 "특별한 평이 없음"(비움 · 근거 없음)과 "근거가 엇갈림"(엇갈림 6 · 실측과 반대 4)이 섞여 있다. (2026-11-10 기준) [c:37e665c]
+- 그래서 **"보통"을 고르면 발볼을 보지 않는다**(2026-11-10 사용자) — 전에는 "보통" 신발 61켤레만 +20 을 받고, 상당수가 평범한 신발인 빈 칸 69켤레는 0점이었다. 보통을 고른 사람에게는 걸러야 할 대상이 사실상 없다. 넓은 발볼을 찾는 사람에게는 걸러야 할 것이 있어 "넓음"은 조건으로 남긴다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:123-129] [c:37e665c]
+- 빈 칸을 "보통"으로 채우지 않는다 — 엇갈린 신발까지 보통이 된다(`01a` 2-1). [docs:01a_catalog_sources.md]
 
 #### 2-3a. 예산은 상한이다 — 원하는 가격대가 아니라 넘으면 안 되는 선(2026-11-11 사용자)
 
-전에는 세 구간(20만 미만 · 20~30만 · 30만 이상)과 일치해야 맞았다. "30만원 이상도 괜찮아요"를 고르면 가격 있는 256켤레 중 30만원 이상 28켤레만 맞아 거의 모든 신발이 예산 20점을 잃었고, 가격을 모르는 신발(예산을 안 봄)이 앞으로 나왔다 — 예산이 넉넉하다고 답했는데 싼 신발이 불리한 로직 오류였다.
+전에는 세 구간(20만 미만 · 20~30만 · 30만 이상)과 일치해야 맞았다. "30만원 이상도 괜찮아요"를 고르면 가격 있는 256켤레 중 30만원 이상 28켤레만 맞아 거의 모든 신발이 예산 20점을 잃었고, 가격을 모르는 신발(예산을 안 봄)이 앞으로 나왔다 — 예산이 넉넉하다고 답했는데 싼 신발이 불리한 로직 오류였다. (2026-11-11 기준) [c:32a3467]
 
-- **상한으로 바꿨다.** 20만원까지 · 30만원까지. 상한에 가까운 쪽을 우대하지 않는다 — "얼마나 가까우면 몇 점"에 근거가 없고, 싸다고 나쁘지도 좋지도 않다.
-- **"30만원 이상도 괜찮아요"는 조건이 아니다.** 그 선택지 설명이 "성능이 확실하다면 가격은 상관없어요"였다 — 걸러낼 신발이 없어 "상관없어요"와 같게 두고, 같은 일을 하는 선택지 둘을 하나로 합쳤다("가격은 상관없어요").
-- 상한으로 바꾸고 "상관없어요"와 같게 둔 것(C)과, 30만 이상을 "다 맞음"으로 둔 것(B)을 견줬다. B 는 가격이 있는 신발이 전부 맞고 가격 빈 신발만 예산을 못 봐 동점 규칙에서 져서, "가격 정보가 있는 신발 우선"처럼 작동했다(가격 빈 신발 상위 3 2.1%). C 는 9.7% — 예산을 아예 묻지 않았을 때와 같다.
+- **상한으로 바꿨다.** 20만원까지 · 30만원까지. 상한에 가까운 쪽을 우대하지 않는다 — "얼마나 가까우면 몇 점"에 근거가 없고, 싸다고 나쁘지도 좋지도 않다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:174-180] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:188]
+- **"30만원 이상도 괜찮아요"는 조건이 아니다.** 그 선택지 설명이 "성능이 확실하다면 가격은 상관없어요"였다 — 걸러낼 신발이 없어 "상관없어요"와 같게 두고, 같은 일을 하는 선택지 둘을 하나로 합쳤다("가격은 상관없어요"). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:28] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:180] [code:src/pages/Recommend.tsx:142]
+- 상한으로 바꾸고 "상관없어요"와 같게 둔 것(C)과, 30만 이상을 "다 맞음"으로 둔 것(B)을 견줬다. B 는 가격이 있는 신발이 전부 맞고 가격 빈 신발만 예산을 못 봐 동점 규칙에서 져서, "가격 정보가 있는 신발 우선"처럼 작동했다(가격 빈 신발 상위 3 2.1%). C 는 9.7% — 예산을 아예 묻지 않았을 때와 같다. (2026-11-11 기준) [c:32a3467]
 
 #### 2-3b. 예산은 10점 — 확실한 조건은 제값, 유일하게 불확실한 조건은 절반(2026-11-11 사용자, 작업 3-4)
 
 - 다른 네 조건(용도 · 발볼 · 안정성 · 쿠션)은 **신발의 고정된 속성**이다 — 신발이 바뀌지 않는 한 그대로다.
 - 예산만 **발매가 기준**이라 실제로 살 값과 다를 수 있다(1-4 문장 규칙). 특히 옛 세대는 발매가보다 낮게 팔리는 경우가 많다.
-- 그래서 확실한 조건은 제값(20 · 30 · 40), 유일하게 불확실한 예산은 절반 — 10점은 쿠션 · 예산이 함께 쓰던 20점의 절반이다. "왜 10인가"의 답이 이것이다(근거 없는 감점 숫자를 만들지 않는다, 2-4).
-- 결과 — 예산을 넘은 신발이 다른 조건 하나가 어긋난 신발보다 덜 밀린다. 예: "조깅 · 넓음 · 안정화 · 쿠션 low · 20만원까지"에서 3위가 GT-1000 14(110/120 — 가격 정보가 없어 예산은 못 보고, 와이드 모델만 있어 발볼 20/30)에서 패러다임 7(발볼 넓음 · 네 조건이 다 맞고 예산만 넘음, 120/140 → 120/130)로 바뀐다. 960 조합 상위 3 에서 예산 넘는 신발 자리 41 → 64.
+- 그래서 확실한 조건은 제값(20 · 30 · 40), 유일하게 불확실한 예산은 절반 — 10점은 쿠션 · 예산이 함께 쓰던 20점의 절반이다. "왜 10인가"의 답이 이것이다(근거 없는 감점 숫자를 만들지 않는다, 2-4). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:39-40]
+- 결과 — 예산을 넘은 신발이 다른 조건 하나가 어긋난 신발보다 덜 밀린다. 예: "조깅 · 넓음 · 안정화 · 쿠션 low · 20만원까지"에서 3위가 GT-1000 14(110/120 — 가격 정보가 없어 예산은 못 보고, 와이드 모델만 있어 발볼 20/30)에서 패러다임 7(발볼 넓음 · 네 조건이 다 맞고 예산만 넘음, 120/140 → 120/130)로 바뀐다. 960 조합 상위 3 에서 예산 넘는 신발 자리 41 → 64. (2026-11-11 기준) [c:90f34d7]
 - 동점(쏠림)은 늘지 않는다 — 만점(비율 1.0)은 배점과 상관없이 "판단한 조건이 다 맞음"이라 만점 신발 수가 그대로다(4절).
 
 #### 2-4. 세대는 점수에 넣지 않는다(2026-11-10 사용자)
 
-310켤레 중 143켤레가 현행이 아니고, 960 조합 상위 3 의 942/2,880 자리가 옛 세대다. 그래도 감점하거나 빼지 않는다.
+310켤레 중 143켤레가 현행이 아니고, 960 조합 상위 3 의 942/2,880 자리가 옛 세대다. 그래도 감점하거나 빼지 않는다. (2026-11-10 기준) [c:37e665c]
 
-- **근거 없는 숫자가 된다.** 환산 계수 2.6% 에는 출처를 달았고 무게 240g · 300g 도 "업계 통념"이라 밝혔다. "구세대 −10점"은 왜 10점인지 답할 수 없다.
+- **근거 없는 숫자가 된다.** 환산 계수 2.6% 에는 출처를 달았고 무게 240g · 300g 도 "업계 통념"이라 밝혔다. "구세대 −10점"은 왜 10점인지 답할 수 없다. [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:3] [code:backend/src/main/resources/db/migration/V16__weight_term.sql:4]
 - **배점은 "조건이 맞느냐"를 잰다.** 세대는 조건이 아니라 상태다 — 섞으면 점수가 무엇을 뜻하는지 흐려진다.
 - 러닝화는 세대가 바뀌어도 앞 세대가 낫다는 평이 흔하고, 재고를 싸게 사는 경우도 많다. 빼거나 깎으면 그 선택지를 없앤다.
 - 역할: 점수는 스펙이 얼마나 맞나 · 표시는 사용자가 알아야 할 것 · 선택은 사용자.
-- **표시(작업 3-3, 2026-11-11 사용자)** — `notes` 에 "지금은 다음 세대(클리프톤 11)가 나와 있어요". 같은 라인(`lineKey`)의 현행(`isCurrent`) 신발이 **사이트에서 열 수 있을 때만**, 그 이름(`model`)으로. 열 수 있다 = `/api/shoes` 에 나온다 = `deleted_at IS NULL`(숨기기 · 삭제가 같은 칸 하나다 — `Shoe` 의 `@SQLRestriction`, 공개 여부 칸은 따로 없다). 현행이 없거나 숨겨진 옛 세대(운영 11-11: 143 중 35켤레)는 아무 말도 하지 않는다 — 찾아볼 수 없는 신발을 "나와 있어요"라고 하면 다음 행동으로 이어지지 않는다. 운영 데이터에서 라인당 현행은 하나, 현행의 세대는 늘 옛 세대보다 높다(11-11 확인). ✓ 셋에 끼지 않고 모든 순위에 보인다.
+- **표시(작업 3-3, 2026-11-11 사용자)** — `notes` 에 "지금은 다음 세대(클리프톤 11)가 나와 있어요". 같은 라인(`lineKey`)의 현행(`isCurrent`) 신발이 **사이트에서 열 수 있을 때만**, 그 이름(`model`)으로. 열 수 있다 = `/api/shoes` 에 나온다 = `deleted_at IS NULL`(숨기기 · 삭제가 같은 칸 하나다 — `Shoe` 의 `@SQLRestriction`, 공개 여부 칸은 따로 없다). 현행이 없거나 숨겨진 옛 세대(운영 11-11: 143 중 35켤레)는 아무 말도 하지 않는다 — 찾아볼 수 없는 신발을 "나와 있어요"라고 하면 다음 행동으로 이어지지 않는다. 운영 데이터에서 라인당 현행은 하나, 현행의 세대는 늘 옛 세대보다 높다(11-11 확인). ✓ 셋에 끼지 않고 모든 순위에 보인다. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:65-70] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:219-221] [code:backend/src/main/java/com/kopo17/runshoes/domain/Shoe.java:24] [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:40-42] [c:4ba39bc] <!-- 확인 못 함: 운영 11-11 의 143 중 35켤레와 라인당 현행 하나는 운영 데이터 -->
 
 "왜 옛 세대가 1위지?"의 답이 여기다.
 
 #### 3. 시도했던 것들
 
-- **브라우저 → 서버(2026-11-10, 작업 3).** `Recommend.tsx` 안의 `evaluate` 를 `RecommendPolicy` 로 옮겼다. 얼린 사본과 960 조합을 `===` 로 대조해 불일치 0(로컬 · 운영), 화면 전후 캡처 20쌍 픽셀 차이 0. 그때의 사본은 `scripts/parity/reference/history/recommend-browser-20261110.mjs`.
+- **브라우저 → 서버(2026-11-10, 작업 3).** `Recommend.tsx` 안의 `evaluate` 를 `RecommendPolicy` 로 옮겼다. 얼린 사본과 960 조합을 `===` 로 대조해 불일치 0(로컬 · 운영), 화면 전후 캡처 20쌍 픽셀 차이 0. 그때의 사본은 `scripts/parity/reference/history/recommend-browser-20261110.mjs`. [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:10-11] [code:scripts/parity/reference/history/recommend-browser-20261110.mjs] [c:37e665c]
 - **데이터 없음 중립 — 시뮬레이션 먼저(2026-11-10 사용자).** 기준 사본만 고쳐 960 조합을 돌려 보고 정했다(서버는 숫자를 보고 고쳤다).
 
   | 안 | 바뀐 자리(2,880) | 1위 바뀜(960) | 가격 빈 17.4% → 상위 3 | 판단 3개짜리 켤레당 자리(5개짜리) |
   |---|---|---|---|---|
-  | 비율만 | 1,717 | 463 | 36.3% | 20.9 (8.5) |
-  | 동점 규칙 | 1,413 | 368 | 27.5% | 11.9 (9.5) |
-  | 하한선 | 1,583 | 417 | 27.9% | 9.6 (9.2) |
-  | **동점 규칙 + 하한선** | **1,317** | **337** | **22.5%** | **6.2 (10.0)** |
+  | 비율만 | 1,717 | 463 | 36.3% | 20.9 (8.5) (2026-11-10 기준) [c:37e665c] |
+  | 동점 규칙 | 1,413 | 368 | 27.5% | 11.9 (9.5) (2026-11-10 기준) [c:37e665c] |
+  | 하한선 | 1,583 | 417 | 27.9% | 9.6 (9.2) (2026-11-10 기준) [c:37e665c] |
+  | **동점 규칙 + 하한선** | **1,317** | **337** | **22.5%** | **6.2 (10.0)** (2026-11-10 기준) [c:37e665c] |
 
-  넷째만 "근거가 많을수록 조금 더 자주"(5개 10.0 > 4개 8.3 > 3개 6.2 > 2개 0)가 섰다. 상위 3에 한 번이라도 든 신발 170 → 185.
-- **예산 구간 → 상한(2026-11-11 사용자, 작업 3-2).** 시뮬레이션 뒤 확정. 작업 3-1 대비 바뀐 자리 979 · 1위 254 · 구성 378(운영 310켤레). 가격 빈 신발의 상위 3 비율(예산을 물은 조합) 22.5% → 8.6%, "30만원 이상"만 보면 47.9% → 9.7%. 그때의 사본은 `reference/history/recommend-neutral-20261110.mjs`.
-- **문구 정리(2026-11-11 사용자, 작업 3-3).** 발매가 표기 · 쿠션 방향 · 맞은 조건 · 조사 · 옛 세대 표시를 한 번에 고치고 한 번 대조했다 — 작업 3-2 사본(`reference/history/recommend-budgetcap-20261111.mjs`)과 960 조합에서 id · 순서 · `score` · `max` · `checked` · `hit` · 못 본 조건 줄이 **0곳 바뀌었다**(운영 310켤레). 바뀐 문장(상위 3, 2,880 자리 중): 발매가 정보 줄 1,300 · 예산 맞음 1,284 · 예산 넘음 41 · 발볼 조사 720(좁음 334 · 넓음 230 · 보통 156) · 안정성 꼬리 386(모두 349 · 용도 36 · 셋 1) · 용도 꼬리 13 · 쿠션 방향 29 · 세대 줄 687(그중 못 본 조건 줄과 두 줄 50). 그때 사본은 `reference/history/recommend-budgetcap-20261111.mjs`.
-- **예산 배점 20 → 10(2026-11-11 사용자, 작업 3-4).** 시뮬레이션 뒤 확정. 작업 3-3 대비 바뀐 자리 27 · 1위 1 · 구성 23(운영 310켤레). 상위 3에 드는 신발 137 → 137, 가장 자주 나오는 5켤레 몫 11.7% → 11.6%, 만점 신발이 4켤레 이상인 조합 505 → 505(예산을 물은 720 중). 그때 사본은 `reference/history/recommend-copy-20261111.mjs`. (작업 3-2 때 적은 5켤레 몫 11.6% 는 같은 셈으로 다시 세면 11.7% — 3-2 시뮬레이션 뒤 운영 찜 · 평점이 조금 바뀌었다.)
-- **예산 금액 입력을 더했다(2026-11-12 사용자, 작업 5-1).** 챗봇이 "15만원 안쪽"을 "20만원까지"로 바꿔 거르던 것을 고쳤다 — 화면의 칸 셋은 드롭다운 때문이고 자유 문장에는 맞지 않는다. 기준 사본 · 서버에 `budget` 을 더했고, 칸 셋의 길은 바꾸지 않았다: 960 조합 불일치 0, 더한 대조 720(`budget` 200000 · 300000 ≡ `price` low · mid 480 + 금액 넷 × 60 조합 240) 불일치 0(로컬, 운영 스냅숏 310켤레).
+  넷째만 "근거가 많을수록 조금 더 자주"(5개 10.0 > 4개 8.3 > 3개 6.2 > 2개 0)가 섰다. 상위 3에 한 번이라도 든 신발 170 → 185. (2026-11-10 기준) [c:37e665c]
+- **예산 구간 → 상한(2026-11-11 사용자, 작업 3-2).** 시뮬레이션 뒤 확정. 작업 3-1 대비 바뀐 자리 979 · 1위 254 · 구성 378(운영 310켤레). 가격 빈 신발의 상위 3 비율(예산을 물은 조합) 22.5% → 8.6%, "30만원 이상"만 보면 47.9% → 9.7%. 그때의 사본은 `reference/history/recommend-neutral-20261110.mjs`. [code:scripts/parity/reference/history/recommend-neutral-20261110.mjs] [c:32a3467]
+- **문구 정리(2026-11-11 사용자, 작업 3-3).** 발매가 표기 · 쿠션 방향 · 맞은 조건 · 조사 · 옛 세대 표시를 한 번에 고치고 한 번 대조했다 — 작업 3-2 사본(`reference/history/recommend-budgetcap-20261111.mjs`)과 960 조합에서 id · 순서 · `score` · `max` · `checked` · `hit` · 못 본 조건 줄이 **0곳 바뀌었다**(운영 310켤레). 바뀐 문장(상위 3, 2,880 자리 중): 발매가 정보 줄 1,300 · 예산 맞음 1,284 · 예산 넘음 41 · 발볼 조사 720(좁음 334 · 넓음 230 · 보통 156) · 안정성 꼬리 386(모두 349 · 용도 36 · 셋 1) · 용도 꼬리 13 · 쿠션 방향 29 · 세대 줄 687(그중 못 본 조건 줄과 두 줄 50). 그때 사본은 `reference/history/recommend-budgetcap-20261111.mjs`. [code:scripts/parity/reference/history/recommend-budgetcap-20261111.mjs] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:15] [c:4ba39bc]
+- **예산 배점 20 → 10(2026-11-11 사용자, 작업 3-4).** 시뮬레이션 뒤 확정. 작업 3-3 대비 바뀐 자리 27 · 1위 1 · 구성 23(운영 310켤레). 상위 3에 드는 신발 137 → 137, 가장 자주 나오는 5켤레 몫 11.7% → 11.6%, 만점 신발이 4켤레 이상인 조합 505 → 505(예산을 물은 720 중). 그때 사본은 `reference/history/recommend-copy-20261111.mjs`. (작업 3-2 때 적은 5켤레 몫 11.6% 는 같은 셈으로 다시 세면 11.7% — 3-2 시뮬레이션 뒤 운영 찜 · 평점이 조금 바뀌었다.) [code:scripts/parity/reference/history/recommend-copy-20261111.mjs] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:39-40] [c:90f34d7]
+- **예산 금액 입력을 더했다(2026-11-12 사용자, 작업 5-1).** 챗봇이 "15만원 안쪽"을 "20만원까지"로 바꿔 거르던 것을 고쳤다 — 화면의 칸 셋은 드롭다운 때문이고 자유 문장에는 맞지 않는다. 기준 사본 · 서버에 `budget` 을 더했고, 칸 셋의 길은 바꾸지 않았다: 960 조합 불일치 0, 더한 대조 720(`budget` 200000 · 300000 ≡ `price` low · mid 480 + 금액 넷 × 60 조합 240) 불일치 0(로컬, 운영 스냅숏 310켤레). [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java:176-180] [code:scripts/parity/check.mjs:9] [code:scripts/parity/check.mjs:114-136] [c:f52d0b1]
 - **"보통"을 "발볼을 알 때만 본다"로 하려다 거뒀다(2026-11-10).** 운영 분포에서 보통이 가장 적다는 것을 그대로 믿었는데, 그 분포가 수집 방식이 만든 것이었다(2-3).
 
 #### 4. 남은 한계
 
-- **예산이 상한이 되면서 동점이 많아졌다 — 알려진 한계(2026-11-11 사용자, 고치지 않는다).** 가격 있는 신발의 89%(256 중 228)가 "30만원까지"를 통과한다. 만점(비율 1.0) 신발이 4켤레 이상인 조합이 367 → 505(예산을 물은 720 중)로 늘어 순위를 동점 처리(평점 · 리뷰 · 찜)가 정하는 일이 많아졌고, 상위 3에 드는 신발이 185 → 137, 가장 자주 나오는 5켤레의 몫이 7.5% → 11.6% 가 됐다(작업 3-2 시뮬레이션).
+- **예산이 상한이 되면서 동점이 많아졌다 — 알려진 한계(2026-11-11 사용자, 고치지 않는다).** 가격 있는 신발의 89%(256 중 228)가 "30만원까지"를 통과한다. 만점(비율 1.0) 신발이 4켤레 이상인 조합이 367 → 505(예산을 물은 720 중)로 늘어 순위를 동점 처리(평점 · 리뷰 · 찜)가 정하는 일이 많아졌고, 상위 3에 드는 신발이 185 → 137, 가장 자주 나오는 5켤레의 몫이 7.5% → 11.6% 가 됐다(작업 3-2 시뮬레이션). [c:4ba39bc]
   - 동점이면 인기순인 것은 **의도한 동작**이다 — 점수가 같으면 많은 사람이 좋다고 한 쪽을 먼저 보이는 것이 자연스럽다.
-  - 다만 지금 평점 · 리뷰 · 찜은 대부분 시드(가상 사용자 200명, `01e`)가 만든 값이라, 동점이 많아질수록 가상의 인기가 순위를 정한다. 실사용자가 쌓이면 풀린다.
+  - 다만 지금 평점 · 리뷰 · 찜은 대부분 시드(가상 사용자 200명, `01e`)가 만든 값이라, 동점이 많아질수록 가상의 인기가 순위를 정한다. 실사용자가 쌓이면 풀린다. [docs:01e_seed_reviews.md] (2026-11-11 기준) [c:4ba39bc]
   - 앞으로 생각해 볼 길: 상위 3 아래에 "조건이 맞는 신발 N켤레 더"를 작은 카드 목록으로 보여, 순위는 그대로 두고 사용자가 더 고를 수 있게 하는 것.
-- **가격 빈 신발이 "30만원까지"에서 적게 나온다**(상위 3 2.1%, 전체 17.4% · 예산을 묻지 않을 때 9.7%). 가격 있는 신발이 거의 다 맞아 가격 빈 신발이 동점 규칙에서 진다 — "예산 안이라고 확인된 신발이 앞"이라 의도한 동작으로 본다.
+- **가격 빈 신발이 "30만원까지"에서 적게 나온다**(상위 3 2.1%, 전체 17.4% · 예산을 묻지 않을 때 9.7%). 가격 있는 신발이 거의 다 맞아 가격 빈 신발이 동점 규칙에서 진다 — "예산 안이라고 확인된 신발이 앞"이라 의도한 동작으로 본다. (2026-11-11 기준) [c:32a3467]
 
 #### 5. 검증 항목
 
-- `node scripts/parity/check.mjs --base <주소>` — 서버가 기준 사본(`scripts/parity/reference/`)과 960 조합(+ 비교하기 · 예산 금액 720) `===` 일치. 불일치면 exit 1. 허용 오차는 두지 않는다 — 의도하지 않은 불일치가 하나라도 나오면 "반올림 차이라 괜찮다"처럼 혼자 판단해 넘기지 않고 멈추고 보고한다(2026-11-10 사용자).
-- 규칙을 바꿀 때: 기준 사본을 먼저 고치고 `node scripts/parity/diff-reference.mjs --base <주소>` 로 옛 사본(`reference/history/`)과의 차이를 센다 — 작업 3-1 은 자리 1,317 · 1위 337 · 구성 502(운영 310켤레, 11-10), 작업 3-2 는 `--old reference/history/recommend-neutral-20261110.mjs` 로 979 · 254 · 378. 그다음 서버를 고쳐 `check.mjs`.
-- 작업 3-4 는 `--old reference/history/recommend-copy-20261111.mjs` 로 27 · 1 · 23.
-- 작업 3-3 처럼 문장만 바꿀 때: 옛 사본과 견줘 id · 순서 · 점수 · `hit` 가 0곳 바뀌는지, 바뀐 문장을 갈래별로 센다(3절의 숫자).
-- 서버 단위 시험 `PolicyTest`(못 본 조건 · 보통 · 동점 규칙 · JS 숫자 표기 · 쿠션 방향 · 맞은 조건 꼬리 · 조사 · 옛 세대 줄), 계약 spring-v6 X151 ~ X156(X154 ~ X156 예산 금액 · 둘 다 400 · 숫자 아님 400).
+- `node scripts/parity/check.mjs --base <주소>` — 서버가 기준 사본(`scripts/parity/reference/`)과 960 조합(+ 비교하기 · 예산 금액 720) `===` 일치. 불일치면 exit 1. 허용 오차는 두지 않는다 — 의도하지 않은 불일치가 하나라도 나오면 "반올림 차이라 괜찮다"처럼 혼자 판단해 넘기지 않고 멈추고 보고한다(2026-11-10 사용자). [code:scripts/parity/check.mjs:3-4] [code:scripts/parity/check.mjs:8-11] [code:scripts/parity/reference/]
+- 규칙을 바꿀 때: 기준 사본을 먼저 고치고 `node scripts/parity/diff-reference.mjs --base <주소>` 로 옛 사본(`reference/history/`)과의 차이를 센다 — 작업 3-1 은 자리 1,317 · 1위 337 · 구성 502(운영 310켤레, 11-10), 작업 3-2 는 `--old reference/history/recommend-neutral-20261110.mjs` 로 979 · 254 · 378. 그다음 서버를 고쳐 `check.mjs`. [code:scripts/parity/diff-reference.mjs:3] [code:scripts/parity/diff-reference.mjs:12] [code:scripts/parity/reference/history/] [c:32a3467]
+- 작업 3-4 는 `--old reference/history/recommend-copy-20261111.mjs` 로 27 · 1 · 23. [code:scripts/parity/reference/history/recommend-copy-20261111.mjs] (2026-11-11 기준) [c:90f34d7]
+- 작업 3-3 처럼 문장만 바꿀 때: 옛 사본과 견줘 id · 순서 · 점수 · `hit` 가 0곳 바뀌는지, 바뀐 문장을 갈래별로 센다(3절의 숫자). [code:scripts/parity/diff-reference.mjs:32]
+- 서버 단위 시험 `PolicyTest`(못 본 조건 · 보통 · 동점 규칙 · JS 숫자 표기 · 쿠션 방향 · 맞은 조건 꼬리 · 조사 · 옛 세대 줄), 계약 spring-v6 X151 ~ X156(X154 ~ X156 예산 금액 · 둘 다 400 · 숫자 아님 400). [code:backend/src/test/java/com/kopo17/runshoes/compare/PolicyTest.java] [code:contract/scenarios.mjs:493-499]

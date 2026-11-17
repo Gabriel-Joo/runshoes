@@ -1,34 +1,38 @@
-> 상태: **운영 반영**(2026-11-09, 처음 이미지 `a7c6085c443e` · 지금 `36430d9ae5a1`(infra `d953a52`, 2026-11-10) — 공개 API `search=nike` 34 · `hoka` 30 · `new balance` 31, `/compare` 확인). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(주소 · 표시 — 시험 `tests/compare.test.ts`) · `src/utils/compareApi.ts` · `src/utils/compareStore.ts` · 서버 `compare/ComparePolicy`(계산 — 자동 채우기 · 등수 · 밴드, 2026-11-10 작업 3) · `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절.
+<!--
+다루는 곳: src/pages/Compare.tsx, src/pages/Compare.css, src/components/compare/, src/utils/compare.ts, src/utils/compareApi.ts, src/utils/compareStore.ts, tests/compare.test.ts, backend/src/main/java/com/kopo17/runshoes/compare/, backend/src/main/java/com/kopo17/runshoes/api/BrandNames.java, backend/src/main/java/com/kopo17/runshoes/activity/ActivityController.java, scripts/parity/, scripts/vite.prodapi.config.mjs, scripts/screen-shot.mjs
+읽은 커밋: 606b730
+-->
+> 상태: **운영 반영**(2026-11-09, 처음 이미지 `a7c6085c443e` · 지금 `36430d9ae5a1`(infra `d953a52`, 2026-11-10) — 공개 API `search=nike` 34 · `hoka` 30 · `new balance` 31, `/compare` 확인). 숫자는 공개 API `GET /api/shoes`(2026-11-09, 310켤레)로 센 것. 원천: `src/pages/Compare.tsx` · `src/components/compare/*` · `src/utils/compare.ts`(주소 · 표시 — 시험 `tests/compare.test.ts`) · `src/utils/compareApi.ts` · `src/utils/compareStore.ts` · 서버 `compare/ComparePolicy`(계산 — 자동 채우기 · 등수 · 밴드, 2026-11-10 작업 3) · `BrandNames` · `ActivityController`. 처음 설계안(2026-10-21, 레이더 차트)은 `archive/COMPARE_DESIGN.md`, 바뀐 과정은 3절. [code:src/pages/Compare.tsx:18-23] [code:src/components/compare/] [code:src/utils/compare.ts:1-5] [code:tests/compare.test.ts] [code:src/utils/compareApi.ts:1-4] [code:src/utils/compareStore.ts:1] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:13-17] [code:backend/src/main/java/com/kopo17/runshoes/api/BrandNames.java:5-8] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityController.java:21] [docs:archive/COMPARE_DESIGN.md] [c:a7c6085c443e] [c:36430d9ae5a1] [c:a76793f] <!-- 확인 못 함: 운영 이미지, infra 커밋 d953a52, 공개 API 검색 수는 저장소 밖 -->
 
 #### 0. 한 줄 요약
 
-**비교하기**(`/compare`)는 정해 둔 신발 2~5켤레를 나란히 펼쳐 보는 화면이다. 머리(사진 · 브랜드 · 모델 · 바코드)는 찜 목록 카드처럼, 그 아래 스펙은 줄 이름이 왼쪽에 있는 표로 놓는다. **점수 · 순위 · 더 나은 쪽 표시는 없다** — 우리 값은 공시값뿐이라 근거가 없다. 숫자 칸에는 310켤레 가운데 어디쯤인지를 "가벼운 편 · 중간 · 무거운 편" 같은 말과 작은 분포 그래프로 보인다. 하나를 고르면 같은 라인 · 비슷한 신발로 4켤레까지 채워 준다.
+**비교하기**(`/compare`)는 정해 둔 신발 2~5켤레를 나란히 펼쳐 보는 화면이다. 머리(사진 · 브랜드 · 모델 · 바코드)는 찜 목록 카드처럼, 그 아래 스펙은 줄 이름이 왼쪽에 있는 표로 놓는다. **점수 · 순위 · 더 나은 쪽 표시는 없다** — 우리 값은 공시값뿐이라 근거가 없다. 숫자 칸에는 310켤레 가운데 어디쯤인지를 "가벼운 편 · 중간 · 무거운 편" 같은 말과 작은 분포 그래프로 보인다. 하나를 고르면 같은 라인 · 비슷한 신발로 4켤레까지 채워 준다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:22-23] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:16] [code:src/components/compare/CompareCard.tsx:24-28] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:29-34] [code:src/components/compare/CompareDist.tsx:24-27] (2026-11-09 기준) [c:1c0342f]
 
 #### 1. 최종 설계
 
 #### 1-1. 메뉴 · 들어오는 곳
 
-- 메뉴: **홈 · 추천받기 · 비교하기 · 러너들의 선택** — 동사로 맞춘다. 넷 다 같은 색이고 **지금 보는 화면만 틸**(`--accent`) — 메뉴 하나만 따로 강조하지 않는다(2026-11-09 사용자). 신발 관리 · 로그인은 메뉴가 아니라 배지 — 평소 청록 테두리, 보고 있을 때 청록 채움에 흰 글자, 머리 메뉴에서만(2026-11-15 사용자, `02_screens.md` 헤더). "맞춤추천"은 "추천받기"로 이름만 바꾸고 화면 · 점수는 그대로(`02_screens.md` 1-4). 화면 제목 · 드로어 메뉴도 같은 이름.
-- 추천받기와 비교하기는 역할이 다르다 — 추천받기는 조건을 넣으면 **점수로 줄 세워** 고르게 하고, 비교하기는 정한 후보를 **점수 없이 펼쳐** 견준다. "점수를 매기지 않는다"는 비교하기의 원칙이다.
+- 메뉴: **홈 · 추천받기 · 비교하기 · 러너들의 선택** — 동사로 맞춘다. 넷 다 같은 색이고 **지금 보는 화면만 틸**(`--accent`) — 메뉴 하나만 따로 강조하지 않는다(2026-11-09 사용자). 신발 관리 · 로그인은 메뉴가 아니라 배지 — 평소 청록 테두리, 보고 있을 때 청록 채움에 흰 글자, 머리 메뉴에서만(2026-11-15 사용자, `02_screens.md` 헤더). "맞춤추천"은 "추천받기"로 이름만 바꾸고 화면 · 점수는 그대로(`02_screens.md` 1-4). 화면 제목 · 드로어 메뉴도 같은 이름. [code:src/components/Header.tsx:17] [code:src/components/Header.tsx:82] [code:src/components/Header.tsx:86-93] [docs:02_screens.md]
+- 추천받기와 비교하기는 역할이 다르다 — 추천받기는 조건을 넣으면 **점수로 줄 세워** 고르게 하고, 비교하기는 정한 후보를 **점수 없이 펼쳐** 견준다. "점수를 매기지 않는다"는 비교하기의 원칙이다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:16] [code:backend/src/main/java/com/kopo17/runshoes/compare/RecommendPolicy.java]
 - 들어오는 곳:
 
   | 어디서 | 무엇을 | 자동 채우기 |
   |---|---|---|
-  | 메뉴 "비교하기" | 첫 화면(1-2). 마지막 구성이 있으면 "이어서 보기" | 고르면 함 |
-  | 상세 모달 "비교에 담기" | 비교가 비어 있으면 그 신발로 시작, 있으면 한 칸 더함 | 비어 있을 때만 |
-  | 추천받기 결과 "1~3위 비교하기" | 보이는 결과 그대로(추천받기는 3켤레를 보인다 — 보이지 않는 4위를 끼우지 않았다) | 하지 않음 — 이미 고른 신발 |
-  | 찜 목록 체크 → "선택 비교" | 고른 2~5켤레(6개 이상이면 버튼이 꺼지고 "5개까지") | 하지 않음 |
-  | 링크 `/compare?ids=…` | 그 신발들 그대로 | 하지 않음 |
+  | 메뉴 "비교하기" | 첫 화면(1-2). 마지막 구성이 있으면 "이어서 보기" | 고르면 함 [code:src/pages/Compare.tsx:147] [code:src/pages/Compare.tsx:191-198] |
+  | 상세 모달 "비교에 담기" | 비교가 비어 있으면 그 신발로 시작, 있으면 한 칸 더함 | 비어 있을 때만 [code:src/utils/compare.ts:99-105] |
+  | 추천받기 결과 "1~3위 비교하기" | 보이는 결과 그대로(추천받기는 3켤레를 보인다 — 보이지 않는 4위를 끼우지 않았다) | 하지 않음 — 이미 고른 신발 [code:src/pages/Recommend.tsx:346-351] |
+  | 찜 목록 체크 → "선택 비교" | 고른 2~5켤레(6개 이상이면 버튼이 꺼지고 "5개까지") | 하지 않음 [code:src/pages/Account.tsx:425-432] |
+  | 링크 `/compare?ids=…` | 그 신발들 그대로 | 하지 않음 [code:src/pages/Compare.tsx:47-48] [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:56] |
 
-- **로그인 없이 쓴다.** 구성은 주소(`?ids=`)가 정답이고, 마지막 구성만 브라우저(localStorage)에 기억한다 — 읽고 쓸 때 실패해도 화면은 주소로 그린다. 로그인한 사람이 표를 보면 `POST /api/activity {type:"compare.view", shoeIds}`(2~5개를 받는다 — 그 밖은 400).
-- 주소는 `replace` 로 바꾼다 — 칸을 바꿀 때마다 뒤로 가기가 쌓이지 않게.
+- **로그인 없이 쓴다.** 구성은 주소(`?ids=`)가 정답이고, 마지막 구성만 브라우저(localStorage)에 기억한다 — 읽고 쓸 때 실패해도 화면은 주소로 그린다. 로그인한 사람이 표를 보면 `POST /api/activity {type:"compare.view", shoeIds}`(2~5개를 받는다 — 그 밖은 400). [code:src/utils/compareStore.ts:1] [code:src/utils/compareStore.ts:6-23] [code:src/pages/Compare.tsx:109-121] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityController.java:64-66]
+- 주소는 `replace` 로 바꾼다 — 칸을 바꿀 때마다 뒤로 가기가 쌓이지 않게. [code:src/pages/Compare.tsx:51-62]
 
 #### 1-2. 첫 화면 · 한 켤레
 
-- 제목 "비교하기" 아래 설명: "고른 신발을 나란히 놓고 봅니다. 값이 310켤레 가운데 어디쯤인지도 함께 보여 드려요."(하지 않는 일은 적지 않는다 — 2026-11-09 사용자). 글씨는 러너들의 선택 설명(`.best__desc` 14px)과 같다.
-- 처음(구성 없음): 가운데 **"비교할 신발을 골라 주세요"** + 검색창. 검색은 홈과 같은 서버 검색(`?search=` — 영어 이름 · 다른 표기 포함). **브랜드는 한글 · 영문 둘 다**("나이키" · "nike", "호카" · "hoka") — 브랜드는 한글로만 저장돼 있고 영어 이름 칸에는 모델명만 있어 지금 "nike" · "hoka" 검색은 0건이다(홈도 같다, 2026-11-09 공개 API). 서버 검색에 브랜드 영문을 더한다(마이그레이션 없이 코드의 브랜드 표 14개). **검색은 310켤레 전체** — 옛 세대도 비교할 수 있게 현행만 거르지 않는다(현행만은 1-3 자동 채우기에만). 결과는 개수를 먼저 보이고 모두 보인다(창 안에서 스크롤), 같은 라인은 붙여서 새 세대 → 옛 세대, 줄마다 "현행" · "지난 세대". 로그인했으면 모바일(1199px 이하)에서 아래에 "내 찜" 줄 — PC 는 오른쪽 내 찜 열이 같은 일을 한다.
-- 하나를 고르면 1-3 의 자동 채우기로 표가 생긴다.
-- **한 켤레만 남으면** 표 대신 그 신발 머리 + "한 켤레 더 골라 주세요" + 검색창. 비교는 두 켤레부터. 모두 빼면 첫 화면.
+- 제목 "비교하기" 아래 설명: "고른 신발을 나란히 놓고 봅니다. 값이 310켤레 가운데 어디쯤인지도 함께 보여 드려요."(하지 않는 일은 적지 않는다 — 2026-11-09 사용자). 글씨는 러너들의 선택 설명(`.best__desc` 14px)과 같다. [code:src/pages/Compare.tsx:226] [code:src/pages/Compare.css:14-16]
+- 처음(구성 없음): 가운데 **"비교할 신발을 골라 주세요"** + 검색창. 검색은 홈과 같은 서버 검색(`?search=` — 영어 이름 · 다른 표기 포함). **브랜드는 한글 · 영문 둘 다**("나이키" · "nike", "호카" · "hoka") — 브랜드는 한글로만 저장돼 있고 영어 이름 칸에는 모델명만 있어 지금 "nike" · "hoka" 검색은 0건이다(홈도 같다, 2026-11-09 공개 API). 서버 검색에 브랜드 영문을 더한다(마이그레이션 없이 코드의 브랜드 표 14개). **검색은 310켤레 전체** — 옛 세대도 비교할 수 있게 현행만 거르지 않는다(현행만은 1-3 자동 채우기에만). 결과는 개수를 먼저 보이고 모두 보인다(창 안에서 스크롤), 같은 라인은 붙여서 새 세대 → 옛 세대, 줄마다 "현행" · "지난 세대". 로그인했으면 모바일(1199px 이하)에서 아래에 "내 찜" 줄 — PC 는 오른쪽 내 찜 열이 같은 일을 한다. [code:src/pages/Compare.tsx:188] [code:src/components/compare/ComparePicker.tsx:16-17] [code:src/components/compare/ComparePicker.tsx:27] [code:backend/src/main/java/com/kopo17/runshoes/api/BrandNames.java:11-25] [code:src/components/compare/ComparePicker.tsx:61] [code:src/utils/compare.ts:86-95] [code:src/components/compare/ComparePicker.tsx:42] [code:src/pages/Compare.tsx:29] [code:src/pages/Compare.tsx:190] [c:6bef573] <!-- 확인 못 함: nike, hoka 검색 0건은 그때 공개 API -->
+- 하나를 고르면 1-3 의 자동 채우기로 표가 생긴다. [code:src/pages/Compare.tsx:147]
+- **한 켤레만 남으면** 표 대신 그 신발 머리 + "한 켤레 더 골라 주세요" + 검색창. 비교는 두 켤레부터. 모두 빼면 첫 화면. [code:src/pages/Compare.tsx:202-214] [code:src/pages/Compare.tsx:185]
 
 #### 1-3. 자동 채우기 — 하나를 고르면 4켤레
 
@@ -41,83 +45,83 @@
  = 4켤레, 그 뒤에 "+ 추가" 1칸(최대 5)
 ```
 
-- 한 라인은 많아야 두 세대다(라인 201 — 두 세대 109 · 한 세대 92). 같은 브랜드 후보가 없으면 다른 브랜드로 채운다.
-- **안정성이 다른 신발 한 칸**(2026-11-09 사용자 — 다 중립화면 비교가 심심하다). 같은 용도 안에서 안정성이 다른 다른 브랜드 신발 가운데 가장 가까운 것. 레이스 · 트레일처럼 같은 용도에 안정화가 없으면 이 칸은 다른 브랜드의 비슷한 신발로. 310켤레 모두로 돌려 보면 4켤레의 안정성이 섞이는 경우가 0% → 65%.
+- 한 라인은 많아야 두 세대다(라인 201 — 두 세대 109 · 한 세대 92). 같은 브랜드 후보가 없으면 다른 브랜드로 채운다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:132-133] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:165-169] (2026-11-09 기준) [c:1c0342f]
+- **안정성이 다른 신발 한 칸**(2026-11-09 사용자 — 다 중립화면 비교가 심심하다). 같은 용도 안에서 안정성이 다른 다른 브랜드 신발 가운데 가장 가까운 것. 레이스 · 트레일처럼 같은 용도에 안정화가 없으면 이 칸은 다른 브랜드의 비슷한 신발로. 310켤레 모두로 돌려 보면 4켤레의 안정성이 섞이는 경우가 0% → 65%. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:136-140] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:166-168] [c:1c0342f]
 - **비슷한 신발**:
-  1. 거르기 — 용도가 같고, 다른 라인이고, 현행 세대(안정성은 위 칸 구성대로).
-  2. 가까운 순 — 스택 차이 + 드롭 차이 × 0.7 + 무게 차이(270mm 로 맞춘 값 `weightNorm270`, `01a_catalog_sources.md` 1-3a)(각각 310켤레의 표준편차로 나눈 값), 카본이 서로 다르면 +2. 한쪽 값이 비면 그 칸은 1(중간 거리).
-  - **기준 모름 29켤레는 거리 계산 안에서만 원값 무게를 쓴다**(2026-11-10 사용자, 서버 `ComparePolicy.distWeight`). "무게 모름(1)"으로 두니 거리가 스택 · 드롭으로만 갈려 247g 신발 옆에 311g 을 "비슷한 신발"로 내놓았다. 대표 사이즈는 거의 265~285mm 라 원값의 오차(많아야 약 ±7.4%)가 무게를 버리는 것보다 작다. 저장 · 표시는 하지 않는다 — 그 신발의 무게 칸은 화면에서 여전히 "기준 모름"이고 등수 · 그래프에도 없다.
-  3. **가격은 쓰지 않는다** — 54켤레가 비어 있고, 성격이 비슷한 신발을 찾는 것이라 가격대는 기준이 아니다.
-  - 예: 클리프톤 11 → 클리프톤 10(같은 라인) · 스카이플로우(같은 브랜드) · 클라우드러너 3(안정성 다름 — 311g 은 280mm 기준이라 270mm 로 약 295g). 카야노 32 → 카야노 33 · GT-2000 15 · 고스트 맥스 4(안정성 다름).
-- **모든 카드에 이유가 한 줄** — 자동 채우기는 "고른 신발" · "같은 라인" · "같은 브랜드" · "안정성 다름" · "비슷한 신발", 검색 · 찜(끌어 놓기 · 선택 비교) · 상세 모달에서 담은 것은 "내가 담은 신발", 추천받기에서 온 것은 "추천받은 신발"(주소 `why` 한 글자: p · l · b · s · m · u · r). 이유가 없는 카드가 있으면 줄이 어긋났다(2026-11-09 사용자).
-- 계산은 화면에서 한다(목록 API 한 번 — 홈이 이미 받는 것과 같다). 결과는 주소에 그대로 적는다 — 카탈로그가 바뀌어도 링크는 같은 표.
+  1. 거르기 — 용도가 같고, 다른 라인이고, 현행 세대(안정성은 위 칸 구성대로). [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:136-140]
+  2. 가까운 순 — 스택 차이 + 드롭 차이 × 0.7 + 무게 차이(270mm 로 맞춘 값 `weightNorm270`, `01a_catalog_sources.md` 1-3a)(각각 310켤레의 표준편차로 나눈 값), 카본이 서로 다르면 +2. 한쪽 값이 비면 그 칸은 1(중간 거리). [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:99-116] [docs:01a_catalog_sources.md]
+  - **기준 모름 29켤레는 거리 계산 안에서만 원값 무게를 쓴다**(2026-11-10 사용자, 서버 `ComparePolicy.distWeight`). "무게 모름(1)"으로 두니 거리가 스택 · 드롭으로만 갈려 247g 신발 옆에 311g 을 "비슷한 신발"로 내놓았다. 대표 사이즈는 거의 265~285mm 라 원값의 오차(많아야 약 ±7.4%)가 무게를 버리는 것보다 작다. 저장 · 표시는 하지 않는다 — 그 신발의 무게 칸은 화면에서 여전히 "기준 모름"이고 등수 · 그래프에도 없다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:85-93] [c:a76793f]
+  3. **가격은 쓰지 않는다** — 54켤레가 비어 있고, 성격이 비슷한 신발을 찾는 것이라 가격대는 기준이 아니다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:99-112] (2026-11-09 기준) [c:1c0342f]
+  - 예: 클리프톤 11 → 클리프톤 10(같은 라인) · 스카이플로우(같은 브랜드) · 클라우드러너 3(안정성 다름 — 311g 은 280mm 기준이라 270mm 로 약 295g). 카야노 32 → 카야노 33 · GT-2000 15 · 고스트 맥스 4(안정성 다름). [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:122-170] (2026-11-10 기준) [c:2e05859]
+- **모든 카드에 이유가 한 줄** — 자동 채우기는 "고른 신발" · "같은 라인" · "같은 브랜드" · "안정성 다름" · "비슷한 신발", 검색 · 찜(끌어 놓기 · 선택 비교) · 상세 모달에서 담은 것은 "내가 담은 신발", 추천받기에서 온 것은 "추천받은 신발"(주소 `why` 한 글자: p · l · b · s · m · u · r). 이유가 없는 카드가 있으면 줄이 어긋났다(2026-11-09 사용자). [code:src/utils/compare.ts:10-21] [code:src/components/compare/CompareCard.tsx:34]
+- 계산은 화면에서 한다(목록 API 한 번 — 홈이 이미 받는 것과 같다). 결과는 주소에 그대로 적는다 — 카탈로그가 바뀌어도 링크는 같은 표. [code:src/pages/Compare.tsx:79-87] [code:src/pages/Compare.tsx:85] <!-- 안 맞음: 문서는 「계산은 화면에서 한다(목록 API 한 번」, 코드는 자동 채우기를 「서버가 고른다(?pick=)」(Compare.tsx:79, GET /api/compare) -->
 
 #### 1-4. 빼기 · 더하기 · 되돌리기
 
-- 고른 신발 말고는 ✕ — 누르면 그 열이 빠지고 오른쪽이 한 칸씩 당겨진다. **빈 칸은 남지 않는다.** 다른 신발이 자동으로 들어오지도 않는다.
-- **고른 신발은 ↻(기준 바꾸기)** — 자동 채우기의 기준이라 빼지 않는다. 마우스를 올리면 "기준 바꾸기", 누르면 첫 화면(검색)으로 가서 다시 고르고, 고르면 자동 채우기가 다시 돈다. 5초 동안 "기준 신발을 다시 골라 주세요 · 되돌리기", 첫 화면의 "이어서 보기"로도 돌아간다(2026-11-09 사용자).
-- 끝에는 늘 **"+ 추가" 한 칸**(5켤레면 없다). 문구는 로그인하면 "검색하거나 내 찜에서 끌어 오세요"(모바일은 "검색 · 내 찜"), 아니면 "검색해서 추가하세요". PC 는 누르면 추가 창(검색창, 로그인했으면 내 찜 목록도), 모바일은 아래에서 올라오는 시트(검색창 + 내 찜, 찜마다 "추가").
-- 뺀 뒤 5초 동안 아래에 **"○○를 뺐어요 · 되돌리기"** — 누르면 같은 자리로 돌아온다(2026-11-09 사용자 — 다시 찾기 번거롭다).
-- **"내 찜"(PC) — 오른쪽 세로 열, 스크롤해도 따라온다**(sticky, 헤더 바로 아래). 찜이 많으면 그 안에서만 스크롤. 카드를 표의 열 위로 끌어 놓으면 그 칸을 바꾸고, "+ 추가" 칸에 놓으면 더한다(브라우저 기본 끌어 놓기, 의존성 없음). 이미 비교 중인 신발은 옅게, "비교 중"은 이름 아래 줄(오른쪽에 두면 이름 자리를 30px 넘게 먹었다 — 줄은 모든 칸에 비워 둬 높이가 같다). 카드를 누르거나 Enter 를 치면 끝에 더한다 — 칸을 바꾸는 것은 끌어 놓기뿐이다. 비로그인은 "로그인하면 찜한 신발을 끌어올 수 있어요"만. 화면은 폭을 꽉 채운다(비교 표 | 내 찜). **내 찜 폭은 1440px 이상 340px · 1200~1439px 300px** — 310켤레 모델명을 13px 굵게 재면 95% 136px · 가장 긴 것 180px, 이름 자리는 스크롤바 17px 를 빼고 340px 에서 205px(모두 한 줄) · 300px 에서 165px(180px 안팎 셋만 두 줄)(2026-11-09 사용자 — 296px 에서도 꺾였다. 1199px 이하에서 200px 로 줄던 것이 컸다).
-- 모바일에는 내 찜 열이 없다 — "+ 추가"의 시트에서 고른다.
+- 고른 신발 말고는 ✕ — 누르면 그 열이 빠지고 오른쪽이 한 칸씩 당겨진다. **빈 칸은 남지 않는다.** 다른 신발이 자동으로 들어오지도 않는다. [code:src/components/compare/CompareCard.tsx:38] [code:src/pages/Compare.tsx:130-134]
+- **고른 신발은 ↻(기준 바꾸기)** — 자동 채우기의 기준이라 빼지 않는다. 마우스를 올리면 "기준 바꾸기", 누르면 첫 화면(검색)으로 가서 다시 고르고, 고르면 자동 채우기가 다시 돈다. 5초 동안 "기준 신발을 다시 골라 주세요 · 되돌리기", 첫 화면의 "이어서 보기"로도 돌아간다(2026-11-09 사용자). [code:src/components/compare/CompareCard.tsx:36] [code:src/pages/Compare.tsx:136-140] [code:src/pages/Compare.tsx:124-129] [code:src/pages/Compare.tsx:106-107]
+- 끝에는 늘 **"+ 추가" 한 칸**(5켤레면 없다). 문구는 로그인하면 "검색하거나 내 찜에서 끌어 오세요"(모바일은 "검색 · 내 찜"), 아니면 "검색해서 추가하세요". PC 는 누르면 추가 창(검색창, 로그인했으면 내 찜 목록도), 모바일은 아래에서 올라오는 시트(검색창 + 내 찜, 찜마다 "추가"). [code:src/components/compare/CompareTable.tsx:104] [code:src/components/compare/CompareTable.tsx:191-196] [code:src/pages/Compare.tsx:233-242] [code:src/components/compare/ComparePicker.tsx:65-68]
+- 뺀 뒤 5초 동안 아래에 **"○○를 뺐어요 · 되돌리기"** — 누르면 같은 자리로 돌아온다(2026-11-09 사용자 — 다시 찾기 번거롭다). [code:src/pages/Compare.tsx:130-134] [code:src/pages/Compare.tsx:244-249]
+- **"내 찜"(PC) — 오른쪽 세로 열, 스크롤해도 따라온다**(sticky, 헤더 바로 아래). 찜이 많으면 그 안에서만 스크롤. 카드를 표의 열 위로 끌어 놓으면 그 칸을 바꾸고, "+ 추가" 칸에 놓으면 더한다(브라우저 기본 끌어 놓기, 의존성 없음). 이미 비교 중인 신발은 옅게, "비교 중"은 이름 아래 줄(오른쪽에 두면 이름 자리를 30px 넘게 먹었다 — 줄은 모든 칸에 비워 둬 높이가 같다). 카드를 누르거나 Enter 를 치면 끝에 더한다 — 칸을 바꾸는 것은 끌어 놓기뿐이다. 비로그인은 "로그인하면 찜한 신발을 끌어올 수 있어요"만. 화면은 폭을 꽉 채운다(비교 표 | 내 찜). **내 찜 폭은 1440px 이상 340px · 1200~1439px 300px** — 310켤레 모델명을 13px 굵게 재면 95% 136px · 가장 긴 것 180px, 이름 자리는 스크롤바 17px 를 빼고 340px 에서 205px(모두 한 줄) · 300px 에서 165px(180px 안팎 셋만 두 줄)(2026-11-09 사용자 — 296px 에서도 꺾였다. 1199px 이하에서 200px 로 줄던 것이 컸다). [code:src/components/compare/CompareLikes.tsx:12] [code:src/pages/Compare.css:666-670] [code:src/components/compare/CompareTable.tsx:110-125] [code:src/pages/Compare.tsx:144-150] [code:src/components/compare/CompareLikes.tsx:46-58] [code:src/pages/Compare.css:746] [code:src/components/compare/CompareLikes.tsx:15-23] [code:src/pages/Compare.css:24-25] [code:src/pages/Compare.css:817-820] [c:6bef573] <!-- 안 맞음: 문서는 「340px 에서 205px」, 「300px 에서 165px」, 코드 주석은 「≈ 190px」(Compare.css:24), 「이름 자리 ≈ 150px, 310켤레의 98% 한 줄」(Compare.css:817) -->
+- 모바일에는 내 찜 열이 없다 — "+ 추가"의 시트에서 고른다. [code:src/pages/Compare.tsx:230] [code:src/pages/Compare.tsx:239]
 
 #### 1-5. 표
 
-- 머리의 사진이나 모델명을 누르면 그 신발 상세 모달(`ShoeModal`)이 뜬다 — 주소에 `&shoe={id}`, 닫으면 비교 화면 그대로.
-- **머리는 찜 목록 카드 모양**(`Account.css` `.mypage__card`): 행택 끈 구멍 · 사진 높이 111px · 브랜드 12px 400 `--text-weak` · 모델 14px 700 · 바코드(150px)와 `RS` + id 네 자리(10px, 자간 0.18em, `--text-weak`). 끈 구멍 아래 이유 한 줄(브랜드와 같은 12px), 오른쪽 위 ✕ 또는 ↻. **줄 맞춤** — 같은 줄의 카드는 높이가 같고, 이유 · 사진(고정 높이) · 브랜드 · 모델명은 위에서 같은 자리, 바코드는 카드 맨 아래(모델명이 한 줄이든 두 줄이든 바코드 줄이 맞는다, 2026-11-09 사용자 — "아드레날린 GTS 25" 두 줄에서 어긋났다).
-- **사진은 홈 카드(`ShoeCard.css` `.card__image`) 처리 그대로** — 흰 바탕, 좌우 11% 여백, `object-fit: contain`. StockX 사진(700×500, 신발이 가로에 꽉)과 GOAT 사진(700×344 안팎, 신발에 딱 맞게 자름)의 비율이 달라, 여백 없이 높이만 정하면 GOAT 신발이 크게 보인다. 찜 목록 카드(`.mypage__cardimg`)도 같은 처리로 맞춘다(2026-11-09 사용자).
-- **그 아래는 표** — 줄 이름이 왼쪽, 값이 열마다 같은 높이에 온다. 글씨는 관리 화면 신발 수정 폼의 스펙 칸(`ShoeForm.css`)과 같다 — 묶음 이름 `.form__section`(14px × 1.5 = 21px, 700, `--text-strong`, 아래 줄 `--border-light`) · 줄 이름 `.form__rowlabel`(13px, 600, `--text-mid`) · 값은 입력 칸 글씨(14px, 400, `--text-strong`) · 기준 사이즈 · 위치 말 `.form__hint`(12px, 400 — 위치 말만 `--accent`). ⓘ 는 줄 이름과 같은 줄 높이에 세로 가운데.
+- 머리의 사진이나 모델명을 누르면 그 신발 상세 모달(`ShoeModal`)이 뜬다 — 주소에 `&shoe={id}`, 닫으면 비교 화면 그대로. [code:src/pages/Compare.tsx:159-166]
+- **머리는 찜 목록 카드 모양**(`Account.css` `.mypage__card`): 행택 끈 구멍 · 사진 높이 111px · 브랜드 12px 400 `--text-weak` · 모델 14px 700 · 바코드(150px)와 `RS` + id 네 자리(10px, 자간 0.18em, `--text-weak`). 끈 구멍 아래 이유 한 줄(브랜드와 같은 12px), 오른쪽 위 ✕ 또는 ↻. **줄 맞춤** — 같은 줄의 카드는 높이가 같고, 이유 · 사진(고정 높이) · 브랜드 · 모델명은 위에서 같은 자리, 바코드는 카드 맨 아래(모델명이 한 줄이든 두 줄이든 바코드 줄이 맞는다, 2026-11-09 사용자 — "아드레날린 GTS 25" 두 줄에서 어긋났다). [code:src/pages/Compare.css:1] [code:src/pages/Compare.css:322] [code:src/pages/Compare.css:336] [code:src/pages/Compare.css:341] [code:src/pages/Compare.css:360] [code:src/pages/Compare.css:364-365] [code:src/components/compare/CompareCard.tsx:7] [code:src/components/compare/CompareCard.tsx:24-49]
+- **사진은 홈 카드(`ShoeCard.css` `.card__image`) 처리 그대로** — 흰 바탕, 좌우 11% 여백, `object-fit: contain`. StockX 사진(700×500, 신발이 가로에 꽉)과 GOAT 사진(700×344 안팎, 신발에 딱 맞게 자름)의 비율이 달라, 여백 없이 높이만 정하면 GOAT 신발이 크게 보인다. 찜 목록 카드(`.mypage__cardimg`)도 같은 처리로 맞춘다(2026-11-09 사용자). [code:src/pages/Compare.css:317-332] [code:src/pages/Account.css:274-282] [c:1c0342f]
+- **그 아래는 표** — 줄 이름이 왼쪽, 값이 열마다 같은 높이에 온다. 글씨는 관리 화면 신발 수정 폼의 스펙 칸(`ShoeForm.css`)과 같다 — 묶음 이름 `.form__section`(14px × 1.5 = 21px, 700, `--text-strong`, 아래 줄 `--border-light`) · 줄 이름 `.form__rowlabel`(13px, 600, `--text-mid`) · 값은 입력 칸 글씨(14px, 400, `--text-strong`) · 기준 사이즈 · 위치 말 `.form__hint`(12px, 400 — 위치 말만 `--accent`). ⓘ 는 줄 이름과 같은 줄 높이에 세로 가운데. [code:src/pages/Compare.css:406-428] [code:src/tokens.css:15] [code:src/pages/Compare.css:444-449] [code:src/pages/Compare.css:478-483] [code:src/pages/Compare.css:491-501] [code:src/pages/Compare.css:430-438]
 
   | 묶음 | 줄 |
   |---|---|
-  | 기본 | 용도 · 안정성 |
-  | 발에 맞나 | 발볼 · 와이드 모델 |
-  | 주행감 | 무게(기준 사이즈 함께, 다르면 270mm 로 맞춘 값도) · 스택하이트 · 드롭 · 카본 플레이트 · 미드솔 |
-  | 평가 | 평점 · 리뷰 수(**늘 한 칸** — "★4.2 · 리뷰 3", "리뷰 3"을 누르면 상세 모달이 리뷰 쪽으로 열린다) · 찜 |
-  | 가격 | 발매가 |
+  | 기본 | 용도 · 안정성 [code:src/components/compare/CompareTable.tsx:24] |
+  | 발에 맞나 | 발볼 · 와이드 모델 [code:src/components/compare/CompareTable.tsx:25] |
+  | 주행감 | 무게(기준 사이즈 함께, 다르면 270mm 로 맞춘 값도) · 스택하이트 · 드롭 · 카본 플레이트 · 미드솔 [code:src/components/compare/CompareTable.tsx:26-36] [code:src/components/compare/CompareTable.tsx:128-152] |
+  | 평가 | 평점 · 리뷰 수(**늘 한 칸** — "★4.2 · 리뷰 3", "리뷰 3"을 누르면 상세 모달이 리뷰 쪽으로 열린다) · 찜 [code:src/components/compare/CompareTable.tsx:37] [code:src/components/compare/CompareTable.tsx:165-177] |
+  | 가격 | 발매가 [code:src/components/compare/CompareTable.tsx:38] |
 
-- **카드 줄 고정** — 표를 내리면 카드 줄(이유 · 사진 · 브랜드 · 모델명 · 바코드, "+ 추가" 칸까지)이 크기 그대로 헤더 바로 아래에 붙는다(2026-11-09 사용자 — 작은 띠는 알아보기 어려웠다, RunRepeat 처럼 내린 채로도 더할 수 있게). 카드 줄을 표와 다른 칸으로 떼어 그 칸을 sticky 로 둔다 — 1199px 이하는 두 칸 모두 가로로 넘기고 가로 위치를 서로 맞춘다(가로 스크롤 칸 "안"의 것은 세로 sticky 가 듣지 않지만 칸 "자체"는 듣는다). 열 폭은 표에서 재서 카드 줄에 그대로 준다. 헤더 높이는 크기가 바뀔 때마다 잰다(로고 글꼴이 늦게 오면 2~5px 틈이 났다).
-- 넣지 않는 것: 설명문(길다 — 머리를 누르면 상세 모달), 요약(머리가 길어져 줄이 어긋난다), 실측값(19켤레뿐), 품번 · 출처 · 다른 표기, **AI 리뷰 요약**(v1 에서 뺌 — 여러 켤레를 한꺼번에 요약하면 무겁다).
-- 점수 · 순위 · 굵게 표시(더 나은 쪽) 없음.
-- 값(숫자 · 배지 · 글자 · "정보 없음")은 칸 가운데, 줄 이름은 왼쪽(2026-11-09 사용자).
-- **"발에 맞나 · 주행감" 묶음에서 값이 다른 줄은 틸 15% 배경**(흰 바탕 위에), 같은 줄은 흰색 — 토글 없이 바로 보이게(2026-11-09 사용자). 평가 · 가격은 거의 늘 달라 깔지 않는다. 글씨가 안 읽히면 그때 조절한다.
-- 같은 값이어도 열마다 그대로 쓴다 — 한 칸으로 접으면 열이 어긋나 보인다(2026-11-09 사용자).
-- 줄 이름 옆 ⓘ — 상세 모달과 같은 `terms` 설명(와이드는 `WIDE_TERM`, 안정성은 중립화 · 안정화를 값마다). PC 는 마우스를 올리면, 모바일은 탭하면 뜬다. 커서는 손가락(물음표 커서 아님).
+- **카드 줄 고정** — 표를 내리면 카드 줄(이유 · 사진 · 브랜드 · 모델명 · 바코드, "+ 추가" 칸까지)이 크기 그대로 헤더 바로 아래에 붙는다(2026-11-09 사용자 — 작은 띠는 알아보기 어려웠다, RunRepeat 처럼 내린 채로도 더할 수 있게). 카드 줄을 표와 다른 칸으로 떼어 그 칸을 sticky 로 둔다 — 1199px 이하는 두 칸 모두 가로로 넘기고 가로 위치를 서로 맞춘다(가로 스크롤 칸 "안"의 것은 세로 sticky 가 듣지 않지만 칸 "자체"는 듣는다). 열 폭은 표에서 재서 카드 줄에 그대로 준다. 헤더 높이는 크기가 바뀔 때마다 잰다(로고 글꼴이 늦게 오면 2~5px 틈이 났다). [code:src/components/compare/CompareTable.tsx:83-103] [code:src/pages/Compare.css:989-994] [code:src/pages/Compare.tsx:169-177]
+- 넣지 않는 것: 설명문(길다 — 머리를 누르면 상세 모달), 요약(머리가 길어져 줄이 어긋난다), 실측값(19켤레뿐), 품번 · 출처 · 다른 표기, **AI 리뷰 요약**(v1 에서 뺌 — 여러 켤레를 한꺼번에 요약하면 무겁다). [code:src/components/compare/CompareTable.tsx:23-39] (2026-11-09 기준) [c:1c0342f]
+- 점수 · 순위 · 굵게 표시(더 나은 쪽) 없음. [code:src/components/compare/CompareTable.tsx:23-39] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:16]
+- 값(숫자 · 배지 · 글자 · "정보 없음")은 칸 가운데, 줄 이름은 왼쪽(2026-11-09 사용자). [code:src/pages/Compare.css:453]
+- **"발에 맞나 · 주행감" 묶음에서 값이 다른 줄은 틸 15% 배경**(흰 바탕 위에), 같은 줄은 흰색 — 토글 없이 바로 보이게(2026-11-09 사용자). 평가 · 가격은 거의 늘 달라 깔지 않는다. 글씨가 안 읽히면 그때 조절한다. [code:src/components/compare/CompareTable.tsx:20] [code:src/components/compare/CompareTable.tsx:207] [code:src/pages/Compare.css:3] [code:src/pages/Compare.css:460-463]
+- 같은 값이어도 열마다 그대로 쓴다 — 한 칸으로 접으면 열이 어긋나 보인다(2026-11-09 사용자). [code:src/components/compare/CompareTable.tsx:222-240]
+- 줄 이름 옆 ⓘ — 상세 모달과 같은 `terms` 설명(와이드는 `WIDE_TERM`, 안정성은 중립화 · 안정화를 값마다). PC 는 마우스를 올리면, 모바일은 탭하면 뜬다. 커서는 손가락(물음표 커서 아님). [code:src/components/compare/CompareTable.tsx:107-108] [code:src/components/compare/CompareTable.tsx:215-218] [code:src/utils/terms.ts:6] [code:src/utils/terms.ts:20-26] [code:src/components/TermTooltip.tsx:22-23] [code:src/index.css:43-45]
 
 #### 1-6. 빈 칸
 
-- 한 켤레만 비면 그 칸에 **"정보 없음"**(옅은 글씨). 숨기지도, 다른 세대 값 · 실측값 · 설명문으로 메우지도 않는다(`02_screens.md` 0절).
-- 모든 켤레가 비어도 열마다 "정보 없음" — 한 칸으로 합치면 열이 어긋나 보인다(2026-11-09 사용자).
-- 지금 빈 칸(310켤레 중): 발볼 69 · 가격 54 · 스택 19 · 카본 16 · 와이드 6. 두 켤레를 비교할 때 둘 다 발볼이 있을 확률은 약 60%, 가격은 약 68% — 빈 칸은 자주 보인다는 것을 전제로 그린다.
+- 한 켤레만 비면 그 칸에 **"정보 없음"**(옅은 글씨). 숨기지도, 다른 세대 값 · 실측값 · 설명문으로 메우지도 않는다(`02_screens.md` 0절). [code:src/utils/display.ts:2] [code:src/components/compare/CompareTable.tsx:136] [code:src/components/compare/CompareTable.tsx:155] [code:src/components/compare/CompareTable.tsx:179] [docs:02_screens.md]
+- 모든 켤레가 비어도 열마다 "정보 없음" — 한 칸으로 합치면 열이 어긋나 보인다(2026-11-09 사용자). [code:src/components/compare/CompareTable.tsx:222-240]
+- 지금 빈 칸(310켤레 중): 발볼 69 · 가격 54 · 스택 19 · 카본 16 · 와이드 6. 두 켤레를 비교할 때 둘 다 발볼이 있을 확률은 약 60%, 가격은 약 68% — 빈 칸은 자주 보인다는 것을 전제로 그린다. (2026-11-09 기준) [c:1c0342f]
 
 #### 1-7. 어디쯤인지 — 말과 분포 그래프
 
-- 숫자 칸(무게 · 스택하이트 · 드롭 · 가격)의 값 아래에 **늘 보이는 말**을 틸 알약(배지 — 옅은 틸 바탕 · 틸 테두리 · 12px)으로: 하위 25% · 가운데 · 상위 25% 로
-  - 무게 "가벼운 편 · 중간 · 무거운 편"
-  - 스택 · 드롭 · 가격 "낮은 편 · 중간 · 높은 편"
-  - 좋고 나쁨이 아니라 자리만 말한다. 동점은 가운데 순위로.
-- 값에 마우스를 올리면(모바일은 탭) **작은 분포 그래프** — 화면 아래쪽 줄은 위로, 오른쪽 끝 열은 왼쪽으로 펼친다(화면 밖으로 나가지 않게) — 막대는 회색, 이 칸의 신발은 틸(`--accent`), 같이 비교 중인 다른 신발은 진한 코랄(`--coral-strong`) 눈금. 글은 **결론 먼저**(2026-11-09 사용자) — 제목 "무게 280g — 중간이에요", 본문 "270mm로 맞춘 무게가 있는 신발 281켤레를 가벼운 순으로 세우면 131번째예요." 스택 · 드롭 · 발매가도 같은 틀("발매가를 확인한 신발 256켤레를 낮은 순으로 …"). 한 번에 하나만 열리고 화면 밖으로 나가지 않는다(툴팁과 같은 규칙).
-- 모집단: 스택 · 드롭은 값이 있는 켤레 전부, 가격은 가격이 있는 256켤레(그래프에 수를 적는다).
-- **무게는 270mm(M9)로 맞춘 값으로 281켤레의 자리를 말한다**(V15 `weightNorm270`, 2026-11-10 사용자). 브랜드는 무게를 한 사이즈로 재서 내는데 그 사이즈가 다르다 — 270mm 211 · 다른 사이즈(265 · 275 · 280 · 285mm) 70 · 모름 29. 발이 크면 신발도 무거우니 반 사이즈당 2.6%로 270mm 에 맞춘다(계수 · 출처 · 규칙은 `01a_catalog_sources.md` 1-3a). 원값이 먼저, 환산값은 보조다.
-  - 270mm 신발: 숫자 + "270mm 기준" + 위치 배지 + 그래프.
-  - 다른 사이즈 70켤레: 숫자 + "280mm 기준 · 270mm로 약 271g"(좁은 열에서는 "·" 뒤에서 줄을 바꾼다) + 위치 배지 + **"환산" 배지**(흰 바탕 · 회색 테두리 — 위치가 아니라 이 숫자가 그대로가 아니라는 표시). 그래프 제목 "무게 285g(270mm로 약 271g) — 중간이에요", 본문 앞에 "280mm 신발로 잰 무게라 270mm로 맞춰 그래프에 넣었어요."(값은 제목에만 — 본문에서 되풀이하지 않는다)
-  - 기준 모름 29켤레: 숫자 + "기준 모름"만, 배지 없음. 누르면 그래프 대신 "몇 mm 신발로 잰 무게인지 알 수 없어서 그래프에 넣지 않았어요."
-  - 그래프 아래 작은 글씨 — 같이 보는 신발(코랄 눈금) 가운데 환산한 것 "페가수스 41 · 클라우드고는 270mm로 맞춘 값으로 놓았어요."(셋 이상이면 "같이 보는 신발 중 4켤레는 …"), 기준 모름인 것 "엔돌핀 스피드 4는 기준 사이즈를 알 수 없어서 그래프에 넣지 않았어요." 281개 막대 하나하나는 구분하지 않는다 — 모집단 문장("270mm로 맞춘 무게가 있는 신발")이 이미 말한다.
-  - 비교 중인 신발 가운데 환산한 것이 있으면 무게 줄 아래에 "기준 사이즈가 다른 신발이 있어서 환산값을 적용했어요"(회색 글씨 · 옅은 바탕 — 경고가 아니라 했다는 말). 모두 270mm 이거나 기준 모름뿐이면 없다. 줄 이름 칸부터 신발이 있는 열까지(빈 "+ 추가" 열은 빼고), 글자는 줄 이름과 같은 자리에서 시작.
-  - 우열 문장은 없다 — 8g 규칙(차이가 8g 미만이면 "거의 같은 수준")은 챗봇이 쓴다(`01a` 1-3a).
-- **계산은 서버가 한다**(`GET /api/compare`, 2026-11-10 작업 3 — `05_api_contract.md`). 등수 · 밴드 · 위치 말 · 환산 여부 · 그래프 모집단 · 자동 채우기(`?pick=`)를 받아 화면은 그리기만 한다. 막대 칸 수(24)는 화면 상수라 서버는 모집단을 값 배열로 준다. 원값 · "N mm 기준 · 270mm로 약 Ng" 보조 줄은 `/api/shoes` 데이터 그대로다.
-  - 구성이 바뀌는 동안은 직전 응답의 배지를 그대로 두고, 새로 들어온 신발 칸만 응답이 오면 배지가 붙는다(서버 계산 약 10ms — 스피너는 두지 않는다, 2026-11-10 사용자). 그래프는 서버 값이 온 칸만 열린다.
-  - 실패하면 배지 · 그래프 · 무게 줄 아래 문구 없이 원값 표만. 하나를 골랐는데 자동 채우기가 실패하면 그 한 켤레만("한 켤레 더 골라 주세요").
+- 숫자 칸(무게 · 스택하이트 · 드롭 · 가격)의 값 아래에 **늘 보이는 말**을 틸 알약(배지 — 옅은 틸 바탕 · 틸 테두리 · 12px)으로: 하위 25% · 가운데 · 상위 25% 로 [code:src/components/compare/CompareTable.tsx:144-149] [code:src/components/compare/CompareTable.tsx:153-163] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:61-71] [code:src/pages/Compare.css:490-501]
+  - 무게 "가벼운 편 · 중간 · 무거운 편" [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:31]
+  - 스택 · 드롭 · 가격 "낮은 편 · 중간 · 높은 편" [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:32-34]
+  - 좋고 나쁨이 아니라 자리만 말한다. 동점은 가운데 순위로. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:61-70]
+- 값에 마우스를 올리면(모바일은 탭) **작은 분포 그래프** — 화면 아래쪽 줄은 위로, 오른쪽 끝 열은 왼쪽으로 펼친다(화면 밖으로 나가지 않게) — 막대는 회색, 이 칸의 신발은 틸(`--accent`), 같이 비교 중인 다른 신발은 진한 코랄(`--coral-strong`) 눈금. 글은 **결론 먼저**(2026-11-09 사용자) — 제목 "무게 280g — 중간이에요", 본문 "270mm로 맞춘 무게가 있는 신발 281켤레를 가벼운 순으로 세우면 131번째예요." 스택 · 드롭 · 발매가도 같은 틀("발매가를 확인한 신발 256켤레를 낮은 순으로 …"). 한 번에 하나만 열리고 화면 밖으로 나가지 않는다(툴팁과 같은 규칙). [code:src/components/compare/CompareDist.tsx:24-37] [code:src/components/compare/CompareDist.tsx:86-88] [code:src/components/compare/CompareDist.tsx:104-108] [code:src/utils/compare.ts:57-63] [code:src/pages/Compare.css:584] [code:src/pages/Compare.css:589] [code:src/components/compare/CompareTable.tsx:75]
+- 모집단: 스택 · 드롭은 값이 있는 켤레 전부, 가격은 가격이 있는 256켤레(그래프에 수를 적는다). [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:56-59] [code:src/components/compare/CompareDist.tsx:107] (2026-11-09 기준) [c:1c0342f]
+- **무게는 270mm(M9)로 맞춘 값으로 281켤레의 자리를 말한다**(V15 `weightNorm270`, 2026-11-10 사용자). 브랜드는 무게를 한 사이즈로 재서 내는데 그 사이즈가 다르다 — 270mm 211 · 다른 사이즈(265 · 275 · 280 · 285mm) 70 · 모름 29. 발이 크면 신발도 무거우니 반 사이즈당 2.6%로 270mm 에 맞춘다(계수 · 출처 · 규칙은 `01a_catalog_sources.md` 1-3a). 원값이 먼저, 환산값은 보조다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:40-54] [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:3] [code:src/components/compare/CompareTable.tsx:136-141] [docs:01a_catalog_sources.md] [c:2e05859]
+  - 270mm 신발: 숫자 + "270mm 기준" + 위치 배지 + 그래프. [code:src/components/compare/CompareTable.tsx:141]
+  - 다른 사이즈 70켤레: 숫자 + "280mm 기준 · 270mm로 약 271g"(좁은 열에서는 "·" 뒤에서 줄을 바꾼다) + 위치 배지 + **"환산" 배지**(흰 바탕 · 회색 테두리 — 위치가 아니라 이 숫자가 그대로가 아니라는 표시). 그래프 제목 "무게 285g(270mm로 약 271g) — 중간이에요", 본문 앞에 "280mm 신발로 잰 무게라 270mm로 맞춰 그래프에 넣었어요."(값은 제목에만 — 본문에서 되풀이하지 않는다) [code:src/components/compare/CompareTable.tsx:139-140] [code:src/components/compare/CompareTable.tsx:147] [code:src/pages/Compare.css:514-519] [code:src/components/compare/CompareDist.tsx:87] [code:src/components/compare/CompareDist.tsx:106] (2026-11-10 기준) [c:31ffda1]
+  - 기준 모름 29켤레: 숫자 + "기준 모름"만, 배지 없음. 누르면 그래프 대신 "몇 mm 신발로 잰 무게인지 알 수 없어서 그래프에 넣지 않았어요." [code:src/components/compare/CompareTable.tsx:139] [code:src/components/compare/CompareDist.tsx:55-64] (2026-11-10 기준) [c:2e05859]
+  - 그래프 아래 작은 글씨 — 같이 보는 신발(코랄 눈금) 가운데 환산한 것 "페가수스 41 · 클라우드고는 270mm로 맞춘 값으로 놓았어요."(셋 이상이면 "같이 보는 신발 중 4켤레는 …"), 기준 모름인 것 "엔돌핀 스피드 4는 기준 사이즈를 알 수 없어서 그래프에 넣지 않았어요." 281개 막대 하나하나는 구분하지 않는다 — 모집단 문장("270mm로 맞춘 무게가 있는 신발")이 이미 말한다. [code:src/components/compare/CompareDist.tsx:74-75] [code:src/components/compare/CompareDist.tsx:109-116] (2026-11-10 기준) [c:2e05859]
+  - 비교 중인 신발 가운데 환산한 것이 있으면 무게 줄 아래에 "기준 사이즈가 다른 신발이 있어서 환산값을 적용했어요"(회색 글씨 · 옅은 바탕 — 경고가 아니라 했다는 말). 모두 270mm 이거나 기준 모름뿐이면 없다. 줄 이름 칸부터 신발이 있는 열까지(빈 "+ 추가" 열은 빼고), 글자는 줄 이름과 같은 자리에서 시작. [code:src/components/compare/CompareTable.tsx:242-249] [code:src/pages/Compare.css:532-539]
+  - 우열 문장은 없다 — 8g 규칙(차이가 8g 미만이면 "거의 같은 수준")은 챗봇이 쓴다(`01a` 1-3a). [code:chatbot/facts.py:6] [code:chatbot/facts.py:238] [docs:01a_catalog_sources.md]
+- **계산은 서버가 한다**(`GET /api/compare`, 2026-11-10 작업 3 — `05_api_contract.md`). 등수 · 밴드 · 위치 말 · 환산 여부 · 그래프 모집단 · 자동 채우기(`?pick=`)를 받아 화면은 그리기만 한다. 막대 칸 수(24)는 화면 상수라 서버는 모집단을 값 배열로 준다. 원값 · "N mm 기준 · 270mm로 약 Ng" 보조 줄은 `/api/shoes` 데이터 그대로다. [code:backend/src/main/java/com/kopo17/runshoes/compare/CompareController.java:44-57] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:198-236] [code:src/components/compare/CompareDist.tsx:6] [code:src/utils/compareApi.ts:9-21] [docs:05_api_contract.md]
+  - 구성이 바뀌는 동안은 직전 응답의 배지를 그대로 두고, 새로 들어온 신발 칸만 응답이 오면 배지가 붙는다(서버 계산 약 10ms — 스피너는 두지 않는다, 2026-11-10 사용자). 그래프는 서버 값이 온 칸만 열린다. [code:src/pages/Compare.tsx:66-77] [code:src/components/compare/CompareTable.tsx:223] (2026-11-10 기준) [c:a76793f]
+  - 실패하면 배지 · 그래프 · 무게 줄 아래 문구 없이 원값 표만. 하나를 골랐는데 자동 채우기가 실패하면 그 한 켤레만("한 켤레 더 골라 주세요"). [code:src/pages/Compare.tsx:75] [code:src/pages/Compare.tsx:87] [code:src/components/compare/CompareDist.tsx:51]
 
 #### 1-8. 태블릿 · 휴대폰(1199px 이하)
 
-- 1199px 이하는 휴대폰과 같은 배치(줄 이름은 값 위, 표 안쪽만 가로로, 내 찜은 시트) — 그 아래 폭에서 왼쪽 줄 이름 열 + 5열 + 내 찜 열을 두면 내 찜(200px)의 이름이 꺾이고 표도 좁았다(2026-11-09). 열은 150px 이상으로 폭을 채운다.
-- 묶음 이름 · 줄 이름 · 무게 경고 줄의 폭은 **표 칸의 보이는 폭**(`100cqw` − 오른쪽 여백)으로 잡는다. `100vw` 로 잡았을 때는 PC 세로 스크롤바(15px)까지 들어가, 열이 폭 안에 다 들어오는 경우(768~1199px, 2~3켤레 등)에도 표가 15px 넘쳐 맨 아래에 가로 스크롤바가 생겼다(2026-11-09 사용자 — 추천받기에서 넘어와 보였지만 들어온 경로와는 상관없었다).
-- 5열은 360px 에 들어가지 않는다 — **표 안쪽만 가로로 넘긴다**(scroll-snap). 한 화면에 두 켤레 + 다음 켤레 끝이 조금. 페이지 자체는 가로로 밀리지 않는다.
-- 줄 이름은 값 위에 작게(왼쪽 열을 두지 않는다), 머리(사진 · 모델)는 위에 붙는다.
-- 분포 그래프는 탭 → 아래 시트(화면 절반 이하), "내 찜"은 "+ 추가"의 시트 안에. 시트는 챗봇 단추 위에 뜬다. 처음에는 내용을 PC 호버 그래프와 같은 300px 폭으로 묶었다(시트 폭만큼 커지면 높이도 같이 커져 화면을 거의 덮었다, 2026-11-09 사용자). 그래서 양옆이 비어, **그래프만 시트 안쪽 폭을 다 쓰고 높이(약 101px) · 글자 크기는 그대로**다(2026-11-15 사용자 — SVG 의 viewBox 폭만 늘린다, `CompareDist` `SHEET_SCALE`). 글은 예전 300px 폭 그대로라 시트 높이도 같다. 무게 · 스택 · 드롭 · 발매가가 같은 그래프를 쓴다. 막대 칸 수(24)는 그대로. PC 호버 상자(300px)는 바뀌지 않았다.
-- 그래프 축의 가격은 "159,000원"처럼 다 쓴다("159천원"으로 줄이지 않는다).
-- 주소의 쉼표는 `%2C` 로 적힌다(`ids=115%2C3` — 읽을 때는 같다).
+- 1199px 이하는 휴대폰과 같은 배치(줄 이름은 값 위, 표 안쪽만 가로로, 내 찜은 시트) — 그 아래 폭에서 왼쪽 줄 이름 열 + 5열 + 내 찜 열을 두면 내 찜(200px)의 이름이 꺾이고 표도 좁았다(2026-11-09). 열은 150px 이상으로 폭을 채운다. [code:src/pages/Compare.tsx:29] [code:src/pages/Compare.css:845-847] [code:src/pages/Compare.css:871]
+- 묶음 이름 · 줄 이름 · 무게 경고 줄의 폭은 **표 칸의 보이는 폭**(`100cqw` − 오른쪽 여백)으로 잡는다. `100vw` 로 잡았을 때는 PC 세로 스크롤바(15px)까지 들어가, 열이 폭 안에 다 들어오는 경우(768~1199px, 2~3켤레 등)에도 표가 15px 넘쳐 맨 아래에 가로 스크롤바가 생겼다(2026-11-09 사용자 — 추천받기에서 넘어와 보였지만 들어온 경로와는 상관없었다). [code:src/pages/Compare.css:859] [code:src/pages/Compare.css:868-870] [c:2884ae0]
+- 5열은 360px 에 들어가지 않는다 — **표 안쪽만 가로로 넘긴다**(scroll-snap). 한 화면에 두 켤레 + 다음 켤레 끝이 조금. 페이지 자체는 가로로 밀리지 않는다. [code:src/pages/Compare.css:858] [code:src/pages/Compare.css:882]
+- 줄 이름은 값 위에 작게(왼쪽 열을 두지 않는다), 머리(사진 · 모델)는 위에 붙는다. [code:src/pages/Compare.css:845-847]
+- 분포 그래프는 탭 → 아래 시트(화면 절반 이하), "내 찜"은 "+ 추가"의 시트 안에. 시트는 챗봇 단추 위에 뜬다. 처음에는 내용을 PC 호버 그래프와 같은 300px 폭으로 묶었다(시트 폭만큼 커지면 높이도 같이 커져 화면을 거의 덮었다, 2026-11-09 사용자). 그래서 양옆이 비어, **그래프만 시트 안쪽 폭을 다 쓰고 높이(약 101px) · 글자 크기는 그대로**다(2026-11-15 사용자 — SVG 의 viewBox 폭만 늘린다, `CompareDist` `SHEET_SCALE`). 글은 예전 300px 폭 그대로라 시트 높이도 같다. 무게 · 스택 · 드롭 · 발매가가 같은 그래프를 쓴다. 막대 칸 수(24)는 그대로. PC 호버 상자(300px)는 바뀌지 않았다. [code:src/components/compare/CompareTable.tsx:257-266] [code:src/pages/Compare.css:914-926] [code:src/pages/Compare.css:662] [code:src/components/compare/CompareDist.tsx:6-12] [code:src/components/compare/CompareDist.tsx:47] [code:src/pages/Compare.css:547]
+- 그래프 축의 가격은 "159,000원"처럼 다 쓴다("159천원"으로 줄이지 않는다). [code:src/components/compare/CompareDist.tsx:78]
+- 주소의 쉼표는 `%2C` 로 적힌다(`ids=115%2C3` — 읽을 때는 같다). [code:src/pages/Compare.tsx:54-58]
 
 #### 2. 왜 이렇게 했나
 
@@ -127,7 +131,7 @@
 
 #### 2-2. 하나를 고르면 채워 준다(2026-11-09 사용자)
 
-처음 들어온 사람은 비교할 후보가 없다. 한 켤레만 정해도 같은 라인 이전 세대 · 같은 브랜드 · 다른 브랜드의 비슷한 신발이 있으면 바로 견줄 수 있다. 같은 브랜드의 비슷한 모델도 궁금한 것이라 브랜드당 1켤레 제한 대신 "같은 브랜드 1 + 다른 브랜드 1~2".
+처음 들어온 사람은 비교할 후보가 없다. 한 켤레만 정해도 같은 라인 이전 세대 · 같은 브랜드 · 다른 브랜드의 비슷한 신발이 있으면 바로 견줄 수 있다. 같은 브랜드의 비슷한 모델도 궁금한 것이라 브랜드당 1켤레 제한 대신 "같은 브랜드 1 + 다른 브랜드 1~2". [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:165-169]
 
 #### 2-3. 머리는 카드, 아래는 표(2026-11-09 사용자)
 
@@ -135,40 +139,40 @@
 
 #### 2-4. 빈 칸도 열마다 쓴다
 
-발볼 · 가격이 비는 켤레가 많아 "정보 없음"이 줄마다 되풀이되면 표가 허전하다. 처음에는 모두 빈 줄을 한 칸으로 합쳤지만, 합친 칸은 열이 어긋나 보여 열마다 그대로 쓴다. 빈 칸은 옅은 글씨로 덜 눈에 띄게 한다.
+발볼 · 가격이 비는 켤레가 많아 "정보 없음"이 줄마다 되풀이되면 표가 허전하다. 처음에는 모두 빈 줄을 한 칸으로 합쳤지만, 합친 칸은 열이 어긋나 보여 열마다 그대로 쓴다. 빈 칸은 옅은 글씨로 덜 눈에 띄게 한다. [code:src/components/compare/CompareTable.tsx:222-240]
 
 #### 3. 시도했던 것들
 
-- **처음 설계안(2026-10-21, 20켤레).** 찜한 것 가운데 둘을 레이더 차트(백분위) + 표로. 결정은 받지 않았다 — `archive/COMPARE_DESIGN.md`.
-- **다시 본 설계안(2026-11-02, 302켤레).** 리뷰가 20켤레에만 있어 평점 축을 빼고 축 셋(가벼움 · 쿠션 · 가격)으로 줄였다. 가격이 170켤레 비어 축 하나가 자주 빠지는 문제가 열린 질문으로 남았다.
-- **2026-11-09 결정(사용자, 여러 번에 걸쳐).** ① 레이더 · 백분위 · 서버 `/api/compare` 를 버리고 표만 ② 찜 · 로그인 없이 담기 ③ 둘 → 최대 5 · 하나를 고르면 4까지 채움 ④ 맞춤추천을 비교로 바꾸자는 안 → 둘은 역할이 달라 그대로 두고 "추천받기 · 비교하기"로 이름만, 추천 결과에서 비교로 넘긴다 ⑤ 비슷한 신발은 브랜드당 1 → 같은 브랜드 1 + 다른 브랜드 1~2 ⑥ 무게 자리는 270mm 끼리만 ⑦ 뺀 자리는 당기고 되돌리기를 둔다 ⑧ 머리는 찜 카드 모양 ⑨ 찜 목록 체크 → "선택 비교" ⑩ 메뉴는 지금 화면만 틸 ⑪ 내 찜은 표 아래 가로 줄 → 오른쪽 고정 세로 열 ⑫ "다른 칸만 보기" 토글 → 다른 줄에 옅은 틸 배경(5 · 10% 시안 → 15%, 발에 맞나 · 주행감만) ⑬ 같은 값을 "모두 ○○"로 접던 시안 → 열마다 그대로 ⑭ 비슷한 신발은 용도 · 안정성이 같은 것만 → 다른 브랜드 한 칸은 안정성이 다른 신발 ⑮ 글씨는 새로 정하지 않고 찜 카드 · 관리 폼에서 ⑯ "모두 정보 없음" 합치기도 풀었다 ⑰ 위치 말 밑줄 → 배지 ⑱ 브랜드 영문 검색 ⑲ 그래프 설명은 숫자 나열 → 결론 먼저(A · B · C 시안 중 A) ⑳ 검색이 8개로 잘려 옛 세대가 안 보이던 시안 → 전체. 세로 화면 가로 스크롤 — 관리자로 로그인하면 768~800px 에서 헤더(메뉴 넷 + 신발 관리 + 닉네임)가 폭을 넘었다(768px 에서 784/689px) → 899px 이하에서 헤더 글자 · 간격을 줄였다. 카드 띠(작은 띠, 바코드 뺌)를 더했다가 → 카드 줄 통째로 고정으로 바꿨다. 운영 뒤 카드 영역 점검(같은 날): 내 찜 248 → 296 → 340px · "비교 중"을 이름 아래로, 바코드 줄 맞춤, 고른 신발 ✕ → ↻, 모든 카드에 이유, 1199px 이하 휴대폰 배치.
+- **처음 설계안(2026-10-21, 20켤레).** 찜한 것 가운데 둘을 레이더 차트(백분위) + 표로. 결정은 받지 않았다 — `archive/COMPARE_DESIGN.md`. [docs:archive/COMPARE_DESIGN.md]
+- **다시 본 설계안(2026-11-02, 302켤레).** 리뷰가 20켤레에만 있어 평점 축을 빼고 축 셋(가벼움 · 쿠션 · 가격)으로 줄였다. 가격이 170켤레 비어 축 하나가 자주 빠지는 문제가 열린 질문으로 남았다. [c:1c0342f]
+- **2026-11-09 결정(사용자, 여러 번에 걸쳐).** ① 레이더 · 백분위 · 서버 `/api/compare` 를 버리고 표만 ② 찜 · 로그인 없이 담기 ③ 둘 → 최대 5 · 하나를 고르면 4까지 채움 ④ 맞춤추천을 비교로 바꾸자는 안 → 둘은 역할이 달라 그대로 두고 "추천받기 · 비교하기"로 이름만, 추천 결과에서 비교로 넘긴다 ⑤ 비슷한 신발은 브랜드당 1 → 같은 브랜드 1 + 다른 브랜드 1~2 ⑥ 무게 자리는 270mm 끼리만 ⑦ 뺀 자리는 당기고 되돌리기를 둔다 ⑧ 머리는 찜 카드 모양 ⑨ 찜 목록 체크 → "선택 비교" ⑩ 메뉴는 지금 화면만 틸 ⑪ 내 찜은 표 아래 가로 줄 → 오른쪽 고정 세로 열 ⑫ "다른 칸만 보기" 토글 → 다른 줄에 옅은 틸 배경(5 · 10% 시안 → 15%, 발에 맞나 · 주행감만) ⑬ 같은 값을 "모두 ○○"로 접던 시안 → 열마다 그대로 ⑭ 비슷한 신발은 용도 · 안정성이 같은 것만 → 다른 브랜드 한 칸은 안정성이 다른 신발 ⑮ 글씨는 새로 정하지 않고 찜 카드 · 관리 폼에서 ⑯ "모두 정보 없음" 합치기도 풀었다 ⑰ 위치 말 밑줄 → 배지 ⑱ 브랜드 영문 검색 ⑲ 그래프 설명은 숫자 나열 → 결론 먼저(A · B · C 시안 중 A) ⑳ 검색이 8개로 잘려 옛 세대가 안 보이던 시안 → 전체. 세로 화면 가로 스크롤 — 관리자로 로그인하면 768~800px 에서 헤더(메뉴 넷 + 신발 관리 + 닉네임)가 폭을 넘었다(768px 에서 784/689px) → 899px 이하에서 헤더 글자 · 간격을 줄였다. 카드 띠(작은 띠, 바코드 뺌)를 더했다가 → 카드 줄 통째로 고정으로 바꿨다. 운영 뒤 카드 영역 점검(같은 날): 내 찜 248 → 296 → 340px · "비교 중"을 이름 아래로, 바코드 줄 맞춤, 고른 신발 ✕ → ↻, 모든 카드에 이유, 1199px 이하 휴대폰 배치. [c:85b9677]
 
-- **무게를 270mm 끼리만 → 환산(2026-11-10 사용자, V15).** 처음에는 사이즈를 바꿔 계산하면 추정값이라 공시값 원칙에 어긋난다고 보고 270mm 로 잰 211켤레만 줄 세웠다 — 99켤레가 배지 없이 "공정하지 않아 뺐어요"였고, 비교 중인 신발의 기준이 다르면 "그대로 비교하기 어려워요"가 붙었다. 반 사이즈당 2.6%(RunRepeat 실측)로 맞춘 값을 DB 생성 컬럼으로 두고, 원값을 먼저 · 환산값을 보조로 · "환산" 배지로 숨기지 않는 쪽으로 바꿨다. 비슷한 신발 거리도 같은 값으로 바꿨다(그전에는 "반 사이즈 차가 표준편차보다 작아 보정하지 않는다") — 한 사이트에 무게 기준이 둘이면 안 된다. 처음에는 기준 모름을 거리에서도 "무게 모름(1)"으로 뒀는데, 247g(레벨 8) 옆에 311g(클라우드러너 3), 233g(엔돌핀 스피드 4) 옆에 278g 이 "비슷한 신발"로 나와 그 29켤레만 거리 안에서 원값을 쓰게 했다(1-3). 310켤레로 돌려 보면 환산 전과 결과가 다른 것 71켤레(기준 모름이 낀 것 13 · 환산만 58), 바뀐 후보와의 무게 차 중앙값은 빠진 것 19.0g → 들어온 것 13.9g.
+- **무게를 270mm 끼리만 → 환산(2026-11-10 사용자, V15).** 처음에는 사이즈를 바꿔 계산하면 추정값이라 공시값 원칙에 어긋난다고 보고 270mm 로 잰 211켤레만 줄 세웠다 — 99켤레가 배지 없이 "공정하지 않아 뺐어요"였고, 비교 중인 신발의 기준이 다르면 "그대로 비교하기 어려워요"가 붙었다. 반 사이즈당 2.6%(RunRepeat 실측)로 맞춘 값을 DB 생성 컬럼으로 두고, 원값을 먼저 · 환산값을 보조로 · "환산" 배지로 숨기지 않는 쪽으로 바꿨다. 비슷한 신발 거리도 같은 값으로 바꿨다(그전에는 "반 사이즈 차가 표준편차보다 작아 보정하지 않는다") — 한 사이트에 무게 기준이 둘이면 안 된다. 처음에는 기준 모름을 거리에서도 "무게 모름(1)"으로 뒀는데, 247g(레벨 8) 옆에 311g(클라우드러너 3), 233g(엔돌핀 스피드 4) 옆에 278g 이 "비슷한 신발"로 나와 그 29켤레만 거리 안에서 원값을 쓰게 했다(1-3). 310켤레로 돌려 보면 환산 전과 결과가 다른 것 71켤레(기준 모름이 낀 것 13 · 환산만 58), 바뀐 후보와의 무게 차 중앙값은 빠진 것 19.0g → 들어온 것 13.9g. [code:backend/src/main/resources/db/migration/V15__weight_norm_270.sql:1-16] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:85-93] [c:03aef95]
 
-- **계산을 서버로 옮겼다(2026-11-10 사용자, 작업 3 — `09_chatbot_rag.md` 13절).** 11-09 에 버린 "서버 `/api/compare`"는 레이더 · 백분위 · 점수를 내는 API 였다. 이번 `GET /api/compare` 는 점수를 매기지 않고, 그때 화면이 하던 표 계산(자동 채우기 · 등수 · 밴드 · 위치 말)을 그대로 옮긴 것이다 — 챗봇이 같은 계산을 쓰게. 옮기기 전 계산의 얼린 사본(`scripts/parity/reference/`)과 310켤레 · 자동 채우기 · 네 칸 등수를 `===` 로 전수 대조해 불일치 0(로컬 · 운영), 화면은 전후 캡처 20쌍(1440 · 390px)이 픽셀까지 같았다.
+- **계산을 서버로 옮겼다(2026-11-10 사용자, 작업 3 — `09_chatbot_rag.md` 13절).** 11-09 에 버린 "서버 `/api/compare`"는 레이더 · 백분위 · 점수를 내는 API 였다. 이번 `GET /api/compare` 는 점수를 매기지 않고, 그때 화면이 하던 표 계산(자동 채우기 · 등수 · 밴드 · 위치 말)을 그대로 옮긴 것이다 — 챗봇이 같은 계산을 쓰게. 옮기기 전 계산의 얼린 사본(`scripts/parity/reference/`)과 310켤레 · 자동 채우기 · 네 칸 등수를 `===` 로 전수 대조해 불일치 0(로컬 · 운영), 화면은 전후 캡처 20쌍(1440 · 390px)이 픽셀까지 같았다. [code:scripts/parity/reference/] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:14-15] [docs:09_chatbot_rag.md] [c:a76793f]
 
 #### 4. 남은 한계
 
-- 무게 위치 말은 기준 모름 29켤레에 붙지 않는다. 다른 사이즈 70켤레의 자리는 반 사이즈당 2.6%(모델별 1.66~3.60%)로 맞춘 값이라, 경계 근처에서는 배지가 한 칸 다를 수 있다.
-- 비슷한 신발은 스펙 칸만 본다 — 실제 주행감이 비슷한지는 모른다. 무게 · 스택이 빈 켤레는 거리 계산이 거칠다.
-- 분포 · 자동 채우기를 화면에서 계산하려면 목록 전체(지금 약 1MB)를 받아야 한다. 카탈로그가 크게 늘면 서버로 옮긴다.
-- 평점 · 리뷰는 시드 리뷰(`01e`)에서 온다. 3건 이하인 신발이 123켤레라 평점은 늘 리뷰 수와 함께 보인다.
+- 무게 위치 말은 기준 모름 29켤레에 붙지 않는다. 다른 사이즈 70켤레의 자리는 반 사이즈당 2.6%(모델별 1.66~3.60%)로 맞춘 값이라, 경계 근처에서는 배지가 한 칸 다를 수 있다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:40-54] (2026-11-10 기준) [c:2e05859]
+- 비슷한 신발은 스펙 칸만 본다 — 실제 주행감이 비슷한지는 모른다. 무게 · 스택이 빈 켤레는 거리 계산이 거칠다. [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:99-116]
+- 분포 · 자동 채우기를 화면에서 계산하려면 목록 전체(지금 약 1MB)를 받아야 한다. 카탈로그가 크게 늘면 서버로 옮긴다. [code:src/pages/Compare.tsx:22] [code:backend/src/main/java/com/kopo17/runshoes/compare/ComparePolicy.java:14] (2026-11-09 기준) [c:1c0342f] <!-- 안 맞음: 문서는 「화면에서 계산하려면」, 「카탈로그가 크게 늘면 서버로 옮긴다」, 코드는 이미 「그래프 모집단은 서버가 계산한다(GET /api/compare」(Compare.tsx:22) -->
+- 평점 · 리뷰는 시드 리뷰(`01e`)에서 온다. 3건 이하인 신발이 123켤레라 평점은 늘 리뷰 수와 함께 보인다. [code:src/components/compare/CompareTable.tsx:165-176] [docs:01e_seed_reviews.md] (2026-11-09 기준) [c:1c0342f]
 
 #### 5. 검증 항목
 
-- 단위(`npm test` — `tests/compare.test.ts` 11건): 자동 채우기(같은 라인 · 같은 브랜드 · 안정성 다름 · 다른 브랜드 먼저 · 현행 · 같은 용도 · 후보 모자람 · 없는 id), 자리(동점 · 25% · 75% · 무게 270mm), `ids` 다듬기(숫자 아님 · 모르는 id · 겹침 · 6개 이상), 은/는, 검색 순서, "비교에 담기" 주소. 서버 `ListQueryTest` 에 영문 브랜드 검색.
-- 화면: 첫 화면 → 고르기 → 4켤레, ✕ · 되돌리기, "+ 추가", 한 켤레 · 0켤레, 열마다 "정보 없음", 다른 줄 배경(발에 맞나 · 주행감만), 머리 → 상세 모달 · "리뷰 N" → 리뷰 쪽, 그래프(호버 · 탭 · 화면 끝에서 뒤집기), ⓘ, 내 찜 끌어 놓기(더하기 · 바꾸기), 찜 목록 "선택 비교", 추천받기 "1~3위 비교하기", 상세 모달 "비교에 담기", 링크로 들어오기(비로그인), 1440 · 1280 · 1024 · 768 · 390 · 360px.
-- 계약: spring-v6 에 X130 ~ X135(영문 브랜드 검색 넷 · `compare.view` 5개 204 · 6개 400). 목록 API 의 모양은 바뀌지 않는다.
-- 2026-11-09 로컬: 화면은 운영 공개 API(읽기)와 로컬 Spring(시드 · 로그인)에 붙여 1440 · 1024 · 800 · 390px 캡처로 확인, 계약 v6 PASS 98 · v3-search 24 · v4 21 · v3 101/11(그대로).
-- 2026-11-10(작업 3 — 계산을 서버로): `node scripts/parity/check.mjs --base <주소>` 불일치 0(로컬 · 운영 310켤레, 추천 960 조합 포함). 화면은 운영(브라우저 계산)과 로컬(서버 계산, 같은 운영 API), 배포 뒤 운영(이미지 `9a563cfa090c`)을 같은 계획으로 캡처해 20쌍씩 픽셀 비교(차이 0) — 섞인 조합 · 모두 270mm · 기준 모름 · ?pick= · 그래프(환산 · 270mm · 기준 모름), 추천 세 조합. 로딩(신발을 더할 때 배지가 붙기 전) · 실패(표만 · 한 켤레만)도 캡처.
-- 2026-11-10 로컬(V15 환산): 단위 11건(환산값으로 자리 · 기준 모름만 빠짐 · 환산 여부 · 반올림 · 이름 묶기 · 비슷한 신발 거리가 환산값으로 · 기준 모름은 거리 안에서만 원값). 화면은 운영 공개 API 에 V15 와 같은 식으로 `weightNorm270` 을 붙인 점검용 프록시로 1440 · 390px — 환산 · M9 · 기준 모름을 고른 그래프, 같이 보는 신발 넷이 모두 환산(수로 줄임), 모두 270mm(아래 문구 없음), 가로 넘침 없음. 계약 v6 PASS 109(X136 ~ X146 더함) · v3 100/12(V16 무게 용어 설명 — R03) · v3-search 24 · v4 21 · v14-summary 20.
-- 배포: 마이그레이션 없음 — 이미지 Sync 하나(자동 Sync). 확인은 인프라 `apps/runshoes/kustomization.yaml` 의 `newTag` 가 커밋 해시 12자리인지, 운영 `/compare` 가 내보내는 `assets/index-*.css` · `*.js` 이름이 로컬 `npm run build` 의 `dist/assets` 와 같은지로 한다.
+- 단위(`npm test` — `tests/compare.test.ts` 11건): 자동 채우기(같은 라인 · 같은 브랜드 · 안정성 다름 · 다른 브랜드 먼저 · 현행 · 같은 용도 · 후보 모자람 · 없는 id), 자리(동점 · 25% · 75% · 무게 270mm), `ids` 다듬기(숫자 아님 · 모르는 id · 겹침 · 6개 이상), 은/는, 검색 순서, "비교에 담기" 주소. 서버 `ListQueryTest` 에 영문 브랜드 검색. [code:tests/compare.test.ts:10-40] [code:backend/src/test/java/com/kopo17/runshoes/api/ListQueryTest.java:104] [code:backend/src/test/java/com/kopo17/runshoes/compare/PolicyTest.java] <!-- 안 맞음: 문서는 「tests/compare.test.ts 11건: 자동 채우기 ... 자리 ...」, 코드는 「test 4개(주소, 표시 반올림과 이름 묶기, 은/는과 검색 순서, 비교에 담기)」, 자동 채우기와 자리 시험은 서버 PolicyTest 로 옮겼다(tests/compare.test.ts:2) -->
+- 화면: 첫 화면 → 고르기 → 4켤레, ✕ · 되돌리기, "+ 추가", 한 켤레 · 0켤레, 열마다 "정보 없음", 다른 줄 배경(발에 맞나 · 주행감만), 머리 → 상세 모달 · "리뷰 N" → 리뷰 쪽, 그래프(호버 · 탭 · 화면 끝에서 뒤집기), ⓘ, 내 찜 끌어 놓기(더하기 · 바꾸기), 찜 목록 "선택 비교", 추천받기 "1~3위 비교하기", 상세 모달 "비교에 담기", 링크로 들어오기(비로그인), 1440 · 1280 · 1024 · 768 · 390 · 360px. <!-- 확인 못 함: 사람이 본 화면 점검 -->
+- 계약: spring-v6 에 X130 ~ X135(영문 브랜드 검색 넷 · `compare.view` 5개 204 · 6개 400). 목록 API 의 모양은 바뀌지 않는다. [code:contract/scenarios.mjs:464-469]
+- 2026-11-09 로컬: 화면은 운영 공개 API(읽기)와 로컬 Spring(시드 · 로그인)에 붙여 1440 · 1024 · 800 · 390px 캡처로 확인, 계약 v6 PASS 98 · v3-search 24 · v4 21 · v3 101/11(그대로). [c:34fcc49] <!-- 확인 못 함: 그때 캡처와 계약 실행 결과 -->
+- 2026-11-10(작업 3 — 계산을 서버로): `node scripts/parity/check.mjs --base <주소>` 불일치 0(로컬 · 운영 310켤레, 추천 960 조합 포함). 화면은 운영(브라우저 계산)과 로컬(서버 계산, 같은 운영 API), 배포 뒤 운영(이미지 `9a563cfa090c`)을 같은 계획으로 캡처해 20쌍씩 픽셀 비교(차이 0) — 섞인 조합 · 모두 270mm · 기준 모름 · ?pick= · 그래프(환산 · 270mm · 기준 모름), 추천 세 조합. 로딩(신발을 더할 때 배지가 붙기 전) · 실패(표만 · 한 켤레만)도 캡처. [code:scripts/parity/check.mjs:3-4] [code:scripts/parity/check.mjs:159] [c:9a563cfa090c] [c:acea546] <!-- 확인 못 함: 그때 대조와 캡처 결과, 운영 배포 -->
+- 2026-11-10 로컬(V15 환산): 단위 11건(환산값으로 자리 · 기준 모름만 빠짐 · 환산 여부 · 반올림 · 이름 묶기 · 비슷한 신발 거리가 환산값으로 · 기준 모름은 거리 안에서만 원값). 화면은 운영 공개 API 에 V15 와 같은 식으로 `weightNorm270` 을 붙인 점검용 프록시로 1440 · 390px — 환산 · M9 · 기준 모름을 고른 그래프, 같이 보는 신발 넷이 모두 환산(수로 줄임), 모두 270mm(아래 문구 없음), 가로 넘침 없음. 계약 v6 PASS 109(X136 ~ X146 더함) · v3 100/12(V16 무게 용어 설명 — R03) · v3-search 24 · v4 21 · v14-summary 20. [code:contract/scenarios.mjs:473-486] [c:03aef95] <!-- 확인 못 함: 그때 시험과 캡처 결과 -->
+- 배포: 마이그레이션 없음 — 이미지 Sync 하나(자동 Sync). 확인은 인프라 `apps/runshoes/kustomization.yaml` 의 `newTag` 가 커밋 해시 12자리인지, 운영 `/compare` 가 내보내는 `assets/index-*.css` · `*.js` 이름이 로컬 `npm run build` 의 `dist/assets` 와 같은지로 한다. <!-- 확인 못 함: 인프라 저장소의 newTag 와 운영 자산 이름 -->
 
 #### 화면 점검 방식
 
-- **로컬 코드 + 운영 공개 API**: `npx vite --config scripts/vite.prodapi.config.mjs` → `http://localhost:5179`. `/api` 만 운영으로 보낸다 — 310켤레 실제 데이터로 화면을 본다. **읽기만** 한다(찜 · 리뷰 · 관리 화면 쓰기 금지).
-- **로그인 상태**는 로컬 Spring(시드 DB, 포트 3000)에 붙인다: `API_TARGET=http://localhost:3000 PORT=5180 npx vite --config scripts/vite.prodapi.config.mjs`. 시드 계정 비밀번호는 plan · 문서 · 커밋에 적지 않는다.
-- **상세 모달은 운영 데이터로 열어도 된다** — 모달의 AI 요약은 DB(`shoe_summaries`, V14)만 읽고 Ollama 를 부르지 않는다(요약을 만드는 것은 하루 한 번 배치, `09_chatbot_rag.md` 5절).
-- **캡처 · 넘침 검사**: `node scripts/screen-shot.mjs plan.json`(헤드리스 크롬 CDP, 예시 `scripts/screen-shot.example.json`). 단계 `{overflow: "이름", skip: ".ctable__scroll"}` 이 페이지 가로 넘침과 넘친 요소를 찍는다(skip 은 원래 가로로 넘기는 표 안쪽). 결과 PNG 는 git 밖(세션 임시 폴더)에 둔다.
-- **넘침 검사는 스크롤바를 켠 채로** 한다(스크립트 기본값). 숨기고 재면 폭이 스크롤바(약 15px)만큼 넓게 잡혀, 관리자로 로그인한 768~800px 헤더 넘침을 놓쳤다(2026-11-09). 768px 이면 `cw 753` 처럼 나와야 스크롤바가 켜진 것이다.
+- **로컬 코드 + 운영 공개 API**: `npx vite --config scripts/vite.prodapi.config.mjs` → `http://localhost:5179`. `/api` 만 운영으로 보낸다 — 310켤레 실제 데이터로 화면을 본다. **읽기만** 한다(찜 · 리뷰 · 관리 화면 쓰기 금지). [code:scripts/vite.prodapi.config.mjs:2] [code:scripts/vite.prodapi.config.mjs:8-15]
+- **로그인 상태**는 로컬 Spring(시드 DB, 포트 3000)에 붙인다: `API_TARGET=http://localhost:3000 PORT=5180 npx vite --config scripts/vite.prodapi.config.mjs`. 시드 계정 비밀번호는 plan · 문서 · 커밋에 적지 않는다. [code:scripts/vite.prodapi.config.mjs:3]
+- **상세 모달은 운영 데이터로 열어도 된다** — 모달의 AI 요약은 DB(`shoe_summaries`, V14)만 읽고 Ollama 를 부르지 않는다(요약을 만드는 것은 하루 한 번 배치, `09_chatbot_rag.md` 5절). [code:backend/src/main/java/com/kopo17/runshoes/summary/SummaryService.java:29] [code:backend/src/main/resources/db/migration/V14__shoe_summaries.sql:1-2] [docs:09_chatbot_rag.md]
+- **캡처 · 넘침 검사**: `node scripts/screen-shot.mjs plan.json`(헤드리스 크롬 CDP, 예시 `scripts/screen-shot.example.json`). 단계 `{overflow: "이름", skip: ".ctable__scroll"}` 이 페이지 가로 넘침과 넘친 요소를 찍는다(skip 은 원래 가로로 넘기는 표 안쪽). 결과 PNG 는 git 밖(세션 임시 폴더)에 둔다. [code:scripts/screen-shot.mjs:10] [code:scripts/screen-shot.mjs:28-34] [code:scripts/screen-shot.example.json]
+- **넘침 검사는 스크롤바를 켠 채로** 한다(스크립트 기본값). 숨기고 재면 폭이 스크롤바(약 15px)만큼 넓게 잡혀, 관리자로 로그인한 768~800px 헤더 넘침을 놓쳤다(2026-11-09). 768px 이면 `cw 753` 처럼 나와야 스크롤바가 켜진 것이다. [code:scripts/screen-shot.mjs:24] [c:5133b6d]
 - 폭: 1440 · 1280 · 1024 · 900 · 768 · 390 · 360px. 헤더 넘침은 관리자 로그인 상태(메뉴 넷 + 신발 관리 + 닉네임)에서 768 · 800 · 899px 를 본다.

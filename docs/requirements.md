@@ -1,4 +1,8 @@
-> 상태: 요건 ①~⑦ 모두 운영에서 동작(2026-11-02). 원천: 과제 안내(번외 산출물 안내 PART_02, 12~18p) · README(옛 1 · 3절) · 영역 문서
+<!--
+다루는 곳: src/, backend/, catalog/, chatbot/
+읽은 커밋: 606b730
+-->
+> 상태: 요건 ①~⑦ 모두 운영에서 동작(2026-11-02). 원천: 과제 안내(번외 산출물 안내 PART_02, 12~18p) · README(옛 1 · 3절) · 영역 문서 <!-- 확인 못 함: 운영에서 동작하는지는 운영 사이트, 과제 안내는 저장소 밖 -->
 
 #### 0. 한 줄 요약
 
@@ -14,47 +18,47 @@
 
 | 누구 | 바라는 것 | RUNSHOES 가 주는 것 |
 |---|---|---|
-| 초보 러너 | 무엇을 사야 할지 | 용어 툴팁 · 추천받기 5문항 · 비교하기 · 러너들의 선택(랭킹) |
+| 초보 러너 | 무엇을 사야 할지 | 용어 툴팁 · 추천받기 5문항 · 비교하기 · 러너들의 선택(랭킹) [code:src/components/TermTooltip.tsx:10] [code:src/App.tsx:30-32] |
 | 상급 러너 | 스펙 비교 | 빠짐없는 스펙(공시값) · 세대 구분 · 출처 · 찜 목록 나란히 보기 |
-| 발볼이 넓은 러너 | 맞는 신발 · 와이드 | 발볼 값 · 와이드 넷(있음 · 국외에만 · 없음 · 정보 없음) |
+| 발볼이 넓은 러너 | 맞는 신발 · 와이드 | 발볼 값 · 와이드 넷(있음 · 국외에만 · 없음 · 정보 없음) [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-4] |
 | 리뷰를 남기는 사람 | 내 경험 기록 | 계정별 리뷰 · "도움이 돼요" · 마이페이지 |
 | 관리자 | 카탈로그 관리 | 관리 화면(출처 · 보완 필요 · 숨김 · 수정 이력) |
-| 처음 보는 사람(면접관) | 둘러보기 | 체험 계정 — 일반 회원 · 읽기 전용 관리자 |
+| 처음 보는 사람(면접관) | 둘러보기 | 체험 계정 — 일반 회원 · 읽기 전용 관리자 [code:src/components/DemoCards.tsx:4] [code:backend/src/main/resources/db/migration/V7__demo_admin.sql:1-3] |
 
 #### 3. 요건 — 과제 ①~⑦
 
-과제 요건은 React + json-server 였다. API 는 같은 계약을 Spring Boot + MySQL 로 구현했다(`05_api_contract.md`).
+과제 요건은 React + json-server 였다. API 는 같은 계약을 Spring Boot + MySQL 로 구현했다(`05_api_contract.md`). [docs:05_api_contract.md] [code:package.json:16] [code:backend/src/main/java/com/kopo17/runshoes/api/ListQuery.java:15-17]
 
 | # | 요건 | 어떻게 | 문서 |
 |---|---|---|---|
-| ① | 목록 화면 `/` — 단일 화면 구조 | 목록 `GET`, 용도 필터 6개(전체 포함), 브랜드 · 모델 검색(서버), 정렬 기본 · 평점 · 리뷰 · 좋아요(`_sort`), 찜 토글(계정별 저장), 찜한 것만 보기(토글, 별도 페이지 아님), 카드 → 상세 모달 | `02_screens.md` 1-2 |
-| ② | 신발 관리(등록 · 수정) `/new` · `/edit/:id` | `POST` · `PATCH`(`useParams`), 삭제 = 숨김(리뷰는 남는다, 영구 삭제는 따로), 저장 뒤 목록으로(`useNavigate`) | `03_admin.md` |
-| ③ | 러너들의 선택 `/best` | 평점 · 리뷰 · 좋아요 정렬, 종합 점수 1~5위(신뢰도 가중 평점), 용도별 1위 | `02_screens.md` 1-5 |
-| ④ | 공통 · 라우팅 | 상단 메뉴 `Link`, `Routes` · `Route`, NotFound `path="*"` | `02_screens.md` 1-1 |
-| ⑤ | 상세 모달 | 스펙 + 용어 툴팁, 리뷰 목록 · 작성(`POST` + 다시 받기) · 삭제, 배경 클릭 닫기, 삭제 확인 모달 | `02_screens.md` 1-3 |
-| ⑥ | 서버 연결 | REST API(json-server 계약을 Spring Boot + MySQL 로), 데이터 = `shoes` + `reviews`(`shoeId`), 쓰기 뒤 다시 받기, TS `interface` · `useState<T[]>` | `05_api_contract.md` |
-| ⑦ | 반응형 | 데스크톱 3열 → 태블릿 2열 → 모바일 1열, 목록 → 모달 흐름은 모든 크기에서, 툴팁이 화면 밖으로 나가지 않게, 모바일 햄버거 메뉴 | `02_screens.md` 1-7 · `02b_design_system.md` 1-6 |
+| ① | 목록 화면 `/` — 단일 화면 구조 | 목록 `GET`, 용도 필터 6개(전체 포함), 브랜드 · 모델 검색(서버), 정렬 기본 · 평점 · 리뷰 · 좋아요(`_sort`), 찜 토글(계정별 저장), 찜한 것만 보기(토글, 별도 페이지 아님), 카드 → 상세 모달 | `02_screens.md` 1-2 [docs:02_screens.md] [code:src/App.tsx:29] [code:src/components/FilterBar.tsx:4-11] [code:src/components/SortBar.tsx:3-8] [code:src/pages/ShoeList.tsx:41-48] |
+| ② | 신발 관리(등록 · 수정) `/new` · `/edit/:id` | `POST` · `PATCH`(`useParams`), 삭제 = 숨김(리뷰는 남는다, 영구 삭제는 따로), 저장 뒤 목록으로(`useNavigate`) | `03_admin.md` [docs:03_admin.md] [code:src/App.tsx:38-39] [code:src/pages/ShoeForm.tsx:115-116] [code:src/pages/ShoeForm.tsx:303] [code:backend/src/main/resources/db/migration/V8__shoe_soft_delete.sql:1] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:20] |
+| ③ | 러너들의 선택 `/best` | 평점 · 리뷰 · 좋아요 정렬, 종합 점수 1~5위(신뢰도 가중 평점), 용도별 1위 | `02_screens.md` 1-5 [docs:02_screens.md] [code:src/App.tsx:32] [code:src/pages/Best.tsx:51] [code:src/pages/Best.tsx:67] [code:src/pages/Best.tsx:92-96] |
+| ④ | 공통 · 라우팅 | 상단 메뉴 `Link`, `Routes` · `Route`, NotFound `path="*"` | `02_screens.md` 1-1 [docs:02_screens.md] [code:src/components/Header.tsx:82] [code:src/App.tsx:28-40] |
+| ⑤ | 상세 모달 | 스펙 + 용어 툴팁, 리뷰 목록 · 작성(`POST` + 다시 받기) · 삭제, 배경 클릭 닫기, 삭제 확인 모달 | `02_screens.md` 1-3 [docs:02_screens.md] [code:src/components/ShoeModal.tsx:3] [code:src/components/ShoeModal.tsx:85] [code:src/components/ReviewSection.tsx:87] [code:src/components/ReviewSection.tsx:122] [code:src/components/ReviewSection.tsx:264] |
+| ⑥ | 서버 연결 | REST API(json-server 계약을 Spring Boot + MySQL 로), 데이터 = `shoes` + `reviews`(`shoeId`), 쓰기 뒤 다시 받기, TS `interface` · `useState<T[]>` | `05_api_contract.md` [docs:05_api_contract.md] [code:backend/src/main/resources/db/migration/V1__schema.sql:11] [code:backend/src/main/resources/db/migration/V1__schema.sql:36] [code:src/types/index.ts:1] [code:src/types/index.ts:61-63] [code:src/pages/ShoeList.tsx:18] |
+| ⑦ | 반응형 | 데스크톱 3열 → 태블릿 2열 → 모바일 1열, 목록 → 모달 흐름은 모든 크기에서, 툴팁이 화면 밖으로 나가지 않게, 모바일 햄버거 메뉴 | `02_screens.md` 1-7 · `02b_design_system.md` 1-6 [docs:02_screens.md] [docs:02b_design_system.md] [code:src/pages/ShoeList.css:3] [code:src/pages/ShoeList.css:19-21] [code:src/pages/ShoeList.css:29-31] [code:src/components/TermTooltip.css:44] [code:src/components/Header.tsx:129] |
 
 #### 4. 요건 밖으로 더한 것
 
 | 무엇 | 왜 | 문서 |
 |---|---|---|
-| 용어 툴팁 · 해부도 히어로 | 정보를 덜지 않고 모르는 말을 없앤다 | `02_screens.md` |
-| 출처가 있는 카탈로그 302켤레 · "정보 없음" 명시 | 추측한 값보다 빈 값이 낫다 | `01a` · `01b` · `01c` |
-| 발볼 · 와이드 넷 | 한국 러너에게 중요한 것을 앞에 | `01a_catalog_sources.md` 1-7 |
-| 추천받기 5문항 | 초보가 첫 후보를 얻는 길 | `02_screens.md` 1-4 |
-| 비교하기 | 후보를 점수 없이 나란히 견준다 — 310켤레 가운데 어디쯤인지까지 | `08_compare.md` |
-| 계정 · 권한(⑧) | 찜 · 리뷰를 사람에게 묶고, 쓰기 권한 · 셈하는 값을 서버로 | `04_auth.md` |
-| 체험 계정 | 처음 보는 사람이 가입 없이 둘러본다 | `04_auth.md` 1-3 |
-| 관리 화면 보강 | 출처 · 보완 필요 · 숨김 · 영구 삭제 · 수정 이력 | `03_admin.md` |
-| 리뷰 AI 요약 · 챗봇 | 리뷰가 쌓였을 때 한눈에(Ollama, GPU 서버) | `02_screens.md` 1-3 |
-| Spring Boot + MySQL · 계약 시험 | 녹화한 응답으로 백엔드를 바꿔 끼운다 | `05` · `07` |
-| 자체 쿠버네티스 GitOps 배포 | push 한 번으로 무중단 배포 | `06_deployment.md` |
+| 용어 툴팁 · 해부도 히어로 | 정보를 덜지 않고 모르는 말을 없앤다 | `02_screens.md` [docs:02_screens.md] [code:src/components/TermTooltip.tsx:10] [code:src/components/Hero.tsx:24] |
+| 출처가 있는 카탈로그 302켤레 · "정보 없음" 명시 | 추측한 값보다 빈 값이 낫다 | `01a` · `01b` · `01c` [docs:01a_catalog_sources.md] [docs:01b_catalog_images.md] [docs:01c_catalog_loader.md] [code:src/utils/display.ts:1-2] (2026-11-02 기준) [c:298845e] <!-- 확인 못 함: 켤레 수는 운영 DB 값 --> |
+| 발볼 · 와이드 넷 | 한국 러너에게 중요한 것을 앞에 | `01a_catalog_sources.md` 1-7 [docs:01a_catalog_sources.md] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-4] |
+| 추천받기 5문항 | 초보가 첫 후보를 얻는 길 | `02_screens.md` 1-4 [docs:02_screens.md] [code:src/App.tsx:30] |
+| 비교하기 | 후보를 점수 없이 나란히 견준다 — 310켤레 가운데 어디쯤인지까지 | `08_compare.md` [docs:08_compare.md] [code:src/pages/Compare.tsx:19] (2026-11-09 기준) [c:34fcc49] <!-- 확인 못 함: 켤레 수는 운영 DB 값 --> |
+| 계정 · 권한(⑧) | 찜 · 리뷰를 사람에게 묶고, 쓰기 권한 · 셈하는 값을 서버로 | `04_auth.md` [docs:04_auth.md] [code:backend/src/main/resources/db/migration/V3__auth.sql:29] [code:backend/src/main/resources/db/migration/V3__auth.sql:70] [code:src/auth/useShoeLike.ts:9] |
+| 체험 계정 | 처음 보는 사람이 가입 없이 둘러본다 | `04_auth.md` 1-3 [docs:04_auth.md] [code:src/components/DemoCards.tsx:4] |
+| 관리 화면 보강 | 출처 · 보완 필요 · 숨김 · 영구 삭제 · 수정 이력 | `03_admin.md` [docs:03_admin.md] [code:backend/src/main/resources/db/migration/V6__spec_sources.sql:1] [code:backend/src/main/resources/db/migration/V8__shoe_soft_delete.sql:1] [code:backend/src/main/resources/db/migration/V11__admin_history.sql:1] [code:backend/src/main/resources/db/migration/V11__admin_history.sql:16] |
+| 리뷰 AI 요약 · 챗봇 | 리뷰가 쌓였을 때 한눈에(Ollama, GPU 서버) | `02_screens.md` 1-3 [docs:02_screens.md] [code:src/components/ReviewSummary.tsx:18] [code:backend/src/main/java/com/kopo17/runshoes/summary/SummaryService.java:29-31] [code:chatbot/llm.py:12-13] |
+| Spring Boot + MySQL · 계약 시험 | 녹화한 응답으로 백엔드를 바꿔 끼운다 | `05` · `07` [docs:05_api_contract.md] [docs:07_database.md] [code:backend/pom.xml:11-12] [code:contract/] |
+| 자체 쿠버네티스 GitOps 배포 | push 한 번으로 무중단 배포 | `06_deployment.md` [docs:06_deployment.md] [code:Jenkinsfile:1] [code:backend/src/main/resources/application.yml:6] <!-- 확인 못 함: 클러스터와 ArgoCD 쪽은 이 저장소 밖 --> |
 
 #### 5. 하지 않는 것
 
 - **판매 · 가격 비교.** 구매 버튼 · 할인 배지 · 최저가가 없다. 가격은 발매가(정가)만, 읽은 곳 · 날과 함께.
-- **추측한 값.** 출처가 없는 스펙은 "정보 없음"이다. 기본값(`보통` · `없음`)으로 메우지 않는다.
-- **약관이 막는 수집.** robots.txt 나 약관이 자동 수집을 막는 곳은 열지 않고 뺀다(`01a_catalog_sources.md` 1-2).
+- **추측한 값.** 출처가 없는 스펙은 "정보 없음"이다. 기본값(`보통` · `없음`)으로 메우지 않는다. [code:src/utils/display.ts:1-2] [code:src/utils/display.ts:6]
+- **약관이 막는 수집.** robots.txt 나 약관이 자동 수집을 막는 곳은 열지 않고 뺀다(`01a_catalog_sources.md` 1-2). [docs:01a_catalog_sources.md]
 - **"느낌" 점수.** 쿠션감 · 반발력 같은 근거 없는 숫자를 만들지 않는다.
-- **소셜 로그인 · 비밀번호 찾기**(지금 범위 밖, `04_auth.md` 4절).
+- **소셜 로그인 · 비밀번호 찾기**(지금 범위 밖, `04_auth.md` 4절). [docs:04_auth.md]
