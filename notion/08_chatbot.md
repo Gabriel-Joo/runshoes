@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/, Dockerfile.chatbot, backend/src/main/java/com/kopo17/runshoes/compare/
-읽은 커밋: f8cea0d
+읽은 커밋: 3e0d241
 -->
 # 08 챗봇
 

@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/, src/components/ChatBot.tsx, backend/src/main/java/com/kopo17/runshoes/compare/, backend/src/main/java/com/kopo17/runshoes/summary/
-읽은 커밋: 0fd9641
+읽은 커밋: 3e0d241
 -->
 # 챗봇
 

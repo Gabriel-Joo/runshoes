@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, chatbot/, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/resources/db/migration/, contract/, Jenkinsfile
-읽은 커밋: 0fd9641
+읽은 커밋: 3e0d241
 -->
 # 알려진 한계
 
