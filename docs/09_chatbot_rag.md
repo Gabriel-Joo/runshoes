@@ -500,7 +500,7 @@ DB 에 CHECK 를 두지 않았다. 챗봇에 갈래가 늘 때 기록이 실패�
 
 정한 것(사용자 2026-11-14)
 
-- **보관** — 행은 지우지 않는다. 숫자 칸은 계속 두고, 질문 · 답만 90일 뒤 빈 글로 바꾼다. 처음에는 Pod 둘이 함께 돌지 않게 하는 잠금이 없어 켜지 않았다. 2026-11-17 `ActivityCleanup` 에 MySQL `GET_LOCK` 을 넣고(ShedLock 은 테이블이 필요해 쓰지 않음, 사용자) 매일 04:00 activity_logs 정리와 같은 잠금 안에서 함께 비운다. 운영에서는 infra env `ACTIVITY_CLEANUP_CRON` 을 뺄 때 켜진다(`TODO.md`).
+- **보관**. 행은 지우지 않는다. 숫자 칸은 계속 두고, 질문과 답만 90일 뒤 빈 글로 바꾼다. 처음에는 Pod 둘이 함께 돌지 않게 하는 잠금이 없어 켜지 않았다. 2026-11-17 `ActivityCleanup` 에 MySQL `GET_LOCK` 을 넣고(ShedLock 은 테이블이 필요해 쓰지 않음, 사용자) 매일 04:00 activity_logs 정리와 같은 잠금 안에서 함께 비운다. 운영에서는 2026-11-17 infra env `ACTIVITY_CLEANUP_CRON` 을 뺐고 켜졌다(infra `d8997bb`).
 - **`conn_id`**, 웹소켓 연결마다 무작위 값(uuid4). 화면이 만든 대화 id 를 받지 않는다. 화면이 보낸 값을 믿어야 하고, 대화 상태도 연결이 끊기면 사라져서다. [code:chatbot/server.py:80-82]
 
 확인(2026-11-14)
