@@ -2,8 +2,15 @@
 # 이 파일이 있으면 저장소 몫 칸은 모두 이 파일 것을 쓰고 FOREMAN config/notion.toml [runshoes] 의 같은 칸은 보지 않는다.
 # root, docs_page, portfolio_page, ref, github 은 FOREMAN 쪽에만 둔다.
 # 2026-11-17 FOREMAN [runshoes] 의 docs, quiet_min 을 값을 바꾸지 않고 옮기고, 노션 페이지 제목을 문서의 첫 # 줄로 바꿨다(사용자).
-#   게시 원고 폴더를 notion/ 으로 바꾸는 일은 원고를 다 쓴 뒤 src 칸으로 한다.
+# 2026-11-19 게시 원고 폴더를 notion/ 으로 바꿨다(사용자 결정, 인프라와 FOREMAN 과 같은 꼴). notion/ 의 폴더 나무가
+#   [기술문서] 아래 새 페이지 나무가 된다. docs/ 는 개발자 문서라 노션에 올리지 않는다.
+#   옛 docs 페이지 21쪽(「문서 쓰는 법」 포함)은 지우지 않고 게시 대상에서만 뺐다. 지울지는 사람이 정한다.
 
 docs = "auto"
+src = "notion/"     # 원고 폴더. 게시기가 머리 주석, 근거 표시, 저장소 링크를 떼고 올린다
 quiet_min = 30
-title = "h1"        # 페이지 제목 = 문서의 첫 # 줄(예: 「01a 신발 데이터」)
+create = true       # 새 나무라 짝 없는 원고는 새 페이지로 만든다
+archive = false     # 원본이 사라져도 페이지를 휴지통으로 보내지 않는다(기본은 보낸다). 사람이 보고 정한다
+headings = "md"     # 원고의 ## 를 노션 머리 2단계로
+title = "h1"        # 페이지 제목 = 원고의 첫 # 줄(예: 「00 전체 그림」)
+header = "footer"   # 맨 위 사본 상자 대신 맨 아래 갱신 줄에 읽은 커밋을 적는다
