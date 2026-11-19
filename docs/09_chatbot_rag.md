@@ -275,7 +275,7 @@ cc안의 A(챗봇을 Node 로 다시 쓰기)는 쓰지 않는다. 프런트 Reac
 표현
 
 - 집계: "리뷰 14건 중 무릎 이야기가 5건이고, 그중 좋다는 쪽이 3건 아쉽다는 쪽이 2건이에요", 한쪽만이면 "…5건이고, 모두 좋다는 쪽이에요". "나머지 9건은 언급 없음"은 14에서 5를 뺀 수라 새 정보가 없어 뺐다(5-2 5차 수정, `archive/09_chatbot_rag_log.md` 옛 16절) [code:chatbot/branches/experience.py:196-203]
-- 특정 리뷰 인용: "등록된 리뷰 가운데 가장 많은 추천을 받은 리뷰에서는" [code:chatbot/branches/experience.py:212-220]
+- 특정 리뷰 인용: 관점 없는 질문은 "'도움이 돼요'를 가장 많이 받은 리뷰를 가져왔어요."(인용한 리뷰의 「도움이 돼요」가 0이면 빼고 집계 줄만), 관점 질문은 "무릎을 말한 리뷰 가운데 가장 많은 추천을 받은 리뷰예요." 꼴(좋다는 쪽, 아쉽다는 쪽을 물으면 그 쪽을 밝힌다). [code:chatbot/prompt.py:24] [code:chatbot/branches/experience.py:211-217] [code:chatbot/branches/experience.py:408-410]
 - 금지: "러너들이", "실제 사용자 후기", "많은 사람들이" [code:chatbot/reply.py:15-16]
 
 리뷰는 가상 유저 200명이 만든 데이터다(`01e_seed_reviews.md`). 실제 사용자 반응처럼 말하면 사실과 다르다. 나중에 실유저 리뷰가 쌓이면 `is_seed` 플래그로 구분해 표현을 푼다. [code:chatbot/branches/experience.py:12] [code:chatbot/reply.py:15] [docs:01e_seed_reviews.md]
