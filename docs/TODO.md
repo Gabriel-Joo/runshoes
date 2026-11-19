@@ -156,8 +156,6 @@
   나온 곳: [code:backend/src/main/resources/application.yml:36] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:80]
 - **runshoes-81** 서버 코드 주석이 와이드 "없음"의 출처를 관리 폼이 요구한다고 적는다. 지금 관리 폼은 "없음"을 출처 면제로 두고 `NOTFOUND` 를 저절로 넣는다. 동작은 맞고 주석만 낡았다(2026-11-19 사용자) [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] (2026-11-19)
   나온 곳: `03_admin.md` 1-2, 4절
-- **runshoes-82** 챗봇 갈래 패키지 머리 주석이 경험과 후기 갈래를 아직 「5-1 에서는 준비 중」이라고 적는다. 그 갈래는 5-2에서 운영에 나가 돌고 있다. 화면 밖이라 about 화면 작업에서는 고치지 않았다(2026-11-19 사용자) [code:chatbot/branches/__init__.py:1] (2026-11-19)
-  나온 곳: about 화면 글 훑기
 - **runshoes-83** 체험 계정과 관리자 계정이 막힐 때 서버가 보내는 문장에 가운뎃점이 남아 있다(「체험 · 관리자 계정은 … 수 없어요」). 서버가 보내는 글도 화면에 보이는 글이라 화면 글 기준(줄표와 가운뎃점 없이)을 따른다(2026-11-19 사용자) [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:296] (2026-11-19)
   나온 곳: about 화면 글 훑기
 - **runshoes-84** 린트 오류 하나. 리뷰 칸이 effect 안에서 바로 상태를 바꾼다(`react-hooks/set-state-in-effect`). about 화면 작업에서 손대지 않은 파일이라 그대로 두었다(2026-11-19 사용자) [code:src/components/ReviewSection.tsx:63] (2026-11-19)

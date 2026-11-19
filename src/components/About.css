@@ -1,7 +1,8 @@
-/* 로그인 화면 아래 프로젝트 소개. 로그인 칸(440px)과 따로 화면 폭 전체를 쓰고, 흰 바탕과 윗선으로 나눈다 */
+/* 로그인 화면 아래 프로젝트 소개. 바탕은 사이트 배경(--bg-light)과 같고, 윗선 하나로 로그인 칸과 나눈다.
+   카드는 흰 바탕(--surface-white), 강조는 청록(--accent) 하나. 색은 index.css에 있는 값만 쓴다 */
 .about {
-  background: var(--surface-white);
-  border-top: 1px solid var(--border-light);
+  background: var(--bg-light);
+  border-top: 1px solid var(--border);
   padding: 96px var(--page-gutter);   /* 아래 96px은 떠 있는 버튼 자리(--fab-clearance)보다 넓다 */
   display: flex;
   flex-direction: column;
@@ -11,7 +12,7 @@
 .about__lead,
 .about__section {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
@@ -53,31 +54,100 @@
   text-align: center;
 }
 
-/* 할 수 있는 것: 넓은 화면 네 칸, 1199px 이하 두 칸, 767px 이하 한 칸 */
+/* 할 수 있는 것: 넓은 화면 두 칸(2 × 2), 767px 이하 한 칸. 카드 안은 이름, 말투 한 줄, 설명, 무엇으로 도는지 */
 .about__features {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
 .about__feature {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 20px;
+  gap: 10px;
+  padding: 24px;
   border: 1px solid var(--border-light);
   border-top: 3px solid var(--accent);
   border-radius: 10px;
   background: var(--surface-white);
 }
 
-.about__feature strong {
-  font-size: 17px;
+.about__fname {
+  font-size: 18px;
   font-weight: 800;
 }
 
-.about__feature span {
+/* 그 기능이 사용자에게 하는 말. 따옴표 대신 왼쪽 선 */
+.about__voice {
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--accent);
+  word-break: keep-all;
+}
+
+.about__fline {
   font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  word-break: keep-all;
+}
+
+.about__fspec {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.about__fspec div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.about__fspec dt {
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.about__fspec dd {
+  color: var(--text-mid);
+  word-break: keep-all;
+}
+
+/* 기술 구성 카드 여덟 장: 1200px 이상 네 칸, 그 아래 두 칸, 767px 이하 한 칸 */
+.about__tech {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.about__techcard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--surface-white);
+}
+
+.about__techcard strong {
+  font-size: 15.5px;
+  font-weight: 800;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.about__techcard span {
+  font-size: 13.5px;
   line-height: 1.7;
   color: var(--text-mid);
   word-break: keep-all;
@@ -87,7 +157,7 @@
 .about__tools {
   max-width: 760px;
   margin: 0 auto;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--border);
 }
 
 .about__toolrow {
@@ -95,7 +165,7 @@
   grid-template-columns: 72px minmax(0, 1fr);
   gap: 16px;
   padding: 14px 4px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
   font-size: 15px;
   line-height: 1.6;
 }
@@ -110,8 +180,18 @@
   word-break: keep-all;
 }
 
+/* 숫자를 언제, 어디서 셌는지 */
+.about__counted {
+  max-width: 760px;
+  margin: 24px auto 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-weak);
+  word-break: keep-all;
+}
+
 @media (max-width: 1199px) {
-  .about__features {
+  .about__tech {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -130,14 +210,23 @@
     font-size: 15px;
   }
 
-  .about__features {
+  .about__features,
+  .about__tech {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
 
   .about__feature {
+    padding: 18px 16px;
+  }
+
+  .about__techcard {
     padding: 16px;
-    gap: 4px;
+  }
+
+  .about__fspec div {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 10px;
   }
 
   .about__toolrow {
