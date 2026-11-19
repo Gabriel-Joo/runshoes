@@ -1,6 +1,6 @@
 """웹소켓 챗봇 서버 — 작업 5-1(docs/09_chatbot_rag.md). 실행: python -m chatbot.server
 
-로그인한 사람만 쓴다(docs/04_auth.md 4절 · 09 17절). 연결 직후 첫 메시지가 인증이다:
+로그인한 사람만 쓴다(docs/04_auth.md 4절 · 09 1-13절). 연결 직후 첫 메시지가 인증이다:
   받는 것  {"type": "auth", "token": "<access token>"}  → 같은 Pod 백엔드 GET /api/me(Bearer)로 확인
   통과하면 인사(system)를 보내고 질문을 받는다. 메시지마다 다시 확인하지 않는다
   401 · 인증이 아닌 첫 메시지 · AUTH_TIMEOUT 초 안에 아무것도 없음 → {"type": "auth_failed"} 뒤 닫는다

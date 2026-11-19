@@ -1,4 +1,4 @@
-"""Embedder — model-service `/embed`(KURE-v1, 09 2절). 색인 밖에 둔다(색인은 벡터를 받기만 한다).
+"""Embedder — model-service `/embed`(KURE-v1, 09 1-3절). 색인 밖에 둔다(색인은 벡터를 받기만 한다).
 
 - 주소 `MODEL_SERVICE_URL`(운영 http://192.168.122.1:8200 — 인프라 매니페스트가 넣는다, OLLAMA_URL 과 같은 자리).
   코드에 기본값을 두지 않는다(사용자 2026-11-13). 없으면 server 가 색인을 만들지 않는다 — 경험·후기는 "잠시 뒤", 특성 설명은 사전만,

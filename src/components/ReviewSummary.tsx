@@ -5,7 +5,7 @@ import { API } from "../api";
 type Summary = { positive: string; negative: string | null };
 
 /**
- * 리뷰 AI 요약 — 서버는 DB 에 만들어 둔 요약을 읽어 주기만 한다(V14 — 하루 한 번 배치가 만든다, docs/09_chatbot_rag.md 5절).
+ * 리뷰 AI 요약 — 서버는 DB 에 만들어 둔 요약을 읽어 주기만 한다(V14 — 하루 한 번 배치가 만든다, docs/09_chatbot_rag.md 1-6절).
  * "리뷰 N건 기준" — 요약이 그 시점 스냅샷이라 아래 리뷰 목록과 조금 어긋나도 거짓말이 되지 않게(2026-11-10 사용자).
  * 요약이 없거나(리뷰 3건 미만 · 아직 만들지 않음) 읽기 실패면 조용히 숨긴다.
  */

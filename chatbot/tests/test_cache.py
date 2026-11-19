@@ -1,4 +1,4 @@
-"""카탈로그 캐시(09 19절) — 네트워크 없이. python -m unittest discover -s chatbot/tests -t .
+"""카탈로그 캐시(09 1-15절) — 네트워크 없이. python -m unittest discover -s chatbot/tests -t .
 
 판이 같으면 다시 읽지 않고, 판이 바뀌면 · 판을 묻지 못하면 새로 읽는다(낡은 카탈로그를 내지 않는다).
 """

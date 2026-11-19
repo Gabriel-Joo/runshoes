@@ -1,4 +1,4 @@
-"""챗봇 1단계 평가(작업 5-1, docs/09_chatbot_rag.md 12절) — 전수 자동 검증. 샘플 검수하지 않는다.
+"""챗봇 1단계 평가(작업 5-1, docs/09_chatbot_rag.md 5-1절) — 전수 자동 검증. 샘플 검수하지 않는다.
 
   python -m chatbot.eval.run                       # 운영 공개 API(읽기만) + 로컬 Ollama
   python -m chatbot.eval.run --api http://127.0.0.1:3200   # 5-1 이 운영에 오르기 전 — 운영 API 는 예산 금액(budget)을 모른다

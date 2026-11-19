@@ -60,7 +60,7 @@ def pick(dic: Dictionary, text: str, extra: tuple[str, ...] = ()) -> list[dict]:
     return [dic.by_key[k] for k in keys[:3]]
 
 
-DESC_COS = 0.55   # 설명문 문장을 근거로 줄 문턱(임베딩 유사도) — 평가로 정했다(09 16절)
+DESC_COS = 0.55   # 설명문 문장을 근거로 줄 문턱(임베딩 유사도) — 평가로 정했다(archive/09_chatbot_rag_log.md 16절)
 DESC_MAX = 3
 DESC_HEAD = "[설명문에서 찾은 문장] 이 사이트에 등록된 신발의 설명이다. 예로 들 때는 브랜드와 모델을 밝힌다."
 

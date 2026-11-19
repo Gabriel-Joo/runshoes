@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 /**
- * 리뷰 요약 — 만들기(배치)와 읽기(조회)를 나눴다(V14, 2026-11-10 사용자 — docs/09_chatbot_rag.md 5절).
+ * 리뷰 요약 — 만들기(배치)와 읽기(조회)를 나눴다(V14, 2026-11-10 사용자 — docs/09_chatbot_rag.md 1-6절).
  * 만드는 법은 server.cjs summaryHandler 그대로다(프롬프트 · 공감 순 정렬 · JSON 파싱 · 실패 처리). 바뀐 것은 언제 부르나와 결과를 어디 두나뿐이다.
  *   조회 GET /api/shoes/{id}/summary — shoe_summaries 만 읽는다. Ollama 를 부르지 않는다.
  *   만들기 — SummaryBatch(CronJob, batch 프로필)가 stale 인 신발마다 generate() 를 부르고 SummaryStore 에 저장한다.

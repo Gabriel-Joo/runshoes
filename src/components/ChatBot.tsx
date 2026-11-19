@@ -50,7 +50,7 @@ const Guide = ({ text, button, onClick }: { text: string; button: string; onClic
 const LoginGuide = ({ text, onLogin }: { text: string; onLogin: () => void }) => <Guide text={text} button="로그인" onClick={onLogin} />;
 
 /**
- * 로그인 확인(docs/04_auth.md 4절 · 09 17절) — 연결 직후 첫 메시지 {type:"auth", token}. 주소에는 넣지 않는다(로그에 남는다).
+ * 로그인 확인(docs/04_auth.md 4절 · 09 1-13절) — 연결 직후 첫 메시지 {type:"auth", token}. 주소에는 넣지 않는다(로그에 남는다).
  * - 서버가 인사(system)를 보내면 질문을 받는다. 메시지마다 다시 확인하지 않는다(15분 토큰으로 오래 연 창이 막히지 않게)
  * - auth_failed → refresh 한 번 뒤 다시 연결. 서버가 refresh 를 거절하면 로그아웃 상태가 되어 이 컴포넌트가 내려가고(소켓도 닫힘)
  *   로그인 안내가 뜬다. refresh 가 서버에 닿지 못하면(재시도까지 실패) 로그인은 그대로라 retry 로 — [다시 연결].

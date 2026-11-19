@@ -1,4 +1,4 @@
-"""Ollama — gemma4:e4b(09 9절, 바꾸지 않는다). 함수 호출에 기대지 않고 JSON 은 format: json 으로 받는다"""
+"""Ollama — gemma4:e4b(09 1-10절, 바꾸지 않는다). 함수 호출에 기대지 않고 JSON 은 format: json 으로 받는다"""
 
 from __future__ import annotations
 

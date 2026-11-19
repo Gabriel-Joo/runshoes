@@ -277,7 +277,7 @@ export const SUMMARY_V3_SCENARIOS = [
     body: { shoeId: 1, rating: 5, content: "요약 캐시 무효화 리뷰" }, volatile: ["createdAt"], expect: 201 }),
 ];
 
-// V14(2026-11-10) — 리뷰 요약을 DB 에 두고 배치(CronJob, batch 프로필)가 만든다. 조회는 Ollama 를 부르지 않는다(docs/09_chatbot_rag.md 5절).
+// V14(2026-11-10) — 리뷰 요약을 DB 에 두고 배치(CronJob, batch 프로필)가 만든다. 조회는 Ollama 를 부르지 않는다(docs/09_chatbot_rag.md 1-6절).
 // SUMMARY_V3_SCENARIOS(spring-v3-summary)는 "조회가 Ollama 를 부르고 메모리에 캐시"하던 계약 — 이력으로 둔다(V14 뒤 앱에는 맞지 않는다).
 // run-spring-local.sh v14-summary 가 녹화 전에 배치를 한 번 돌린다(mock-ollama, 시드 20켤레 → 20번 호출). 그 뒤 녹화 중에는 Ollama 호출이 늘면 안 된다(스크립트가 본다).
 // 신발 8 은 시드 리뷰 4건(28 · 29 · 79 · …) — 1건이면 5건 25%(stale), 3건을 지우면 2건(행 삭제), 1건을 더하면 3건(아직 만들지 않은 행)

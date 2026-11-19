@@ -3,7 +3,7 @@ package com.kopo17.runshoes.summary;
 import java.time.LocalDateTime;
 
 /**
- * 요약을 다시 만들어야 하나(docs/09_chatbot_rag.md 5절, 2026-11-10 사용자) — 화면 · DB 와 떨어진 판단만. 시험: StaleRuleTest.
+ * 요약을 다시 만들어야 하나(docs/09_chatbot_rag.md 1-6절, 2026-11-10 사용자) — 화면 · DB 와 떨어진 판단만. 시험: StaleRuleTest.
  * 리뷰 1건마다 다시 만들지 않는다. 절대 수가 아니라 비율로 본다 — 1,800건에 1건은 요약을 바꿀 이유가 못 되고, 4건에 3건이면 내용이 달라진다.
  * 리뷰 수 · 평균은 생성 입력과 같은 범위(그 신발의 리뷰 전부)로 센다.
  */

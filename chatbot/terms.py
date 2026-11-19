@@ -1,4 +1,4 @@
-"""용어 — 사전 그대로 낸다. Ollama 를 부르지 않는다(09 8절 · 0절 원칙 3).
+"""용어 — 사전 그대로 낸다. Ollama 를 부르지 않는다(09 1-9절 · 1-1절 원칙 3).
 
 사전 = DB terms 13개(GET /api/terms) + 화면이 직접 가진 둘(src/utils/terms.ts 의 WIDE_TERM · stabilityTerm).
 툴팁이 사이트의 진실의 원천이라 검색하지 않고 전량을 쓴다. 화면 둘은 여기 사본을 둔다 —
@@ -61,7 +61,7 @@ PLAIN = {
     "트레일": "trail",
 }
 
-# 사전에 없는 용어에 "대신 OO은 설명해드릴 수 있어요"의 OO — 09 8절 보강 목록(21개)에서 가까운 사전 용어로
+# 사전에 없는 용어에 "대신 OO은 설명해드릴 수 있어요"의 OO — 09 1-9절 보강 목록(21개)에서 가까운 사전 용어로
 NEAR = {
     "갑피": "width", "텅": "width", "메시": "width", "니트": "width", "토박스": "width", "앞코": "width", "중족부": "width", "라스트": "width",
     "eva": "midsole", "peba": "midsole", "tpu": "midsole",

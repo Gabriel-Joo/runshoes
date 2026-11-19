@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 챗봇 카탈로그 캐시의 「판」(docs/09_chatbot_rag.md 19절).
+ * 챗봇 카탈로그 캐시의 「판」(docs/09_chatbot_rag.md 1-15절).
  * GET /api/internal/catalog-version  챗봇 사이드카만 — 같은 Pod 안에서 127.0.0.1:3000 으로 들어온 연결만(그 밖은 404 {}, V18 · V19 와 같다).
  *                                    → {"version": "<shoes 체크섬>-<terms 체크섬>"}
  * 챗봇은 턴마다 이것만 묻고, 지난번과 다르면 /api/shoes · /api/terms 를 다시 읽는다.

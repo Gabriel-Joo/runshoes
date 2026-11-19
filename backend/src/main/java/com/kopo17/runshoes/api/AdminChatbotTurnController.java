@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 챗봇 대화 보기(관리자 마이페이지, 2026-11-14 사용자 — docs/09_chatbot_rag.md 18절 「읽는 길」). chatbot_turns(V19)를 읽는다.
+ * 챗봇 대화 보기(관리자 마이페이지, 2026-11-14 사용자 — docs/09_chatbot_rag.md 1-14절 「읽는 길」). chatbot_turns(V19)를 읽는다.
  * V19 때는 「읽는 API 를 두지 않는다 — 대시보드가 복제본을 읽는다」였다. 사용자가 이번에 관리자 화면에서 대화 원문을 보기로 정했다
  * (숫자 · 추세는 Grafana, 개별 대화는 관리자 화면). 대시보드 읽기 계정이 question · answer 를 못 읽는 것은 그대로다.
  *

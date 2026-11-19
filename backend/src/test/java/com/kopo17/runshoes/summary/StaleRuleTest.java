@@ -7,7 +7,7 @@ import com.kopo17.runshoes.summary.StaleRule.Row;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
-/** 요약 재생성 조건(docs/09_chatbot_rag.md 5절) — 리뷰 수 ±10% · 평균 ±0.3 · 3건 · 30일 */
+/** 요약 재생성 조건(docs/09_chatbot_rag.md 1-6절) — 리뷰 수 ±10% · 평균 ±0.3 · 3건 · 30일 */
 class StaleRuleTest {
 
 	static final LocalDateTime NOW = LocalDateTime.of(2026, 11, 10, 0, 0);

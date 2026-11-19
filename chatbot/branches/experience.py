@@ -1,4 +1,4 @@
-"""경험 · 후기 — 하이브리드 검색 + 리뷰 집계(작업 5-2, docs/09_chatbot_rag.md 6절 · 7절 · 16절).
+"""경험 · 후기 — 하이브리드 검색 + 리뷰 집계(작업 5-2, docs/09_chatbot_rag.md 1-7절 · 1-8절 · archive/09_chatbot_rag_log.md 16절).
 
 검색은 후보를 고르는 데만 쓰고, 말은 전체를 놓고 한다(6절).
 1. 신발 — 이름이 나왔으면 그 신발, 아니면 리뷰 검색 → 신발 순위 상위 3켤레
@@ -29,7 +29,7 @@ from .common import generate
 CAP = 30                 # 답에 넣는 리뷰 상한(사용자 2026-11-12)
 # 관점이 없는 질문("후기 어때요") — 리뷰를 좋다는 쪽 · 아쉽다는 쪽으로 묶어 준다(8차 수정, 사용자 2026-11-13).
 # 7차의 주제 묶음(theme_groups — 주제마다 추천 많은 2건)은 추천 많은 리뷰가 거의 좋다는 쪽이라 아쉬운 이야기가 빠졌다(E06 · E07 · E15)
-SIDE_GOOD = 3            # 좋다는 쪽에서 LLM 에 주는 리뷰(추천 많은 순) — 8차 측정으로 정함(09 16절)
+SIDE_GOOD = 3            # 좋다는 쪽에서 LLM 에 주는 리뷰(추천 많은 순) — 8차 측정으로 정함(archive/09_chatbot_rag_log.md 16절)
 SIDE_BAD = 4             # 아쉽다는 쪽에서 LLM 에 주는 리뷰 — 3 이면 클리프톤 10 "튀는 맛이 없다"(추천 7위)가 빠졌다. 5 와 문장 수 · 내용이 비슷
 CAP_PER_SHOE_MULTI = 10  # 신발을 말하지 않아 여러 켤레를 볼 때 켤레당(30 을 셋으로 — Claude 가 정함, 사용자 확인 2026-11-13)
 MULTI_SHOES = 3
@@ -649,7 +649,7 @@ def drop_vague(text: str) -> str:
 
 def pick_shoes(tallies: list[Tally], want: str | None, avoid: bool) -> list[Tally]:
     """여러 켤레 — 질문이 찾는 쪽(want) 건수가 많은 순으로 셋(사용자 2026-11-13, E11).
-    반대 쪽이 더 많은 신발은 뺀다(Claude 가 정함 — 넣고 먼저 밝히는 것보다 낫다: 09 16절). 피하려는 질문은 부정이 긍정보다 많은 신발만(E12).
+    반대 쪽이 더 많은 신발은 뺀다(Claude 가 정함 — 넣고 먼저 밝히는 것보다 낫다: archive/09_chatbot_rag_log.md 16절). 피하려는 질문은 부정이 긍정보다 많은 신발만(E12).
     분류가 안 됐으면(낱말로만 셈) 긍부정을 모르니 거르지 않는다"""
     if want is None or not all(t.labeled for t in tallies):
         return tallies[:MULTI_SHOES]

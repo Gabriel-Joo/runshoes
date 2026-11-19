@@ -142,7 +142,7 @@ class FactsTest(unittest.TestCase):
     D = {"brand": "라", "model": "D", "weight": 258, "weightSize": "M9", "weightNorm270": 258}
 
     def test_8g_rule(self):
-        # 09 4절 예 2 — 272 → 약 258, 차이 6.6g → 우열을 말하지 않는다
+        # 09 1-5절 예 2 — 272 → 약 258, 차이 6.6g → 우열을 말하지 않는다
         self.assertEqual(facts.weight_converted(self.B), 258)
         self.assertIn("거의 같은 수준", facts.weight_conclusion(self.A, self.B, "A", "B"))
         # 예 1 — 285 → 약 271, 258 보다 12.7g → 말한다

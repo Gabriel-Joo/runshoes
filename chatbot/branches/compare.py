@@ -1,4 +1,4 @@
-"""비교 — GET /api/compare?ids= 를 그대로 쓴다(파이썬에 다시 구현하지 않는다, 09 3절). 결론 문장은 코드가 쓴다(8g 규칙)"""
+"""비교 — GET /api/compare?ids= 를 그대로 쓴다(파이썬에 다시 구현하지 않는다, 09 1-4절). 결론 문장은 코드가 쓴다(8g 규칙)"""
 
 from __future__ import annotations
 

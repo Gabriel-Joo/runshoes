@@ -1,4 +1,4 @@
-"""API 값 → 색인 문서(작업 5-2, docs/09_chatbot_rag.md 11절 · 16절).
+"""API 값 → 색인 문서(작업 5-2, docs/09_chatbot_rag.md 1-12절 · archive/09_chatbot_rag_log.md 16절).
 
 문서 둘
 - 리뷰 1건 = 문서 1(`rev:<리뷰 id>`). 짧은 리뷰도 넣는다

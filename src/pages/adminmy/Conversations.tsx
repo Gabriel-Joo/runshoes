@@ -29,7 +29,7 @@ interface Turn {
   stages: Record<string, number>;
 }
 
-/** 갈래(docs/09_chatbot_rag.md 18절 표) — 화면 이름 */
+/** 갈래(docs/09_chatbot_rag.md 1-14절 표) — 화면 이름 */
 const BRANCHES: [string, string][] = [
   ["term", "용어"], ["spec", "스펙"], ["compare", "비교"], ["recommend", "추천"], ["explain", "특성 설명"], ["experience", "경험·후기"],
   ["out_of_scope", "범위 밖"], ["greeting", "인사"], ["choose", "되물음"], ["no_shoe", "없는 신발"], ["error", "오류"],

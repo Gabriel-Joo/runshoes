@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 챗봇이 찾지 못한 신발 · 용어(V18) — 작업 5-1(docs/09_chatbot_rag.md 9절).
+ * 챗봇이 찾지 못한 신발 · 용어(V18) — 작업 5-1(docs/09_chatbot_rag.md 1-10절).
  * POST /api/internal/chatbot-misses  챗봇 사이드카만 — 같은 Pod 안에서 127.0.0.1:3000 으로 들어온 연결만 받는다(그 밖은 404 {}).
  *                                    연결이 들어온 서버 쪽 주소(localAddr)를 본다. remoteAddr 는 믿지 않는다 — Spring Boot 는 쿠버네티스에서
  *                                    forward-headers-strategy 를 NATIVE 로 보고 X-Forwarded-For 로 remoteAddr 를 바꾼다(내부 대역 · 127/8 을

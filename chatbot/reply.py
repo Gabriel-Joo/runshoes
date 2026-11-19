@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 from .prompt import DOCTOR, INTRO_HELPFUL, LINK_LABEL
 
-# 리뷰는 가상 유저 200명이 만든 데이터다 — 실제 사람들의 반응처럼 말하는 낱말을 막는다(09 6절, 5-2 에서 셋 더함)
+# 리뷰는 가상 유저 200명이 만든 데이터다 — 실제 사람들의 반응처럼 말하는 낱말을 막는다(09 1-7절, 5-2 에서 셋 더함)
 BANNED = ("전문가", "완벽한 선택", "죄송합니다만", "러너들이", "실제 사용자", "많은 사람들", "대부분의 사용자", "사용자들")
 _EMOJI = re.compile("[\U0001F000-\U0001FAFF☀-➿️‍]")
 _NUM = re.compile(r"\d[\d,]*(?:\.\d+)?")

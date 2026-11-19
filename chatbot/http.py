@@ -1,4 +1,4 @@
-"""런슈즈 Spring API — 같은 Pod 의 127.0.0.1:3000(사이드카). 계산은 Spring 한 곳에만 둔다(09 0절 원칙 2)"""
+"""런슈즈 Spring API — 같은 Pod 의 127.0.0.1:3000(사이드카). 계산은 Spring 한 곳에만 둔다(09 1-1절 원칙 2)"""
 
 from __future__ import annotations
 

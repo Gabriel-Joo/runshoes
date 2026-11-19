@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 챗봇 대화 한 턴에 한 줄(V19 chatbot_turns) — docs/09_chatbot_rag.md 18절.
+ * 챗봇 대화 한 턴에 한 줄(V19 chatbot_turns) — docs/09_chatbot_rag.md 1-14절.
  * POST /api/internal/chatbot-turns  챗봇 사이드카만 — V18(ChatbotMissController)과 같이 같은 Pod 안에서 127.0.0.1:3000 으로 들어온
  *                                   연결만 받는다(localAddr 를 본다, 그 밖은 404 {}).
  *                                   본문 {connId, userId, question, answer, branch, byRule, llmOk, health, fallbackUsed, shoeCount,

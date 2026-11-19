@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 요약 배치 — 하루 한 번 CronJob(batch 프로필, SummaryBatchRunner)이 한 번 돌리고 끝난다(docs/09_chatbot_rag.md 5절).
+ * 요약 배치 — 하루 한 번 CronJob(batch 프로필, SummaryBatchRunner)이 한 번 돌리고 끝난다(docs/09_chatbot_rag.md 1-6절).
  *   1. MySQL GET_LOCK — 정기 Job 과 손으로 띄운 Job 이 겹치면 뒤에 온 쪽은 바로 끝낸다(정상 종료 0 — 겹친 것은 오류가 아니다).
  *      concurrencyPolicy Forbid 는 CronJob 이 만든 Job 끼리만 막는다.
  *   2. 보이는 신발 전체를 다시 판단한다 — 30일 조건 · SQL 로 직접 넣은 리뷰는 쓰기 시점 판단을 거치지 않는다.

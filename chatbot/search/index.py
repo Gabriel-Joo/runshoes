@@ -1,4 +1,4 @@
-"""SearchIndex 인터페이스와 순위 규칙(작업 5-2, docs/09_chatbot_rag.md 1절 · 6절 · 16절).
+"""SearchIndex 인터페이스와 순위 규칙(작업 5-2, docs/09_chatbot_rag.md 1-2절 · 1-7절 · archive/09_chatbot_rag_log.md 16절).
 
 챗봇 코드는 이 인터페이스만 부른다 — 지금 구현은 MemoryIndex(memory.py). 1절의 전환 기준을 넘으면 벡터 DB 로 바꾼다.
 임베딩(Embedder, embed.py)은 색인 밖이다 — upsert 하는 문서는 벡터를 달고 온다.
