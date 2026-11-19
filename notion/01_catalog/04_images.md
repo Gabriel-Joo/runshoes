@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, src/components/ShoeGallery*, src/components/ShoeModal.css, src/components/ShoeImage.tsx
-읽은 커밋: f8cea0d
+읽은 커밋: 008739c
 -->
 # 01-04 신발 이미지
 

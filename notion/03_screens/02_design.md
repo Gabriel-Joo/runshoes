@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/index.css, src/tokens.css, src/components/, src/pages/, index.html
-읽은 커밋: f58a2a6
+읽은 커밋: 008739c
 -->
 # 03-02 디자인
 
