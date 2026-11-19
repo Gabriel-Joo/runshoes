@@ -1,9 +1,9 @@
 <!--
 다루는 곳: src/App.tsx, src/pages/, src/components/, src/utils/, src/auth/, src/api.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/activity/
-읽은 커밋: 606b730
+읽은 커밋: af8d544
 -->
 # 02 화면
-> 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인, 비교하기는 2026-11-09 운영 반영). 화면 11개(라우트 10 + 상세 모달). 원천: `src/App.tsx`, `src/pages/*`, `src/components/*`, `src/utils/display.ts`. 관리 화면은 `03_admin.md`, 로그인, 계정 규칙은 `04_auth.md`, 색, 글꼴은 `02b_design_system.md` [code:src/App.tsx:29-40] [code:src/components/ShoeModal.tsx:84-239] [docs:03_admin.md] [docs:04_auth.md] [docs:02b_design_system.md]
+> 상태: 2026-11-17 코드와 맞춰 봄(1-8 로그인 화면 아래 소개는 2026-11-19). 운영에서 쓰는 중(2026-11-02 확인, 비교하기는 2026-11-09 운영 반영). 화면 11개(라우트 10 + 상세 모달). 원천: `src/App.tsx`, `src/pages/*`, `src/components/*`, `src/utils/display.ts`. 관리 화면은 `03_admin.md`, 로그인, 계정 규칙은 `04_auth.md`, 색, 글꼴은 `02b_design_system.md` [code:src/App.tsx:29-40] [code:src/components/ShoeModal.tsx:84-239] [docs:03_admin.md] [docs:04_auth.md] [docs:02b_design_system.md]
 
 #### 0. 한 줄 요약
 
@@ -19,7 +19,7 @@ React 단일 페이지 앱이다. 홈 하나에서 **찾고(용도, 검색, 정�
 | `/recommend` | 추천받기. 5문항 → 점수순 결과 | 누구나 [code:src/App.tsx:30] [code:src/pages/Recommend.tsx:26-128] |
 | `/compare` | 비교하기. 2~5켤레를 나란히(`?ids=`, `?pick=`, `08_compare.md`) | 누구나 [code:src/App.tsx:31] [code:src/utils/compare.ts:8] [code:src/pages/Compare.tsx:21] [docs:08_compare.md] |
 | `/best` | 러너들의 선택. 종합 점수 1~5위, 용도별 1위 | 누구나 [code:src/App.tsx:32] [code:src/pages/Best.tsx:50-51] [code:src/pages/Best.tsx:94-96] |
-| `/login`, `/signup` | 로그인, 가입. 성공하면 `returnTo`(같은 사이트 경로만)로 | 누구나 [code:src/App.tsx:33-34] [code:src/auth/session.ts:199] [code:src/pages/Login.tsx:15] [code:src/pages/Signup.tsx:22] |
+| `/login`, `/signup` | 로그인, 가입. 성공하면 `returnTo`(같은 사이트 경로만)로. 로그인 화면 아래에 프로젝트 소개(1-8) | 누구나 [code:src/App.tsx:33-34] [code:src/auth/session.ts:199] [code:src/pages/Login.tsx:16] [code:src/pages/Signup.tsx:22] |
 | `/account` | 마이페이지(`?tab=`) | 로그인 [code:src/App.tsx:35] [code:src/pages/Account.tsx:48] |
 | `/admin`, `/new`, `/edit/:id` | 관리 화면(`03_admin.md`) | admin, 데모 관리자 [code:src/App.tsx:37-39] [code:src/auth/RequireAuth.tsx:13] [docs:03_admin.md] |
 | `*` | NotFound | [code:src/App.tsx:40] |
@@ -39,7 +39,7 @@ React 단일 페이지 앱이다. 홈 하나에서 **찾고(용도, 검색, 정�
 #### 1-3. 상세 모달
 
 - 주소 `?shoe={id}`. 새로 고침하거나 로그인하고 돌아와도 같은 신발이 열린다. 배경을 누르면 닫힌다. [code:src/pages/ShoeList.tsx:27-35] [code:src/components/ShoeModal.tsx:85-92]
-- **사진**. 2장 이상이면 좌우 화살표와 썸네일 줄(끌어서 넘긴다), 1장이면 사진만. 이미지가 없거나 못 불러오면 자리표시로 레이아웃을 지킨다. PC 는 화살표와 신발 가운데가 오른쪽 스펙표의 스택하이트 아래 구분선에 온다(요약 문구가 있는 신발 기준. 없는 8켤레는 구분선이 34px 위, 2026-11-03 사용자: 그대로 둔다). [code:src/components/ShoeGallery.tsx:7-11] [code:src/components/ShoeGallery.tsx:77-110] [code:src/components/ShoeImage.tsx:13-18] [code:src/components/ShoeModal.css:83-84] [c:e3b60c0]
+- **사진**. 2장 이상이면 좌우 화살표와 썸네일 줄(끌어서 넘긴다), 1장이면 사진만. 이미지가 없거나 못 불러오면 자리표시로 레이아웃을 지킨다. PC 는 화살표와 신발 가운데가 오른쪽 스펙표의 스택하이트 아래 구분선에 온다(요약 문구가 있는 신발 기준. 없는 8켤레는 구분선이 34px 위, 2026-11-03 사용자: 그대로 둔다). [code:src/components/ShoeGallery.tsx:7-11] [code:src/components/ShoeGallery.tsx:77-110] [code:src/components/ShoeImage.tsx:13-19] [code:src/components/ShoeModal.css:83-84] [c:e3b60c0]
 - **영어 이름**. 브랜드 줄에 가운뎃점으로 붙인다(`뉴발란스 · FuelCell SuperComp Pacer v2`, 브랜드와 같은 크기와 색). 없으면 브랜드만. 홈 카드에는 넣지 않는다(카드가 복잡해 보인다, 2026-11-03 사용자). 검색용 다른 표기는 보이지 않는다. [code:src/components/ShoeModal.tsx:110-111] [code:src/components/ShoeCard.tsx:54-55] [code:backend/src/main/resources/db/migration/V13__model_en.sql:3]
 - **스펙**. 중량, 드롭, 스택하이트, 발볼, 와이드 모델, 안정성, 미드솔, 카본 플레이트 여덟 칸. 가격은 칸 밖 아래 줄에 평점과 나란히 있다(아래 가격 줄). 용어마다 툴팁(`terms`, 한 번에 하나만 열린다, 화면 밖으로 나가지 않는다). [code:src/components/ShoeModal.tsx:117-208] [code:src/components/ShoeModal.tsx:215-223] [code:src/components/ShoeModal.tsx:41] [code:src/components/TermTooltip.tsx:13-17] [code:src/components/ShoeModal.css:315-318] [code:src/components/TermTooltip.css:44-49]
   - 값이 없으면 **"정보 없음"**. 칸을 숨기지도, 기본값으로 메우지도 않는다. [code:src/utils/display.ts:1-7] [code:src/components/ShoeModal.tsx:216-217]
@@ -87,6 +87,15 @@ score = rating × 20 × (reviewCount / (reviewCount + 3)) + likeCount × 0.5
 - **챗봇**. 왼쪽 아래(오른쪽 아래 "맨 위로" 단추와 대칭). 같은 Pod 의 파이썬 사이드카(`chatbot/`)와 WebSocket(`/ws/chat`)으로. 신발을 말한 답 아래에는 "보러 가기" 버튼 하나. 1켤레는 상세 모달, 2켤레 이상은 비교하기(작업 5-1, `archive/09_chatbot_rag_log.md` 옛 15절). 창을 닫으면 대화가 지워진다. 로그인한 사람만 쓴다. 버튼은 누구에게나 보이고, 로그인 전에 누르면 패널 안에 "챗봇은 로그인한 뒤에 쓸 수 있어요. 체험 계정으로 바로 둘러볼 수 있어요." 와 [로그인](보던 화면으로 돌아온다). 로그아웃하면 연결을 닫는다(`09_chatbot_rag.md` 1-13절). [code:src/components/ChatBot.css:3-4] [code:src/components/ScrollTop.css:3-4] [code:src/api.ts:10-12] [code:chatbot/] [code:src/components/ChatBot.tsx:28] [code:src/components/ChatBot.tsx:38] [code:src/components/ChatBot.tsx:236-246] [code:src/components/ChatBot.tsx:263-281] [docs:09_chatbot_rag.md] <!-- 확인 못 함: 같은 Pod 의 사이드카라는 배치는 인프라 저장소 매니페스트에 있다 -->
 - **반응형**. 1200px 이상 데스크톱, 768~1199px 태블릿, 767px 이하 휴대폰. 카드 그리드 3열 → 2열 → 1열, 목록 → 상세 모달 흐름은 모든 크기에서 같다. 검색창은 1200px 이상 칩 오른쪽, 그 아래로는 칩 위 한 줄. [code:src/pages/ShoeList.css:3] [code:src/pages/ShoeList.css:19-31] [code:src/components/FilterBar.tsx:17] [code:src/components/FilterBar.css:42-43]
 - 확인 창은 공통 `ConfirmModal`(신발 숨김, 리뷰 삭제, 한꺼번에). 줄은 낱말 사이에서만 바꾸고(`word-break: keep-all`, 2026-11-15 사용자, 「합니 / 다」처럼 끊겼다), 띄어쓰기 없는 긴 글(이메일, 주소)만 창 안에서 끊는다(`overflow-wrap: anywhere`). 관리자 페이지의 처리 사유와 용어 추가 창도 같은 상자(`confirm__box`)라 같이 따른다. [code:src/components/ConfirmModal.tsx:35] [code:src/components/ConfirmModal.css:12-17] [code:src/components/HideShoeConfirm.tsx:25] [code:src/components/ReviewSection.tsx:264] [code:src/pages/adminmy/ChatMisses.tsx:185] [code:src/pages/adminmy/ChatMisses.tsx:225]
+
+#### 1-8. 로그인 화면 아래 소개
+
+- 로그인 화면(`/login`)을 내리면 프로젝트 소개가 이어진다(2026-11-19 사용자). 처음 온 사람이 30초 안에 이 사이트가 무엇인지 알게 하는 자리다. 로그인 칸(440px)과 따로 화면 폭 전체를 쓰고, 흰 바탕과 윗선으로 나눈다. [code:src/pages/Login.tsx:116-117] [code:src/components/About.css:1-9]
+- 차례는 넷이다. 한 줄 소개와 두 문단, 할 수 있는 것 넷(찾아보기, 추천받기, 비교하기, 챗봇), 구성도, 쓴 기술(화면, 서버, 챗봇, 운영 네 줄, 이름만). 할 수 있는 것은 넓은 화면 네 칸, 1199px 이하 두 칸, 767px 이하 한 칸. [code:src/components/About.tsx:10-31] [code:src/components/About.tsx:35-70] [code:src/components/About.css:56-60] [code:src/components/About.css:113-117] [code:src/components/About.css:133-135]
+- 글은 docs가 아니라 운영 코드와 운영 설정을 보고 썼다. docs를 보고 쓰면 docs가 낡을 때 같이 낡는다(2026-11-19 사용자). 그래서 소개의 낱말마다 근거 코드를 주석에 적었다. 모델 이름도 코드가 부르는 그대로다(`gemma4:e4b`, KURE-v1). [code:src/components/About.tsx:4-8] [code:src/components/About.tsx:28-29] [code:chatbot/llm.py:13] [code:backend/src/main/resources/application.yml:55]
+- 넣지 않는 것: 왜 그 기술을 골랐는지, 무엇이 어려웠는지, 어떻게 만들었는지(노션 몫), 서버 주소와 포트, 실제 사람 이름, 바깥 링크. [code:src/components/About.tsx:7]
+- **구성도**는 라이브러리 없이 인라인 SVG다. 넓은 화면은 가로형(viewBox 1000 × 650), 1023px 이하는 세로형(364 × 762)을 따로 그렸다. 가로형을 줄여 쓰면 좁은 화면에서 글자가 너무 작아진다. 둘 다 DOM에 있고 CSS가 하나만 보인다. 그리는 것은 들어오는 길(브라우저, Cloudflare 터널, ingress-nginx에서 앱과 챗봇 두 갈래), 앱 Pod 두 벌(Spring Boot와 챗봇 사이드카), MySQL과 복제본, 리뷰 요약 배치, 배포 줄(GitHub, Jenkins, Harbor, Argo CD), 쿠버네티스 밖 호스트의 Ollama와 임베딩 모델 서버다. 근거는 인프라 저장소 `apps/runshoes` 매니페스트이고 주소와 포트는 그리지 않는다. [code:src/components/ArchDiagram.tsx:3-11] [code:src/components/ArchDiagram.tsx:54-67] [code:src/components/ArchDiagram.tsx:74] [code:src/components/ArchDiagram.tsx:142] [code:src/components/ArchDiagram.css:21-35]
+- 점검(2026-11-19): 여섯 폭(360, 390, 768, 1024, 1280, 1920px)에서 가로 넘침 없음, 그림 글자 겹침 없음. 그림의 가장 작은 글자는 360px 폭에서 10.1px. 처음 세로형은 8.8px라 글자를 키우고 상자를 다시 놓았다. 768px과 1024px에서 검사가 상자 제목과 아랫줄이 맞닿은 것을 겹침으로 셌는데, 사진으로 보고 겹침이 아님을 확인했다. 화면 사진은 `portfolio/img/07_login_about_wide.png`, `portfolio/img/07_login_about_mobile.png`.
 
 #### 2. 왜 이렇게 했나
 

@@ -1,6 +1,6 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx, tests/refreshPolicy.test.ts
-읽은 커밋: 606b730
+읽은 커밋: af8d544
 -->
 # 04 로그인과 계정
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 체험 로그인 켜짐, `GET /api/auth/demo-accounts` 가 31장(시드 30 + 데모 관리자)을 준다(2026-11-17 공개 API 로 다시 확인). 원천: `backend/…/auth/*`, `activity/*`, `application.yml`, `V3`, `V7`, `V9`, `src/auth/*`, `pages/Login.tsx`, `Signup.tsx`, `Account.tsx` [c:a6bf21e] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:245-248] [code:backend/src/main/resources/db/migration/V3__auth.sql:136-165] [code:backend/src/main/resources/application.yml:37] <!-- 확인 못 함: 운영에서 체험 로그인이 켜졌는지와 31장은 운영 env 와 공개 API 의 값, 저장소 기본값은 꺼짐 -->
@@ -64,7 +64,7 @@
 - 데모 관리자는 비밀번호로 들어갈 수 없다. 비밀번호 칸이 NULL 이 아니라 표식 `'!demo'`(NULL 이면 기동 때 시드 비밀번호가 채워진다). [code:backend/src/main/resources/db/migration/V7__demo_admin.sql:3-5] [code:backend/src/main/resources/db/migration/V7__demo_admin.sql:10] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:107] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:286-288]
 - 시드 계정과 관리자는 닉네임 변경과 탈퇴가 403(체험 카드로 들어온 누구나 시드 이름을 바꾸거나 지울 수 있게 되므로). 비밀번호 변경은 지금 비밀번호를 알아야 해 그대로. [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:294-297] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:171] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:228] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:195-205]
 - env `DEMO_LOGIN_ENABLED`(기본 꺼짐)로 켠다. 끄면 카드도 API(404)도 없다. 같은 IP 15분 30번이면 429. [code:backend/src/main/resources/application.yml:37] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthService.java:290-292] [code:src/auth/session.ts:112-116] [code:backend/src/main/resources/application.yml:42] [code:backend/src/main/resources/application.yml:45] [code:backend/src/main/java/com/kopo17/runshoes/auth/RateLimiter.java:80-87]
-- 체험 안내: "누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰 · 찜은 다른 사람이 바꾸거나 지울 수 있어요". [code:src/pages/Login.tsx:95]
+- 체험 안내: "누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰와 찜은 다른 사람이 바꾸거나 지울 수 있어요". [code:src/pages/Login.tsx:97]
 - **체험 계정은 방문자가 바꾼 대로 둔다. 되돌리지 않는다**(2026-11-17 사용자). 시드 30명의 리뷰와 찜은 방문자 손으로 바뀐다.
 - **데모 관리자는 읽기를 다 한다(2026-11-15 사용자).** 관리자 페이지의 회원 이메일과 챗봇 대화 원문까지 admin 과 같게 본다. 쓰기(숨기기, 영구 삭제, 되살리기, 잠금 풀기, 인증, 용어 추가, 문의 처리 등)는 그대로 서버가 403 `demo_admin` 으로 막는다. [code:backend/src/main/java/com/kopo17/runshoes/api/Viewer.java:50-60] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:47] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminUserController.java:77] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java:105] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java:122-123] [code:backend/src/main/java/com/kopo17/runshoes/api/ApiException.java:25-26]
   - 까닭: 데모 관리자는 시현용이다. 읽지 못하면 화면이 비어 시현이 안 된다. 처음(11-14)에는 카드를 누구나 쓰므로 이메일과 원문을 서버에서 뺐는데, 이 까닭으로 풀었다.
@@ -99,7 +99,7 @@
 
 #### 1-6. 화면
 
-- 로그인과 회원가입. 서로 오가는 문구 "처음이세요? 회원가입 화면으로 이동합니다", "이미 계정이 있으세요? 로그인 화면으로 이동합니다"(회원가입, 로그인 낱말이 링크). 비밀번호 칸 오른쪽 끝에 보기 단추. [code:src/pages/Login.tsx:84-86] [code:src/pages/Signup.tsx:99-101] [code:src/auth/Field.tsx:36]
+- 로그인과 회원가입. 서로 오가는 문구 "처음이세요? 회원가입 화면으로 이동합니다", "이미 계정이 있으세요? 로그인 화면으로 이동합니다"(회원가입, 로그인 낱말이 링크). 비밀번호 칸 오른쪽 끝에 보기 단추. [code:src/pages/Login.tsx:86-88] [code:src/pages/Signup.tsx:99-101] [code:src/auth/Field.tsx:36]
 - 마이페이지(`/account`). 왼쪽 목차(회원정보 수정, 내 활동(내 리뷰, 찜 목록, 도움받은 리뷰), 회원 탈퇴)와 오른쪽 본문, 맨 위 활동 요약(리뷰, 찜, 도움이 돼요, 가입일). 화면 모양은 `02_screens.md`. [code:src/pages/Account.tsx:34] [code:src/pages/Account.tsx:79-84] [code:src/pages/Account.tsx:91] [docs:02_screens.md]
 
 #### 2. 왜 이렇게 했나
