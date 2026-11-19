@@ -81,6 +81,51 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 - **리뷰는 가상 사용자 200명이 쓴 시드 1,800건이다.** 310켤레 모두 리뷰가 있지만 3건 이하인 신발이 123켤레라, 랭킹과 추천 동점 처리와 비교의 평점은 시드가 만든 값이다(`01e_seed_reviews.md`, `08_compare.md` 4절). (2026-11-17 운영 공개 API 로 다시 셈: 310켤레의 reviewCount 합 1,800, 3건 이하 123켤레) [c:89117ec] [docs:01e_seed_reviews.md] [docs:08_compare.md] [code:backend/src/main/java/com/kopo17/runshoes/summary/StaleRule.java:7] <!-- 확인 못 함: 생성 스크립트와 글은 git 밖 -->
 - **빈 칸이 많다.** 발볼 191, 가격 154켤레가 정보 없음. 와이드는 재조사를 마쳐 4켤레만 비었다(`01a_catalog_sources.md` 1-7). (2026-11-05 기준) [c:fa31029] [docs:01a_catalog_sources.md] <!-- 확인 못 함: 빈 칸 수는 운영 DB 값 -->
 
+#### 5. 저장소 지도
+
+맨 위 `README.md` 는 생성물이라(`tools/docs.py readme`, `.foreman/docs.toml` `[readme]`) 폴더 지도는 여기에 둔다(2026-11-19 사용자, 인프라가 docs 00편에 둔 것과 같은 자리).
+
+```
+runshoes/
+├─ src/          React 화면. pages, components, auth(메모리 토큰, refresh), utils
+├─ backend/      Spring Boot. api, auth, activity, summary, compare, config, db/migration(Flyway V1~V24)
+├─ chatbot/      챗봇 사이드카(파이썬). 웹소켓 server, router, branches(갈래), search, 평가(eval/), tests/
+├─ catalog/      카탈로그. candidates.csv, 수집기, decisions.json(사람 판단), build.mjs, load.mjs, pull-admin.mjs, copy.json
+├─ contract/     API 계약 녹화본(baseline/)과 녹화, 비교 도구
+├─ scripts/      운영 적재(load-prod.sh), 시드 생성, 추천과 비교 대조(parity/), 화면 점검(screen-shot.mjs), 문서 점검(docs-check.py)
+├─ tests/        화면 쪽 단위 시험
+├─ public/       화면이 쓰는 정적 이미지
+├─ docs/         개발 문서(설계, 규칙, 지금 상태). archive/ 는 옛 계획서(지우지 않는다)
+├─ notion/       노션 기술문서 원고(사람이 읽는 글)
+├─ portfolio/    노션 포트폴리오 원고와 화면 사진(img/)
+├─ config/       포트폴리오 주제(portfolio.toml)
+├─ log/          작업 기록
+├─ Dockerfile, Dockerfile.chatbot, Jenkinsfile, docker-compose.yml
+└─ db.json       json-server 시절의 시드. 카탈로그 빌드가 시드 20켤레의 값을 읽는다
+```
+
+[code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [code:catalog/build.mjs:155] [code:config/portfolio.toml:1]
+
+배포 명세(매니페스트, 이미지 태그, 런북)는 인프라 저장소 `apps/runshoes/` 에 있다(`06_deployment.md`). [docs:06_deployment.md] <!-- 확인 못 함: 인프라 저장소 -->
+
+#### 6. 로컬에서 실행하기
+
+```bash
+yarn
+docker compose up -d            # MySQL 8, 127.0.0.1:3307
+# 백엔드: backend/README.md (Maven, Java 21). 첫 기동에 Flyway 가 스키마와 시드를 넣는다
+#   API http://localhost:3000. env JWT_SECRET(32바이트 이상)이 있어야 뜬다. 시드 계정 비밀번호는 SEED_USER_PASSWORD, ADMIN_PASSWORD
+yarn dev                        # Vite. /api 는 vite 프록시로 :3000
+python -m chatbot.server        # (선택) 챗봇 ws :8766. env RUNSHOES_API(기본 :3000), OLLAMA_URL
+```
+
+[code:docker-compose.yml:24] [code:vite.config.ts:8] [code:chatbot/server.py:126] [code:chatbot/http.py:13] [code:chatbot/llm.py:12]
+
+- 개발 중에도 같은 출처의 `/api` 를 부르고 Vite 가 `:3000` 으로 넘긴다. refresh 쿠키(`Path=/api/auth`)가 운영과 같게 붙는다. [code:vite.config.ts:8] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:125]
+- 이미지: `docker build -t runshoes .`(Vite, Maven, jlink JRE, alpine). 실행 env 는 `backend/README.md`. [code:Dockerfile:35]
+- 계약 시험: `contract/run-spring-local.sh v6`. 전용 임시 MySQL `runshoes-mysql-contract`(127.0.0.1:3309, tmpfs)를 새로 띄워 V1 부터 올려 녹화하고 비교한다. 개발 DB 는 건드리지 않는다. [code:contract/run-spring-local.sh:13] [code:contract/run-spring-local.sh:30-31]
+- 빈 DB 로: `docker compose down -v && docker compose up -d`. **로컬 개발 DB 를 지운다.** 계약 시험은 이 DB 를 쓰지 않는다.
+
 #### 다음에 할 일
 
 남은 일은 [`TODO.md`](TODO.md) 한 곳에 모은다. 한 줄에 하나, 상세는 그 주제의 문서. [docs:TODO.md]

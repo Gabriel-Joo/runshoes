@@ -1,115 +1,65 @@
+<!-- 이 파일은 `tools/docs.py readme`가 만든다. 손으로 고치면 다음에 만들 때 날아간다. 소개는 포트폴리오 00편 첫 문단, 편 목록은 원고 첫 # 줄, 노션 주소는 게시 기록에서 온다 -->
 # RUNSHOES
 
-> **러닝화, 제대로 읽기**
-> 스펙은 빠짐없이, 용어는 설명과 함께
+RUNSHOES는 러닝화 310켤레(2026-11-17 운영 공개 API)의 스펙과 리뷰를 한곳에 모은 아카이브 사이트입니다. 어려운 용어에는 바로 풀이가 뜨고, 모르는 값은 짐작으로 채우지 않고 "정보 없음"으로 남깁니다.
 
-React · TypeScript 화면과 Spring Boot · MySQL API 로 만든 러닝화 리뷰 아카이브를
-자체 Kubernetes 클러스터에 GitOps CI/CD 로 배포한 프로젝트
+## 포트폴리오
 
-**🔗 Live Demo — https://runshoes.ronanlab.dev** (자체 kubeadm 클러스터 · Cloudflare Tunnel) — 로그인 화면의 체험 계정으로 가입 없이 둘러볼 수 있다(일반 회원 · 읽기 전용 관리자)
+[노션에서 보기](https://app.notion.com/p/00-RUNSHOES-41d3218bb524812eb0a9c1e1d3673b8f)
 
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-000?logo=vite&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router-7-CA4245?logo=reactrouter&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?logo=springboot&logoColor=white)
-![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white)
-![Jenkins](https://img.shields.io/badge/Jenkins-D24939?logo=jenkins&logoColor=white)
-![Argo CD](https://img.shields.io/badge/Argo%20CD-EF7B4D?logo=argo&logoColor=white)
-![Harbor](https://img.shields.io/badge/Harbor-60B932?logo=harbor&logoColor=white)
-![Ollama](https://img.shields.io/badge/Ollama-000?logo=ollama&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-Tunnel-F38020?logo=cloudflare&logoColor=white)
+| 번호 | 제목 | 하위 |
+|---|---|---|
+| 00 | [한눈에 보는 RUNSHOES](portfolio/00_overview.md) |  |
+| 01 | [신발 목록](portfolio/01_list.md) |  |
+| 02 | [신발 상세 창](portfolio/02_detail.md) |  |
+| 03 | [추천받기](portfolio/03_recommend.md) |  |
+| 04 | [비교하기](portfolio/04_compare.md) |  |
+| 05 | [러너들의 선택](portfolio/05_best.md) |  |
+| 06 | [챗봇](portfolio/06_chatbot.md) |  |
+| 07 | [로그인과 체험 계정](portfolio/07_login.md) |  |
+| 08 | [관리 화면](portfolio/08_admin.md) |  |
+| 09 | [알려진 한계](portfolio/09_limits.md) |  |
 
----
+## 기술문서
 
-## 무엇인가
+[노션에서 보기](https://app.notion.com/p/00-41d3218bb52481ec81e4c8fce394f0df)
 
-기존 러닝화 정보는 상급자 기준으로 쓰여 있다. 드롭 · 스택하이트 같은 말이 설명 없이 나열되고, 사이트마다 값이 다르며 출처가 없다.
-RUNSHOES 는 **정보를 덜어내지 않고, 모르는 말과 근거 없는 값을 없앤다.**
-
-| | |
-|---|---|
-| **용어 툴팁** | 스펙마다 용어 설명 — 초보와 상급자가 같은 페이지를 본다 |
-| **출처가 있는 카탈로그** | 302켤레, 칸마다 어디서 읽었는지(리뷰 사이트 · 공식몰 · 웹 문서 · 직접 확인). 근거가 없으면 추측하지 않고 **"정보 없음"** |
-| **발볼 · 와이드** | 한국 러너에게 중요한 토박스 너비와 와이드 모델(있음 · 국외에만 · 없음 · 정보 없음) |
-| **맞춤 추천 · 랭킹** | 5문항 점수제 추천, 신뢰도 가중 평점으로 매긴 "러너들의 선택" |
-| **리뷰 AI 요약 · 챗봇** | 리뷰 3개 이상이면 Ollama 가 좋았던 점 · 아쉬운 점을 요약. GPU 서버를 프로덕션에서 바로 부른다 |
-
-쇼핑몰이 아니다 — 구매 버튼도, 할인 배지도 없다. 가격은 발매가만, 읽은 곳 · 날과 함께 보인다.
-
-## 구조
-
-```
-git push ─ Jenkins(BuildKit) ─ Harbor ─ ronanlab-infra 태그 커밋 ─ ArgoCD ─▶ Pod
-                                                                            ├ runshoes  Spring Boot :3000 (React 빌드물 + /api)  ─▶ MySQL 8 (Flyway V1~V13)
-                                                                            └ chatbot   Python WebSocket :8766                    ─▶ Ollama (GPU 호스트)
-카탈로그(catalog/) ─ 사람 판단(decisions.json) ─ 적재기 ─▶ 관리자 API
-```
-
-- **백엔드를 바꿔 끼웠다.** 과제 요건은 json-server 였다. 돌던 API 의 응답을 녹화해 정답으로 삼고, 같은 계약을 Spring Boot + MySQL 로 재현했다 — 화면은 한 줄도 바꾸지 않고, 운영 전환 끊김 0.
-- **GitOps.** Jenkins 는 Git 에 태그를 쓰고 ArgoCD 는 Git 을 읽는다 — 서로를 부르지 않는다. 스키마를 바꾸는 배포만 자동 Sync 를 끄고 런북대로.
-- **마이그레이션은 추가만.** 옛 이미지로 롤백해도 뜬다.
-- **권한과 숫자는 서버가.** 쓰기 권한 · 평점 · 찜 수 · 작성자는 서버가 정한다. 토큰은 메모리, refresh 는 HttpOnly 쿠키.
+| 번호 | 제목 | 하위 |
+|---|---|---|
+| 00 | [전체 그림](notion/00_overview.md) |  |
+| 01 | [신발 데이터를 모으는 법](notion/01_catalog.md) | 하위 5 |
+| 02 | [시드 리뷰 1,800건](notion/02_seed_reviews.md) |  |
+| 03 | [화면](notion/03_screens.md) | 하위 2 |
+| 04 | [추천받기](notion/04_recommend.md) |  |
+| 05 | [비교하기](notion/05_compare.md) |  |
+| 06 | [관리 화면](notion/06_admin.md) |  |
+| 07 | [로그인과 체험 계정](notion/07_auth.md) |  |
+| 08 | [챗봇](notion/08_chatbot.md) | 하위 6 |
+| 09 | [Spring 전환과 API 계약 시험](notion/09_spring.md) |  |
+| 10 | [배포](notion/10_deploy.md) |  |
+| 11 | [알려진 한계](notion/11_limits.md) |  |
 
 ## 문서
 
-설계 문서는 [`docs/`](docs/README.md) 에 있다 — 코드에서 거꾸로 쓰고, 다르면 코드가 맞다.
-
-| 문서 | 내용 |
-|---|---|
-| [요건](docs/requirements.md) · [전체 구조](docs/overview.md) · [타임라인](docs/HISTORY.md) | 무엇을 · 어떻게 · 언제 |
-| [01a 신발 데이터](docs/01a_catalog_sources.md) · [01b 이미지](docs/01b_catalog_images.md) · [01c 적재기](docs/01c_catalog_loader.md) | 카탈로그 — 수집처 · 약관 · 판단 규칙 · 실루엣 대조 · 사람 판단 |
-| [02 화면](docs/02_screens.md) · [02b 디자인](docs/02b_design_system.md) | 화면 구성 · 표본 전시실 컨셉 |
-| [03 관리 화면](docs/03_admin.md) · [04 로그인 · 계정](docs/04_auth.md) | 출처 · 숨김 · 수정 이력 / JWT · 체험 계정 · 시도 제한 |
-| [05 API 계약](docs/05_api_contract.md) · [06 배포](docs/06_deployment.md) · [07 DB](docs/07_database.md) | 계약 시험 · GitOps · 스키마 V1~V13 |
-| [08 비교](docs/08_compare.md) | 점수 없는 비교표(2~5켤레) · 자동 채우기 · 분포 그래프 — 운영 반영(2026-11-09) |
-| [backend/README.md](backend/README.md) · [contract/README.md](contract/README.md) | 백엔드 개발 · 계약 시험 실행 |
-
-## 실행하기
-
-```bash
-git clone https://github.com/Gabriel-Joo/runshoes.git && cd runshoes
-yarn
-
-docker compose up -d            # MySQL 8   127.0.0.1:3307
-# 백엔드 — backend/README.md (Maven, Java 21). 첫 기동에 Flyway 가 스키마 · 시드를 넣는다
-#   API  http://localhost:3000 — env JWT_SECRET(32바이트 이상)이 있어야 뜬다. 시드 계정 비밀번호는 SEED_USER_PASSWORD · ADMIN_PASSWORD
-yarn dev                        # Vite      http://localhost:5173 (/api 는 vite 프록시로 :3000)
-python -m chatbot.server        # (선택) 챗봇 ws://localhost:8766 — env RUNSHOES_API(기본 :3000) · OLLAMA_URL
-python -m chatbot.eval.run      # (선택) 챗봇 평가 — 운영 공개 API 를 읽기만, 로컬 Ollama
-```
-
-- 개발 중에도 같은 출처의 `/api` 를 부르고 Vite 가 `:3000` 으로 넘긴다 — refresh 쿠키(`Path=/api/auth`)가 운영과 같게 붙는다.
-- 이미지: `docker build -t runshoes .`(Vite → Maven → jlink JRE → alpine, 252MB). 실행 env 는 `backend/README.md`.
-- 계약 시험: `contract/run-spring-local.sh v6`(전용 임시 MySQL `runshoes-mysql-contract` :3309 를 새로 띄워 V1 부터 올려 녹화 · 비교 — 개발 DB 는 건드리지 않는다).
-- 빈 DB 로: `docker compose down -v && docker compose up -d` — **로컬 개발 DB(운영 스냅숏 310켤레)를 지운다.** 계약 시험은 이 DB 를 쓰지 않는다(전용 임시 MySQL :3309).
-
-## 저장소
-
-```
-runshoes/
-├─ src/          React 화면 — pages · components · auth(메모리 토큰 · refresh)
-├─ backend/      Spring Boot — api · auth · activity · summary · compare · config, db/migration(Flyway V1~V18)
-├─ catalog/      카탈로그 — candidates.csv · 수집기 · decisions.json(사람 판단) · build.mjs · load.mjs
-├─ contract/     API 계약 녹화본 · 녹화 · 비교 도구
-├─ scripts/      운영 적재(load-prod.sh) · 시드 생성 · 화면 점검(screen-shot.mjs)
-├─ docs/         설계 문서(위 표) · archive/(옛 계획서 — 지우지 않고 남긴다)
-├─ chatbot/      챗봇 사이드카(파이썬) — 웹소켓 · 이름 찾기 · 라우터 · 갈래 · 평가(eval/)
-├─ Dockerfile · Dockerfile.chatbot · Jenkinsfile · docker-compose.yml
-└─ db.json · server.cjs   json-server 시절의 시드 · API — 계약 기준선을 다시 뜨는 용도(운영 이미지에는 없다)
-```
-
-배포 명세(매니페스트 · 이미지 태그 · 런북)는 인프라 리포 `Gabriel-Joo/ronanlab-infra`(private) `apps/runshoes/` 에 있다.
-
-## 다음에 할 일
-
-리뷰(실사용 후기 화면) · 챗봇(로그인 맥락을 읽는 RAG) · MySQL 정기 백업 · Argo Rollouts — 자세한 것은 [TODO](docs/TODO.md).
-
-## 데이터
-
-- 스펙: 브랜드 공식 자료 · 러닝 리뷰 사이트(실측) · 국내 공식몰 · ABC마트 — 칸마다 출처를 남긴다([01a](docs/01a_catalog_sources.md))
-- 이미지: StockX · GOAT(KicksDB) 제품컷([01b](docs/01b_catalog_images.md))
-- 리뷰: 시드 데이터(실제 사용자 리뷰가 아니다)와 가입자가 쓴 리뷰
+| 문서 | 제목 | 요약 |
+|---|---|---|
+| [01a_catalog_sources.md](docs/01a_catalog_sources.md) | 01a 신발 데이터 | 브랜드 14개, 라인 233개의 **현행 + 직전 1세대**(후보 408행)를, 약관과 robots 가 허락하는 곳에서 **사실 값만** 모으고, 값마다 출처 URL 을 붙이고, 못 구한 값은 기본값으로 메우지 않… |
+| [01b_catalog_images.md](docs/01b_catalog_images.md) | 01b 신발 이미지 | 신발 사진은 **저장하지 않고 StockX(없으면 GOAT) 이미지 주소를 핫링크**한다. |
+| [01c_catalog_loader.md](docs/01c_catalog_loader.md) | 01c 적재기 | 카탈로그(`shoes.jsonl`)를 **관리자 API 로** 운영에 넣는 적재기다. |
+| [01d_catalog_copy.md](docs/01d_catalog_copy.md) | 01d 문구 | 카드의 **한 줄 요약**과 상세 모달의 **설명문**은 우리가 쓴 글이다. |
+| [01e_seed_reviews.md](docs/01e_seed_reviews.md) | 01e 시드 리뷰 | 사이트의 리뷰, 찜, 도움이 돼요는 **가상 사용자 200명이 쓴 시드 데이터**다. |
+| [02_screens.md](docs/02_screens.md) | 02 화면 | React 단일 페이지 앱이다. |
+| [02b_design_system.md](docs/02b_design_system.md) | 02b 디자인 | **표본 전시실**. |
+| [03_admin.md](docs/03_admin.md) | 03 관리 화면 | 신발을 등록, 수정, 숨김, 영구 삭제하는 관리 화면이다. |
+| [04_auth.md](docs/04_auth.md) | 04 로그인과 계정 | 이메일 가입과 로그인(JWT)이다. |
+| [05_api_contract.md](docs/05_api_contract.md) | 05 API 계약과 계약 시험 | REST API 는 **원래 돌던 json-server API 의 응답을 녹화해 두고 그대로 재현**한 것이다. |
+| [06_deployment.md](docs/06_deployment.md) | 06 배포 | push 한 번이면 배포된다. |
+| [07_database.md](docs/07_database.md) | 07 스키마와 마이그레이션 | MySQL 8 하나에 테이블 14개(+ `flyway_schema_history`)다. |
+| [08_compare.md](docs/08_compare.md) | 08 비교하기 | **비교하기**(`/compare`)는 정해 둔 신발 2~5켤레를 나란히 펼쳐 보는 화면이다. |
+| [09_chatbot_rag.md](docs/09_chatbot_rag.md) | 09 챗봇 RAG 설계 | 질문이 들어오면 여섯 갈래로 나눈다. |
+| [10_recommend.md](docs/10_recommend.md) | 10 추천받기 | **추천받기**(`/recommend`)는 다섯 문항(용도, 발볼, 안정성, 쿠션, 예산)에 답하면 310켤레를 점수로 줄 세워 상위 3을 보인다. |
+| [HISTORY.md](docs/HISTORY.md) | 날짜 타임라인 | React + json-server 과제로 시작해(2026-07), 학교 클러스터 → 자체 클러스터로 옮기고(10-18), 녹화한 응답으로 백엔드를 Spring Boot + MySQL 로 바꿔 끼웠다(10-21). |
+| [TODO.md](docs/TODO.md) | 남은 일 |  |
+| [overview.md](docs/overview.md) | 전체 구조 | React, TypeScript 화면과 Spring Boot, MySQL API 를 한 이미지로 묶어, 자체 쿠버네티스 클러스터에 GitOps 로 배포한 러닝화 리뷰 아카이브다. |
+| [requirements.md](docs/requirements.md) | 요구사항 | **"러닝화 스펙을 다 보여주되, 모르는 말이 없게."** |
+| [style_guide.md](docs/style_guide.md) | 문서 쓰는 법 |  |

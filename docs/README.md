@@ -22,27 +22,7 @@
   - **archive 는 노션과 발표 자료에 옮기지 않는다.** 저장소에만 둔다.
   - 이미 운영에 적용된 마이그레이션(`V*.sql`)의 주석이 옛 문서를 가리켜도 고치지 않는다. 적용된 마이그레이션은 한 글자만 바뀌어도 Flyway 체크섬이 달라져 앱이 뜨지 않는다. 옛 경로는 `archive/` 에서 찾는다. [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/db/migration/V3__auth.sql:2] [docs:archive/AUTH_DESIGN.md]
 
-| 파일 | 다루는 것 |
-|---|---|
-| `requirements.md` | 무엇을 만드는가. 문제, 사용자, 요건(학교 요건 ①~⑧ 포함) [docs:requirements.md] |
-| `overview.md` | 전체 구조. 서비스 지도, 데이터 흐름, 기술 선택 [docs:overview.md] |
-| `HISTORY.md` | 날짜 타임라인. 한 줄씩, 자세한 이야기는 각 문서 3절로 링크 [docs:HISTORY.md] |
-| `TODO.md` | 남은 일. 한 줄에 하나, 상세는 그 주제의 문서(2026-11-10 사용자, 문서마다 적던 "다음에 할 일"을 모았다) [docs:TODO.md] |
-| `01a_catalog_sources.md` | 신발 데이터. 수집처, 약관, 현행 세대, 스펙, 가격, 발볼, 와이드 판단 규칙 [docs:01a_catalog_sources.md] |
-| `01b_catalog_images.md` | 신발 이미지. StockX와 GOAT, 대표 색상과 품번, 색상 보강(실루엣 대조) [docs:01b_catalog_images.md] |
-| `01c_catalog_loader.md` | 적재기. 사람 판단(`decisions.json`), 관리 화면 수정 보호, 운영 적재 스크립트 [docs:01c_catalog_loader.md] |
-| `01d_catalog_copy.md` | 문구. 카드 요약과 상세 설명 작성 규칙(`copy.json`), 검사기 [docs:01d_catalog_copy.md] |
-| `01e_seed_reviews.md` | 시드 리뷰. 가상 사용자 200명, 리뷰 1,800, 찜, 도움이 돼요, 별점과 문장 규칙, 적재 [docs:01e_seed_reviews.md] |
-| `02_screens.md` | 화면. 목록, 상세 모달, 추천받기, 비교하기, 러너들의 선택, 반응형 [docs:02_screens.md] |
-| `02b_design_system.md` | 디자인. 표본 전시실 컨셉, 색, 글꼴, 카드, 모달 [docs:02b_design_system.md] |
-| `03_admin.md` | 관리 화면. 등록, 수정, 보완 필요 탭, 숨김, 영구 삭제, 수정 이력, 출처 [docs:03_admin.md] |
-| `04_auth.md` | 로그인, 계정, 데모 계정, 시도 제한, 활동 로그 [docs:04_auth.md] |
-| `05_api_contract.md` | API 계약과 계약 시험 [docs:05_api_contract.md] [code:contract/] |
-| `06_deployment.md` | CI/CD, GitOps, 클러스터, 스키마 변경 절차 [docs:06_deployment.md] |
-| `07_database.md` | 스키마와 마이그레이션 V1~V24 [docs:07_database.md] [code:backend/src/main/resources/db/migration/] |
-| `08_compare.md` | 비교하기. 점수 없는 비교표, 자동 채우기, 분포 그래프, 내 찜 [docs:08_compare.md] |
-| `09_chatbot_rag.md` | 챗봇 RAG 설계. 여섯 갈래, 메모리 색인 + BM25, 무게 환산, 요약 배치, 말투, 평가, 단계별 상태(3-1절) [docs:09_chatbot_rag.md] |
-| `10_recommend.md` | 추천받기. 배점, 경계, 데이터가 없을 때(중립, 동점 규칙, 하한선), 발볼 칸의 성격, 세대를 점수에 넣지 않는 이유 [docs:10_recommend.md] |
+이 폴더의 편 차례(파일, 제목, 요약)는 맨 위 `README.md` 의 「문서」 표에 있다. 그 표는 각 편의 첫 # 줄과 첫 문단으로 `tools/docs.py readme` 가 만들고, 차례가 어긋나면 문서 점검 9번이 잡는다. 여기에 손으로 차례를 다시 쓰지 않는다(2026-11-19 사용자).
 
 #### 2. 문서 형식
 
