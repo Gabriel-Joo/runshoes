@@ -20,7 +20,7 @@
 | 탭 | 무엇 | 누가 |
 |---|---|---|
 | 등록된 신발 | 전체 목록. 정렬 `최근 수정순`(기본), `등록순`, `브랜드순`, `모델명순`. 고른 것을 다시 누르면 방향이 바뀐다 | admin, 데모 관리자 [code:src/pages/Admin.tsx:18] [code:src/pages/Admin.tsx:37-42] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:52] [code:backend/src/main/java/com/kopo17/runshoes/api/Viewer.java:57-60] |
-| 숨긴 신발 N | 숨긴 신발과 숨긴 시각. 되살리기, 영구 삭제 | 보기는 둘 다, 쓰기는 admin [code:src/pages/Admin.tsx:402-428] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:118] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:19-20] |
+| 숨긴 신발 N | 숨긴 신발과 숨긴 날. 되살리기, 영구 삭제 | 보기는 둘 다, 쓰기는 admin [code:src/pages/Admin.tsx:402-428] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:118] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:19-20] |
 | 보완 필요 N | 빈 칸이 있는 신발. 칸 하나로 거를 수 있고, 기본은 **빈 칸 적은 순**(한 칸만 빈 신발부터 고치면 목록이 빨리 준다) | admin, 데모 관리자 [code:src/pages/Admin.tsx:59] [code:src/pages/Admin.tsx:360-369] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:70] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminController.java:52] |
 | 영구 삭제 기록 N | 영구 삭제한 신발(`shoe_purges`, V11). 번호, 모델, 라인, 세대, 성별, 지울 때의 리뷰와 찜 수, 지운 날, 최근 먼저. 읽기만(2026-11-14, API 는 있었는데 화면이 없었다) | admin, 데모 관리자 [code:src/pages/Admin.tsx:431-452] [code:backend/src/main/java/com/kopo17/runshoes/api/AdminShoes.java:122-125] [code:backend/src/main/resources/db/migration/V11__admin_history.sql:7] [code:backend/src/main/resources/db/migration/V11__admin_history.sql:16] |
 

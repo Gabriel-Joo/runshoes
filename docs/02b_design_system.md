@@ -51,7 +51,7 @@
 - **그림자**. 카드에는 없다. 모달, 드롭다운 같은 실제로 떠 있는 것만. [code:src/components/ShoeModal.css:22] [code:src/components/ConfirmModal.css:21] [code:src/components/Header.css:141] [code:src/components/TermTooltip.css:30]
 - **칩과 토글**. 완전 둥근 모서리(`border-radius: 100px`). [code:src/components/FilterBar.css:24] [code:src/components/SortBar.css:36]
 - **여백 리듬**. 섹션 사이는 크게(24~40px), 카드 안은 촘촘하게(6~18px).
-- **히어로**. 어두운 바탕에 용어 해부도 사진 3장(드롭, 아웃솔, 스택하이트)이 4초마다 넘어가는 슬라이드. 라이브러리 없이 `setInterval` + 정리. [code:src/components/Hero.tsx:6-22] [code:src/components/Hero.tsx:28-31]
+- **히어로**. 왼쪽은 "러닝화, 제대로 읽기" 문구가 얹힌 사진, 오른쪽은 용어 해부도 사진 3장(드롭, 아웃솔, 스택하이트)이 4초마다 넘어가는 슬라이드. 사진 아래 검은 띠에 용어 이름과 풀이 한 줄, 넘기는 점 셋. 라이브러리 없이 `setInterval` + 정리. [code:src/components/Hero.tsx:6-22] [code:src/components/Hero.tsx:28-31]
 - **드롭다운**. `appearance: none` + 배경 화살표. 관리 폼은 오른쪽 12px, 안쪽 여백 36px이고 관리자 페이지 고르기 칸은 오른쪽 10px, 안쪽 여백 30px로 아직 같지 않다(`TODO.md`). [code:src/pages/ShoeForm.css:166-174] [code:src/pages/AdminMy.css:64-72]
 - **화살표**. 글자 ‹ › 대신 SVG `Chevron`(글꼴 기준선 때문에 가운데가 맞지 않았다). [code:src/components/Chevron.tsx:1-2]
 
