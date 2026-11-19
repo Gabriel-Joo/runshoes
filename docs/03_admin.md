@@ -7,7 +7,7 @@
 
 #### 0. 한 줄 요약
 
-신발을 등록, 수정, 숨김, 영구 삭제하는 관리 화면이다. 칸마다 **출처를 같이 저장**하고, 근거 없는 값이 생기지 않게 막는다. 값을 바꾸면 출처를 다시 고르게 하고, 와이드 "없음"은 출처가 있어야 저장된다. 여기서 고친 값은 다음 적재에서 되돌려지지 않는다(`01c_catalog_loader.md`). [code:src/pages/ShoeForm.tsx:196-201] [code:src/pages/ShoeForm.tsx:247-248] [code:catalog/pull-admin.mjs:5] [docs:01c_catalog_loader.md]
+신발을 등록, 수정, 숨김, 영구 삭제하는 관리 화면이다. 칸마다 **출처를 같이 저장**하고, 근거 없는 값이 생기지 않게 막는다. 값을 바꾸면 출처를 다시 고르게 하고, 와이드 "없음"은 출처 면제다(1-2). 여기서 고친 값은 다음 적재에서 되돌려지지 않는다(`01c_catalog_loader.md`). [code:src/pages/ShoeForm.tsx:196-201] [code:src/pages/ShoeForm.tsx:247-248] [code:catalog/pull-admin.mjs:5] [docs:01c_catalog_loader.md]
 
 #### 1. 최종 설계
 
@@ -171,7 +171,7 @@
 
 #### 4. 남은 한계
 
-- **와이드 "없음"의 출처는 관리 폼만 요구한다.** API 로 직접 쓰면 출처 없는 `false` 가 들어갈 수 있다. 안 하는 까닭: 서버도 요구하려면 옛 계약(W30, W36)을 의도한 변경으로 받아들여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] [code:src/pages/ShoeForm.tsx:225]
+- **서버는 와이드 "없음"의 출처를 보지 않는다.** 관리 폼은 "없음"이면 출처 칸을 숨기고 `NOTFOUND` 를 저절로 넣지만(1-2), API 로 직접 쓰면 출처 없는 `false` 가 들어갈 수 있다. 안 하는 까닭: 서버가 요구하려면 옛 계약(W30, W36)을 의도한 변경으로 받아들여야 한다. [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] [code:src/pages/ShoeForm.tsx:225] [code:src/pages/ShoeForm.tsx:247]
 
 **조건: 우리가 고르지 않은 것**
 - **보완 필요가 많다.** 몇 켤레인지는 이 편 맨 위 상태 줄에 둔다. 대부분 발볼, 와이드, 가격이다. 와이드는 재조사가 채운다(`01a_catalog_sources.md` 1-7). [docs:01a_catalog_sources.md]
@@ -181,4 +181,4 @@
 
 - 계약 시험 spring-v6. 리뷰 숨기기(X157~X176: 401, 403, 데모 관리자 403, 409, 공개 목록에서 빠짐, 평점 다시 셈, 되살리기, 영구 삭제). admin 의 남의 리뷰 공개 API 지우기 403 `hide_first`(X222, X223, spring-v14-summary Y42). 데모 관리자 403(X10~X16). 숨김과 되살리기(X30~X43). 품번, 수정 이력, 적재기 제외, 영구 삭제(X100~X115). 와이드 범위와 NOTFOUND(X116~X122). [code:contract/scenarios.mjs:502] [code:contract/scenarios.mjs:521] [code:contract/scenarios.mjs:572-573] [code:contract/scenarios.mjs:300] [code:contract/scenarios.mjs:356-362] [code:contract/scenarios.mjs:369-383] [code:contract/scenarios.mjs:424-451] [code:contract/baseline/spring-v6/]
 - 적재기 건조 실행이 관리 화면 수정 뒤에도 그 칸을 되돌리지 않는지(`어드민 수정 N건` 가져오기 로그). [code:catalog/load.mjs:45-46]
-- 화면: 값을 바꾸면 출처가 비는지, 와이드 "없음"에 출처 없으면 저장되지 않는지, 데모 관리자로 저장하면 문구가 뜨는지.
+- 화면: 값을 바꾸면 출처가 비는지, 와이드 "없음"을 고르면 출처 칸 대신 "출처 면제"가 뜨고 저장되는지, 데모 관리자로 저장하면 문구가 뜨는지.
