@@ -11,8 +11,6 @@
   나온 곳: `09_chatbot_rag.md` 1-8절
 - **runshoes-2** **결정을 어긴 코드, 다음 코드 일에서 먼저 볼 것**: `catalog/fill.mjs` 가 사이즈 표기 없는 공식몰 무게를 맨 뒤 묶음에 둔다. 11-06과 11-09 결정은 M9 로 보고 맨 앞 묶음에 두는 것이다. 운영에서 7켤레가 공식몰 값 대신 BITR 값으로 나가고, 그 가운데 148과 163은 `resolve_official` 사람 판단까지 무시된다(`HUMAN` 목록에 없다)(2026-11-17 사용자) [code:catalog/fill.mjs:36] [code:catalog/fill.mjs:48] [code:catalog/fill.mjs:74-76] (2026-11-17)
   나온 곳: `01a_catalog_sources.md` 1-3
-- **runshoes-3** 09편을 가리키는 코드 주석 42곳을 새 절 번호로 고치고, 09편 맨 아래 짝 표를 지운다. 표는 주석이 옛 번호를 가리키는 동안만 쓰는 임시 다리다. 런슈즈 문서 일이 끝난 뒤 코드 커밋으로 따로 한다(2026-11-17 사용자) (2026-11-17)
-  나온 곳: `09_chatbot_rag.md` 맨 아래 「절 번호 짝」
 
 - **runshoes-4** model-service 재부팅 순서 확인(다음 재부팅 때) (2026-11-11)
   나온 곳: `~/AI_programming/model-service/docs/runbook-cutover.md` 8절
