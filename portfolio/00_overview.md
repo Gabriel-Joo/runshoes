@@ -1,6 +1,6 @@
 <!--
 다루는 곳: README.md, src/App.tsx, Dockerfile, Dockerfile.chatbot, Jenkinsfile
-읽은 커밋: ad888c2
+읽은 커밋: 0fd9641
 -->
 # 한눈에 보는 RUNSHOES
 
