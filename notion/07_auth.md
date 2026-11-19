@@ -1,6 +1,6 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 07 로그인과 체험 계정
 

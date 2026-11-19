@@ -1,6 +1,6 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/summary/, backend/src/main/resources/db/migration/V14__shoe_summaries.sql, backend/src/main/resources/db/migration/V20__summary_batch_runs.sql, backend/src/main/resources/application-batch.yml, src/components/ReviewSummary.tsx
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-04 리뷰 요약 배치
 

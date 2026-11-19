@@ -1,6 +1,6 @@
 <!--
 다루는 곳: README.md, CLAUDE.md, Dockerfile, Dockerfile.chatbot
-읽은 커밋: 8167bc9
+읽은 커밋: f8cea0d
 -->
 # 00 전체 그림
 

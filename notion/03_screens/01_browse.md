@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/App.tsx, src/pages/ShoeList.tsx, src/pages/Best.tsx, src/pages/Account.tsx, src/components/, src/utils/display.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/activity/
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 03-01 둘러보기와 상세
 

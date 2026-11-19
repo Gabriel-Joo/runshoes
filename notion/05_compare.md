@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/pages/Compare.tsx, src/pages/Compare.css, src/components/compare/, src/utils/compare.ts, src/utils/compareApi.ts, src/utils/compareStore.ts, backend/src/main/java/com/kopo17/runshoes/compare/, backend/src/main/java/com/kopo17/runshoes/api/BrandNames.java, scripts/parity/
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 05 비교하기
 

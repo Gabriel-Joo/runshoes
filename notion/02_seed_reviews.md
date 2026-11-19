@@ -1,6 +1,6 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/domain/UserRepository.java, backend/src/main/java/com/kopo17/runshoes/api/Ratings.java, backend/src/main/java/com/kopo17/runshoes/api/ReviewCollection.java, backend/src/main/resources/db/migration/V3__auth.sql, chatbot/branches/experience.py
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 02 시드 리뷰 1,800건
 

@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/search/, chatbot/branches/experience.py, chatbot/branches/explain.py
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-01 리뷰를 찾아 답하는 법
 

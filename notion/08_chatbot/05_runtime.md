@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/server.py, chatbot/bot.py, chatbot/http.py, chatbot/timing.py, chatbot/catalog.py, src/components/ChatBot.tsx, src/auth/session.ts, src/pages/adminmy/Conversations.tsx, backend/src/main/java/com/kopo17/runshoes/api/ChatbotTurnController.java, backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java, backend/src/main/java/com/kopo17/runshoes/api/CatalogVersionController.java, backend/src/main/resources/db/migration/V19__chatbot_turns.sql
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-05 운영 장치
 

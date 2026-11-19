@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/App.tsx, src/pages/, src/components/, src/index.css, src/tokens.css
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 03 화면
 

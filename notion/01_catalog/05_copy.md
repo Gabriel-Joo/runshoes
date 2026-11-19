@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, src/components/CardRowSync.tsx, src/components/ShoeCard*, src/components/ShoeModal*, chatbot/search/corpus.py, chatbot/branches/
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 01-05 카드 요약과 설명 문구
 

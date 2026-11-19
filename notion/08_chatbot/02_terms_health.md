@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/terms.py, chatbot/branches/term.py, chatbot/router.py, chatbot/catalog.py, src/utils/terms.ts
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-02 용어, 통증 질문, 신발 이름
 

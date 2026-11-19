@@ -1,6 +1,6 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/compare/, src/pages/Recommend.tsx, src/utils/compareApi.ts, scripts/parity/
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 04 추천받기
 

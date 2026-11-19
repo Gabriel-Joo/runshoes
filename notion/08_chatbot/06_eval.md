@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/eval/, chatbot/tests/, chatbot/prompt.py, chatbot/router.py, chatbot/branches/experience.py, chatbot/branches/explain.py, chatbot/branches/recommend.py
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-06 평가와 바꿔 온 길
 

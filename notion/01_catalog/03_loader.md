@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, scripts/load-prod.sh, backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 01-03 사람 판단과 적재
 

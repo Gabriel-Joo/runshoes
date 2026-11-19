@@ -1,6 +1,6 @@
 <!--
 다루는 곳: Jenkinsfile, Dockerfile, Dockerfile.chatbot, .dockerignore, backend/src/main/resources/application.yml, scripts/load-prod.sh
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 10 배포
 
@@ -46,7 +46,6 @@ ArgoCD는 자동으로 반영하되 두 가지를 껐다. 하나는 클러스터
 
 - MySQL이 죽었을 때 자동으로 넘어가는 장치가 없다. 그러려면 전용 운영 도구가 필요한데 자원이 모자라, 복제본을 두고 사람이 런북대로 승격하는 쪽을 골랐다. [docs:06_deployment.md:176]
 - 구조를 바꾸는 배포는 사람이 세 번 손댄다(자동 반영 끄기, 반영, 켜기). 빼먹으면 덤프 전에 배포된다. 평소 배포는 자동이 낫고 되돌릴 수 없는 순간에만 사람이 문을 연다는 선택의 대가다. [docs:06_deployment.md:178]
-- 오래된 활동 기록과 챗봇 질문, 답을 지우는 정리 작업이 운영에서 꺼져 있다. Pod 둘이 같은 정리를 동시에 하지 않게 껐고, 잠금을 넣은 이미지가 오른 뒤 다시 켠다. [docs:06_deployment.md:177]
 - 이 서비스 전체에 걸린 한계와 조건은 → 「알려진 한계」 한 편에 모았다.
 
 ## 용어 풀이

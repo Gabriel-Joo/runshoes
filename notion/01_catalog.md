@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, db.json, scripts/load-prod.sh
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 01 신발 데이터를 모으는 법
 

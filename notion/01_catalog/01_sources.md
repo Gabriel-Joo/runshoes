@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/sources.yaml, catalog/sources-media.yaml, catalog/live-fields.mjs, catalog/audit.mjs
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 01-01 어디서 읽나: 약관과 출처
 

@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/llm.py, chatbot/prompt.py, chatbot/reply.py, chatbot/router.py
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 08-03 말투와 생성 검사
 

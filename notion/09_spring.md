@@ -1,6 +1,6 @@
 <!--
 다루는 곳: contract/, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/config/, backend/src/main/java/com/kopo17/runshoes/auth/
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 09 Spring 전환과 API 계약 시험
 

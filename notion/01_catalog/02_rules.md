@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/fill.mjs, catalog/build.mjs, catalog/variant.mjs, catalog/toebox-filter.mjs, backend/src/main/resources/db/migration/V4__shoe_generations.sql, backend/src/main/resources/db/migration/V5__price_reference.sql, backend/src/main/resources/db/migration/V12__wide_scope.sql, backend/src/main/resources/db/migration/V15__weight_norm_270.sql
-읽은 커밋: 5387ec7
+읽은 커밋: f8cea0d
 -->
 # 01-02 값을 고르는 규칙
 
