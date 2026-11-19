@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/pages/Compare.tsx, src/pages/Compare.css, src/components/compare/, src/utils/compare.ts, src/utils/compareApi.ts, src/utils/compareStore.ts, backend/src/main/java/com/kopo17/runshoes/compare/, backend/src/main/java/com/kopo17/runshoes/api/BrandNames.java, scripts/parity/
-읽은 커밋: f8cea0d
+읽은 커밋: f58a2a6
 -->
 # 05 비교하기
 
@@ -42,7 +42,7 @@
 
 ## 휴대폰에서
 
-폭이 좁은 화면에서는 줄 이름을 값 위에 작게 두고, 다섯 열이 들어가지 않으니 표 안쪽만 가로로 넘긴다. 한 화면에 두 켤레와 다음 켤레의 끝이 조금 보이고, 페이지 자체는 옆으로 밀리지 않는다. [docs:08_compare.md:121-122] 분포 그래프는 누르면 아래에서 올라오는 시트로 열리고, 내 찜은 "+ 추가"를 눌렀을 때 뜨는 시트 안에 있다. [docs:08_compare.md:123] 표를 내리면 카드 줄이 크기 그대로 화면 위에 붙어 따라오므로, 아래쪽 줄을 보면서도 어느 열이 어느 신발인지 알 수 있다. [docs:08_compare.md:84]
+폭이 좁은 화면에서는 줄 이름을 값 위에 작게 두고, 다섯 열이 들어가지 않으니 표 안쪽만 가로로 넘긴다. 열은 가장 긴 값에 맞춰 넓어져, 휴대폰 폭에서는 한 켤레 열 전체와 다음 열 절반쯤이 보인다(2026-11-19 운영 화면). 페이지 자체는 옆으로 밀리지 않는다. [docs:08_compare.md:121-122] 분포 그래프는 누르면 아래에서 올라오는 시트로 열리고, 내 찜은 "+ 추가"를 눌렀을 때 뜨는 시트 안에 있다. [docs:08_compare.md:123] 표를 내리면 카드 줄이 크기 그대로 화면 위에 붙어 따라오므로, 아래쪽 줄을 보면서도 어느 열이 어느 신발인지 알 수 있다. [docs:08_compare.md:84]
 
 ## 무엇이 어려웠나
 
