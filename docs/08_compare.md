@@ -78,7 +78,7 @@
   | 기본 | 용도, 안정성 [code:src/components/compare/CompareTable.tsx:24] |
   | 발에 맞나 | 발볼, 와이드 모델 [code:src/components/compare/CompareTable.tsx:25] |
   | 주행감 | 무게(기준 사이즈 함께, 다르면 270mm 로 맞춘 값도), 스택하이트, 드롭, 카본 플레이트, 미드솔 [code:src/components/compare/CompareTable.tsx:26-36] [code:src/components/compare/CompareTable.tsx:128-152] |
-  | 평가 | 평점, 리뷰 수(**늘 한 칸**, "★4.2 · 리뷰 3", "리뷰 3"을 누르면 상세 모달이 리뷰 쪽으로 열린다), 찜 [code:src/components/compare/CompareTable.tsx:37] [code:src/components/compare/CompareTable.tsx:165-177] |
+  | 평가 | 평점, 리뷰 수(**늘 한 칸**, "★ 4.2 · 리뷰 3", "리뷰 3"을 누르면 상세 모달이 리뷰 쪽으로 열린다), 찜 [code:src/components/compare/CompareTable.tsx:37] [code:src/components/compare/CompareTable.tsx:165-177] |
   | 가격 | 발매가 [code:src/components/compare/CompareTable.tsx:38] |
 
 - **카드 줄 고정**, 표를 내리면 카드 줄(이유, 사진, 브랜드, 모델명, 바코드, "+ 추가" 칸까지)이 크기 그대로 헤더 바로 아래에 붙는다(2026-11-09 사용자, 작은 띠는 알아보기 어려웠다, RunRepeat 처럼 내린 채로도 더할 수 있게). 카드 줄을 표와 다른 칸으로 떼어 그 칸을 sticky 로 둔다. 1199px 이하는 두 칸 모두 가로로 넘기고 가로 위치를 서로 맞춘다(가로 스크롤 칸 "안"의 것은 세로 sticky 가 듣지 않지만 칸 "자체"는 듣는다). 열 폭은 표에서 재서 카드 줄에 그대로 준다. 헤더 높이는 크기가 바뀔 때마다 잰다(로고 글꼴이 늦게 오면 2~5px 틈이 났다). [code:src/components/compare/CompareTable.tsx:83-103] [code:src/pages/Compare.css:989-994] [code:src/pages/Compare.tsx:169-177]
