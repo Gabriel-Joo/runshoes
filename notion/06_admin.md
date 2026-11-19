@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/pages/Admin.tsx, src/pages/ShoeForm.tsx, src/pages/AdminMy.tsx, src/pages/adminmy/, src/components/HideShoeConfirm.tsx, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/resources/db/migration/, catalog/pull-admin.mjs
-읽은 커밋: f8cea0d
+읽은 커밋: 7f0351a
 -->
 # 06 관리 화면
 

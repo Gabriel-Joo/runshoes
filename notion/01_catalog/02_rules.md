@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/fill.mjs, catalog/build.mjs, catalog/variant.mjs, catalog/toebox-filter.mjs, backend/src/main/resources/db/migration/V4__shoe_generations.sql, backend/src/main/resources/db/migration/V5__price_reference.sql, backend/src/main/resources/db/migration/V12__wide_scope.sql, backend/src/main/resources/db/migration/V15__weight_norm_270.sql
-읽은 커밋: f8cea0d
+읽은 커밋: 7f0351a
 -->
 # 01-02 값을 고르는 규칙
 
@@ -8,7 +8,7 @@
 
 ## 무게
 
-무게는 미국 남성 9 사이즈(M9, 270mm) 기준이다. 값과 함께 그 값이 몇 사이즈 기준인지를 적고, 출처가 밝히지 않으면 비워 둔다. [docs:01a_catalog_sources.md:108] 브랜드 공식몰이 사이즈를 적지 않았으면 M9로 본다. 국내 공식몰은 대부분 남성 270mm 상품으로 무게를 적고, 270mm는 대부분 브랜드에서 M9다. 해외에서도 뉴발란스 호주 공식몰이 사이즈 없이 적은 880 v14의 270g이 RSG의 "9.5 oz for men's size 9"와 같았다. [docs:01a_catalog_sources.md:289] [docs:01a_catalog_sources.md:291] 소매점과 리뷰에는 이 가정을 넓히지 않는다. 사이즈를 밝히지 않으면 어느 사이즈인지 알 길이 없기 때문이다. [docs:01a_catalog_sources.md:291] 다만 지금 코드는 이 결정과 어긋난다. 결정은 사이즈 표기가 없는 공식몰 값을 M9로 보고 맨 앞에 두는 것인데, 코드는 그 값을 사이즈 불명으로 보고 맨 뒤에 둔다. [docs:01a_catalog_sources.md:109]
+무게는 미국 남성 9 사이즈(M9, 270mm) 기준이다. 값과 함께 그 값이 몇 사이즈 기준인지를 적고, 출처가 밝히지 않으면 비워 둔다. [docs:01a_catalog_sources.md:108] 출처 여럿 가운데 무게를 고를 때, 사이즈를 적지 않은 값은 브랜드 공식몰 값이라도 사이즈 불명으로 보고 고르는 순서의 맨 뒤에 둔다. [docs:01a_catalog_sources.md:109]
 
 출처가 여럿이면 M9로 확인된 값, 다른 사이즈를 밝힌 값, 사이즈 불명 순으로 고른다. 같은 묶음 안에서는 국내 공식몰과 보도자료, BITR 스펙 상자, fit2run, RSG 스펙 상자, BITR 본문, RSG 본문 순이다. [docs:01a_catalog_sources.md:111] 두 값이 5g 또는 2% 안으로 다르면 이 순서대로 저절로 고르고 진 값은 메모로 남긴다. [docs:01a_catalog_sources.md:112] 소닉블라스트 2가 241g, 242g, 245g으로 갈린 것처럼 작은 차이를 매번 사람이 보는 것은 낭비였기 때문이다. [docs:01a_catalog_sources.md:320] 같은 글 안에서 g과 oz가 맞지 않는 출처는 쓰지 않고, 사이즈 기준을 확인할 수 없는 큰 차이는 비운다. 나이키가 적은 다운시프터 14의 358g(US10)은 직접 잰 값 303~315g보다 40g 넘게 무거웠다. [docs:01a_catalog_sources.md:113] [docs:01a_catalog_sources.md:320]
 

@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/sources.yaml, catalog/sources-media.yaml, catalog/live-fields.mjs, catalog/audit.mjs
-읽은 커밋: f8cea0d
+읽은 커밋: 7f0351a
 -->
 # 01-01 어디서 읽나: 약관과 출처
 
@@ -40,7 +40,7 @@
 
 화면에서 스펙 값 옆에 붙는 출처 표시는 그 값을 어떤 문서에서 읽었는지를 말한다. BITR과 RSG는 그 모델을 직접 리뷰한 페이지, STORE는 브랜드가 직접 운영하는 공식몰의 상품 페이지(국내든 해외든), PR은 브랜드 보도자료다. [docs:01a_catalog_sources.md:244-246] 같은 공식몰 안이라도 블로그, 도움말, 비교 글은 상품 페이지가 아니어서 "공식몰에서 확인한 값"이라 하기 어려워 WEB으로 둔다. 브랜드 이름을 단 판매점과 대리점도 WEB이다. [docs:01a_catalog_sources.md:252]
 
-WEB과 MAN을 가르는 것은 누가 확인했나다. WEB은 Claude가 검색해서 찾은 값이고, MAN은 사람이 직접 보고 넣은 값이다. 둘 다 주소를 적는다. [docs:01a_catalog_sources.md:247-248] [docs:01a_catalog_sources.md:253] 운영 스펙의 출처는 BITR 640, WEB 375, RSG 218, STORE 89, MAN 19, PR 11, 시드의 옛 값 9, StockX 1이다(2026-11-02 운영). [docs:01a_catalog_sources.md:254]
+WEB과 MAN을 가르는 것은 누가 확인했나다. WEB은 AI(Claude)가 검색해서 찾은 값이고, MAN은 사람이 직접 보고 넣은 값이다. 둘 다 주소를 적는다. [docs:01a_catalog_sources.md:247-248] [docs:01a_catalog_sources.md:253] 운영 스펙의 출처는 BITR 640, WEB 375, RSG 218, STORE 89, MAN 19, PR 11, 시드의 옛 값 9, StockX 1이다(2026-11-02 운영). [docs:01a_catalog_sources.md:254]
 
 ## 무엇이 어려웠나
 

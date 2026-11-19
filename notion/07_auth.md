@@ -1,10 +1,10 @@
 <!--
 다루는 곳: backend/src/main/java/com/kopo17/runshoes/auth/, backend/src/main/java/com/kopo17/runshoes/activity/, backend/src/main/resources/application.yml, backend/src/main/resources/db/migration/V3__auth.sql, backend/src/main/resources/db/migration/V7__demo_admin.sql, backend/src/main/resources/db/migration/V9__user_withdraw.sql, src/auth/, src/pages/Login.tsx, src/pages/Signup.tsx, src/pages/Account.tsx
-읽은 커밋: f8cea0d
+읽은 커밋: 7f0351a
 -->
 # 07 로그인과 체험 계정
 
-RUNSHOES는 신발을 둘러보고 비교하는 데는 로그인이 필요 없다. [docs:08_compare.md:28] 리뷰와 찜은 계정마다 따로 남고, 챗봇도 로그인한 사람만 쓴다. [docs:requirements.md:25] [docs:09_chatbot_rag.md:433] 가입은 이메일과 비밀번호로 하고, 처음 보는 사람은 가입하지 않고 체험 계정 카드를 눌러 바로 들어올 수 있다. [docs:04_auth.md:10] 이 편은 로그인이 어떻게 지켜지는지, 체험 계정을 왜 그렇게 열었는지를 다룬다.
+RUNSHOES는 신발을 둘러보고 비교하는 데는 로그인이 필요 없다. [docs:08_compare.md:28] 리뷰와 찜은 계정마다 따로 남고, 챗봇도 로그인한 사람만 쓴다. [docs:04_auth.md:36] [docs:09_chatbot_rag.md:433] 가입은 이메일과 비밀번호로 하고, 처음 보는 사람은 가입하지 않고 체험 계정 카드를 눌러 바로 들어올 수 있다. [docs:04_auth.md:10] 이 편은 로그인이 어떻게 지켜지는지, 체험 계정을 왜 그렇게 열었는지를 다룬다.
 
 ## 왜 로그인이 필요했나
 
