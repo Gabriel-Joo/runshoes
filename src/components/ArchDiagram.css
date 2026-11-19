@@ -1,0 +1,109 @@
+/* 서비스 구성도. SVG 글자 크기는 viewBox 단위라 그림과 함께 커지고 줄어든다 */
+.arch {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.arch__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-base);
+}
+
+.arch__svg--wide {
+  max-width: 1000px;
+}
+
+/* 1023px 이하는 세로형. 가로형을 줄여 쓰면 800px 폭에서 글자가 10px 아래로 작아진다 */
+.arch__svg--narrow {
+  display: none;
+  max-width: 440px;
+}
+
+@media (max-width: 1023px) {
+  .arch__svg--wide {
+    display: none;
+  }
+
+  .arch__svg--narrow {
+    display: block;
+  }
+}
+
+.arch__box {
+  fill: var(--surface-white);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.arch__box--host {
+  stroke: var(--accent);
+}
+
+.arch__title {
+  fill: var(--text-strong);
+  font-weight: 700;
+}
+
+.arch__sub {
+  fill: var(--text-mid);
+  font-weight: 400;
+}
+
+.arch__edge {
+  fill: none;
+  stroke: var(--text-weak);
+  stroke-width: 1.5;
+}
+
+.arch__head {
+  fill: var(--text-weak);
+}
+
+.arch__label {
+  fill: var(--text-mid);
+  font-weight: 500;
+}
+
+/* 묶음: 쿠버네티스는 옅은 실선, Pod는 옅은 바탕, 호스트는 틸 점선 */
+.arch__group {
+  stroke-width: 1.5;
+}
+
+.arch__group--k8s {
+  fill: none;
+  stroke: var(--border);
+}
+
+.arch__group--pod {
+  fill: var(--bg-light);
+  stroke: var(--border-light);
+}
+
+.arch__group--host {
+  fill: rgba(29, 122, 114, 0.06);
+  stroke: var(--accent);
+  stroke-dasharray: 7 6;
+}
+
+.arch__group-label {
+  font-weight: 700;
+  fill: var(--text-mid);
+}
+
+.arch__group-label--host {
+  fill: var(--accent);
+}
+
+.arch__caption {
+  max-width: 720px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  text-align: center;
+  word-break: keep-all;
+}

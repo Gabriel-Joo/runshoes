@@ -1,0 +1,148 @@
+/* 로그인 화면 아래 프로젝트 소개. 로그인 칸(440px)과 따로 화면 폭 전체를 쓰고, 흰 바탕과 윗선으로 나눈다 */
+.about {
+  background: var(--surface-white);
+  border-top: 1px solid var(--border-light);
+  padding: 96px var(--page-gutter);   /* 아래 96px은 떠 있는 버튼 자리(--fab-clearance)보다 넓다 */
+  display: flex;
+  flex-direction: column;
+  gap: 88px;
+}
+
+.about__lead,
+.about__section {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about__lead {
+  max-width: 760px;
+  text-align: center;
+}
+
+.about__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.about__title {
+  margin-top: 12px;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.about__body {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-mid);
+  word-break: keep-all;
+}
+
+.about__heading {
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* 할 수 있는 것: 넓은 화면 네 칸, 1199px 이하 두 칸, 767px 이하 한 칸 */
+.about__features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.about__feature {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--border-light);
+  border-top: 3px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface-white);
+}
+
+.about__feature strong {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.about__feature span {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-mid);
+  word-break: keep-all;
+}
+
+/* 쓴 기술: 왼쪽 묶음 이름, 오른쪽 이름만 */
+.about__tools {
+  max-width: 760px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border-light);
+}
+
+.about__toolrow {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.about__toolrow dt {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.about__toolrow dd {
+  color: var(--text-strong);
+  word-break: keep-all;
+}
+
+@media (max-width: 1199px) {
+  .about__features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .about {
+    padding-top: 64px;
+    gap: 64px;
+  }
+
+  .about__title {
+    font-size: 23px;
+  }
+
+  .about__body {
+    font-size: 15px;
+  }
+
+  .about__features {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .about__feature {
+    padding: 16px;
+    gap: 4px;
+  }
+
+  .about__toolrow {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 12px;
+    font-size: 14px;
+  }
+}

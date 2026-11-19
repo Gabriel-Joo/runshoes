@@ -156,6 +156,8 @@
   나온 곳: [code:backend/src/main/resources/application.yml:36] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:80]
 - **runshoes-81** 서버 코드 주석이 와이드 "없음"의 출처를 관리 폼이 요구한다고 적는다. 지금 관리 폼은 "없음"을 출처 면제로 두고 `NOTFOUND` 를 저절로 넣는다. 동작은 맞고 주석만 낡았다(2026-11-19 사용자) [code:backend/src/main/java/com/kopo17/runshoes/api/ShoeCollection.java:31] (2026-11-19)
   나온 곳: `03_admin.md` 1-2, 4절
+- **runshoes-82** 챗봇 갈래 패키지 머리 주석이 경험과 후기 갈래를 아직 「5-1 에서는 준비 중」이라고 적는다. 그 갈래는 5-2에서 운영에 나가 돌고 있다. 화면 밖이라 about 화면 작업에서는 고치지 않았다(2026-11-19 사용자) [code:chatbot/branches/__init__.py:1] (2026-11-19)
+  나온 곳: about 화면 글 훑기
 - **runshoes-70** 실사용 인증을 다시 켤지. 실사용 후기나 기록 앱 스크린샷 같은 근거가 생긴 뒤. 칸(V3 `verified`)은 남아 있다 (2026-11-17)
   나온 곳: `03_admin.md` 1-6 [code:backend/src/main/resources/db/migration/V3__auth.sql:57-59] [docs:03_admin.md]
 - **runshoes-71** 사전에 더한 용어를 고치거나 지울 화면 (2026-11-15)

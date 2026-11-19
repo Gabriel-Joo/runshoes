@@ -120,7 +120,7 @@ function DemoCards({ cards, busy, onPick }: { cards: DemoAccount[]; busy: boolea
       aria-hidden={copy || undefined}
     >
       <strong>{c.nickname}</strong>
-      <span>{`리뷰 ${c.reviewCount} · 찜 ${c.likeCount}`}</span>
+      <span>{`리뷰 ${c.reviewCount}, 찜 ${c.likeCount}`}</span>
     </button>
   );
 

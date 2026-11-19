@@ -4,6 +4,7 @@ import { useAuth } from "../auth/useAuth";
 import { AuthError, DEMO_ADMIN_NAME, demoAccounts, demoLogin, login, safeReturnTo, type DemoAccount } from "../auth/session";
 import Field from "../auth/Field";
 import DemoCards from "../components/DemoCards";
+import About from "../components/About";
 import { useCooldown } from "../auth/useCooldown";
 import "./Auth.css";
 
@@ -66,6 +67,7 @@ function Login() {
   };
 
   return (
+    <>
     <div className="auth">
       <h2 className="auth__title is-center">로그인</h2>
       <form className="auth__form" onSubmit={submit} noValidate>
@@ -92,14 +94,14 @@ function Login() {
           {cards.some((c) => c.role === "USER") && (
             <div className="auth__demogroup">
               <h3 className="auth__demotitle">일반 회원으로 체험하기</h3>
-              <p className="auth__demonote">누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰 · 찜은 다른 사람이 바꾸거나 지울 수 있어요</p>
+              <p className="auth__demonote">누구나 함께 쓰는 체험 계정이에요. 남긴 리뷰와 찜은 다른 사람이 바꾸거나 지울 수 있어요</p>
               <DemoCards cards={cards} busy={busy} onPick={tryDemo} />
             </div>
           )}
           {admin && (
             <div className="auth__demogroup">
               <h3 className="auth__demotitle">관리자로 체험하기</h3>
-              <p className="auth__demonote">실제 관리자 화면을 그대로 둘러볼 수 있어요. 저장 · 삭제만 막혀 있어요</p>
+              <p className="auth__demonote">실제 관리자 화면을 그대로 둘러볼 수 있어요. 저장과 삭제만 막혀 있어요</p>
               <div className="auth__admincard">
                 <button className="auth__card is-admin" onClick={() => tryDemo(admin)} disabled={busy}>
                   <strong>{DEMO_ADMIN_NAME}</strong>
@@ -111,6 +113,9 @@ function Login() {
         </section>
       )}
     </div>
+    {/* 프로젝트 소개, 스크롤하면 나온다(2026-11-19 사용자) */}
+    <About />
+    </>
   );
 }
 
