@@ -335,7 +335,7 @@ def main() -> int:
             for w in warns:
                 print(f"     · {w}")
 
-    # 로그인 문턱(17절) — 웹소켓 서버 수준. 위 문항은 봇을 바로 부르므로 로그인과 상관없다
+    # 로그인 문턱(1-13절) — 웹소켓 서버 수준. 위 문항은 봇을 바로 부르므로 로그인과 상관없다
     from chatbot.eval import login
     only = set(a.only.split(",")) if a.only else None
     for r in login.run(only):

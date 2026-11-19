@@ -206,7 +206,7 @@ class Bot:
         if b == "greeting" and not found:
             return Reply(prompt.GREETING, branch="greeting"), trace
         if b == "out_of_scope" and not found:
-            if r.health:   # 몸 이야기가 섞였으면 거절하지 않고 특성으로(7절)
+            if r.health:   # 몸 이야기가 섞였으면 거절하지 않고 특성으로(1-8절)
                 return self._explain(state, text, dic, r, trace, cat), trace
             return Reply(prompt.OUT_OF_SCOPE, links_off=True, branch="out_of_scope"), trace
         if b == "explain" and not found:
