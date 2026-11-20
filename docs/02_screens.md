@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/App.tsx, src/pages/, src/components/, src/utils/, src/auth/, src/api.ts, backend/src/main/java/com/kopo17/runshoes/api/, backend/src/main/java/com/kopo17/runshoes/activity/
-읽은 커밋: aaa847e
+읽은 커밋: af93ce0
 -->
 # 02 화면
 > 상태: 2026-11-17 코드와 맞춰 봄(1-8 로그인 화면 아래 소개는 2026-11-19). 운영에서 쓰는 중(2026-11-02 확인, 비교하기는 2026-11-09 운영 반영). 화면 11개(라우트 10 + 상세 모달). 원천: `src/App.tsx`, `src/pages/*`, `src/components/*`, `src/utils/display.ts`. 관리 화면은 `03_admin.md`, 로그인, 계정 규칙은 `04_auth.md`, 색, 글꼴은 `02b_design_system.md` [code:src/App.tsx:29-40] [code:src/components/ShoeModal.tsx:84-239] [docs:03_admin.md] [docs:04_auth.md] [docs:02b_design_system.md]
@@ -15,7 +15,7 @@ React 단일 페이지 앱이다. 홈 하나에서 **찾고(용도, 검색, 정�
 
 | 라우트 | 화면 | 누가 |
 |---|---|---|
-| `/` | 홈. 히어로 슬라이드, 용도 칩, 검색, 정렬, 찜만 보기, 카드 그리드, 상세 모달(`?shoe={id}`) | 누구나 [code:src/App.tsx:29] [code:src/components/Hero.tsx:6-22] [code:src/components/FilterBar.tsx:4-11] [code:src/components/SortBar.tsx:3-8] [code:src/pages/ShoeList.tsx:28-35] |
+| `/` | 홈. 히어로(신발 한 장에 용어 선이 쌓이는 설계도), 용도 칩, 검색, 정렬, 찜만 보기, 카드 그리드, 상세 모달(`?shoe={id}`) | 누구나 [code:src/App.tsx:29] [code:src/components/Hero.tsx:50-95] [code:src/components/FilterBar.tsx:4-11] [code:src/components/SortBar.tsx:3-8] [code:src/pages/ShoeList.tsx:28-35] |
 | `/recommend` | 추천받기. 5문항 → 점수순 결과 | 누구나 [code:src/App.tsx:30] [code:src/pages/Recommend.tsx:26-128] |
 | `/compare` | 비교하기. 2~5켤레를 나란히(`?ids=`, `?pick=`, `08_compare.md`) | 누구나 [code:src/App.tsx:31] [code:src/utils/compare.ts:8] [code:src/pages/Compare.tsx:21] [docs:08_compare.md] |
 | `/best` | 러너들의 선택. 종합 점수 1~5위, 용도별 1위 | 누구나 [code:src/App.tsx:32] [code:src/pages/Best.tsx:50-51] [code:src/pages/Best.tsx:94-96] |

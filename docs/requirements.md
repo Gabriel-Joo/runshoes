@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/, backend/, catalog/, chatbot/
-읽은 커밋: 606b730
+읽은 커밋: af93ce0
 -->
 # 요구사항
 > 상태: 2026-11-17 코드와 맞춰 봄. 요건 ①~⑦ 모두 운영에서 동작(2026-11-02 확인). 원천: 과제 안내(번외 산출물 안내 PART_02, 12~18p), README(옛 1, 3절), 영역 문서 <!-- 확인 못 함: 운영에서 동작하는지는 운영 사이트, 과제 안내는 저장소 밖 -->
@@ -44,7 +44,7 @@
 
 | 무엇 | 왜 | 문서 |
 |---|---|---|
-| 용어 툴팁, 해부도 히어로 | 정보를 덜지 않고 모르는 말을 없앤다 | `02_screens.md` [docs:02_screens.md] [code:src/components/TermTooltip.tsx:10] [code:src/components/Hero.tsx:24] |
+| 용어 툴팁, 해부도 히어로 | 정보를 덜지 않고 모르는 말을 없앤다 | `02_screens.md` [docs:02_screens.md] [code:src/components/TermTooltip.tsx:10] [code:src/components/Hero.tsx:50-95] |
 | 출처가 있는 카탈로그 302켤레, "정보 없음" 명시 | 추측한 값보다 빈 값이 낫다 | `01a`, `01b`, `01c` [docs:01a_catalog_sources.md] [docs:01b_catalog_images.md] [docs:01c_catalog_loader.md] [code:src/utils/display.ts:1-2] (2026-11-02 기준) [c:298845e] <!-- 확인 못 함: 켤레 수는 운영 DB 값 --> |
 | 발볼과 와이드 넷 | 한국 러너에게 중요한 것을 앞에 | `01a_catalog_sources.md` 1-7 [docs:01a_catalog_sources.md] [code:backend/src/main/resources/db/migration/V12__wide_scope.sql:1-4] |
 | 추천받기 5문항 | 초보가 첫 후보를 얻는 길 | `02_screens.md` 1-4 [docs:02_screens.md] [code:src/App.tsx:30] |

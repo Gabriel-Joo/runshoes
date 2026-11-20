@@ -1,6 +1,6 @@
 <!--
-다루는 곳: src/index.css, src/tokens.css, src/components/, src/pages/, index.html
-읽은 커밋: 606b730
+다루는 곳: src/index.css, src/tokens.css, src/components/, src/pages/, index.html, public/images/hero-shoe.webp
+읽은 커밋: af93ce0
 -->
 # 02b 디자인
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중(2026-11-02 확인). 원천: `src/index.css`(색, 글꼴 토큰), `src/tokens.css`(크기, 배율), 컴포넌트 CSS. 처음 시안과 인계 문서는 `archive/design-prompt.md`, `archive/design-handoff.md` [code:src/index.css:1-29] [code:src/tokens.css:1-10] [docs:archive/design-prompt.md] [docs:archive/design-handoff.md]
@@ -51,7 +51,7 @@
 - **그림자**. 카드에는 없다. 모달, 드롭다운 같은 실제로 떠 있는 것만. [code:src/components/ShoeModal.css:22] [code:src/components/ConfirmModal.css:21] [code:src/components/Header.css:141] [code:src/components/TermTooltip.css:30]
 - **칩과 토글**. 완전 둥근 모서리(`border-radius: 100px`). [code:src/components/FilterBar.css:24] [code:src/components/SortBar.css:36]
 - **여백 리듬**. 섹션 사이는 크게(24~40px), 카드 안은 촘촘하게(6~18px).
-- **히어로**. 왼쪽은 "러닝화, 제대로 읽기" 문구가 얹힌 사진, 오른쪽은 용어 해부도 사진 3장(드롭, 아웃솔, 스택하이트)이 4초마다 넘어가는 슬라이드. 사진 아래 검은 띠에 용어 이름과 풀이 한 줄, 넘기는 점 셋. 라이브러리 없이 `setInterval` + 정리. [code:src/components/Hero.tsx:6-22] [code:src/components/Hero.tsx:28-31]
+- **히어로**. 왼쪽은 "러닝화, 제대로 읽기" 문구가 얹힌 사진, 오른쪽은 신발 옆모습 한 장(호카 시엘로 X1 3.0, 카탈로그 131번) 위에 용어 셋(스택하이트, 미드솔, 카본 플레이트)의 선이 하나씩 쌓이는 설계도. 신발, 이름, 자 눈금이 먼저 뜨고, 용어마다 선이 그어진 뒤 이름표에 이 신발의 값(38mm, PEBA, 있음)이, 사진 아래 검은 띠에 용어 이름과 풀이가 한 글자에 0.03초씩 박힌다. 그은 선은 남고, 셋이 다 그어지면 머문 뒤 처음부터 다시 돈다. [code:src/components/Hero.tsx:50-95] [code:src/components/Hero.tsx:11-16] [code:src/components/Hero.tsx:126-156] 선은 어디인지를, 글은 무엇인지를 말하게 하려는 것이라 선과 글자는 처음부터 떠 있지 않다. 용어는 옆모습에서 자리를 정확히 짚을 수 있는 셋만 둔다. 드롭은 발바닥이 놓이는 면이 옆벽 안쪽이라 옆모습에 보이지 않아 두지 않고, 카본 플레이트 선은 옆면 무늬를 따라 어림한 것이다. [code:src/components/Hero.tsx:34-37] 풀이는 용어 사전 설명의 첫 문장이고, 사전에 없는 용어는 비워 둔다. [code:src/components/Hero.tsx:101-102] [code:src/components/Hero.tsx:119-123] 움직임을 줄여 달라는 설정에서는 다 그어진 그림을 그대로 둔다. 라이브러리 없이 타이머와 SVG 로 그린다. [code:src/components/Hero.tsx:133-138]
 - **드롭다운**. `appearance: none` + 배경 화살표. 관리 폼은 오른쪽 12px, 안쪽 여백 36px이고 관리자 페이지 고르기 칸은 오른쪽 10px, 안쪽 여백 30px로 아직 같지 않다(`TODO.md`). [code:src/pages/ShoeForm.css:166-174] [code:src/pages/AdminMy.css:64-72]
 - **화살표**. 글자 ‹ › 대신 SVG `Chevron`(글꼴 기준선 때문에 가운데가 맞지 않았다). [code:src/components/Chevron.tsx:1-2]
 
@@ -77,7 +77,7 @@
 #### 3. 시도했던 것들
 
 - **AI 디자인 시안에서 시작했다(2026-07).** 프롬프트(`archive/design-prompt.md`)로 hi-fi HTML 시안을 받고, 인계 문서(`archive/design-handoff.md`)대로 React 로 옮겼다. 1차 수정(2026-07-21)에서 히어로 3분할이 신발 세 켤레로 보이던 것, 스펙 라벨이 부위와 맞지 않던 것, 카드가 흰 박스에 가깝던 것을 고쳤다. [docs:archive/design-prompt.md] [docs:archive/design-handoff.md]
-- **히어로 해부도 3분할 → 사진 슬라이드.** 시안은 신발 한 짝이 패널 셋에 걸쳐 이어지고 라벨이 부위에 선으로 붙는 정지 화면이었다. 지금은 용어별 사진 3장이 넘어가는 슬라이드다. [code:src/components/Hero.tsx:6-22]
+- **히어로 해부도 3분할 → 한 장 설계도.** 시안은 신발 한 짝이 패널 셋에 걸쳐 이어지고 라벨이 부위에 선으로 붙는 정지 화면이었다. 지금은 신발 한 장 위에 용어의 선이 차례로 그어져 쌓인다. [code:src/components/Hero.tsx:50-95]
 - **보조 강조색 코랄을 더했다(2026-11-01 사용자).** 처음 원칙은 "강조색은 딥 틸 하나"였다. 그런데 AI 리뷰 요약 상자가 베스트 리뷰(옅은 틸)와 구분되지 않았고(그 전에는 앰버였다), 관리 화면의 "보완 필요" 탭은 할 일이라 다른 탭과 구분돼야 했다. 둘을 구분하는 보조 강조색으로 코랄을 정했다. [code:src/index.css:14-18] [code:src/components/ReviewSummary.css:3-5] [code:src/pages/Admin.css:327-336]
 - **코랄을 바탕용과 글자용으로 나눴다(2026-11-01).** 원색 `#FF7A59` 는 흰 바탕 대비 2.57:1 이라 글자와 선으로 쓰면 읽기 어렵다. 옅은 바탕과 테두리는 원색에서(`--coral-soft`, `--coral-border`), 글자, 선, 고른 탭은 진한 코랄 `#C2462A`(`--coral-strong`, 흰 바탕 5.0:1)로 나눴다. [code:src/index.css:14-18]
 - **화면 다듬기(2026-10-30 사용자).** 마이페이지와 관리 폼의 제목 크기를 홈 정렬과 같은 토큰으로, 체험 카드와 갤러리 화살표를 SVG 로(지금 체험 카드에는 화살표가 없다), 찜 카드를 행택 모양(끈 구멍과 바코드)으로. 자세한 것은 `02_screens.md` 3절. [code:src/tokens.css:71-81] [code:src/components/DemoCards.tsx:4-6] [code:src/components/Chevron.tsx:1-2] [code:src/components/Barcode.tsx:1-5] [code:src/pages/Account.css:632] [docs:02_screens.md]
