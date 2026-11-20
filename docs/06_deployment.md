@@ -1,6 +1,6 @@
 <!--
 다루는 곳: Jenkinsfile, Dockerfile, Dockerfile.chatbot, .dockerignore, backend/src/main/resources/application.yml, scripts/load-prod.sh
-읽은 커밋: 606b730
+읽은 커밋: cdf4312
 -->
 # 06 배포
 > 상태: 2026-11-17 코드와 인프라 저장소 매니페스트로 맞춰 봄(읽기만, 클러스터는 보지 않음). infra 매니페스트(`081d6e4`, 2026-11-17)의 이미지 태그 `606b73052c41`(앱 커밋 `606b730`), 자동 Sync 켜짐(`prune: false, selfHeal: false`), Deployment replicas 2(컨테이너 2, 노드 분산, PDB, 2026-11-10부터, 1-5절), MySQL 8.0.46 local-path 2Gi(원본, 복제본). 운영 중, ArgoCD `runshoes` Synced/Healthy 는 2026-11-02 확인(infra `4a54ca7`). 원천: infra `apps/runshoes/`, `platform/`, `Jenkinsfile`, `Dockerfile`, 런북 [c:97ec8e0] [c:606b730] [code:Jenkinsfile:71] <!-- 확인 못 함: 클러스터에서 실제로 도는 이미지, ArgoCD 상태, 자동 Sync 의 실제 설정은 클러스터 값(위 값은 인프라 저장소 매니페스트) -->
@@ -133,7 +133,7 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 |---|---|---|---|
 | 1 | 앱: 3000 에 `/livez` 와 `/readyz` 를 더한다(`management.endpoint.health.probes.add-additional-paths`). `/actuator/**` 는 그대로 3000 에 있다. 챗봇 준비 확인과 계약 스크립트도 `/readyz` 로 | 앱 push(관리자) | 운영(35537160ce73) [code:backend/src/main/resources/application.yml:67-70] [code:chatbot/search/service.py:28-30] [code:contract/run-spring-local.sh:96-97] [c:3553716] <!-- 확인 못 함: 운영 이미지 태그는 클러스터 --> |
 | 2 | 인프라: 프로브를 `/livez` 와 `/readyz` 로(startup, readiness, liveness 셋) | 인프라 관리자 | 끝(infra 2bfbf40) [code:chatbot/search/service.py:29] <!-- 확인 못 함: 프로브 설정은 인프라 저장소, 2bfbf40 은 이 저장소에 없는 커밋 --> |
-| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push, 인프라 | 앱 로컬 끝, 주석은 인프라 [code:backend/src/main/resources/application.yml:59-62] <!-- 확인 못 함: Pod 주석과 운영 반영 여부는 인프라와 클러스터 --> |
+| 3 | 앱: 관리 포트 9000 + prometheus 노출. 인프라: 9000 을 긁는 Pod 주석 | 앱 push, 인프라 | 운영(main `f9ee36e`, 2026-11-14), Pod 주석은 인프라 `9b57224`(`HISTORY.md` 11-14) [code:backend/src/main/resources/application.yml:59-62] [c:f9ee36e] <!-- 확인 못 함: Pod 주석과 운영 이미지는 인프라 저장소와 클러스터 --> |
 
 - `/livez` = liveness 그룹(livenessState), `/readyz` = readiness 그룹(readinessState + db). 내용은 `/actuator/health/liveness`, `readiness` 와 같다. DB 가 멈추면 `/readyz` 만 503(Hikari 연결 대기 30초 뒤, 지금 readiness 와 같은 동작), `/livez` 는 200(2026-11-14 로컬). [c:3553716] [code:backend/src/main/resources/application.yml:66-71]
 - SPA 대체 경로(`config/SpaConfig` 의 `/**`)와 겹치지 않는다. `/livez` 와 `/readyz` 는 actuator JSON, 다른 주소는 그대로 `index.html`(로컬 확인). [code:backend/src/main/java/com/kopo17/runshoes/config/SpaConfig.java:13-14] [code:backend/src/main/resources/application.yml:68-70]
@@ -146,6 +146,73 @@ contract/run-spring-local.sh v6            # DB 를 비우고 V1~ 부터 → :32
 - 9000 에서도 `/livez`, `/api/…` 같은 주소가 `index.html` 을 돌려준다. SPA 설정이 관리 포트에도 붙는다(컨트롤러는 붙지 않는다). 9000 은 바깥에 없어 그대로 둔다. [code:backend/src/main/java/com/kopo17/runshoes/config/SpaConfig.java:13-14] [code:backend/src/main/resources/application.yml:61]
 - 앱 push 와 Pod 주석은 어느 쪽이 먼저여도 된다. 주석이 먼저면 옛 이미지는 9000 이 닫혀 있어 그 대상이 `up 0` 일 뿐 프로브나 트래픽과 상관없다. 앱이 먼저면 9000 이 열려 있고 아무도 긁지 않는다. [code:backend/src/main/resources/application.yml:60-61]
 - 배포 뒤 확인: 공개 주소의 `/actuator`, `/actuator/health`, `/actuator/prometheus` 가 `text/html`(index.html)인지 본다. JSON 이나 `# HELP` 로 시작하는 글이 나오면 열린 것이다. [code:backend/src/main/resources/application.yml:59]
+
+#### 1-10. 지켜보기(모니터링, 2026-11-20 정리)
+
+모니터링 스택(Prometheus, Loki, Alloy, Grafana)은 인프라 저장소가 세우고 돌린다. 구성, 수집 대상, 자원, 바깥 주소, 확인 명령은 infra `docs/12_monitoring.md` 가 원본이고 여기에 다시 적지 않는다. 이 절은 런슈즈가 무엇을 내놓고, 대시보드가 그것으로 무엇을 보며, 무엇을 아직 보지 않는지만 적는다. <!-- 확인 못 함: 모니터링 스택은 인프라 저장소(apps/monitoring/) -->
+
+숫자가 오는 곳 넷
+
+| 출처 | 런슈즈 쪽에서 내놓는 것 | 쌓이는 곳 |
+|---|---|---|
+| 입구(ingress-nginx), kube-state-metrics, cAdvisor | 없음. 런슈즈 주소로 들어온 요청 수와 결과, Pod 준비와 재시작, 컨테이너 CPU와 메모리를 인프라 수집기가 센다 | Prometheus, 30초마다 긁고 15일 또는 9GB |
+| Spring 관리 포트(9000 `/actuator/prometheus`) | 주소별 요청 수와 응답 시간 버킷 넷, 오류 상태, DB 연결 풀(Hikari), JVM 힙(1-9) | Prometheus, 같은 보존 |
+| 런슈즈 MySQL 복제본 | 챗봇 턴 기록 `chatbot_turns`(V19), 요약 배치 실행 기록 `summary_batch_runs`(V20), 활동 기록 `activity_logs`, 비교 조합 뷰 `grafana_compare_views`(V21) | 런슈즈 DB 그대로. Grafana 가 읽기 계정 `grafana_ro` 로 복제본을 바로 읽는다(`07_database.md` 1-6) |
+| 컨테이너 로그 | 앱(Spring), 챗봇, 요약 배치가 표준 출력에 쓰는 줄 | Loki, 7일. 챗봇의 질문 원문 줄은 수집기(Alloy)에서 버린다 |
+
+[code:backend/src/main/resources/application.yml:58-65] [code:backend/src/main/resources/db/migration/V19__chatbot_turns.sql:1] [code:backend/src/main/resources/db/migration/V20__summary_batch_runs.sql:1] [code:backend/src/main/resources/db/migration/V21__grafana_compare_views.sql:1] <!-- 확인 못 함: 수집 간격, 보존, 수집기, 로그 거르기는 infra apps/monitoring/(prometheus statefulset.yaml retention.time=15d, retention.size=9GB, loki.yaml retention_period 168h, alloy.yaml stage.drop) -->
+
+- 챗봇 사이드카에는 Prometheus 지표 창구가 없다. 챗봇의 숫자(갈래, 걸린 시간, 단계별 시간, 코드가 대신 쓴 답, 신발 수)는 턴마다 Spring 내부 창구로 보내 DB 에 한 줄로 남기고, 대시보드는 그 줄을 센다(`09_chatbot_rag.md` 1-14). [code:backend/src/main/resources/db/migration/V19__chatbot_turns.sql:1]
+- GPU 사용률과 메모리, 올라간 모델은 호스트의 GPU 수집기와 Ollama 응답을 인프라가 긁는다. 펫퍼민트와 한 장을 나눠 쓰므로 런슈즈만의 값이 아니다. <!-- 확인 못 함: infra prometheus configmap.yaml nvidia-gpu, ollama 잡 -->
+
+대시보드 「runshoes 운영」
+
+- 생성기는 인프라 저장소(`apps/monitoring/grafana/dashboards/gen_runshoes.py`)에 있고 JSON 으로 만들어 넣는다. UI 에서 고친 것은 남지 않는다. 기본 범위 7일, 1분마다 새로 고친다. <!-- 확인 못 함: 생성기와 프로비저닝은 인프라 저장소 -->
+- 묶음 일곱, 패널 36(묶음 제목 줄 7을 더하면 생성기가 세는 43, 2026-11-20 생성기를 돌려 셈):
+
+| 묶음 | 패널 | 보는 것 |
+|---|---|---|
+| 서비스 상태 | 7 | 응답 가능한 앱 서버 수(정상 2), 재시작 횟수(최근 24시간), 결과별 접속 요청량, 서버 오류(500번대) 비율, 컨테이너별 CPU, 상한 대비 메모리, 챗봇 메모리 |
+| API | 6 | 주소별 요청 수, 응답 시간(보통, 느린 편 어림값), 1초 넘은 요청 비율, 요청 쪽과 서버 쪽 오류 비율, DB 연결, JVM 힙 |
+| 챗봇 | 8 | 갈래별 질문 수, 연결 수와 질문한 계정 수, 규칙과 AI 판단 비율, AI 판단 형식 틀림, 코드가 대신 쓴 답과 통증 질문 비율, 답 걸린 시간, 신발을 못 보여 준 답 비율, 단계별 평균 시간 |
+| AI 서버(GPU) | 3 | GPU 사용률, GPU 메모리, 올라간 모델(최근 24시간) |
+| 사이트 활동 | 7 | 리뷰 쓰기, 찜과 「도움이 돼요」, 가입과 탈퇴, 로그인 결과, 체험 로그인, 많이 본 신발, 많이 비교한 조합 |
+| 리뷰 요약 배치 | 3 | 회차별 걸린 시간, 만든 켤레와 실패한 켤레, 끝나지 못한 회차 |
+| 서버 기록 | 2 | 챗봇 로그, 앱과 요약 배치 로그(Loki 7일) |
+
+<!-- 확인 못 함: 묶음과 패널은 인프라 저장소 gen_runshoes.py -->
+
+- **리뷰 쓰기 패널은 늘 빈다. 고장이 아니다.** 이 패널은 화면에서 새로 쓴 리뷰(`activity_logs` 의 `review.create`)만 센다. 시드 리뷰는 화면을 거치지 않고 들어가 세지 않는다. 운영 공개 API 의 리뷰는 2026-11-20 에도 시드와 같은 1,800건이다. 패널 설명에도 같은 까닭을 적었다(인프라). [code:backend/src/main/java/com/kopo17/runshoes/api/ReviewCollection.java:109] [docs:01e_seed_reviews.md] <!-- 확인 못 함: 패널 설명은 인프라 저장소 -->
+- 2026-11-14 전의 챗봇 칸은 비어 있다. 턴 기록이 그날 운영에 올랐다(`HISTORY.md` 11-14). [c:3553716]
+- 숫자와 추세는 대시보드가, 개별 건은 관리 화면이 본다. 숫자를 관리 화면에 다시 그리지 않는다(`09_chatbot_rag.md` 1-14).
+
+보존
+
+| 무엇 | 얼마나 | 정하는 곳 |
+|---|---|---|
+| Prometheus 지표 | 15일 또는 9GB 가운데 먼저 닿는 쪽 | 인프라 |
+| Loki 로그 | 7일 | 인프라 |
+| `activity_logs` | `auth.*`, `user.*` 90일, 나머지 180일. 매일 04:00(서울) 한 Pod 가 지운다(1-5) | 앱 |
+| `chatbot_turns` | 행과 숫자 칸은 지우지 않는다. 질문과 답만 90일 뒤 빈 글로 | 앱 |
+| `summary_batch_runs`, `summary_batch_failures` | 지우지 않는다(하루 한 줄과 실패 몇 줄) | 앱 |
+
+[code:backend/src/main/resources/application.yml:46-50] [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityCleanup.java:16-21] [docs:09_chatbot_rag.md:247] <!-- 확인 못 함: Prometheus, Loki 보존은 인프라 저장소 -->
+
+그래서 15일보다 긴 범위로 보면 Prometheus 패널은 15일보다 앞이 빈다. DB 를 읽는 챗봇, 활동, 요약 배치 패널은 기록이 남은 만큼 보인다.
+
+알림
+
+- 없다. Alertmanager 도, Grafana 경보도 두지 않았다. 사람이 대시보드를 열어야 안다. 인프라가 적은 까닭은 「무엇을 누구에게 알릴지 정하기 전」이다(infra `docs/history/build_log/09_monitoring.md` 2-10, TODO `infra-4`). <!-- 확인 못 함: 인프라 저장소 -->
+- 앱 쪽에는 걸 자리를 하나 만들어 두었다. 데이터 정리가 끝나면 남은 `activity_logs` 행 수를 로그 한 줄로 쓰고, 500,000 행을 넘으면 WARN 을 쓴다. 이 줄에 경보를 거는 것은 정해지지 않았다. [code:backend/src/main/java/com/kopo17/runshoes/activity/ActivityCleanup.java:28] [code:backend/src/main/resources/application.yml:51]
+
+아직 보지 않는 것
+
+- 응답 시간은 어림값이다. 버킷이 넷이라 보통과 느린 편은 그 사이를 이은 값이고, 1초 넘는 요청은 「1초 넘음」만 안다. 버킷을 늘리면 시계열이 크게 늘어 넷만 두었다(1-9). [code:backend/src/main/resources/application.yml:63-65]
+- 챗봇에서 아직 재지 않는 것: 코드가 대신 쓴 답의 까닭별 수, 거절과 기록 건수, 「보러 가기」를 누른 비율, 동시 연결 수와 연결당 턴 수. 챗봇 작업을 먼저 끝내고 재기로 미뤘다(2026-11-12 사용자, `TODO.md` runshoes-22~25).
+- 브라우저 쪽(화면이 뜨기까지 걸린 시간, 화면에서 난 오류)은 모으지 않는다. 화면 코드에 수집 장치가 없다. 까닭은 기록에 없다(`TODO.md` runshoes-85). [code:src/]
+- 바깥에서 사이트를 불러 보는 확인이 없다. 서비스 상태 묶음은 클러스터 안에서 본 값(Pod 준비, 입구가 센 요청)이라, Cloudflare 터널이나 DNS 쪽에서 막히면 요청이 0 으로만 보인다. 까닭은 기록에 없다(`TODO.md` runshoes-86). <!-- 확인 못 함: 인프라 수집 대상에 blackbox 확인 없음(infra prometheus configmap.yaml) -->
+- MySQL 자체 지표(복제 지연, 느린 쿼리, 디스크)는 모으지 않는다. 대시보드는 앱 쪽 DB 연결 풀만 본다. 까닭은 기록에 없다(`TODO.md` runshoes-87). <!-- 확인 못 함: 인프라 수집 대상에 MySQL 수집기 없음 -->
+- Prometheus 와 Loki 는 한 대씩이고 한 노드에 묶여 있다. 그 노드를 비우면 그동안 지표와 로그가 빈다. 인프라 한계다(infra `docs/12_monitoring.md` 「알려진 한계」). <!-- 확인 못 함: 인프라 저장소 -->
 
 #### 2. 왜 이렇게 했나
 

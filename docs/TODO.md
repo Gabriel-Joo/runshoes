@@ -183,6 +183,12 @@
   나온 곳: `07_database.md` 4절 [code:backend/src/main/resources/db/migration/V1__schema.sql:18-21] [code:backend/src/main/resources/db/migration/V1__schema.sql:32] [code:backend/src/main/resources/db/migration/V1__schema.sql:44] [code:backend/src/main/java/com/kopo17/runshoes/domain/Shoe.java:48] [code:backend/src/main/java/com/kopo17/runshoes/domain/Shoe.java:91-94] [docs:07_database.md]
 - **runshoes-79** Jenkinsfile 「문서만 바뀌었나」가 한글 이름 파일을 못 알아본다. `git diff --name-only` 가 한글 경로를 따옴표로 감싸 `^docs/`, `\.md$` 에 안 걸린다(빌드로 떨어질 뿐 잘못 건너뛰지는 않는다, 지금 한글 이름 파일 0개). `git -c core.quotePath=false diff` 로 (2026-11-15)
   나온 곳: `Jenkinsfile` 「태그」 단계(FOREMAN 「나중에 할 일」에서 옮김, 2026-11-15) [code:Jenkinsfile:79] [code:Jenkinsfile:83] [c:9a94441]
+- **runshoes-85** 브라우저 쪽(화면이 뜨기까지 걸린 시간, 화면에서 난 오류)을 모을지 정하고, 안 모은다면 그 까닭을 적는다. 지금은 수집 장치도 까닭 기록도 없다 (2026-11-20)
+  나온 곳: `06_deployment.md` 1-10 「아직 보지 않는 것」
+- **runshoes-86** 바깥에서 사이트를 불러 보는 확인(blackbox)을 둘지 정하고, 안 둔다면 그 까닭을 적는다. 지금은 클러스터 안에서 본 값뿐이고 까닭 기록이 없다. 수집 대상은 인프라 일이라 인프라 관리자에게 부탁한다 (2026-11-20)
+  나온 곳: `06_deployment.md` 1-10 「아직 보지 않는 것」
+- **runshoes-87** MySQL 자체 지표(복제 지연, 느린 쿼리, 디스크)를 모을지 정하고, 안 모은다면 그 까닭을 적는다. 수집기는 인프라 일이다 (2026-11-20)
+  나온 곳: `06_deployment.md` 1-10 「아직 보지 않는 것」
 
 #### 포트폴리오
 
