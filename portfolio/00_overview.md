@@ -41,7 +41,7 @@
 
 화면은 React, 서버는 Spring Boot, 데이터는 MySQL에 있습니다. 챗봇은 파이썬으로 만든 별도 프로그램으로 서버 옆에서 돌고, 답을 짓는 언어 모델(글을 읽고 이어지는 글을 지어내는 AI)은 그래픽카드가 있는 호스트에서 돕니다. [docs:overview.md:10] [docs:09_chatbot_rag.md:457] [docs:overview.md:73]
 
-서버는 처음부터 Spring Boot가 아니었습니다. 과제 요건대로 간단한 JSON 서버로 시작했고, 그 응답을 녹화해 두고 새 서버가 똑같이 답하도록 재현한 뒤 바꿔 끼웠습니다. [docs:requirements.md:31] [docs:05_api_contract.md:10] 배포는 코드를 저장소에 올리면 Jenkins가 이미지를 만들고 ArgoCD가 그것을 클러스터에 반영하는 길로 사람 손 없이 이어지고, 데이터베이스 구조를 바꿀 때만 사람이 문을 엽니다. [docs:06_deployment.md:10] [docs:06_deployment.md:103] 이 둘은 보여 드릴 화면이 없어 여기까지만 다룹니다. 자세한 것은 기술문서 [「Spring 전환과 API 계약 시험」](../notion/09_spring.md)과 [「배포」](../notion/10_deploy.md)에 있습니다.
+서버는 처음부터 Spring Boot가 아니었습니다. 과제 요건대로 간단한 JSON 서버로 시작했고, 그 응답을 녹화해 두고 새 서버가 똑같이 답하도록 재현한 뒤 바꿔 끼웠습니다. [docs:requirements.md:31] [docs:05_api_contract.md:10] 배포는 코드를 저장소에 올리면 Jenkins가 이미지를 만들고 ArgoCD가 그것을 클러스터에 반영하는 길로 사람 손 없이 이어지고, 데이터베이스 구조를 바꿀 때만 사람이 문을 엽니다. [docs:06_deployment.md:10] [docs:06_deployment.md:103] 이 둘은 보여 드릴 화면이 없어 여기까지만 다룹니다. 자세한 것은 기술문서 [「Spring 전환과 API 계약 시험」](../notion/09_spring.md)과 [「배포」](../notion/10_deploy.md)에 있습니다. 운영 중인 서버가 잘 도는지 지켜보는 대시보드는 → 「모니터링」에서 보여 드립니다.
 
 ## 무엇이 어려웠나
 

@@ -40,6 +40,7 @@ RUNSHOES 문서는 두 벌이다. `notion/` 은 비개발자도 읽는 노션 �
 | 08-06 | `notion/08_chatbot/06_eval.md` | 평가와 바꿔 온 길 | 09 2-1, 5-1, `archive/09_chatbot_rag_log.md` |
 | 09 | `notion/09_spring.md` | Spring 전환과 API 계약 시험 | 05 |
 | 10 | `notion/10_deploy.md` | 배포 | 06 |
+| 10-01 | `notion/10_deploy/01_monitoring.md` | 모니터링 | 06 1-10 |
 | 11 | `notion/11_limits.md` | 알려진 한계 | 모든 편의 「4. 남은 한계」 |
 
 원고에 넣지 않는 docs 편: 07(스키마, 개발자용), HISTORY(진행 기록), TODO(할 일), docs/README(폴더 안내). 08-03 이 짧으면 08-01 에 넣는다(사용자). 11편은 FOREMAN 과 인프라의 한계 편 꼴이 정해진 뒤 마지막에 쓴다(사용자).

@@ -76,7 +76,14 @@ sources = ["notion/06_admin.md"]
 screenshots = true
 
 [[topic]]
-slug = "09_limits"
+slug = "09_monitoring"
+title = "모니터링"
+about = "서비스가 떠 있는지, 얼마나 빨리 답하는지, 오류가 얼마나 나는지를 Grafana 대시보드 한 장으로 보여 준다. 아직 보지 않는 것과 그 까닭, 리뷰 쓰기 칸이 늘 비는 까닭을 함께 적는다. 관리 화면(앱 안의 관리자 페이지)과는 다른 편이다(2026-11-20 사용자)"
+sources = ["notion/10_deploy/01_monitoring.md"]
+screenshots = true
+
+[[topic]]
+slug = "10_limits"
 title = "알려진 한계"
 about = "기술문서 알려진 한계 편의 결정 여덟과 조건 둘을 짧게 줄인다. 한계 편은 결정으로 묶는다"
 sources = ["notion/11_limits.md"]

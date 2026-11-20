@@ -38,7 +38,8 @@ RUNSHOES는 러닝화 310켤레(2026-11-17 운영 공개 API)의 스펙과 리�
 | 06 | [챗봇](portfolio/06_chatbot.md) |  |
 | 07 | [로그인과 체험 계정](portfolio/07_login.md) |  |
 | 08 | [관리 화면](portfolio/08_admin.md) |  |
-| 09 | [알려진 한계](portfolio/09_limits.md) |  |
+| 09 | [모니터링](portfolio/09_monitoring.md) |  |
+| 10 | [알려진 한계](portfolio/10_limits.md) |  |
 
 ## 기술문서
 
@@ -56,7 +57,7 @@ RUNSHOES는 러닝화 310켤레(2026-11-17 운영 공개 API)의 스펙과 리�
 | 07 | [로그인과 체험 계정](notion/07_auth.md) |  |
 | 08 | [챗봇](notion/08_chatbot.md) | 하위 6 |
 | 09 | [Spring 전환과 API 계약 시험](notion/09_spring.md) |  |
-| 10 | [배포](notion/10_deploy.md) |  |
+| 10 | [배포](notion/10_deploy.md) | 하위 1 |
 | 11 | [알려진 한계](notion/11_limits.md) |  |
 
 ## 문서
