@@ -44,7 +44,7 @@ type Mark = {
   lines: Line[]; // 적힌 차례대로 그어진다
   heads: string[]; // 화살촉. 선이 다 그어지면 뜬다
   dot?: [number, number]; // 이름표로 내려가는 선이 시작하는 동그라미
-  label: { x: number; y: number; align: "left" | "center" | "right" };
+  label: { x: number; y: number; align: "left" | "center" };
 };
 
 const MARKS: Mark[] = [

@@ -146,11 +146,6 @@
   align-items: center;
 }
 
-.hero__label--right {
-  transform: translateX(-100%);
-  align-items: flex-end;
-}
-
 .hero__label-name {
   font-size: clamp(10px, 2.75cqw, 18px);
   font-weight: 700;
