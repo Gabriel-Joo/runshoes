@@ -83,7 +83,7 @@ function ShoeList() {
 
   return (
     <>
-      <Hero />
+      <Hero terms={terms} />
 
       <FilterBar
         selected={purpose}
