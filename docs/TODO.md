@@ -165,9 +165,9 @@
 - **runshoes-71** 사전에 더한 용어를 고치거나 지울 화면 (2026-11-15)
   나온 곳: `07_database.md`
 - **runshoes-72** 계약 시험을 둘이 함께 돌리지 않게 할지(컨테이너 이름과 포트가 고정) (2026-11-15)
-  나온 곳: `contract/README.md` 「결과」 [code:contract/run-spring-local.sh:86-87] [code:contract/run-spring-local.sh:31] [code:contract/README.md:72]
+  나온 곳: `contract/README.md` 「결과」 [code:contract/run-spring-local.sh:86-87] [code:contract/run-spring-local.sh:31] [repo:contract/README.md:72]
 - **runshoes-73** v6 관리자 로그인 401. 265번 중 1번(X00 만, 2026-11-17), 앱 로그가 없어 원인을 못 찾았다. 계약 스크립트가 이제 나면 `contract/run/spring-v6-evidence/` 에 앱 로그와 관리자 행을 남기니 다음에 나면 그때 본다 (2026-11-17)
-  나온 곳: `contract/README.md` 「관리자 로그인 401 — 증거 남기기」. refresh 재사용 10초 창과 운영 로그 요청은 사용자가 401 을 겪은 시각을 안 뒤에 [code:contract/run-spring-local.sh:22-23] [code:contract/run-spring-local.sh:41-44] [code:contract/README.md:164] [c:014e520]
+  나온 곳: `contract/README.md` 「관리자 로그인 401 — 증거 남기기」. refresh 재사용 10초 창과 운영 로그 요청은 사용자가 401 을 겪은 시각을 안 뒤에 [code:contract/run-spring-local.sh:22-23] [code:contract/run-spring-local.sh:41-44] [repo:contract/README.md:164] [c:014e520]
 
 #### 인프라, DB
 

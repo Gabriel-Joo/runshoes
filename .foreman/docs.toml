@@ -24,6 +24,7 @@ claim_min = 0
 banned = ["notion", "portfolio"]      # 금지어(IP, 도메인, 홈 경로, 토큰 꼴, 포트)는 사람이 읽는 원고에만 건다. docs는 내부 주소를 써도 된다
 cover_by = ["docs"]
 dashdot_base = "606b730"
+code_doc_base = "ae3d14c0e1941a2a4deb5b42a5b7578f49edbdbc"   # [code:]가 .md 문서를 가리키면 틀림으로 세는 기준(FOREMAN 973d009). 이 커밋 뒤 옛 16곳을 [repo:]로 바꿨다(2026-11-20 사용자, 네 저장소 같은 꼴)
 
 [readme]
 # 맨 위 README.md 는 생성물이다(tools/docs.py readme, 점검 9번). 2026-11-19 사용자, 인프라와 같은 꼴.
