@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/server.py, chatbot/bot.py, chatbot/http.py, chatbot/timing.py, chatbot/catalog.py, src/components/ChatBot.tsx, src/auth/session.ts, src/pages/adminmy/Conversations.tsx, backend/src/main/java/com/kopo17/runshoes/api/ChatbotTurnController.java, backend/src/main/java/com/kopo17/runshoes/api/AdminChatbotTurnController.java, backend/src/main/java/com/kopo17/runshoes/api/CatalogVersionController.java, backend/src/main/resources/db/migration/V19__chatbot_turns.sql
-읽은 커밋: f8cea0d
+읽은 커밋: ae3d14c
 -->
 # 08-05 운영 장치
 
@@ -22,7 +22,7 @@
 
 걸린 시간은 전체와 함께 단계별로 따로 적는다. 질문을 갈래로 나누는 데 든 시간, 리뷰를 찾는 데 든 시간, 언어 모델이 글을 쓰는 데 든 시간, 그리고 서버 API를 읽은 시간을 API마다 따로 둔다. 하나로 묶으면 어느 API가 느린지 알 수 없어서다. [docs:09_chatbot_rag.md:470-471] 단계 칸을 모두 더하면 전체와 맞아야 한다. 칸을 나누기 전에는 평균 2,421ms 가운데 459ms(19%)가 어느 칸에도 들지 않았고, 그 가운데 458ms가 API 읽기였다(2026-11-14 기준). [docs:09_chatbot_rag.md:475] 지금은 평가가 문항마다 전체에서 칸 합을 뺀 값을 보고, 5ms를 넘으면 경고, 30ms를 넘으면 실패로 센다. [docs:09_chatbot_rag.md:474]
 
-기록을 읽는 길은 둘로 나눴다. 숫자와 추세는 대시보드가 보고, 개별 대화는 관리 화면의 "대화 보기"가 본다. 대화 보기는 합계나 그래프를 그리지 않고, 대시보드용 읽기 계정은 질문과 답 칸을 읽을 권한이 없다. [docs:09_chatbot_rag.md:495-496] 관리자 체험 계정도 질문과 답 원문을 본다. 시연용 계정이 읽지 못하면 화면이 비어 시연이 되지 않기 때문이다. [docs:09_chatbot_rag.md:497] 화면에는 체험 계정의 대화가 한 사람의 것이 아니라고 적고, 그 대화에 표시를 단다. [docs:09_chatbot_rag.md:498] 기록 줄은 지우지 않고, 질문과 답만 90일이 지나면 빈 글로 바꾼다. [docs:09_chatbot_rag.md:499] 다만 운영에서는 이 정리 작업이 아직 꺼져 있다(→ 「배포」). [docs:06_deployment.md:177]
+기록을 읽는 길은 둘로 나눴다. 숫자와 추세는 대시보드가 보고, 개별 대화는 관리 화면의 "대화 보기"가 본다. 대화 보기는 합계나 그래프를 그리지 않고, 대시보드용 읽기 계정은 질문과 답 칸을 읽을 권한이 없다. [docs:09_chatbot_rag.md:495-496] 관리자 체험 계정도 질문과 답 원문을 본다. 시연용 계정이 읽지 못하면 화면이 비어 시연이 되지 않기 때문이다. [docs:09_chatbot_rag.md:497] 화면에는 체험 계정의 대화가 한 사람의 것이 아니라고 적고, 그 대화에 표시를 단다. [docs:09_chatbot_rag.md:498] 기록 줄은 지우지 않고, 질문과 답만 90일이 지나면 빈 글로 바꾼다. [docs:09_chatbot_rag.md:499] 이 정리는 매일 새벽 4시(서울) 앱 서버 한 대가 하고, 운영에서는 2026-11-17부터 켜져 있다. 서버가 두 대라 둘이 같은 시각에 깨어나므로, 데이터베이스 잠금을 먼저 잡은 쪽만 정리하고 다른 쪽은 넘어간다. [docs:06_deployment.md:87]
 
 ## 신발 목록 캐시
 
