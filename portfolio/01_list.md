@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/pages/ShoeList.tsx, src/components/ShoeCard.tsx, src/components/FilterBar.tsx, src/components/SortBar.tsx, src/components/CardRowSync.tsx, catalog/copy.json
-읽은 커밋: 0fd9641
+읽은 커밋: 72cde47
 -->
 # 신발 목록
 
