@@ -67,7 +67,7 @@ Claude는 운영 DB에 직접 접근하지 않는다 — `kubectl exec … mysql
 - `docs/README.md`(문서 표) · `docs/TODO.md`(남은 일) · `docs/HISTORY.md`(한 일) · `docs/archive/`(지난 설계 · 계획)
 - 문서 점검(`scripts/docs-check.py`)은 FOREMAN 문서 도구를 부르는 껍데기다. FOREMAN 폴더는 환경 변수 `FOREMAN_DIR`가 먼저, 없으면 기본 경로 `~/AI_programming/foreman`이다(`scripts/foreman_tool.py`의 `DEFAULT`와 같게 둔다). 못 찾으면 종료 코드 2로 멈추니 `|| true`로 덮지 않는다. 이 저장소만의 값은 `.foreman/docs.toml`, 점검 규칙을 고칠 일은 FOREMAN 관리자에게 부탁한다(2026-11-17 사용자)
 - Notion 「RUNSHOES」 기술문서는 `notion/` 원고로만 나간다. `docs/`는 노션에 올리지 않는다(2026-11-22 사용자). FOREMAN 자동 맞추기가 `origin/main` 기준이라 push한 것만 나간다
-- **게시 API(`/api/publish`)에는 `notion/`와 `portfolio/` 경로만 넣는다.** `docs/` 경로를 넣으면 고쳐지지 않고 새 Notion 페이지가 생긴다. 2026-11-20에 `docs/` 원고 셋을 넣어 뜻하지 않은 페이지 셋이 생겼다(FOREMAN 관리자에게 치워 달라고 부탁함). 이 세션은 Notion 페이지를 지우지 않으므로 잘못 만들면 스스로 되돌릴 수 없다
+- **게시 API(`/api/publish`)에는 `notion/`와 `portfolio/` 경로만 넣는다.** `docs/` 경로를 넣으면 고쳐지지 않고 새 Notion 페이지가 생긴다. 2026-11-20에 `docs/` 원고 셋을 넣어 뜻하지 않은 페이지 셋이 생겼다(사람이 Notion에서 지웠고 FOREMAN은 게시 기록을 맞췄다). 이 세션은 Notion 페이지를 지우지 않으므로 잘못 만들면 스스로 되돌릴 수 없다
 
 ## 커밋 메시지
 
