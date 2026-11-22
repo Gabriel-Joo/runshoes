@@ -1,6 +1,6 @@
 <!--
 다루는 곳: chatbot/, catalog/, contract/, backend/src/main/resources/db/migration/, Jenkinsfile, config/portfolio.toml
-읽은 커밋: 606b730
+읽은 커밋: 662b77b
 -->
 # 남은 일
 

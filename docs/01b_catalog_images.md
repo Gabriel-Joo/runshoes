@@ -1,6 +1,6 @@
 <!--
 다루는 곳: catalog/, src/components/ShoeGallery*, src/components/ShoeModal.css, src/components/ShoeImage.tsx
-읽은 커밋: 606b730
+읽은 커밋: 662b77b
 -->
 # 01b 신발 이미지
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영 반영(2026-11-02). 적재 대상 309켤레(`shoes.jsonl` ok, partial) 모두 이미지가 있고, 238켤레가 같은 모델의 다른 색상을 더 가진다(955장, 2026-11-17 다시 셈). 대표 이미지 교체, 대조 결과는 `decisions.json image_overrides`, `catalog/extra-images.json` 에 있다. [code:catalog/shoes.jsonl] [code:catalog/decisions.json:21974] [code:catalog/extra-images.json:2] [c:6bef573] <!-- 확인 못 함: 운영 반영 여부는 운영 쪽 사실 -->

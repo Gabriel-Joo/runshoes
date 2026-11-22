@@ -1,6 +1,6 @@
 <!--
 다루는 곳: src/, backend/, chatbot/, catalog/, contract/, scripts/, Dockerfile, Dockerfile.chatbot, Jenkinsfile, CLAUDE.md, README.md
-읽은 커밋: 606b730
+읽은 커밋: 662b77b
 -->
 # 전체 구조
 > 상태: 2026-11-17 코드와 맞춰 봄. 운영에서 쓰는 중, https://runshoes.ronanlab.dev . 신발 310켤레, 리뷰 1,800건(2026-11-09 시드, `01e`, 2026-11-17 공개 API 로 다시 셈), 마이그레이션 V1~V24(마지막 `V24__chatbot_miss_note.sql`). 원천: 영역 문서 01a ~ 10, README(옛 2, 5, 6, 9절) [c:89117ec] [docs:01e_seed_reviews.md] [code:backend/src/main/resources/db/migration/V24__chatbot_miss_note.sql:1] [docs:09_chatbot_rag.md] [docs:10_recommend.md] <!-- 확인 못 함: 신발 310켤레, 리뷰 1,800건, 운영 중인지는 운영 DB와 운영 사이트의 값 -->
@@ -62,7 +62,7 @@ Cloudflare ─ 공용 터널 ─ ingress-nginx              │
 
 | 무엇 | 선택 | 한 줄 이유 | 문서 |
 |---|---|---|---|
-| 화면 | React 19, TypeScript 6, Vite 8, React Router 7 | 과제 요건. 상태 라이브러리, 차트 라이브러리 없이 | `02_screens.md` [docs:02_screens.md] [code:package.json:14-22] [code:package.json:33] [code:package.json:35] |
+| 화면 | React 19, TypeScript 6, Vite 8, React Router 7 | 과제 요건. 상태 라이브러리, 차트 라이브러리 없이 | `02_screens.md` [docs:02_screens.md] [code:package.json:15-17] [code:package.json:30] [code:package.json:32] |
 | API | Spring Boot 3.5, Java 21 | json-server 계약을 녹화해 그대로 재현, 그 위에 권한과 검증 | `05_api_contract.md` [docs:05_api_contract.md] [code:backend/pom.xml:11-12] [code:backend/pom.xml:22] |
 | DB | MySQL 8, Flyway | 추가만 하는 마이그레이션. 옛 이미지로 롤백해도 뜬다 | `07_database.md` [docs:07_database.md] [code:docker-compose.yml:9] [code:backend/src/main/resources/application.yml:17-19] [code:backend/src/main/resources/application.yml:22] |
 | 인증 | JWT(메모리) + refresh(HttpOnly 쿠키) | 토큰을 localStorage 에 두지 않는다 | `04_auth.md` [docs:04_auth.md] [code:src/auth/session.ts:5] [code:src/auth/session.ts:48] [code:backend/src/main/java/com/kopo17/runshoes/auth/AuthController.java:124] |
